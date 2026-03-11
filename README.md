@@ -1,8 +1,8 @@
-# Effortless Rulebook (ERB) - Seed Ontology Demo
+# Effortless Rulebook (ERB) - Multi-Base Ontology Platform
 
-**One declarative rulebook. Many execution substrates. Watch them drift.**
+**One repo. Five ontologies. Eleven execution substrates. Complete conformance.**
 
-> This repo demonstrates what happens when you evolve an ontology and different substrates update at different speeds.
+> Swap between completely different domains — workflows, media catalogs, philosophical arguments — and watch Python, Go, SQL, Excel, OWL, and English all regenerate in sync.
 
 > **[View Full Orchestration Report](orchestration/orchestration-report.html)** - See how execution substrates compute equivalent answers from the same rulebook.
 
@@ -10,7 +10,23 @@
 
 ## TL;DR
 
-Write your business rules once in a simple JSON format. ERB automatically generates working code in Python, Go, SQL, Excel, and more. All versions compute identical results — proven by automated conformance tests. When you change a rule, every language updates together.
+Write your business rules once in a declarative JSON format. ERB generates working code in Python, Go, SQL, Excel, and more. All versions compute identical results — proven by automated conformance tests. **Switch to a different ontology, and everything regenerates.** This repo includes 5 ready-to-run bases demonstrating the pattern at different complexity levels.
+
+---
+
+## The Base Progression
+
+Start simple, scale to sophistication. Each base demonstrates different ERB capabilities:
+
+| Base | Complexity | Tables | Key Features | Documentation |
+|------|------------|--------|--------------|---------------|
+| **[CustomerDemo](docs/bases/customer-fullname/)** | Minimal | 1 | String concatenation | The "Hello World" |
+| **[Jessica BASIC](docs/bases/jessica-basic/)** | Moderate | 9 | Relationships, aggregations, role-agent separation | Real workflow modeling |
+| **[Jessica ADVANCED](docs/bases/jessica-advanced/)** | Advanced | 9 | Cross-entity lookups, conditional logic (IF) | Business rule complexity |
+| **[StarTrek](docs/bases/star-trek/)** | Moderate | 7 | Hierarchical rollups, polymorphic FKs | Media catalog patterns |
+| **[is-everything-a-language](docs/bases/is-everything-a-language/)** | Philosophical | 3 | 8-predicate AND logic, meta-ontology | Formal argument modeling |
+
+**To switch bases:** Press **B** in the orchestrator menu, or edit `orchestration/bases.json`.
 
 ---
 
@@ -66,16 +82,17 @@ Pick option **A** to run all substrates. Watch them derive consistent answers fr
 
 ### Swappable Bases: One Repo, Many Ontologies
 
-**This is one of the most powerful features of the ERB platform.**
+**This is the central feature of the ERB platform.**
 
-The `orchestration/bases.json` file contains a list of Airtable bases that can be instantly swapped:
+The `orchestration/bases.json` file contains a catalog of Airtable bases that can be instantly swapped:
 
 ```json
 [
-  {"id": "applThn0rikpCR9C3", "name": "BASIC: Jessic Talisman's Ontology"},
-  {"id": "appwN9EAp8IeIxM23", "name": "ADVANCED: Jessic Talisman's Ontology"},
-  {"id": "appC8XTj95lubn6hz", "name": "is-everything-a-language"},
-  {"id": "appWrXPvXbkgQGOxt", "name": "CustomerDemo"}
+  {"id": "appWrXPvXbkgQGOxt", "name": "CustomerDemo", "complexity": "minimal", "default": true},
+  {"id": "applThn0rikpCR9C3", "name": "BASIC: Jessica Talisman's Ontology", "complexity": "moderate"},
+  {"id": "appwN9EAp8IeIxM23", "name": "ADVANCED: Jessica Talisman's Ontology", "complexity": "advanced"},
+  {"id": "appC8XTj95lubn6hz", "name": "is-everything-a-language", "complexity": "philosophical"},
+  {"id": "appqwWQxIWFtyDsiL", "name": "DEMO: StarTrek TV Shows", "complexity": "moderate"}
 ]
 ```
 
@@ -86,12 +103,12 @@ Press **B** in the orchestrator to switch bases. When you select a new base:
 3. Conformance tests run against the new ontology
 
 **Why this matters:**
-- **Same infrastructure, different domains** — The execution substrates, conformance testing, and DAG tracing work identically regardless of what ontology you load
+- **Same infrastructure, different domains** — Conformance testing and DAG tracing work identically regardless of ontology
 - **A/B testing ontologies** — Compare BASIC vs ADVANCED versions of the same conceptual model
 - **Demo flexibility** — Show the platform with customer-specific data without modifying code
-- **Prove domain-agnosticism** — The same repo runs `is-everything-a-language` (philosophical), `CustomerDemo` (business), and `Workflows` (operational) ontologies
+- **Prove domain-agnosticism** — The same repo runs philosophical meta-ontologies, media catalogs, and enterprise workflows
 
-The bases list is **not** legacy cruft — it's a feature catalog of available ontologies.
+Each base has its own [documentation](docs/bases/) explaining what it demonstrates.
 
 ---
 
@@ -247,26 +264,28 @@ You can trace any derived value back to its inputs mechanically.
 
 ---
 
-## 6. The Seed Ontology
+## 6. Available Ontologies
 
-This repo includes a **Workflows** ontology as a concrete example:
+This repo includes **5 ready-to-run bases** demonstrating the ERB pattern across different domains:
 
-| Entity | Raw Fields | Calculated Fields |
-|--------|------------|-------------------|
-| **Workflows** | DisplayName, Title, Description, Identifier | Name (slug), Modified |
-| **Roles** | DisplayName, Description, Identifier | Name (slug), Modified |
+### CustomerDemo (Start Here)
+The minimal example: 1 table, 1 formula, 3 rows. See [docs/bases/customer-fullname/](docs/bases/customer-fullname/).
 
-### Example Formula
-
-```json
-{
-  "name": "Name",
-  "type": "calculated",
-  "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")"
-}
+```
+FullName = LastName & ", " & FirstName
+→ "Doe, Jane"
 ```
 
-This formula is compiled to Postgres, Python, Go, and any other substrate - not written by hand in each.
+### Jessica Talisman's Workflow Ontology
+A 9-table workflow model with role-agent separation, delegation chains, and approval gates. Available in two versions:
+- **[BASIC](docs/bases/jessica-basic/)** — Relationships, aggregations, boolean derivations
+- **[ADVANCED](docs/bases/jessica-advanced/)** — Adds cross-entity lookups and conditional logic
+
+### StarTrek TV Shows
+Hierarchical media catalog (Series → Seasons → Episodes) with polymorphic ratings. See [docs/bases/star-trek/](docs/bases/star-trek/).
+
+### is-everything-a-language
+A philosophical meta-ontology classifying 33 "language candidates" (English, Python, rocks, coffee mugs) using formal predicates. See [docs/bases/is-everything-a-language/](docs/bases/is-everything-a-language/).
 
 ### Using Your Own Data
 

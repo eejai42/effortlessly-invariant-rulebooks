@@ -1,0 +1,96 @@
+{
+  "$schema": "https://example.com/cmcc-schema/v1",
+  "Name": "DEMO: Customer FullName",
+  "Description": "Rulebook generated from Airtable base \u0027DEMO: Customer FullName\u0027.",
+  "Customers": {
+    "Description": "Table: Customers",
+    "schema": [
+      {
+        "name": "CustomerId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Customer",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Identifier for the customers."
+      },
+      {
+        "name": "EmailAddress",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Thec ustomers email address"
+      },
+      {
+        "name": "FirstName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "First Name of the customer - used to make the full name"
+      },
+      {
+        "name": "LastName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Last Name of the customer - used to make the full name"
+      },
+      {
+        "name": "FullName",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "Description": "Full name is computed from the first and last name of the customer",
+        "formula": "={{LastName}} \u0026 \u0022, \u0022 \u0026 {{FirstName}}"
+      }
+    ],
+    "data": [
+      {
+        "CustomerId": "cust0001",
+        "Customer": "CUST0001",
+        "EmailAddress": "jane.smith@email.com",
+        "FirstName": "Jane",
+        "LastName": "Smith",
+        "FullName": "Smith, Jane"
+      },
+      {
+        "CustomerId": "cust0002",
+        "Customer": "CUST0002",
+        "EmailAddress": "john.doe@email.com",
+        "FirstName": "John",
+        "LastName": "Doe",
+        "FullName": "Doe, John"
+      },
+      {
+        "CustomerId": "cust0003",
+        "Customer": "CUST0003",
+        "EmailAddress": "emily.jones@email.com",
+        "FirstName": "Emily",
+        "LastName": "Jones",
+        "FullName": "Jones, Emily"
+      }
+    ]
+  },
+  "_meta": {
+    "_CMCC_Summary": "Airtable export with schema-first type mapping: Schemas, Data, Relationships (FK links), Lookups (INDEX/MATCH), Aggregations (SUMIFS/COUNTIFS/Rollups), and Calculated fields (formulas) in Excel dialect. Field types are determined from Airtable\u0027s schema metadata FIRST (no coercion), with intelligent fallback to formula/data analysis only when schema is unavailable.",
+    "_conversion_metadata": {
+      "source_base_id": "appWrXPvXbkgQGOxt",
+      "table_count": 1,
+      "tool_version": "2.0.0",
+      "field_type_mapping": "checkbox\u2192boolean, number\u2192number/integer, multipleRecordLinks\u2192relationship, multipleLookupValues\u2192lookup, rollup\u2192aggregation, count\u2192aggregation, formula\u2192calculated",
+      "export_mode": "schema_first_type_mapping",
+      "type_inference": {
+        "enabled": true,
+        "priority": "airtable_metadata (NO COERCION) \u2192 formula_analysis \u2192 reference_resolution \u2192 data_analysis (fallback only)",
+        "airtable_type_mapping": "checkbox\u2192boolean, singleLineText\u2192string, multilineText\u2192string, number\u2192number/integer, datetime\u2192datetime, singleSelect\u2192string, email\u2192string, url\u2192string, phoneNumber\u2192string",
+        "data_coercion_hierarchy": "Only used as fallback when Airtable schema unavailable: datetime \u2192 number \u2192 integer \u2192 boolean \u2192 base64 \u2192 json \u2192 string",
+        "nullable_support": true,
+        "error_value_handling": "#NUM!, #ERROR!, #N/A, #REF!, #DIV/0!, #VALUE!, #NAME? are treated as NULL"
+      }
+    }
+  }
+}

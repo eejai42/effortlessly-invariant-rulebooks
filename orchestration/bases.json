@@ -1,23 +1,39 @@
 [
   {
     "id": "appWrXPvXbkgQGOxt",
-    "name": "CustomerDemo"
-  },
-  {
-    "id": "appC8XTj95lubn6hz",
-    "name": "is-everything-a-language"
+    "name": "CustomerDemo",
+    "description": "Simplest possible example: 1 table, 1 calculated field (FullName = LastName + FirstName), 3 rows",
+    "docs": "docs/bases/customer-fullname",
+    "complexity": "minimal",
+    "default": true
   },
   {
     "id": "applThn0rikpCR9C3",
-    "name": "BASIC: Jessic Talisman's Ontology Seri Parts 1-3"
+    "name": "BASIC: Jessica Talisman's Ontology",
+    "description": "9-table workflow model: Workflows, Steps, Roles, Agents with approval gates and delegation chains",
+    "docs": "docs/bases/jessica-basic",
+    "complexity": "moderate"
   },
   {
     "id": "appwN9EAp8IeIxM23",
-    "name": "ADVANCED: Jessic Talisman's Ontology Seri Parts 1-3"
+    "name": "ADVANCED: Jessica Talisman's Ontology",
+    "description": "Extends BASIC with additional business rules, inferences, and cross-entity calculations",
+    "docs": "docs/bases/jessica-advanced",
+    "complexity": "advanced"
+  },
+  {
+    "id": "appC8XTj95lubn6hz",
+    "name": "is-everything-a-language",
+    "description": "Meta-ontology exploring the thesis that all representations are languages with syntax, semantics, and pragmatics",
+    "docs": "docs/bases/is-everything-a-language",
+    "complexity": "philosophical"
   },
   {
     "id": "appqwWQxIWFtyDsiL",
-    "name": "DEMO: StarTrek TV Shows"
+    "name": "DEMO: StarTrek TV Shows",
+    "description": "Fun domain example: TV series, seasons, episodes, characters demonstrating the pattern on familiar data",
+    "docs": "docs/bases/star-trek",
+    "complexity": "moderate"
   }
 ]
 
