@@ -499,16 +499,10 @@ action_view_results() {
     echo -e "${BOLD}${MAGENTA}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 
-    # Regenerate individual substrate reports using per-substrate scripts
-    SUBSTRATES=$(ls -d "$SUBSTRATES_DIR"/*/ 2>/dev/null | xargs -n1 basename)
-    for substrate in $SUBSTRATES; do
-        substrate_dir="$SUBSTRATES_DIR/$substrate"
-        custom_script="$substrate_dir/create-substrate-report.sh"
-        if [ -f "$custom_script" ]; then
-            # Use the substrate's custom report generator
-            (cd "$substrate_dir" && bash create-substrate-report.sh 2>/dev/null) || true
-        fi
-    done
+    # Note: We don't regenerate individual substrate reports here because:
+    # 1. They were already generated during the test run
+    # 2. Regenerating would overwrite meaningful logs with stale data (e.g., for skipped tests)
+    # The orchestration report reads from the existing substrate-report.html files
 
     # Generate main orchestration report
     python3 "$SCRIPT_DIR/generate-report.py"
@@ -926,10 +920,11 @@ test_orch.generate_substrate_report(substrate, grades, rulebook)
 test_orch.print_substrate_test_summary(substrate, grades, rulebook)
 
 # Generate per-substrate HTML report using the substrate's custom script
+# SKIP if preserve_timing=True (test was skipped) - keeps previous meaningful log intact
 import subprocess
 substrate_dir = os.path.join(test_orch.SUBSTRATES_DIR, substrate)
 custom_script = os.path.join(substrate_dir, 'create-substrate-report.sh')
-if os.path.exists(custom_script):
+if os.path.exists(custom_script) and not preserve_timing:
     subprocess.run(['bash', 'create-substrate-report.sh'], cwd=substrate_dir, capture_output=True)
 
 # Save grades to temp file for final summary
@@ -1042,16 +1037,34 @@ else:
 echo ""
 
 # -----------------------------------------------------------------------------
-# Step 4: Generate HTML Report
+# Step 4: Cleanup timing-only changes before generating report
+# -----------------------------------------------------------------------------
+# Revert files where ONLY duration_seconds changed (no real test result changes)
+# This prevents noise in git history from timing variations
+python3 -c "
+import sys
+sys.path.insert(0, '$SCRIPT_DIR')
+from importlib.util import spec_from_loader, module_from_spec
+from importlib.machinery import SourceFileLoader
+
+spec = spec_from_loader('test_orchestrator', SourceFileLoader('test_orchestrator', '$SCRIPT_DIR/test-orchestrator.py'))
+test_orch = module_from_spec(spec)
+spec.loader.exec_module(test_orch)
+
+test_orch.cleanup_unchanged_files()
+"
+
+# -----------------------------------------------------------------------------
+# Step 5: Generate HTML Report
 # -----------------------------------------------------------------------------
 echo -e "${BOLD}${BLUE}┌──────────────────────────────────────────────────────────────┐${NC}"
-echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 4:${NC} ${YELLOW}Generating HTML report...${NC}                            ${BOLD}${BLUE}│${NC}"
+echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 5:${NC} ${YELLOW}Generating HTML report...${NC}                            ${BOLD}${BLUE}│${NC}"
 echo -e "${BOLD}${BLUE}└──────────────────────────────────────────────────────────────┘${NC}"
 python3 "$SCRIPT_DIR/generate-report.py"
 echo ""
 
 # -----------------------------------------------------------------------------
-# Step 5: Show Failed Substrates Summary (if any)
+# Step 6: Show Failed Substrates Summary (if any)
 # -----------------------------------------------------------------------------
 # Trim leading space from FAILED_SUBSTRATES
 FAILED_SUBSTRATES=$(echo "$FAILED_SUBSTRATES" | xargs)

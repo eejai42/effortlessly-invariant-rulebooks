@@ -4,148 +4,26 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Shape with rules for ApprovalGates ===
-erb:ApprovalGatesShape a sh:NodeShape ;
-    sh:targetClass erb:ApprovalGates ;
+# === Shape with rules for Customers ===
+erb:CustomersShape a sh:NodeShape ;
+    sh:targetClass erb:Customers ;
     sh:rule [
         a sh:SPARQLRule ;
-        rdfs:label "rule_ApprovalGates_Name" ;
+        rdfs:label "rule_Customers_FullName" ;
         sh:prefixes erb: ;
         sh:construct """
             PREFIX erb: <http://example.org/erb#>
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
             CONSTRUCT {
-                $this erb:name ?_result .
+                $this erb:fullName ?_result .
             }
             WHERE {
-    $this a erb:ApprovalGates .
-    OPTIONAL { $this erb:displayName ?display_name . }
-                BIND(REPLACE(LCASE(?display_name), " ", "-") AS ?_result)
+    $this a erb:Customers .
+    OPTIONAL { $this erb:firstName ?first_name . }
+    OPTIONAL { $this erb:lastName ?last_name . }
+                BIND(CONCAT(?last_name, ", ", ?first_name) AS ?_result)
             }
         """ ;
     ] .
 
-# === Shape with rules for Departments ===
-erb:DepartmentsShape a sh:NodeShape ;
-    sh:targetClass erb:Departments ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_Departments_Name" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:name ?_result .
-            }
-            WHERE {
-    $this a erb:Departments .
-    OPTIONAL { $this erb:displayName ?display_name . }
-                BIND(REPLACE(LCASE(?display_name), " ", "-") AS ?_result)
-            }
-        """ ;
-    ] .
-
-# === Shape with rules for PrecedesSteps ===
-erb:PrecedesStepsShape a sh:NodeShape ;
-    sh:targetClass erb:PrecedesSteps ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_PrecedesSteps_DisplayName" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:displayName ?_result .
-            }
-            WHERE {
-    $this a erb:PrecedesSteps .
-    OPTIONAL { $this erb:stepNumber ?step_number . }
-                BIND(CONCAT("Step-", ?step_number) AS ?_result)
-            }
-        """ ;
-    ] .
-
-# === Shape with rules for Roles ===
-erb:RolesShape a sh:NodeShape ;
-    sh:targetClass erb:Roles ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_Roles_Name" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:name ?_result .
-            }
-            WHERE {
-    $this a erb:Roles .
-    OPTIONAL { $this erb:displayName ?display_name . }
-                BIND(LCASE(?display_name) AS ?_result)
-            }
-        """ ;
-    ] .
-
-# === Shape with rules for WorkflowSteps ===
-erb:WorkflowStepsShape a sh:NodeShape ;
-    sh:targetClass erb:WorkflowSteps ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_WorkflowSteps_Name" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:name ?_result .
-            }
-            WHERE {
-    $this a erb:WorkflowSteps .
-    OPTIONAL { $this erb:displayName ?display_name . }
-                BIND(REPLACE(LCASE(?display_name), " ", "-") AS ?_result)
-            }
-        """ ;
-    ] .
-
-# === Shape with rules for Workflows ===
-erb:WorkflowsShape a sh:NodeShape ;
-    sh:targetClass erb:Workflows ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_Workflows_Name" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:name ?_result .
-            }
-            WHERE {
-    $this a erb:Workflows .
-    OPTIONAL { $this erb:displayName ?display_name . }
-                BIND(REPLACE(LCASE(?display_name), " ", "-") AS ?_result)
-            }
-        """ ;
-    ] ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_Workflows_HasMoreThan1Step" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:hasMoreThan1Step ?_result .
-            }
-            WHERE {
-    $this a erb:Workflows .
-    OPTIONAL { $this erb:countOfNonProposedSteps ?count_of_non_proposed_steps . }
-                BIND((?count_of_non_proposed_steps > 1) AS ?_result)
-            }
-        """ ;
-    ] .
-# Rule for CountOfNonProposedSteps - parse error: Unexpected character '!' at position 22
-
-# Generated 7 SHACL rules
+# Generated 1 SHACL rules

@@ -196,6 +196,7 @@ def generate_calc_function(entity_name: str, field: Dict) -> str:
     """
     name = field['name']
     formula = field.get('formula', '')
+    description = field.get('Description', '')
     entity_snake = to_snake_case(entity_name)
     field_snake = to_snake_case(name)
 
@@ -226,13 +227,23 @@ def calc_{entity_snake}_{field_snake}():
     sig = generate_function_signature(entity_name, name, deps)
     lines.append(sig)
 
-    # Docstring preserves the original formula for documentation
+    # Docstring preserves the original formula and description for documentation
     # (escape special characters that would break the docstring)
     formula_escaped = formula.replace('\\', '\\\\').replace('"""', "'''")
     # Prevent """" at end of docstring if formula ends with a quote
     if formula_escaped.endswith('"'):
         formula_escaped = formula_escaped + ' '
-    lines.append(f'    """Formula: {formula_escaped}"""')
+
+    # Build multi-line docstring if we have a description
+    if description:
+        desc_escaped = description.replace('\\', '\\\\').replace('"""', "'''")
+        lines.append(f'    """')
+        lines.append(f'    {desc_escaped}')
+        lines.append(f'    ')
+        lines.append(f'    Formula: {formula_escaped}')
+        lines.append(f'    """')
+    else:
+        lines.append(f'    """Formula: {formula_escaped}"""')
 
     # The actual computation - just returns the compiled Python expression
     lines.append(f'    return {python_expr}')
@@ -244,7 +255,8 @@ def generate_entity_compute_function(
     entity_name: str,
     calculated_fields: List[Dict],
     dag_levels: List[List[Dict]],
-    string_fields: List[str]
+    string_fields: List[str],
+    entity_description: str = ''
 ) -> str:
     """
     Generate a compute function that calculates ALL fields for a specific entity.
@@ -273,6 +285,7 @@ def generate_entity_compute_function(
         calculated_fields: All calculated field definitions for this entity
         dag_levels: Fields organized by dependency level (from build_dag_levels)
         string_fields: List of string-type calculated fields (for post-processing)
+        entity_description: Optional description of the entity from the rulebook
 
     Returns:
         Complete Python function definition as a string
@@ -281,7 +294,15 @@ def generate_entity_compute_function(
 
     lines = []
     lines.append(f'def compute_{entity_snake}_fields(record: dict) -> dict:')
-    lines.append(f'    """Compute all calculated fields for {entity_name}."""')
+    if entity_description:
+        desc_escaped = entity_description.replace('\\', '\\\\').replace('"""', "'''")
+        lines.append(f'    """')
+        lines.append(f'    Compute all calculated fields for {entity_name}.')
+        lines.append(f'    ')
+        lines.append(f'    {desc_escaped}')
+        lines.append(f'    """')
+    else:
+        lines.append(f'    """Compute all calculated fields for {entity_name}."""')
 
     # Start with a copy of the input record to avoid mutating the original
     lines.append('    result = dict(record)')
@@ -472,6 +493,10 @@ def generate_erb_calc(rulebook: Dict) -> str:
 
         entities_with_calcs.append(entity_name)
 
+        # Get entity description from rulebook
+        entity_data = rulebook.get(entity_name, {})
+        entity_description = entity_data.get('Description', '') if isinstance(entity_data, dict) else ''
+
         # Get raw fields for DAG building (these are the "level 0" inputs)
         raw_fields = get_raw_fields(schema)
         raw_field_names = {f['name'] for f in raw_fields}
@@ -494,6 +519,8 @@ def generate_erb_calc(rulebook: Dict) -> str:
         lines.append('')
         lines.append('# ' + '=' * 77)
         lines.append(f'# {entity_name.upper()} CALCULATIONS')
+        if entity_description:
+            lines.append(f'# {entity_description}')
         lines.append('# ' + '=' * 77)
 
         # ---------------------------------------------------------------------
@@ -513,7 +540,7 @@ def generate_erb_calc(rulebook: Dict) -> str:
         lines.append('')
         lines.append('')
         lines.append(generate_entity_compute_function(
-            entity_name, calculated_fields, dag_levels, string_fields
+            entity_name, calculated_fields, dag_levels, string_fields, entity_description
         ))
 
     # -------------------------------------------------------------------------

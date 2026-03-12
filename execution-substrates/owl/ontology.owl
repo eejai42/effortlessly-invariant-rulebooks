@@ -8,356 +8,43 @@ erb: a owl:Ontology ;
     rdfs:label "ERB Ontology" ;
     rdfs:comment "Generated from effortless-rulebook.json" .
 
-# === Class: AIAgents ===
-erb:AIAgents a owl:Class ;
-    rdfs:label "AIAgents" .
+# === Class: Customers ===
+erb:Customers a owl:Class ;
+    rdfs:label "Customers" ;
+    rdfs:comment "Table: Customers" .
 
-erb:aIAgentId a owl:DatatypeProperty ;
-    rdfs:domain erb:AIAgents ;
+erb:customerId a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "AIAgentId" .
+    rdfs:label "CustomerId" .
 
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:AIAgents ;
+erb:customer a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Name" .
+    rdfs:label "Customer" ;
+    rdfs:comment "Identifier for the customers." .
 
-erb:title a owl:DatatypeProperty ;
-    rdfs:domain erb:AIAgents ;
+erb:emailAddress a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Title" .
+    rdfs:label "EmailAddress" ;
+    rdfs:comment "Thec ustomers email address" .
 
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:AIAgents ;
+erb:firstName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
+    rdfs:label "FirstName" ;
+    rdfs:comment "First Name of the customer - used to make the full name" .
 
-erb:modelVersion a owl:DatatypeProperty ;
-    rdfs:domain erb:AIAgents ;
+erb:lastName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "ModelVersion" .
+    rdfs:label "LastName" ;
+    rdfs:comment "Last Name of the customer - used to make the full name" .
 
-erb:roles a owl:DatatypeProperty ;
-    rdfs:domain erb:AIAgents ;
+erb:fullName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Roles" .
-
-# === Class: ApprovalGates ===
-erb:ApprovalGates a owl:Class ;
-    rdfs:label "ApprovalGates" .
-
-erb:approvalGateId a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
-    rdfs:range xsd:string ;
-    rdfs:label "ApprovalGateId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-    # calculated: calculated
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowSteps" .
-
-erb:escalationThresholdHours a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
-    rdfs:range xsd:integer ;
-    rdfs:label "EscalationThresholdHours" .
-
-# === Class: AutomatedPipelines ===
-erb:AutomatedPipelines a owl:Class ;
-    rdfs:label "AutomatedPipelines" .
-
-erb:automatedPipelineId a owl:DatatypeProperty ;
-    rdfs:domain erb:AutomatedPipelines ;
-    rdfs:range xsd:string ;
-    rdfs:label "AutomatedPipelineId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:AutomatedPipelines ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-
-erb:description a owl:DatatypeProperty ;
-    rdfs:domain erb:AutomatedPipelines ;
-    rdfs:range xsd:string ;
-    rdfs:label "Description" .
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:AutomatedPipelines ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:roles a owl:DatatypeProperty ;
-    rdfs:domain erb:AutomatedPipelines ;
-    rdfs:range xsd:string ;
-    rdfs:label "Roles" .
-
-# === Class: Departments ===
-erb:Departments a owl:Class ;
-    rdfs:label "Departments" .
-
-erb:departmentId a owl:DatatypeProperty ;
-    rdfs:domain erb:Departments ;
-    rdfs:range xsd:string ;
-    rdfs:label "DepartmentId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:Departments ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-    # calculated: calculated
-
-erb:title a owl:DatatypeProperty ;
-    rdfs:domain erb:Departments ;
-    rdfs:range xsd:string ;
-    rdfs:label "Title" .
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:Departments ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:roles a owl:DatatypeProperty ;
-    rdfs:domain erb:Departments ;
-    rdfs:range xsd:string ;
-    rdfs:label "Roles" .
-
-# === Class: HumanAgents ===
-erb:HumanAgents a owl:Class ;
-    rdfs:label "HumanAgents" .
-
-erb:humanAgentId a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:string ;
-    rdfs:label "HumanAgentId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:mbox a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:string ;
-    rdfs:label "Mbox" .
-
-erb:roles a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:string ;
-    rdfs:label "Roles" .
-
-# === Class: PrecedesSteps ===
-erb:PrecedesSteps a owl:Class ;
-    rdfs:label "PrecedesSteps" .
-
-erb:precedesStepId a owl:DatatypeProperty ;
-    rdfs:domain erb:PrecedesSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "PrecedesStepId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:PrecedesSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-
-erb:workflowStep a owl:DatatypeProperty ;
-    rdfs:domain erb:PrecedesSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowStep" .
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:PrecedesSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-    # calculated: calculated
-
-erb:stepNumber a owl:DatatypeProperty ;
-    rdfs:domain erb:PrecedesSteps ;
-    rdfs:range xsd:integer ;
-    rdfs:label "StepNumber" .
-
-# === Class: Roles ===
-erb:Roles a owl:Class ;
-    rdfs:label "Roles" .
-
-erb:roleId a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "RoleId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-    # calculated: calculated
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:label a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "Label" .
-
-erb:comment a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "Comment" .
-
-erb:filledByHumanAgent a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FilledByHumanAgent" .
-
-erb:filledByAIAgent a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FilledByAIAgent" .
-
-erb:filledByAutomatedPipeline a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FilledByAutomatedPipeline" .
-
-erb:ownedBy a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "OwnedBy" .
-
-erb:delegatesTo a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "DelegatesTo" .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowSteps" .
-
-erb:fromDelegatesTo a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FromDelegatesTo" .
-
-# === Class: WorkflowSteps ===
-erb:WorkflowSteps a owl:Class ;
-    rdfs:label "WorkflowSteps" .
-
-erb:workflowStepId a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowStepId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-    # calculated: calculated
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:workflow a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "Workflow" .
-
-erb:sequencePosition a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:integer ;
-    rdfs:label "SequencePosition" .
-
-erb:assignedRole a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "AssignedRole" .
-
-erb:requiresHumanApproval a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "RequiresHumanApproval" .
-
-erb:approvalGate a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "ApprovalGate" .
-
-erb:precededBySteps a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "PrecededBySteps" .
-
-# === Class: Workflows ===
-erb:Workflows a owl:Class ;
-    rdfs:label "Workflows" .
-
-erb:workflowId a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowId" .
-
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Name" .
-    # calculated: calculated
-
-erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "DisplayName" .
-
-erb:title a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Title" .
-
-erb:description a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Description" .
-
-erb:identifier a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Identifier" .
-
-erb:modified a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Modified" .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowSteps" .
-
-erb:countOfNonProposedSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:integer ;
-    rdfs:label "CountOfNonProposedSteps" .
-    # calculated: aggregation
-
-erb:hasMoreThan1Step a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "HasMoreThan1Step" .
+    rdfs:label "FullName" ;
+    rdfs:comment "Full name is computed from the first and last name of the customer" .
     # calculated: calculated

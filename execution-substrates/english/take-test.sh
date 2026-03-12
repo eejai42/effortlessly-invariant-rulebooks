@@ -136,19 +136,17 @@ else
         echo "english: Previous answers restored"
     fi
 
-    # Create a minimal log for the report
-    {
-        echo "=== English (LLM) Substrate - Using Previous Answers ==="
-        echo ""
-        echo "Test skipped by user. Grading previous answers against current answer key."
-        echo ""
-    } > "$LOG_FILE"
-
-    echo "english: grading with previous answers"
+    # Keep existing log file and substrate report from the last real run
+    # Don't overwrite with "skipped" message - preserve the meaningful LLM output
+    echo "english: grading with previous answers (keeping previous log and report)"
 
     # Signal to orchestrator: grade but preserve timing from last run
     echo "SUBSTRATE_SKIPPED_BUT_GRADE"
+
+    # Exit early - don't regenerate substrate report when skipping
+    # This preserves the previous run's log in the report
+    exit 0
 fi
 
-# Generate substrate report
+# Generate substrate report (only when test was actually run)
 python3 "$PROJECT_ROOT/orchestration/create-substrate-report.py" english --log "$LOG_FILE"

@@ -216,8 +216,12 @@ def generate_struct_field(field: Dict) -> str:
     name = field['name']
     datatype = field.get('datatype', 'string')
     nullable = field.get('nullable', True)
+    description = field.get('Description', '')
     go_type = datatype_to_go(datatype, nullable)
     json_tag = to_snake_case(name)
+    # Add inline comment if description is available
+    if description:
+        return f'\t{name} {go_type} `json:"{json_tag}"` // {description}'
     return f'\t{name} {go_type} `json:"{json_tag}"`'
 
 
@@ -282,6 +286,7 @@ def generate_calc_function(field: Dict, struct_name: str, struct_var: str = 'tc'
     lines = []
     name = field['name']
     datatype = field.get('datatype', 'string')
+    description = field.get('Description', '')
 
     # Determine return type
     if datatype == 'boolean':
@@ -291,8 +296,11 @@ def generate_calc_function(field: Dict, struct_name: str, struct_var: str = 'tc'
     else:
         return_type = 'string'
 
-    # Generate the function signature
+    # Generate the function signature with description if available
     lines.append(f'// Calc{name} computes the {name} calculated field')
+    if description:
+        # Wrap long descriptions to multiple comment lines
+        lines.append(f'// {description}')
     lines.append(f'// Formula: {field.get("formula", "").replace(chr(10), " ").strip()}')
     lines.append(f'func ({struct_var} *{struct_name}) Calc{name}() {return_type} {{')
 
@@ -363,7 +371,7 @@ def generate_compute_all_function(
     return lines
 
 
-def generate_struct_for_table(table_name: str, schema: List[Dict]) -> List[str]:
+def generate_struct_for_table(table_name: str, schema: List[Dict], entity_description: str = '') -> List[str]:
     """Generate the struct definition for a table."""
     lines = []
     struct_name = table_name_to_struct_name(table_name)
@@ -376,6 +384,8 @@ def generate_struct_for_table(table_name: str, schema: List[Dict]) -> List[str]:
     all_fields = [f for f in input_fields if f['name'] not in calculated_names] + calculated_fields
 
     lines.append(f'// {struct_name} represents a row in the {table_name} table')
+    if entity_description:
+        lines.append(f'// {entity_description}')
     lines.append(f'type {struct_name} struct {{')
     for field in all_fields:
         lines.append(generate_struct_field(field))
@@ -395,6 +405,7 @@ def generate_table_sdk(table_name: str, table_data: Dict) -> List[str]:
     lines = []
     schema = table_data.get('schema', [])
     struct_name = table_name_to_struct_name(table_name)
+    entity_description = table_data.get('Description', '')
 
     input_fields = get_input_fields(schema)
     calculated_fields = get_calculated_fields(schema)
@@ -406,11 +417,13 @@ def generate_table_sdk(table_name: str, table_data: Dict) -> List[str]:
     # Section header
     lines.append(f'// =============================================================================')
     lines.append(f'// {table_name.upper()} TABLE')
+    if entity_description:
+        lines.append(f'// {entity_description}')
     lines.append(f'// =============================================================================')
     lines.append('')
 
     # Struct definition
-    lines.extend(generate_struct_for_table(table_name, schema))
+    lines.extend(generate_struct_for_table(table_name, schema, entity_description))
     lines.append('')
 
     if calculated_fields:

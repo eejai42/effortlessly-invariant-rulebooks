@@ -309,55 +309,25 @@ Lsubst_done:
     .data
     .globl str_0
 str_0:
-    .asciz " "
+    .asciz ", "
     .globl str_0_len
 str_0_len:
-    .quad 1
-    .globl str_1
-str_1:
-    .asciz "-"
-    .globl str_1_len
-str_1_len:
-    .quad 1
-    .globl str_2
-str_2:
-    .asciz "Step-"
-    .globl str_2_len
-str_2_len:
-    .quad 5
+    .quad 2
 
     ; Static result buffers for string concatenation
     .bss
-    .globl _result_buf_eval_approval_gates_name
+    .globl _result_buf_eval_customers_full_name
     .p2align 3
-_result_buf_eval_approval_gates_name:
-    .space 1024
-    .globl _result_buf_eval_departments_name
-    .p2align 3
-_result_buf_eval_departments_name:
-    .space 1024
-    .globl _result_buf_eval_precedes_steps_display_name
-    .p2align 3
-_result_buf_eval_precedes_steps_display_name:
-    .space 1024
-    .globl _result_buf_eval_roles_name
-    .p2align 3
-_result_buf_eval_roles_name:
-    .space 1024
-    .globl _result_buf_eval_workflow_steps_name
-    .p2align 3
-_result_buf_eval_workflow_steps_name:
-    .space 1024
-    .globl _result_buf_eval_workflows_name
-    .p2align 3
-_result_buf_eval_workflows_name:
+_result_buf_eval_customers_full_name:
     .space 1024
 
     .text
 
-    .globl _eval_workflows_name
+; Full name is computed from the first and last name of the customer
+; Formula: ={{LastName}} & ", " & {{FirstName}}
+    .globl _eval_customers_full_name
     .p2align 2
-_eval_workflows_name:
+_eval_customers_full_name:
     stp x29, x30, [sp, #-16]!
     mov x29, sp
     stp x19, x20, [sp, #-16]!
@@ -365,267 +335,35 @@ _eval_workflows_name:
     stp x23, x24, [sp, #-16]!
     sub sp, sp, #256
     mov x19, x0
-    ldr x0, [x19, #32]
-    ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_workflows_name@PAGE
-    add x2, x2, _result_buf_eval_workflows_name@PAGEOFF
-    mov x3, x1
-    mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    str x0, [sp, #16]
-    str x1, [sp, #24]
-    adrp x0, str_0@PAGE
-    add x0, x0, str_0@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #32]
-    str x1, [sp, #40]
-    adrp x0, str_1@PAGE
-    add x0, x0, str_1@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #48]
-    str x1, [sp, #56]
-    adrp x20, _result_buf_eval_workflows_name@PAGE
-    add x20, x20, _result_buf_eval_workflows_name@PAGEOFF
-    ldr x1, [sp, #16]
-    ldr x2, [sp, #24]
-    ldr x3, [sp, #32]
-    ldr x4, [sp, #40]
-    ldr x5, [sp, #48]
-    ldr x6, [sp, #56]
-    mov x0, x20
-    bl _string_substitute
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-    .globl _eval_workflows_has_more_than1_step
-    .p2align 2
-_eval_workflows_has_more_than1_step:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #128]
-    mov x20, x0
-    mov x0, #1
-    cmp x20, x0
-    cset w0, gt
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-    .globl _eval_workflow_steps_name
-    .p2align 2
-_eval_workflow_steps_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #32]
-    ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_workflow_steps_name@PAGE
-    add x2, x2, _result_buf_eval_workflow_steps_name@PAGEOFF
-    mov x3, x1
-    mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    str x0, [sp, #16]
-    str x1, [sp, #24]
-    adrp x0, str_0@PAGE
-    add x0, x0, str_0@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #32]
-    str x1, [sp, #40]
-    adrp x0, str_1@PAGE
-    add x0, x0, str_1@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #48]
-    str x1, [sp, #56]
-    adrp x20, _result_buf_eval_workflow_steps_name@PAGE
-    add x20, x20, _result_buf_eval_workflow_steps_name@PAGEOFF
-    ldr x1, [sp, #16]
-    ldr x2, [sp, #24]
-    ldr x3, [sp, #32]
-    ldr x4, [sp, #40]
-    ldr x5, [sp, #48]
-    ldr x6, [sp, #56]
-    mov x0, x20
-    bl _string_substitute
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-    .globl _eval_approval_gates_name
-    .p2align 2
-_eval_approval_gates_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #32]
-    ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_approval_gates_name@PAGE
-    add x2, x2, _result_buf_eval_approval_gates_name@PAGEOFF
-    mov x3, x1
-    mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    str x0, [sp, #16]
-    str x1, [sp, #24]
-    adrp x0, str_0@PAGE
-    add x0, x0, str_0@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #32]
-    str x1, [sp, #40]
-    adrp x0, str_1@PAGE
-    add x0, x0, str_1@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #48]
-    str x1, [sp, #56]
-    adrp x20, _result_buf_eval_approval_gates_name@PAGE
-    add x20, x20, _result_buf_eval_approval_gates_name@PAGEOFF
-    ldr x1, [sp, #16]
-    ldr x2, [sp, #24]
-    ldr x3, [sp, #32]
-    ldr x4, [sp, #40]
-    ldr x5, [sp, #48]
-    ldr x6, [sp, #56]
-    mov x0, x20
-    bl _string_substitute
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-    .globl _eval_precedes_steps_display_name
-    .p2align 2
-_eval_precedes_steps_display_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    adrp x0, str_2@PAGE
-    add x0, x0, str_2@PAGEOFF
-    mov x1, #5
-    str x0, [sp, #16]
-    str x1, [sp, #24]
     ldr x0, [x19, #64]
-    mov x1, x0
-    sub x0, x29, #200
-    bl _int_to_string
+    ldr x1, [x19, #72]
+    str x0, [sp, #16]
+    str x1, [sp, #24]
+    adrp x0, str_0@PAGE
+    add x0, x0, str_0@PAGEOFF
+    mov x1, #2
     str x0, [sp, #32]
     str x1, [sp, #40]
+    ldr x0, [x19, #48]
+    ldr x1, [x19, #56]
+    str x0, [sp, #48]
+    str x1, [sp, #56]
     ldr x0, [sp, #16]
     ldr x1, [sp, #24]
-    adrp x22, _result_buf_eval_precedes_steps_display_name@PAGE
-    add x22, x22, _result_buf_eval_precedes_steps_display_name@PAGEOFF
+    adrp x22, _result_buf_eval_customers_full_name@PAGE
+    add x22, x22, _result_buf_eval_customers_full_name@PAGEOFF
     ldr x4, [sp, #40]
     ldr x3, [sp, #32]
     mov x2, x1
     mov x1, x0
     mov x0, x22
     bl _string_concat
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-    .globl _eval_roles_name
-    .p2align 2
-_eval_roles_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #32]
-    ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_roles_name@PAGE
-    add x2, x2, _result_buf_eval_roles_name@PAGEOFF
-    mov x3, x1
+    ldr x4, [sp, #56]
+    ldr x3, [sp, #48]
+    mov x2, x1
     mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-    .globl _eval_departments_name
-    .p2align 2
-_eval_departments_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #48]
-    ldr x1, [x19, #56]
-    adrp x2, _result_buf_eval_departments_name@PAGE
-    add x2, x2, _result_buf_eval_departments_name@PAGEOFF
-    mov x3, x1
-    mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    str x0, [sp, #16]
-    str x1, [sp, #24]
-    adrp x0, str_0@PAGE
-    add x0, x0, str_0@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #32]
-    str x1, [sp, #40]
-    adrp x0, str_1@PAGE
-    add x0, x0, str_1@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #48]
-    str x1, [sp, #56]
-    adrp x20, _result_buf_eval_departments_name@PAGE
-    add x20, x20, _result_buf_eval_departments_name@PAGEOFF
-    ldr x1, [sp, #16]
-    ldr x2, [sp, #24]
-    ldr x3, [sp, #32]
-    ldr x4, [sp, #40]
-    ldr x5, [sp, #48]
-    ldr x6, [sp, #56]
-    mov x0, x20
-    bl _string_substitute
+    mov x0, x22
+    bl _string_concat
     add sp, sp, #256
     ldp x23, x24, [sp], #16
     ldp x21, x22, [sp], #16

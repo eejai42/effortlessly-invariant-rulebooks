@@ -525,11 +525,18 @@ def generate_ontology_owl(tables: Dict[str, Any]) -> str:
         if not schema:
             continue
 
-        # Class definition
+        # Class definition with optional description
         class_uri = f'erb:{table_name}'
+        entity_description = table_def.get('Description', '')
         lines.append(f'# === Class: {table_name} ===')
-        lines.append(f'{class_uri} a owl:Class ;')
-        lines.append(f'    rdfs:label "{table_name}" .')
+        if entity_description:
+            desc_escaped = entity_description.replace('\\', '\\\\').replace('"', '\\"')
+            lines.append(f'{class_uri} a owl:Class ;')
+            lines.append(f'    rdfs:label "{table_name}" ;')
+            lines.append(f'    rdfs:comment "{desc_escaped}" .')
+        else:
+            lines.append(f'{class_uri} a owl:Class ;')
+            lines.append(f'    rdfs:label "{table_name}" .')
         lines.append('')
 
         # Property definitions
@@ -538,6 +545,7 @@ def generate_ontology_owl(tables: Dict[str, Any]) -> str:
             col_datatype = col.get('datatype', 'string')
             col_type = col.get('type', 'raw')
             formula = col.get('formula')
+            col_description = col.get('Description', '')
 
             prop_uri = field_to_property_uri(col_name)
             xsd_type = datatype_to_xsd(col_datatype)
@@ -545,7 +553,12 @@ def generate_ontology_owl(tables: Dict[str, Any]) -> str:
             lines.append(f'{prop_uri} a owl:DatatypeProperty ;')
             lines.append(f'    rdfs:domain {class_uri} ;')
             lines.append(f'    rdfs:range {xsd_type} ;')
-            lines.append(f'    rdfs:label "{col_name}" .')
+            if col_description:
+                desc_escaped = col_description.replace('\\', '\\\\').replace('"', '\\"')
+                lines.append(f'    rdfs:label "{col_name}" ;')
+                lines.append(f'    rdfs:comment "{desc_escaped}" .')
+            else:
+                lines.append(f'    rdfs:label "{col_name}" .')
 
             if formula:
                 lines.append(f'    # calculated: {col_type}')

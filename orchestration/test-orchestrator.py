@@ -175,8 +175,6 @@ def update_run_metadata(substrate_name: str, grades: dict, success: bool, error_
     }
     if error_msg:
         run_record["error_message"] = error_msg
-    if preserve_timing:
-        run_record["timing_preserved"] = True
 
     metadata["last_run"] = run_record
 
@@ -190,7 +188,6 @@ def update_run_metadata(substrate_name: str, grades: dict, success: bool, error_
             metadata["last_successful_run"] = {
                 "duration_seconds": prev_duration,
                 "status": "success",
-                "timing_preserved": True,
                 "test_results": {
                     "total_fields_tested": total,
                     "fields_passed": passed,
@@ -979,16 +976,21 @@ def generate_summary_report(all_grades: dict, rulebook: dict):
     total_time = 0.0
 
     # Sort by: 1) 100% substrates first (sorted by time), 2) <100% substrates at bottom (sorted by score desc)
+    # Use substrate name as final tiebreaker for deterministic output
+    # Round elapsed times to 0.5s buckets to prevent jitter from causing re-ordering
     def sort_key(name):
         g = all_grades[name]
         elapsed = g.get("elapsed_seconds", 0.0)
+        # Round to 0.5s buckets for sorting stability
+        elapsed_bucket = round(elapsed * 2) / 2
         p = g["fields_passed"]
         t = g["total_fields_tested"]
         score = (p / t * 100) if t > 0 else 0
         is_perfect = score >= 100.0
         # Primary: is_perfect (True=0, False=1 - so perfect scores come first)
-        # Secondary: time for perfect scores, -score for imperfect (highest score first among failures)
-        return (0 if is_perfect else 1, elapsed if is_perfect else -score)
+        # Secondary: time bucket for perfect scores, -score for imperfect (highest score first among failures)
+        # Tertiary: name for deterministic ordering when times are in same bucket
+        return (0 if is_perfect else 1, elapsed_bucket if is_perfect else -score, name)
 
     for substrate_name in sorted(all_grades.keys(), key=sort_key):
         grades = all_grades[substrate_name]
@@ -1059,16 +1061,21 @@ def print_final_summary_table(all_grades: dict, rulebook: dict):
     total_time = 0.0
 
     # Sort by: 1) 100% substrates first (sorted by time), 2) <100% substrates at bottom (sorted by score desc)
+    # Use substrate name as final tiebreaker for deterministic output
+    # Round elapsed times to 0.5s buckets to prevent jitter from causing re-ordering
     def sort_key(name):
         g = all_grades[name]
         elapsed = g.get("elapsed_seconds", 0.0)
+        # Round to 0.5s buckets for sorting stability
+        elapsed_bucket = round(elapsed * 2) / 2
         p = g["fields_passed"]
         t = g["total_fields_tested"]
         score = (p / t * 100) if t > 0 else 0
         is_perfect = score >= 100.0
         # Primary: is_perfect (True=0, False=1 - so perfect scores come first)
-        # Secondary: time for perfect scores, -score for imperfect (highest score first among failures)
-        return (0 if is_perfect else 1, elapsed if is_perfect else -score)
+        # Secondary: time bucket for perfect scores, -score for imperfect (highest score first among failures)
+        # Tertiary: name for deterministic ordering when times are in same bucket
+        return (0 if is_perfect else 1, elapsed_bucket if is_perfect else -score, name)
 
     for substrate_name in sorted(all_grades.keys(), key=sort_key):
         grades = all_grades[substrate_name]
@@ -1114,6 +1121,116 @@ def strip_timing_fields(obj, timing_fields):
     return obj
 
 
+def normalize_md_timing(content: str) -> str:
+    """
+    Normalize timing values and row order in markdown to enable comparison.
+
+    Replaces duration values like "35s", "< 1s", "1m 23s" with a placeholder
+    so that only-timing changes can be detected.
+
+    Also sorts table rows by substrate name so that row order differences
+    (caused by timing jitter affecting sort) don't register as real changes.
+    """
+    # Pattern for duration in table cells: | 35s | or | < 1s | or | 1m 23s |
+    # Match patterns like: "35s", "< 1s", "1m 23s", "2m", etc.
+    normalized = re.sub(r'\|\s*(<\s*)?\d+m?\s*\d*s?\s*\|', '| DURATION |', content)
+
+    # Sort table rows alphabetically by first column (substrate name)
+    # This ensures row order differences don't cause false positives
+    lines = normalized.split('\n')
+    result_lines = []
+    table_rows = []
+    in_table = False
+
+    for line in lines:
+        # Detect table data rows (start with | and have substrate names, not headers/separators)
+        if line.startswith('|') and not line.startswith('|--') and not '| Substrate |' in line and not '| Metric |' in line:
+            table_rows.append(line)
+            in_table = True
+        else:
+            # If we were collecting table rows, sort and flush them
+            if table_rows:
+                table_rows.sort()
+                result_lines.extend(table_rows)
+                table_rows = []
+            result_lines.append(line)
+            in_table = False
+
+    # Flush any remaining table rows
+    if table_rows:
+        table_rows.sort()
+        result_lines.extend(table_rows)
+
+    return '\n'.join(result_lines)
+
+
+def revert_md_if_only_timing_changes(file_path: str) -> bool:
+    """
+    Check if the only changes in a markdown file are timing/duration values.
+    If so, revert the file. Returns True if reverted, False otherwise.
+
+    This is specifically for all-tests-results.md where Duration columns
+    may change (e.g., "35s" -> "36s") without any real test result changes.
+    """
+    if not os.path.exists(file_path):
+        return False
+
+    try:
+        rel_path = os.path.relpath(file_path, PROJECT_ROOT)
+
+        # Check if file has uncommitted changes (staged or unstaged)
+        result = subprocess.run(
+            ['git', 'status', '--porcelain', '--', rel_path],
+            capture_output=True, text=True, cwd=PROJECT_ROOT
+        )
+        if not result.stdout.strip():
+            return False  # No changes
+
+        # Load current file content
+        with open(file_path, 'r') as f:
+            current_content = f.read()
+
+        # Get previous version from git
+        result = subprocess.run(
+            ['git', 'show', f'HEAD:{rel_path}'],
+            capture_output=True, text=True, cwd=PROJECT_ROOT
+        )
+        if result.returncode != 0:
+            return False  # File doesn't exist in previous commit
+
+        previous_content = result.stdout
+
+        # Normalize timing values in both versions
+        current_normalized = normalize_md_timing(current_content)
+        previous_normalized = normalize_md_timing(previous_content)
+
+        # Compare
+        if current_normalized != previous_normalized:
+            # Real differences exist beyond timing values
+            return False
+
+        # All changes are timing-only - revert this file (both staged and unstaged)
+        # First unstage if staged
+        subprocess.run(
+            ['git', 'reset', 'HEAD', '--', rel_path],
+            capture_output=True, text=True, cwd=PROJECT_ROOT
+        )
+        # Then revert
+        result = subprocess.run(
+            ['git', 'checkout', '--', rel_path],
+            capture_output=True, text=True, cwd=PROJECT_ROOT
+        )
+
+        if result.returncode == 0:
+            print(f"  REVERTED (timing values only): {rel_path}", flush=True)
+            return True
+        return False
+
+    except Exception as e:
+        print(f"  WARNING: Error checking {file_path}: {e}", flush=True)
+        return False
+
+
 def revert_if_only_duration_changes(file_path: str) -> bool:
     """
     Check if the only changes in a JSON file are to timing-related fields.
@@ -1121,7 +1238,6 @@ def revert_if_only_duration_changes(file_path: str) -> bool:
 
     Timing-related fields that are considered "noise" (not real changes):
     - duration_seconds: varies per run
-    - timing_preserved: meta flag about timing
 
     Algorithm:
     - Load current JSON and strip timing fields
@@ -1129,7 +1245,7 @@ def revert_if_only_duration_changes(file_path: str) -> bool:
     - If they're identical after stripping, revert
     """
     # Fields that are timing-related metadata, not actual test results
-    TIMING_FIELDS = {'duration_seconds', 'timing_preserved'}
+    TIMING_FIELDS = {'duration_seconds'}
 
     if not os.path.exists(file_path):
         return False
@@ -1190,17 +1306,73 @@ def revert_if_only_duration_changes(file_path: str) -> bool:
         return False
 
 
+def xlsx_to_json(workbook) -> dict:
+    """
+    Export an xlsx workbook to a JSON structure containing all tabs,
+    cells, values, and formulas.
+
+    Returns a dict like:
+    {
+        "sheets": {
+            "SheetName": {
+                "dimensions": {"rows": 10, "cols": 5},
+                "cells": [
+                    {"row": 1, "col": 1, "value": "Header", "formula": null},
+                    {"row": 2, "col": 1, "value": "=A1+B1", "formula": "=A1+B1"},
+                    ...
+                ]
+            }
+        }
+    }
+    """
+    result = {"sheets": {}}
+
+    for sheet_name in workbook.sheetnames:
+        sheet = workbook[sheet_name]
+        sheet_data = {
+            "dimensions": {
+                "rows": sheet.max_row or 0,
+                "cols": sheet.max_column or 0
+            },
+            "cells": []
+        }
+
+        # Export all cells with their values/formulas
+        for row in range(1, (sheet.max_row or 0) + 1):
+            for col in range(1, (sheet.max_column or 0) + 1):
+                cell = sheet.cell(row=row, column=col)
+                cell_value = cell.value
+
+                # Determine if it's a formula
+                is_formula = isinstance(cell_value, str) and cell_value.startswith('=')
+
+                sheet_data["cells"].append({
+                    "row": row,
+                    "col": col,
+                    "value": cell_value,
+                    "formula": cell_value if is_formula else None
+                })
+
+        result["sheets"][sheet_name] = sheet_data
+
+    return result
+
+
 def revert_xlsx_if_unchanged(file_path: str) -> bool:
     """
     Check if an xlsx file has no real content changes.
-    Compares CSV exports of each tab between current and previous commit.
-    If all tabs are identical, revert the file. Returns True if reverted.
+    Exports both current and previous xlsx to JSON (all tabs + formulas)
+    in a temporary folder and compares them.
+
+    If content and formulas are identical, revert the file.
+    Returns True if reverted, False otherwise.
 
     Algorithm:
-    - Export current xlsx to CSV (each tab)
-    - Export previous commit's xlsx to CSV (each tab)
-    - Compare field lists (column headers) and all data
-    - If identical, revert
+    1. Export current xlsx to JSON (all tabs + formulas)
+    2. Export previous commit's xlsx to JSON (all tabs + formulas)
+    3. Compare the JSON structures
+    4. If identical, revert the file
+    5. Clean up temp files immediately
     """
     if not os.path.exists(file_path):
         return False
@@ -1208,7 +1380,6 @@ def revert_xlsx_if_unchanged(file_path: str) -> bool:
     try:
         import openpyxl
         import tempfile
-        import shutil
 
         # Get relative path for git commands
         rel_path = os.path.relpath(file_path, PROJECT_ROOT)
@@ -1221,18 +1392,23 @@ def revert_xlsx_if_unchanged(file_path: str) -> bool:
         if not result.stdout.strip():
             return False  # No changes
 
-        # Load current workbook
-        try:
-            current_wb = openpyxl.load_workbook(file_path, data_only=False)
-        except Exception:
-            return False
+        # Create temp directory for our work
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_xlsx_path = os.path.join(tmp_dir, 'previous.xlsx')
+            current_json_path = os.path.join(tmp_dir, 'current.json')
+            previous_json_path = os.path.join(tmp_dir, 'previous.json')
 
-        # Get previous version from git
-        with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as tmp:
-            tmp_path = tmp.name
+            # Load current workbook and export to JSON
+            try:
+                current_wb = openpyxl.load_workbook(file_path, data_only=False)
+            except Exception:
+                return False
 
-        try:
-            # Get the file content from HEAD
+            current_json = xlsx_to_json(current_wb)
+            with open(current_json_path, 'w') as f:
+                json.dump(current_json, f, sort_keys=True, default=str)
+
+            # Get previous version from git
             result = subprocess.run(
                 ['git', 'show', f'HEAD:{rel_path}'],
                 capture_output=True, cwd=PROJECT_ROOT
@@ -1241,39 +1417,20 @@ def revert_xlsx_if_unchanged(file_path: str) -> bool:
             if result.returncode != 0:
                 return False  # File doesn't exist in previous commit
 
-            with open(tmp_path, 'wb') as f:
+            with open(tmp_xlsx_path, 'wb') as f:
                 f.write(result.stdout)
 
-            previous_wb = openpyxl.load_workbook(tmp_path, data_only=False)
+            # Load previous workbook and export to JSON
+            previous_wb = openpyxl.load_workbook(tmp_xlsx_path, data_only=False)
+            previous_json = xlsx_to_json(previous_wb)
+            with open(previous_json_path, 'w') as f:
+                json.dump(previous_json, f, sort_keys=True, default=str)
 
-            # Compare sheet names
-            if set(current_wb.sheetnames) != set(previous_wb.sheetnames):
-                return False  # Different sheets - real change
+            # Compare JSON structures
+            if current_json != previous_json:
+                return False  # Real differences exist
 
-            # Compare each sheet
-            for sheet_name in current_wb.sheetnames:
-                current_sheet = current_wb[sheet_name]
-                previous_sheet = previous_wb[sheet_name]
-
-                # Compare dimensions
-                if current_sheet.max_row != previous_sheet.max_row or \
-                   current_sheet.max_column != previous_sheet.max_column:
-                    return False  # Different size - real change
-
-                # Compare cell values and formulas
-                for row in range(1, current_sheet.max_row + 1):
-                    for col in range(1, current_sheet.max_column + 1):
-                        current_cell = current_sheet.cell(row=row, column=col)
-                        previous_cell = previous_sheet.cell(row=row, column=col)
-
-                        # Compare both value and formula
-                        current_val = current_cell.value
-                        previous_val = previous_cell.value
-
-                        if current_val != previous_val:
-                            return False  # Different content - real change
-
-            # All content is identical - revert (both staged and unstaged)
+            # All content and formulas are identical - revert
             # First unstage if staged
             subprocess.run(
                 ['git', 'reset', 'HEAD', '--', rel_path],
@@ -1286,14 +1443,11 @@ def revert_xlsx_if_unchanged(file_path: str) -> bool:
             )
 
             if result.returncode == 0:
-                print(f"  REVERTED (no content changes): {rel_path}", flush=True)
+                print(f"  REVERTED (no content/formula changes): {rel_path}", flush=True)
                 return True
             return False
 
-        finally:
-            # Clean up temp file
-            if os.path.exists(tmp_path):
-                os.unlink(tmp_path)
+        # TemporaryDirectory is automatically cleaned up here
 
     except ImportError:
         print("  WARNING: openpyxl not available for xlsx comparison", flush=True)
@@ -1308,7 +1462,9 @@ def cleanup_unchanged_files():
     Revert files that have no REAL changes to reduce noise in commits.
 
     1. _substrate_results.json - revert if only duration_seconds changed
-    2. *.xlsx files - revert if CSV content is identical to previous commit
+    2. all-tests-results.md - revert if only duration values changed (e.g., 35s -> 36s)
+    3. Per-substrate test-results.md - revert if only duration changed
+    4. *.xlsx files - revert if content and formulas are identical to previous commit
     """
     print("=" * 60, flush=True)
     print("CLEANUP: Reverting files with no real changes", flush=True)
@@ -1320,7 +1476,11 @@ def cleanup_unchanged_files():
     if revert_if_only_duration_changes(CENTRAL_RESULTS_PATH):
         reverted_count += 1
 
-    # 2. Find and check all xlsx files with changes (staged or unstaged)
+    # 2. Check all-tests-results.md
+    if revert_md_if_only_timing_changes(SUMMARY_PATH):
+        reverted_count += 1
+
+    # 3. Find and check all changed files (staged or unstaged)
     result = subprocess.run(
         ['git', 'status', '--porcelain'],
         capture_output=True, text=True, cwd=PROJECT_ROOT
@@ -1332,9 +1492,16 @@ def cleanup_unchanged_files():
                 continue
             # Format is: XY filename (where XY are status codes)
             rel_path = line[3:].strip()  # Skip status codes and space
+            full_path = os.path.join(PROJECT_ROOT, rel_path)
+
+            # Check xlsx files
             if rel_path.endswith('.xlsx'):
-                full_path = os.path.join(PROJECT_ROOT, rel_path)
                 if revert_xlsx_if_unchanged(full_path):
+                    reverted_count += 1
+
+            # Check per-substrate test-results.md files
+            elif rel_path.endswith('test-results.md') and 'execution-substrates/' in rel_path:
+                if revert_md_if_only_timing_changes(full_path):
                     reverted_count += 1
 
     if reverted_count == 0:

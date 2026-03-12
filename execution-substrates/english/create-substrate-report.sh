@@ -29,6 +29,28 @@ def read_file(path, default=""):
     except:
         return default
 
+def extract_log_from_existing_report():
+    """Extract the log content from the existing substrate-report.html if it exists."""
+    report_path = Path('substrate-report.html')
+    if not report_path.exists():
+        return None
+    try:
+        content = report_path.read_text()
+        # Find the log content between <pre> tags in the log tab
+        # Pattern: <div id="log" class="tab-content">...<pre>LOG_CONTENT</pre>
+        import re
+        match = re.search(r'<div id="log"[^>]*>.*?<pre>(.*?)</pre>', content, re.DOTALL)
+        if match:
+            log_html = match.group(1)
+            # Unescape HTML entities
+            log_text = html.unescape(log_html)
+            # Don't return if it's the default "No log available" or similar
+            if log_text.strip() and log_text.strip() not in ('No log available', 'No execution log captured for this run', '(No execution log captured for this run)'):
+                return log_text
+    except:
+        pass
+    return None
+
 def load_json(path):
     try:
         with open(path, 'r') as f:
@@ -150,7 +172,14 @@ def generate_graded_data_html():
     return '\n'.join(html_parts)
 
 # Load content
-log_content = read_file('.last-run.log', 'No log available')
+# Preserve existing log if .last-run.log doesn't exist (tests weren't run this time)
+log_file_path = Path('.last-run.log')
+if log_file_path.exists():
+    log_content = log_file_path.read_text()
+else:
+    # Try to preserve existing log from current HTML report
+    existing_log = extract_log_from_existing_report()
+    log_content = existing_log if existing_log else 'No log available'
 test_results = read_file('test-results.md', 'No test results available')
 specification = read_file('specification.md', '# No specification available')
 

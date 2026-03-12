@@ -66,21 +66,24 @@ The *thing that changes per substrate* is: **what "injection" produces**, **how 
 
 | Substrate | Role | Injection Produces (Domain-Agnostic) | Executable? |
 |-----------|------|--------------------------------------|:-----------:|
-| **PostgreSQL** | Source of truth — canonical computation engine | Tables (1:1 with entities), `calc_*()` functions (1:1 with computed columns), views | ✓ (generates `answer-key.json`) |
-| **XLSX** | Spreadsheet runtime for formulas | Worksheets (1:1 with entities), formula columns (1:1 with computed columns) | ✓ |
-| **Python** | SDK runtime (dataclass + methods) | `@dataclass` classes (1:1 with entities), `calc_*()` methods (1:1 with computed columns) | ✓ |
-| **Go** | Compiled typed runtime (structs + methods) | Go `struct` types (1:1 with entities), `Calc*()` methods (1:1 with computed columns) | ✓ |
-| **GraphQL** | Computation via resolvers | Type definitions (1:1 with entities), resolvers (1:1 with computed columns) | ✓ |
-| **RDF/Turtle** | Semantic-web schema + rules | Classes/properties (1:1 with entities/fields), optional SPARQL rules | ✓ (with rules engine) / 🔮 Fuzzy |
-| **OWL** | Ontology + reasoning | OWL classes (1:1 with entities), optional SWRL rules | ✓ (limited) / 🔮 Fuzzy |
-| **YAML** | LLM-friendly schema serialization | Schema definitions (1:1 with entities/fields) | ✓ (requires runner) |
-| **CSV** | Tabular schema export | Field definitions (1:1 with entities/fields) | ✓ (requires runner) |
-| **UML** | Structural model / diagrams | Class diagrams (1:1 with entities) | 🔮 Fuzzy |
-| **DOCX** | Human-readable document export | Document sections (1:1 with entities/formulas) | 🔮 Fuzzy |
+| **PostgreSQL** | Source of truth — canonical computation engine | Tables (1:1 with entities), `calc_*()` functions (1:1 with computed columns), views | ✓ Full |
+| **XLSX** | Spreadsheet runtime for formulas | Worksheets (1:1 with entities), formula columns (1:1 with computed columns) | ✓ Full |
+| **CSV** | Tabular schema export | Field definitions (1:1 with entities/fields) | ✓ Full |
+| **Python** | SDK runtime (dataclass + methods) | `@dataclass` classes (1:1 with entities), `calc_*()` methods (1:1 with computed columns) | ✓ Limited |
+| **Go** | Compiled typed runtime (structs + methods) | Go `struct` types (1:1 with entities), `Calc*()` methods (1:1 with computed columns) | ✓ Limited |
+| **GraphQL** | Computation via resolvers | Type definitions (1:1 with entities), resolvers (1:1 with computed columns) | ✓ Limited |
+| **RDF/Turtle** | Semantic-web schema + rules | Classes/properties (1:1 with entities/fields), optional SPARQL rules | ✓ Limited |
+| **OWL** | Ontology + reasoning | OWL classes (1:1 with entities), optional SWRL rules | ✓ Limited |
+| **YAML** | LLM-friendly schema serialization | Schema definitions (1:1 with entities/fields) | ✓ Limited |
+| **UML** | Structural model / diagrams | Class diagrams (1:1 with entities) | ✓ Limited |
+| **DOCX** | Human-readable document export | Document sections (1:1 with entities/formulas) | ✓ Limited |
+| **Binary** | Compiled native execution | C structs (1:1 with entities), C functions (1:1 with computed columns) | ✓ Limited |
 | **English** | Human-readable specification | Prose descriptions (1:1 with entities/formulas) | 🔮 Fuzzy |
-| **Binary** | Compiled native execution | C structs (1:1 with entities), C functions (1:1 with computed columns) | ✓ |
 
-**Legend**: ✓ = Native execution, 🔮 = LLM Fuzzy Grading (see [Fuzzy Evaluation Layer](#3-fuzzy-evaluation-layer))
+**Legend**:
+- **✓ Full** = Production-ready deterministic execution (ssotme/effortless tools with comprehensive formula support)
+- **✓ Limited** = Deterministic execution with partial formula support (toy implementations demonstrating the pattern — supports COUNT/SUM/AVERAGE, CONCATENATE, etc. but not MEDIAN/MOD, LEFT/RIGHT substring ops, etc. Unsupported formulas score 0%.)
+- **🔮 Fuzzy** = LLM-based non-deterministic grading (see [Fuzzy Evaluation Layer](#3-fuzzy-evaluation-layer)). Only English uses this — it's 2-3 orders of magnitude slower but handles novel formulas gracefully (~80%+ typical).
 
 ### All Execution Substrates
 
@@ -358,28 +361,30 @@ cd execution-substrates/xlsx
 
 ## 3. Fuzzy Evaluation Layer
 
-Some substrates cannot directly execute computations—they produce **human-readable specifications**, **diagrams**, or **semantic definitions** instead of runnable code. For these substrates, we introduce an **LLM Fuzzy Grading** layer.
+The **English substrate** cannot directly execute computations — it produces prose documentation that describes the formulas in natural language. For this substrate, we use **LLM Fuzzy Grading**.
+
+**Important distinction:** All other substrates (UML, OWL, RDF, DOCX, etc.) are **deterministic** — they execute formulas directly and produce identical results every time. They may have *limited formula support* (not implementing every function), but they are never "fuzzy." Only English uses LLM-based evaluation.
 
 ### Concept
 
 The fuzzy evaluation layer uses a Large Language Model (LLM) to:
 
-1. **Read** the substrate's specification/output (prose, ontology, diagrams)
-2. **Interpret** the instructions to understand the computation logic
-3. **Infer** what the computed field values should be for each candidate
+1. **Read** the English specification (prose documentation)
+2. **Interpret** the prose to understand the computation logic
+3. **Infer** what the computed field values should be for each record
 4. **Compare** the LLM's inferences against the canonical `answer-key.json`
 
-This tests whether the non-computational substrate **accurately describes** the computation, even though it cannot execute it directly.
+This tests whether the English prose **accurately describes** the computation, even though prose cannot execute directly.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                        FUZZY EVALUATION LAYER                               │
+│                   FUZZY EVALUATION LAYER (English only)                      │
 └─────────────────────────────────────────────────────────────────────────────┘
 
   ┌─────────────────────┐     ┌─────────────────────┐
-  │   Substrate Output  │     │   blank-test.json   │
-  │  (prose, ontology,  │     │  (raw field values) │
-  │   diagrams, etc.)   │     └──────────┬──────────┘
+  │  English Prose      │     │   blank-test.json   │
+  │  (specification.md, │     │  (raw field values) │
+  │   glossary.md)      │     └──────────┬──────────┘
   └──────────┬──────────┘                │
              │                           │
              ▼                           ▼
@@ -387,7 +392,7 @@ This tests whether the non-computational substrate **accurately describes** the 
   │                    LLM                              │
   │                                                     │
   │  "Based on this specification, what should the     │
-  │   computed values be for this candidate?"           │
+  │   computed values be for this record?"              │
   │                                                     │
   └──────────────────────┬─────────────────────────────┘
                          │
@@ -404,36 +409,34 @@ This tests whether the non-computational substrate **accurately describes** the 
   └─────────────────────────────────────────────────────┘
 ```
 
-### Why Fuzzy Evaluation?
+### Why Fuzzy Evaluation for English?
 
 | Question | Answer |
 |----------|--------|
-| Why not just skip non-computational substrates? | We want to verify that the specification **accurately describes** the computation—a prose description that leads to wrong answers is a bad specification |
-| What does a high score mean? | The specification is clear and precise enough that an LLM can correctly interpret and apply the formulas |
-| What does a low score mean? | The specification may be ambiguous, incomplete, or use terminology that differs from the implementation |
+| Why not just skip the English substrate? | We want to verify that the prose **accurately describes** the computation—a specification that leads to wrong answers is a bad specification |
+| What does a high score mean? | The prose is clear and precise enough that an LLM can correctly interpret and apply the formulas |
+| What does a low score mean? | The prose may be ambiguous, incomplete, or use terminology that differs from the implementation |
 | Is this deterministic? | No—LLM outputs can vary. Use low temperature (0.1) for consistency. Multiple runs may yield slightly different scores |
 
-### Substrates Using Fuzzy Evaluation
+### The Only Fuzzy Substrate: English
 
 | Substrate | Why Fuzzy? | What Gets Evaluated |
 |-----------|------------|---------------------|
-| **English** | Prose cannot execute | Whether the prose clearly describes formulas an LLM can follow |
-| **DOCX** | Documents cannot execute | Whether the formatted spec accurately describes the computation |
-| **UML** | Diagrams cannot execute | Whether class/method signatures imply correct computation |
-| **OWL** | Limited expressivity (no string ops) | Whether the ontology semantics capture the logic |
-| **RDF** | Limited without SPARQL | Whether the schema + comments describe correct formulas |
+| **English** | Prose cannot execute directly | Whether the prose clearly describes formulas an LLM can follow |
+
+**Why only English?** All other substrates — including UML, OWL, RDF, and DOCX — are **deterministic**. They execute the same formulas the same way every time. The "limited" substrates simply don't implement every formula type (e.g., no MEDIAN, no LEFT/RIGHT substring operations). When they encounter an unsupported formula, they fail deterministically — potentially scoring 0%.
+
+**The English irony:** While deterministic substrates fail completely on unsupported formulas, the English substrate (LLM-based) handles novel concepts gracefully. It rarely drops below ~80% accuracy, even for formulas it has never seen. The tradeoff is speed: English is 2-3 orders of magnitude slower than direct execution.
 
 ### Running Fuzzy Evaluation
 
-The `llm-fuzzy-grader.py` tool in the orchestration folder handles fuzzy evaluation:
+The `llm-fuzzy-grader.py` tool in the orchestration folder handles fuzzy evaluation for the English substrate:
 
 ```bash
 cd orchestration
 
-# Evaluate a specific substrate
+# Evaluate the English substrate (the only fuzzy substrate)
 python llm-fuzzy-grader.py english --provider openai --write-answers
-python llm-fuzzy-grader.py docx --provider anthropic --write-answers
-python llm-fuzzy-grader.py uml --provider ollama --write-answers
 
 # Options:
 #   --provider: openai | anthropic | ollama
@@ -452,7 +455,7 @@ python llm-fuzzy-grader.py uml --provider ollama --write-answers
 
 ### Fuzzy Grading Output
 
-Each fuzzy-evaluated substrate receives:
+The English substrate receives:
 
 | File | Purpose |
 |------|---------|

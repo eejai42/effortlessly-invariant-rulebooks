@@ -678,15 +678,21 @@ def get_score_class(score: float) -> str:
 
 
 def sorted_substrates(data: dict) -> list:
-    """Sort substrates: 100% first (by time), <100% at bottom (by score desc)"""
+    """Sort substrates: 100% first (by time), <100% at bottom (by score desc)
+
+    Uses 0.5s time buckets and name as tiebreaker for deterministic ordering.
+    """
     def sort_key(name):
         g = data["substrates"][name]
         elapsed = g.get("elapsed_seconds", 0.0)
+        # Round to 0.5s buckets for sorting stability
+        elapsed_bucket = round(elapsed * 2) / 2
         p = g["fields_passed"]
         t = g["total_fields_tested"]
         score = (p / t * 100) if t > 0 else 0
         is_perfect = score >= 100.0
-        return (0 if is_perfect else 1, elapsed if is_perfect else -score)
+        # Use name as tiebreaker for deterministic ordering
+        return (0 if is_perfect else 1, elapsed_bucket if is_perfect else -score, name)
     return sorted(data["substrates"].keys(), key=sort_key)
 
 
@@ -2484,13 +2490,51 @@ def main():
     print(f"  -> Report written to: {output_path}")
     print()
 
-    # Open in browser on macOS
+    # Open in browser (reusing same tab/window when possible)
     abs_path = os.path.abspath(output_path)
+    file_url = f"file://{abs_path}"
     import platform
     import subprocess
     if platform.system() == 'Darwin':
         print("Opening report in browser...")
-        subprocess.run(['open', abs_path], check=False)
+        # Use AppleScript to reuse an existing Chrome tab with this report
+        # This prevents opening a new tab every time "View Results" is clicked
+        applescript = f'''
+        tell application "Google Chrome"
+            set found to false
+            set targetURL to "{file_url}"
+
+            -- Look for existing tab with this file
+            repeat with w in windows
+                repeat with t in tabs of w
+                    if URL of t starts with "file://" and URL of t contains "substrate-report.html" then
+                        set URL of t to targetURL
+                        set active tab index of w to (index of t)
+                        set index of w to 1
+                        activate
+                        set found to true
+                        exit repeat
+                    end if
+                end repeat
+                if found then exit repeat
+            end repeat
+
+            -- No existing tab found, open new one
+            if not found then
+                if (count of windows) = 0 then
+                    make new window
+                end if
+                tell front window
+                    make new tab with properties {{URL:targetURL}}
+                end tell
+                activate
+            end if
+        end tell
+        '''
+        result = subprocess.run(['osascript', '-e', applescript], capture_output=True)
+        if result.returncode != 0:
+            # Fallback to regular open if Chrome not available
+            subprocess.run(['open', abs_path], check=False)
     elif platform.system() == 'Windows':
         print("Opening report in browser...")
         subprocess.run(['start', abs_path], shell=True, check=False)

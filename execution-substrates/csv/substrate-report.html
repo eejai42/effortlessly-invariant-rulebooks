@@ -75,7 +75,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>122/122 passed</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -117,49 +117,14 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <pre>=== CSV Substrate Test Run ===
 
 
-  Processing approval_gates from approval_gates.csv...
-Found 5 fields in test answers
-Primary key field: approval_gate_id
-Loaded 11 rows from CSV
-Filled 11 null fields across 11 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/approval_gates.json
+  Processing customers from customers.csv...
+Found 6 fields in test answers
+Primary key field: customer_id
+Loaded 3 rows from CSV
+Filled 3 null fields across 3 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/customers.json
 
-  Processing departments from departments.csv...
-Found 5 fields in test answers
-Primary key field: department_id
-Loaded 15 rows from CSV
-Filled 15 null fields across 15 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/departments.json
-
-  Processing precedes_steps from precedes_steps.csv...
-Found 5 fields in test answers
-Primary key field: precedes_step_id
-Loaded 16 rows from CSV
-Filled 16 null fields across 16 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/precedes_steps.json
-
-  Processing roles from roles.csv...
-Found 12 fields in test answers
-Primary key field: role_id
-Loaded 15 rows from CSV
-Filled 15 null fields across 15 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/roles.json
-
-  Processing workflow_steps from workflow_steps.csv...
-Found 9 fields in test answers
-Primary key field: workflow_step_id
-Loaded 20 rows from CSV
-Filled 19 null fields across 19 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/workflow_steps.json
-
-  Processing workflows from workflows.csv...
-Found 10 fields in test answers
-Primary key field: workflow_id
-Loaded 15 rows from CSV
-Filled 45 null fields across 15 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/workflows.json
-
-csv: Processed 6 entities
+csv: Processed 1 entities
 
 </pre>
             </div>
@@ -169,22 +134,22 @@ csv: Processed 6 entities
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">122</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">122</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
         <div id="candidates" class="tab-content">
             <div class="card">
                 <h2>Entity Data (workflows.csv)</h2>
-                <div class="table-scroll"><table class="csv-table"><thead><tr><th>workflow_id</th><th>name</th><th>display_name</th><th>title</th><th>description</th><th>identifier</th><th>modified</th><th>workflow_steps</th><th>count_of_non_proposed_steps</th><th>has_more_than1_step</th></tr></thead><tbody><tr><td>performance-review</td><td>performance-review</td><td>Performance Review</td><td>Annual Performance Review</td><td>Structured workflow for conducting annual employee performance evaluations.</td><td>WF-PRV-007</td><td>2024-05-15</td><td>system-notification-sent, step-2, recwwXHLqxKPhj6Mt</td><td>3</td><td class="bool-true">true</td></tr><tr><td>change-management</td><td>change-management</td><td>Change Management</td><td>Change Management Workflow</td><td>Structured process for requesting, evaluating, and implementing organizational changes.</td><td>WF-CHM-015</td><td>2024-05-27</td><td>close-workflow, step1, asdf</td><td>3</td><td class="bool-true">true</td></tr><tr><td>asset-management</td><td>asset-management</td><td>Asset Management</td><td>Asset Management Process</td><td>Process for tracking, maintaining, and auditing company assets.</td><td>WF-ASM-012</td><td>2024-05-18</td><td>assign-task-to-team, some-new-task</td><td>2</td><td class="bool-true">true</td></tr><tr><td>incident-reporting</td><td>incident-reporting</td><td>Incident Reporting</td><td>Incident Reporting Process</td><td>Steps for reporting, investigating, and resolving workplace incidents.</td><td>WF-INC-014</td><td>2024-06-06</td><td>generate-report</td><td>1</td><td class="bool-false">false</td></tr><tr><td>customer-feedback</td><td>customer-feedback</td><td>Customer Feedback</td><td>Customer Feedback Collection</td><td>Workflow for collecting, analyzing, and acting on customer feedback.</td><td>WF-CFB-009</td><td>2024-05-25</td><td>archive-request</td><td>1</td><td class="bool-false">false</td></tr><tr><td>project-kickoff</td><td>project-kickoff</td><td>Project Kickoff</td><td>Project Kickoff Process</td><td>Steps to initiate a new project, including team assignment and goal setting.</td><td>WF-PKO-010</td><td>2024-05-20</td><td>customer-feedback-collection</td><td>1</td><td class="bool-false">false</td></tr><tr><td>onboarding</td><td>onboarding</td><td>Onboarding</td><td>Employee Onboarding</td><td>A step-by-step process to onboard new employees, including document collection, orientation, and training.</td><td>WF-ONB-001</td><td>2024-05-10</td><td>submit-request</td><td>1</td><td class="bool-false">false</td></tr><tr><td>content-publishing</td><td>content-publishing</td><td>Content Publishing</td><td>Content Publishing Process</td><td>Workflow for drafting, reviewing, and publishing content to the company website.</td><td>WF-CNT-003</td><td>2024-05-28</td><td>automated-eligibility-check</td><td>1</td><td class="bool-false">false</td></tr><tr><td>expense-reimbursement</td><td>expense-reimbursement</td><td>Expense Reimbursement</td><td>Expense Reimbursement Process</td><td>Steps for employees to submit expenses and receive reimbursements after approval.</td><td>WF-EXP-006</td><td>2024-06-03</td><td>quality-assurance-review</td><td>1</td><td class="bool-false">false</td></tr><tr><td>procurement</td><td>procurement</td><td>Procurement</td><td>Procurement Workflow</td><td>Process for requesting, approving, and purchasing goods or services.</td><td>WF-PRC-008</td><td>2024-06-02</td><td>final-approval</td><td>1</td><td class="bool-false">false</td></tr><tr><td>invoice-approval</td><td>invoice-approval</td><td>Invoice Approval</td><td>Invoice Approval Workflow</td><td>Automated workflow for reviewing, approving, and processing vendor invoices.</td><td>WF-INV-002</td><td>2024-06-01</td><td>manager-review</td><td>1</td><td class="bool-false">false</td></tr><tr><td>contract-review</td><td>contract-review</td><td>Contract Review</td><td>Contract Review Workflow</td><td>Workflow for legal and management review of contracts before signing.</td><td>WF-CTR-011</td><td>2024-06-04</td><td>legal-compliance-check</td><td>1</td><td class="bool-false">false</td></tr><tr><td>recruitment</td><td>recruitment</td><td>Recruitment</td><td>Recruitment Workflow</td><td>Workflow for posting jobs, screening candidates, and scheduling interviews.</td><td>WF-RCT-013</td><td>2024-05-22</td><td>team-lead-review</td><td>1</td><td class="bool-false">false</td></tr><tr><td>it-support</td><td>it-support</td><td>IT Support</td><td>IT Support Ticketing</td><td>Workflow for submitting, triaging, and resolving IT support tickets.</td><td>WF-ITS-005</td><td>2024-05-30</td><td>document-verification</td><td>1</td><td class="bool-false">false</td></tr><tr><td>leave-request</td><td>leave-request</td><td>Leave Request</td><td>Leave Request Workflow</td><td>Process for employees to submit, review, and approve leave requests.</td><td>WF-LRQ-004</td><td>2024-06-05</td><td>finance-approval</td><td>1</td><td class="bool-false">false</td></tr></tbody></table></div>
+                <div class="table-scroll"><p>Error reading CSV: [Errno 2] No such file or directory: 'test-data/workflows.csv'</p></div>
             </div>
         </div>
         <div id="formulas" class="tab-content">
             <div class="card">
                 <h2>column_formulas.csv</h2>
-                <div class="table-scroll"><table class="csv-table"><thead><tr><th>table_name</th><th>field_name</th><th>field_type</th><th>dag_level</th><th>formula</th></tr></thead><tbody><tr><td>Workflows</td><td>workflow_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>Workflows</td><td>name</td><td>calculated</td><td></td><td>=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)</td></tr><tr><td>Workflows</td><td>display_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>Workflows</td><td>title</td><td>raw</td><td>0</td><td></td></tr><tr><td>Workflows</td><td>description</td><td>raw</td><td>0</td><td></td></tr><tr><td>Workflows</td><td>identifier</td><td>raw</td><td>0</td><td></td></tr><tr><td>Workflows</td><td>modified</td><td>raw</td><td>0</td><td></td></tr><tr><td>Workflows</td><td>workflow_steps</td><td>relationship</td><td></td><td></td></tr><tr><td>Workflows</td><td>count_of_non_proposed_steps</td><td>aggregation</td><td></td><td>=COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})</td></tr><tr><td>Workflows</td><td>has_more_than1_step</td><td>calculated</td><td></td><td>={{CountOfNonProposedSteps}} &gt; 1</td></tr><tr><td>WorkflowSteps</td><td>workflow_step_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>WorkflowSteps</td><td>name</td><td>calculated</td><td></td><td>=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)</td></tr><tr><td>WorkflowSteps</td><td>display_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>WorkflowSteps</td><td>workflow</td><td>relationship</td><td></td><td></td></tr><tr><td>WorkflowSteps</td><td>sequence_position</td><td>raw</td><td>0</td><td></td></tr><tr><td>WorkflowSteps</td><td>assigned_role</td><td>relationship</td><td></td><td></td></tr><tr><td>WorkflowSteps</td><td>requires_human_approval</td><td>raw</td><td>0</td><td></td></tr><tr><td>WorkflowSteps</td><td>approval_gate</td><td>relationship</td><td></td><td></td></tr><tr><td>WorkflowSteps</td><td>preceded_by_steps</td><td>relationship</td><td></td><td></td></tr><tr><td>ApprovalGates</td><td>approval_gate_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>ApprovalGates</td><td>name</td><td>calculated</td><td></td><td>=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)</td></tr><tr><td>ApprovalGates</td><td>display_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>ApprovalGates</td><td>workflow_steps</td><td>relationship</td><td></td><td></td></tr><tr><td>ApprovalGates</td><td>escalation_threshold_hours</td><td>raw</td><td>0</td><td></td></tr><tr><td>PrecedesSteps</td><td>precedes_step_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>PrecedesSteps</td><td>name</td><td>raw</td><td>0</td><td></td></tr><tr><td>PrecedesSteps</td><td>workflow_step</td><td>relationship</td><td></td><td></td></tr><tr><td>PrecedesSteps</td><td>display_name</td><td>calculated</td><td></td><td>=&quot;Step-&quot; &amp; {{StepNumber}}</td></tr><tr><td>PrecedesSteps</td><td>step_number</td><td>raw</td><td>0</td><td></td></tr><tr><td>Roles</td><td>role_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>Roles</td><td>name</td><td>calculated</td><td></td><td>=LOWER({{DisplayName}})</td></tr><tr><td>Roles</td><td>display_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>Roles</td><td>label</td><td>raw</td><td>0</td><td></td></tr><tr><td>Roles</td><td>comment</td><td>raw</td><td>0</td><td></td></tr><tr><td>Roles</td><td>filled_by_human_agent</td><td>relationship</td><td></td><td></td></tr><tr><td>Roles</td><td>filled_by_ai_agent</td><td>relationship</td><td></td><td></td></tr><tr><td>Roles</td><td>filled_by_automated_pipeline</td><td>relationship</td><td></td><td></td></tr><tr><td>Roles</td><td>owned_by</td><td>relationship</td><td></td><td></td></tr><tr><td>Roles</td><td>delegates_to</td><td>relationship</td><td></td><td></td></tr><tr><td>Roles</td><td>workflow_steps</td><td>relationship</td><td></td><td></td></tr><tr><td>Roles</td><td>from_delegates_to</td><td>relationship</td><td></td><td></td></tr><tr><td>Departments</td><td>department_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>Departments</td><td>name</td><td>calculated</td><td></td><td>=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)</td></tr><tr><td>Departments</td><td>title</td><td>raw</td><td>0</td><td></td></tr><tr><td>Departments</td><td>display_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>Departments</td><td>roles</td><td>relationship</td><td></td><td></td></tr><tr><td>HumanAgents</td><td>human_agent_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>HumanAgents</td><td>name</td><td>raw</td><td>0</td><td></td></tr><tr><td>HumanAgents</td><td>display_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>HumanAgents</td><td>mbox</td><td>raw</td><td>0</td><td></td></tr></tbody></table><p class="truncated">Showing 50 of 62 rows</p></div>
+                <div class="table-scroll"><table class="csv-table"><thead><tr><th>table_name</th><th>field_name</th><th>field_type</th><th>dag_level</th><th>formula</th><th>description</th></tr></thead><tbody><tr><td>Customers</td><td>customer_id</td><td>raw</td><td>0</td><td></td><td></td></tr><tr><td>Customers</td><td>customer</td><td>raw</td><td>0</td><td></td><td>Identifier for the customers.</td></tr><tr><td>Customers</td><td>email_address</td><td>raw</td><td>0</td><td></td><td>Thec ustomers email address</td></tr><tr><td>Customers</td><td>first_name</td><td>raw</td><td>0</td><td></td><td>First Name of the customer - used to make the full name</td></tr><tr><td>Customers</td><td>last_name</td><td>raw</td><td>0</td><td></td><td>Last Name of the customer - used to make the full name</td></tr><tr><td>Customers</td><td>full_name</td><td>calculated</td><td></td><td>={{LastName}} &amp; &quot;, &quot; &amp; {{FirstName}}</td><td>Full name is computed from the first and last name of the customer</td></tr></tbody></table></div>
             </div>
         </div>
     </main>

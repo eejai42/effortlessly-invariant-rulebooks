@@ -484,13 +484,25 @@ def generate_class_diagram(tables: Dict[str, Any]) -> str:
         if not schema:
             continue
 
+        # Add entity description as a note if available
+        entity_description = table_def.get('Description', '')
+        if entity_description:
+            lines.append(f'note top of {table_name}')
+            lines.append(f'  {entity_description}')
+            lines.append('end note')
+            lines.append('')
+
         lines.append(f'class {table_name} {{')
 
         # Raw attributes
         for col in schema:
             if col.get('type') != 'calculated':
                 uml_type = datatype_to_uml(col.get('datatype', 'string'))
-                lines.append(f'  +{col["name"]}: {uml_type}')
+                desc = col.get('Description', '')
+                if desc:
+                    lines.append(f'  +{col["name"]}: {uml_type} -- {desc}')
+                else:
+                    lines.append(f'  +{col["name"]}: {uml_type}')
 
         lines.append('  --')
 
@@ -498,7 +510,11 @@ def generate_class_diagram(tables: Dict[str, Any]) -> str:
         for col in schema:
             if col.get('type') == 'calculated':
                 uml_type = datatype_to_uml(col.get('datatype', 'string'))
-                lines.append(f'  /{col["name"]}: {uml_type}  {{derived}}')
+                desc = col.get('Description', '')
+                if desc:
+                    lines.append(f'  /{col["name"]}: {uml_type}  {{derived}} -- {desc}')
+                else:
+                    lines.append(f'  /{col["name"]}: {uml_type}  {{derived}}')
 
         lines.append('}')
         lines.append('')
@@ -616,6 +632,10 @@ def generate_ocl_constraints(tables: Dict[str, Any]) -> str:
         if not has_derived:
             continue
 
+        # Add entity description as a comment if available
+        entity_description = table_def.get('Description', '')
+        if entity_description:
+            lines.append(f'-- {entity_description}')
         lines.append(f'context {table_name}')
         lines.append('')
 
@@ -625,16 +645,22 @@ def generate_ocl_constraints(tables: Dict[str, Any]) -> str:
                 continue
 
             col_name = col.get('name', '')
+            col_description = col.get('Description', '')
 
             try:
                 ast = parse_formula(formula)
                 ocl_expr = compile_to_ocl(ast)
 
+                # Add field description if available
+                if col_description:
+                    lines.append(f'-- {col_description}')
                 lines.append(f'-- Formula: {formula.replace(chr(10), " ")}')
                 lines.append(f'derive {col_name}: {ocl_expr}')
                 lines.append('')
 
             except Exception as e:
+                if col_description:
+                    lines.append(f'-- {col_description}')
                 lines.append(f'-- Formula for {col_name} - parse error: {e}')
                 lines.append(f'-- Original: {formula.replace(chr(10), " ")}')
                 lines.append('')

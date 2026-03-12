@@ -1,8 +1,8 @@
 {
   "schema_version": "erb.explain_spec.v1",
   "rulebook": {
-    "name": "Jessica Talisman - BASIC Ontology Parts 1-3",
-    "rulebook_hash": "sha256:3c9abd4c3977c523b8f7e3c007c20f50"
+    "name": "DEMO: Customer FullName",
+    "rulebook_hash": "sha256:fc5baec006076835eeecd2be23742af0"
   },
   "semantics": {
     "profile": "excel",
@@ -11,745 +11,120 @@
     "boolean_coercion": "strict"
   },
   "entities": {
-    "Workflows": {
-      "id_field": "WorkflowId",
-      "id_field_snake": "workflow_id",
+    "Customers": {
+      "id_field": "CustomerId",
+      "id_field_snake": "customer_id",
       "fields": {
-        "WorkflowId": {
+        "CustomerId": {
           "datatype": "string",
           "nullable": false,
           "type": "raw"
         },
-        "Name": {
+        "Customer": {
           "datatype": "string",
           "nullable": true,
-          "type": "calculated"
+          "type": "raw",
+          "description": "Identifier for the customers."
         },
-        "DisplayName": {
+        "EmailAddress": {
           "datatype": "string",
           "nullable": true,
-          "type": "raw"
+          "type": "raw",
+          "description": "Thec ustomers email address"
         },
-        "Title": {
+        "FirstName": {
           "datatype": "string",
           "nullable": true,
-          "type": "raw"
+          "type": "raw",
+          "description": "First Name of the customer - used to make the full name"
         },
-        "Description": {
+        "LastName": {
           "datatype": "string",
           "nullable": true,
-          "type": "raw"
+          "type": "raw",
+          "description": "Last Name of the customer - used to make the full name"
         },
-        "Identifier": {
+        "FullName": {
           "datatype": "string",
           "nullable": true,
-          "type": "raw"
-        },
-        "Modified": {
-          "datatype": "datetime",
-          "nullable": true,
-          "type": "raw"
-        },
-        "WorkflowSteps": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "CountOfNonProposedSteps": {
-          "datatype": "integer",
-          "nullable": true,
-          "type": "aggregation"
-        },
-        "HasMoreThan1Step": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "calculated"
+          "type": "calculated",
+          "description": "Full name is computed from the first and last name of the customer"
         }
       },
       "calc_order": [
-        "Name",
-        "HasMoreThan1Step"
+        "FullName"
       ],
       "dep_edges": [
         [
-          "DisplayName",
-          "Name"
+          "FirstName",
+          "FullName"
         ],
         [
-          "CountOfNonProposedSteps",
-          "HasMoreThan1Step"
+          "LastName",
+          "FullName"
         ]
       ],
       "expr_templates": {
-        "Name": {
-          "formula_source": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")",
-          "template_hash": "sha256:89d15a4a6be3f751",
-          "root_node": "n_result_Name",
+        "FullName": {
+          "formula_source": "={{LastName}} & \", \" & {{FirstName}}",
+          "template_hash": "sha256:87fca7e8a65752b8",
+          "root_node": "n_result_FullName",
           "nodes": {
             "n_ref_1": {
               "kind": "field_ref",
-              "field": "DisplayName",
-              "field_snake": "display_name"
-            },
-            "n_fn_2": {
-              "kind": "fn",
-              "name": "LOWER",
-              "args": [
-                "n_ref_1"
-              ]
-            },
-            "n_const_3": {
-              "kind": "const",
-              "value": " ",
-              "type": "string"
-            },
-            "n_const_4": {
-              "kind": "const",
-              "value": "-",
-              "type": "string"
-            },
-            "n_fn_5": {
-              "kind": "fn",
-              "name": "SUBSTITUTE",
-              "args": [
-                "n_fn_2",
-                "n_const_3",
-                "n_const_4"
-              ]
-            },
-            "n_result_Name": {
-              "kind": "result",
-              "field": "Name",
-              "field_snake": "name",
-              "in": [
-                "n_fn_5"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_2"
-            ],
-            [
-              "n_fn_2",
-              "n_fn_5"
-            ],
-            [
-              "n_const_3",
-              "n_fn_5"
-            ],
-            [
-              "n_const_4",
-              "n_fn_5"
-            ],
-            [
-              "n_fn_5",
-              "n_result_Name"
-            ]
-          ]
-        },
-        "HasMoreThan1Step": {
-          "formula_source": "={{CountOfNonProposedSteps}} > 1",
-          "template_hash": "sha256:52f3eecda8778602",
-          "root_node": "n_result_HasMoreThan1Step",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "CountOfNonProposedSteps",
-              "field_snake": "count_of_non_proposed_steps"
+              "field": "LastName",
+              "field_snake": "last_name"
             },
             "n_const_2": {
               "kind": "const",
-              "value": 1,
-              "type": "integer"
+              "value": ", ",
+              "type": "string"
             },
-            "n_op_3": {
-              "kind": "op",
-              "name": ">",
-              "args": [
-                "n_ref_1",
-                "n_const_2"
-              ]
-            },
-            "n_result_HasMoreThan1Step": {
-              "kind": "result",
-              "field": "HasMoreThan1Step",
-              "field_snake": "has_more_than1_step",
-              "in": [
-                "n_op_3"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_op_3"
-            ],
-            [
-              "n_const_2",
-              "n_op_3"
-            ],
-            [
-              "n_op_3",
-              "n_result_HasMoreThan1Step"
-            ]
-          ]
-        }
-      }
-    },
-    "WorkflowSteps": {
-      "id_field": "WorkflowStepId",
-      "id_field_snake": "workflow_step_id",
-      "fields": {
-        "WorkflowStepId": {
-          "datatype": "string",
-          "nullable": false,
-          "type": "raw"
-        },
-        "Name": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "DisplayName": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Workflow": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "SequencePosition": {
-          "datatype": "integer",
-          "nullable": true,
-          "type": "raw"
-        },
-        "AssignedRole": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "RequiresHumanApproval": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "ApprovalGate": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "PrecededBySteps": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        }
-      },
-      "calc_order": [
-        "Name"
-      ],
-      "dep_edges": [
-        [
-          "DisplayName",
-          "Name"
-        ]
-      ],
-      "expr_templates": {
-        "Name": {
-          "formula_source": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")",
-          "template_hash": "sha256:89d15a4a6be3f751",
-          "root_node": "n_result_Name",
-          "nodes": {
-            "n_ref_1": {
+            "n_ref_3": {
               "kind": "field_ref",
-              "field": "DisplayName",
-              "field_snake": "display_name"
+              "field": "FirstName",
+              "field_snake": "first_name"
             },
-            "n_fn_2": {
-              "kind": "fn",
-              "name": "LOWER",
-              "args": [
-                "n_ref_1"
-              ]
-            },
-            "n_const_3": {
-              "kind": "const",
-              "value": " ",
-              "type": "string"
-            },
-            "n_const_4": {
-              "kind": "const",
-              "value": "-",
-              "type": "string"
-            },
-            "n_fn_5": {
-              "kind": "fn",
-              "name": "SUBSTITUTE",
-              "args": [
-                "n_fn_2",
-                "n_const_3",
-                "n_const_4"
-              ]
-            },
-            "n_result_Name": {
-              "kind": "result",
-              "field": "Name",
-              "field_snake": "name",
-              "in": [
-                "n_fn_5"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_2"
-            ],
-            [
-              "n_fn_2",
-              "n_fn_5"
-            ],
-            [
-              "n_const_3",
-              "n_fn_5"
-            ],
-            [
-              "n_const_4",
-              "n_fn_5"
-            ],
-            [
-              "n_fn_5",
-              "n_result_Name"
-            ]
-          ]
-        }
-      }
-    },
-    "ApprovalGates": {
-      "id_field": "ApprovalGateId",
-      "id_field_snake": "approval_gate_id",
-      "fields": {
-        "ApprovalGateId": {
-          "datatype": "string",
-          "nullable": false,
-          "type": "raw"
-        },
-        "Name": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "DisplayName": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "WorkflowSteps": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "EscalationThresholdHours": {
-          "datatype": "integer",
-          "nullable": true,
-          "type": "raw"
-        }
-      },
-      "calc_order": [
-        "Name"
-      ],
-      "dep_edges": [
-        [
-          "DisplayName",
-          "Name"
-        ]
-      ],
-      "expr_templates": {
-        "Name": {
-          "formula_source": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")",
-          "template_hash": "sha256:89d15a4a6be3f751",
-          "root_node": "n_result_Name",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "DisplayName",
-              "field_snake": "display_name"
-            },
-            "n_fn_2": {
-              "kind": "fn",
-              "name": "LOWER",
-              "args": [
-                "n_ref_1"
-              ]
-            },
-            "n_const_3": {
-              "kind": "const",
-              "value": " ",
-              "type": "string"
-            },
-            "n_const_4": {
-              "kind": "const",
-              "value": "-",
-              "type": "string"
-            },
-            "n_fn_5": {
-              "kind": "fn",
-              "name": "SUBSTITUTE",
-              "args": [
-                "n_fn_2",
-                "n_const_3",
-                "n_const_4"
-              ]
-            },
-            "n_result_Name": {
-              "kind": "result",
-              "field": "Name",
-              "field_snake": "name",
-              "in": [
-                "n_fn_5"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_2"
-            ],
-            [
-              "n_fn_2",
-              "n_fn_5"
-            ],
-            [
-              "n_const_3",
-              "n_fn_5"
-            ],
-            [
-              "n_const_4",
-              "n_fn_5"
-            ],
-            [
-              "n_fn_5",
-              "n_result_Name"
-            ]
-          ]
-        }
-      }
-    },
-    "PrecedesSteps": {
-      "id_field": "PrecedesStepId",
-      "id_field_snake": "precedes_step_id",
-      "fields": {
-        "PrecedesStepId": {
-          "datatype": "string",
-          "nullable": false,
-          "type": "raw"
-        },
-        "Name": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "WorkflowStep": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "DisplayName": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "StepNumber": {
-          "datatype": "integer",
-          "nullable": true,
-          "type": "raw"
-        }
-      },
-      "calc_order": [
-        "DisplayName"
-      ],
-      "dep_edges": [
-        [
-          "StepNumber",
-          "DisplayName"
-        ]
-      ],
-      "expr_templates": {
-        "DisplayName": {
-          "formula_source": "=\"Step-\" & {{StepNumber}}",
-          "template_hash": "sha256:24e5a1504c34af8f",
-          "root_node": "n_result_DisplayName",
-          "nodes": {
-            "n_const_1": {
-              "kind": "const",
-              "value": "Step-",
-              "type": "string"
-            },
-            "n_ref_2": {
-              "kind": "field_ref",
-              "field": "StepNumber",
-              "field_snake": "step_number"
-            },
-            "n_op_3": {
+            "n_op_4": {
               "kind": "op",
               "name": "CONCAT",
               "args": [
-                "n_const_1",
-                "n_ref_2"
+                "n_ref_1",
+                "n_const_2",
+                "n_ref_3"
               ]
             },
-            "n_result_DisplayName": {
+            "n_result_FullName": {
               "kind": "result",
-              "field": "DisplayName",
-              "field_snake": "display_name",
+              "field": "FullName",
+              "field_snake": "full_name",
               "in": [
-                "n_op_3"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_const_1",
-              "n_op_3"
-            ],
-            [
-              "n_ref_2",
-              "n_op_3"
-            ],
-            [
-              "n_op_3",
-              "n_result_DisplayName"
-            ]
-          ]
-        }
-      }
-    },
-    "Roles": {
-      "id_field": "RoleId",
-      "id_field_snake": "role_id",
-      "fields": {
-        "RoleId": {
-          "datatype": "string",
-          "nullable": false,
-          "type": "raw"
-        },
-        "Name": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "DisplayName": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Label": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Comment": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "FilledByHumanAgent": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "FilledByAIAgent": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "FilledByAutomatedPipeline": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "OwnedBy": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "DelegatesTo": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "WorkflowSteps": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        },
-        "FromDelegatesTo": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
-        }
-      },
-      "calc_order": [
-        "Name"
-      ],
-      "dep_edges": [
-        [
-          "DisplayName",
-          "Name"
-        ]
-      ],
-      "expr_templates": {
-        "Name": {
-          "formula_source": "=LOWER({{DisplayName}})",
-          "template_hash": "sha256:76da74226ab8d4cd",
-          "root_node": "n_result_Name",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "DisplayName",
-              "field_snake": "display_name"
-            },
-            "n_fn_2": {
-              "kind": "fn",
-              "name": "LOWER",
-              "args": [
-                "n_ref_1"
-              ]
-            },
-            "n_result_Name": {
-              "kind": "result",
-              "field": "Name",
-              "field_snake": "name",
-              "in": [
-                "n_fn_2"
+                "n_op_4"
               ]
             }
           },
           "edges": [
             [
               "n_ref_1",
-              "n_fn_2"
+              "n_op_4"
             ],
             [
-              "n_fn_2",
-              "n_result_Name"
+              "n_const_2",
+              "n_op_4"
+            ],
+            [
+              "n_ref_3",
+              "n_op_4"
+            ],
+            [
+              "n_op_4",
+              "n_result_FullName"
             ]
-          ]
-        }
-      }
-    },
-    "Departments": {
-      "id_field": "DepartmentId",
-      "id_field_snake": "department_id",
-      "fields": {
-        "DepartmentId": {
-          "datatype": "string",
-          "nullable": false,
-          "type": "raw"
-        },
-        "Name": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "Title": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "DisplayName": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Roles": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship"
+          ],
+          "description": "Full name is computed from the first and last name of the customer"
         }
       },
-      "calc_order": [
-        "Name"
-      ],
-      "dep_edges": [
-        [
-          "DisplayName",
-          "Name"
-        ]
-      ],
-      "expr_templates": {
-        "Name": {
-          "formula_source": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")",
-          "template_hash": "sha256:89d15a4a6be3f751",
-          "root_node": "n_result_Name",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "DisplayName",
-              "field_snake": "display_name"
-            },
-            "n_fn_2": {
-              "kind": "fn",
-              "name": "LOWER",
-              "args": [
-                "n_ref_1"
-              ]
-            },
-            "n_const_3": {
-              "kind": "const",
-              "value": " ",
-              "type": "string"
-            },
-            "n_const_4": {
-              "kind": "const",
-              "value": "-",
-              "type": "string"
-            },
-            "n_fn_5": {
-              "kind": "fn",
-              "name": "SUBSTITUTE",
-              "args": [
-                "n_fn_2",
-                "n_const_3",
-                "n_const_4"
-              ]
-            },
-            "n_result_Name": {
-              "kind": "result",
-              "field": "Name",
-              "field_snake": "name",
-              "in": [
-                "n_fn_5"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_2"
-            ],
-            [
-              "n_fn_2",
-              "n_fn_5"
-            ],
-            [
-              "n_const_3",
-              "n_fn_5"
-            ],
-            [
-              "n_const_4",
-              "n_fn_5"
-            ],
-            [
-              "n_fn_5",
-              "n_result_Name"
-            ]
-          ]
-        }
-      }
+      "description": "Table: Customers"
     }
   }
 }

@@ -683,13 +683,18 @@ class AsmGenerator:
         AsmGenerator._global_label_counter += 1
         return f"{prefix}_{AsmGenerator._global_label_counter}"
 
-    def generate_function(self, ir: IRNode, func_name: str) -> str:
+    def generate_function(self, ir: IRNode, func_name: str,
+                          formula: str = '', description: str = '') -> str:
         """Generate a complete ARM64 function for an IR tree."""
         self.func_name = func_name
         self.needs_result_buffer = False
         lines = []
 
-        # Function header
+        # Function header with description and formula as comments
+        if description:
+            lines.append(f"; {description}")
+        if formula:
+            lines.append(f"; Formula: {formula.replace(chr(10), ' ').strip()}")
         lines.append(f"    .globl _{func_name}")
         lines.append(f"    .p2align 2")
         lines.append(f"_{func_name}:")
@@ -1068,10 +1073,11 @@ class AsmGenerator:
         raise ValueError(f"Unknown IR node type: {type(ir)}")
 
 
-def generate_assembly(ir: IRNode, field_name: str, string_literals: Dict[str, str]) -> str:
+def generate_assembly(ir: IRNode, field_name: str, string_literals: Dict[str, str],
+                      formula: str = '', description: str = '') -> str:
     """Generate x86-64 assembly from IR DAG."""
     gen = AsmGenerator(string_literals)
-    return gen.generate_function(ir, f"eval_{field_name}")
+    return gen.generate_function(ir, f"eval_{field_name}", formula, description)
 
 
 def generate_string_runtime() -> str:
@@ -1524,6 +1530,7 @@ def main():
                     "entity": entity_snake,
                     "formula": formula,
                     "type": col.get("datatype", "string"),
+                    "description": col.get("Description", ""),  # Include field description
                     "schema": schema  # Include schema for this entity
                 })
 
@@ -1576,7 +1583,9 @@ def main():
         # Phase 3: Generate assembly
         print("    Phase 3: Generating assembly...")
         try:
-            asm = generate_assembly(ir, func_name, string_literals)
+            asm = generate_assembly(ir, func_name, string_literals,
+                                    formula=cf['formula'],
+                                    description=cf.get('description', ''))
             all_functions.append(asm)
             print(f"    Generated {len(asm.splitlines())} lines of assembly")
         except Exception as e:

@@ -365,8 +365,8 @@ The commercial ERB tool handles these cases. This repo shows the core pattern.
 **"Isn't Airtable the source of truth?"**
 No, Airtable is the UI. The exported `effortless-rulebook.json` is the canonical artifact. You could use any UI that produces the same JSON format.
 
-**"What about non-deterministic substrates?"**
-The orchestration includes a "fuzzy evaluation" mode where an LLM grades whether English outputs imply the correct computed values. This is explicitly non-deterministic and marked as such.
+**"What about the English substrate? Isn't it non-deterministic?"**
+Yes — English is the **only** non-deterministic substrate. It uses an LLM to interpret prose documentation and infer computed values. All other substrates (Python, Go, OWL, UML, etc.) are 100% deterministic — same input always produces same output. The "limited" substrates simply don't implement every formula type; when they hit an unsupported formula, they fail deterministically (potentially scoring 0%). English, while slower (2-3 orders of magnitude) and imprecise, rarely fails completely (~80%+ typical).
 
 **"How is this different from dbt/MetricFlow/DMN/Substrait?"**
 Those tools solve subsets of the problem:

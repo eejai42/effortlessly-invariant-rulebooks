@@ -14,6 +14,7 @@ also produces CSV files that can be used for testing without Excel dependencies.
 import sys
 import re
 import csv
+import shutil
 from pathlib import Path
 
 # Add project root to path for shared imports
@@ -494,7 +495,7 @@ def export_all_entities_csv(rulebook, output_dir):
 def export_column_formulas_csv(rulebook, output_path):
     """Export column formulas as a CSV file.
 
-    This produces a CSV with columns: table_name, field_name, field_type, dag_level, formula
+    This produces a CSV with columns: table_name, field_name, field_type, dag_level, formula, description
     """
     rows = []
 
@@ -512,18 +513,20 @@ def export_column_formulas_csv(rulebook, output_path):
             field_type = field.get('type', 'raw')
             dag_level = field.get('dag_level', 0 if field_type == 'raw' else '')
             formula = field.get('formula', '')
+            description = field.get('Description', '')
 
             rows.append({
                 'table_name': table_name,
                 'field_name': to_snake_case(field_name),
                 'field_type': field_type,
                 'dag_level': dag_level,
-                'formula': formula
+                'formula': formula,
+                'description': description
             })
 
     # Write CSV
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
-        fieldnames = ['table_name', 'field_name', 'field_type', 'dag_level', 'formula']
+        fieldnames = ['table_name', 'field_name', 'field_type', 'dag_level', 'formula', 'description']
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
@@ -542,6 +545,91 @@ def clean_test_data_dir(test_data_dir):
     else:
         test_data_dir.mkdir(parents=True)
         print(f"Created {test_data_dir}/")
+
+
+def compute_table_values_to_csv(rulebook, table_name, csv_path):
+    """Compute values from rulebook and write to CSV for comparison.
+
+    Args:
+        rulebook: The loaded rulebook dict
+        table_name: Name of the table to export
+        csv_path: Path for the output CSV file
+
+    Returns:
+        True if export succeeded, False otherwise
+    """
+    csv_path = Path(csv_path)
+
+    # Find the table (case-insensitive matching)
+    matching_table = None
+    for name in rulebook.keys():
+        if name.lower() == table_name.lower():
+            matching_table = name
+            break
+
+    if not matching_table:
+        return False
+
+    table_data = rulebook[matching_table]
+    if not isinstance(table_data, dict) or 'schema' not in table_data:
+        return False
+
+    schema = table_data.get('schema', [])
+    data = table_data.get('data', [])
+    column_map = build_column_map(schema)
+
+    try:
+        with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+
+            # Write header row
+            header = [field['name'] for field in schema]
+            writer.writerow(header)
+
+            # Write data rows with computed values
+            for row_data in data:
+                row = []
+                for field in schema:
+                    value = get_value_for_cell(field, row_data, column_map, 0)
+                    if value is None:
+                        row.append('')
+                    elif isinstance(value, bool):
+                        row.append(str(value))
+                    else:
+                        row.append(str(value))
+                writer.writerow(row)
+
+        return True
+    except Exception:
+        return False
+
+
+def compare_csv_files(csv1_path, csv2_path):
+    """Compare two CSV files content.
+
+    Returns True if files are identical, False otherwise.
+    """
+    csv1_path = Path(csv1_path)
+    csv2_path = Path(csv2_path)
+
+    if not csv1_path.exists() or not csv2_path.exists():
+        return False
+
+    try:
+        with open(csv1_path, 'r', encoding='utf-8') as f1:
+            content1 = f1.read()
+        with open(csv2_path, 'r', encoding='utf-8') as f2:
+            content2 = f2.read()
+        return content1 == content2
+    except Exception:
+        return False
+
+
+def cleanup_file(path):
+    """Safely remove a file if it exists."""
+    path = Path(path)
+    if path.exists():
+        path.unlink()
 
 
 def main():
@@ -576,12 +664,6 @@ def main():
         print(f"Error: {e}")
         sys.exit(1)
 
-    # Create workbook
-    wb = Workbook()
-
-    # Remove the default sheet created by openpyxl
-    default_sheet = wb.active
-
     # Get all table names from the rulebook
     table_names = get_table_names(rulebook)
 
@@ -590,6 +672,46 @@ def main():
         sys.exit(1)
 
     print(f"Found {len(table_names)} tables: {', '.join(table_names)}")
+
+    # --- SMART UPDATE WORKFLOW FOR XLSX ---
+    xlsx_path = Path('rulebook.xlsx')
+    backup_path = Path('rulebook.xlsx.backup')
+    csv_before_path = Path('.entity_before.csv')
+    csv_after_path = Path('.entity_after.csv')
+
+    # Find first valid table for comparison (must have schema)
+    comparison_table = None
+    for name in table_names:
+        table_data = rulebook.get(name)
+        if isinstance(table_data, dict) and 'schema' in table_data:
+            comparison_table = name
+            break
+
+    print(f"\n--- Smart Update: Checking for actual content changes ---")
+    has_existing_xlsx = xlsx_path.exists()
+    baseline_exported = False
+
+    if not comparison_table:
+        print(f"  No valid tables found for comparison - skipping smart update")
+    elif has_existing_xlsx:
+        print(f"Step 1: Computing baseline values for '{comparison_table}'...")
+        baseline_exported = compute_table_values_to_csv(rulebook, comparison_table, csv_before_path)
+
+        if baseline_exported:
+            print(f"  Exported baseline to: {csv_before_path}")
+
+            # Backup current xlsx
+            print(f"Step 2: Creating backup of existing xlsx...")
+            shutil.move(str(xlsx_path), str(backup_path))
+            print(f"  Backed up to: {backup_path}")
+    else:
+        print(f"  No existing xlsx found - this is a fresh generation")
+
+    # Create workbook
+    wb = Workbook()
+
+    # Remove the default sheet created by openpyxl
+    default_sheet = wb.active
 
     # Create a worksheet for each table
     for table_name in table_names:
@@ -618,8 +740,33 @@ def main():
         wb.remove(default_sheet)
 
     # Save the workbook
-    xlsx_path = Path('rulebook.xlsx')
     wb.save(xlsx_path)
+
+    # Compare and decide whether to keep or rollback
+    if comparison_table and baseline_exported and backup_path.exists():
+        print(f"\nStep 3: Computing new values for comparison...")
+        after_exported = compute_table_values_to_csv(rulebook, comparison_table, csv_after_path)
+
+        if after_exported:
+            print(f"\nStep 4: Comparing content...")
+            content_changed = not compare_csv_files(csv_before_path, csv_after_path)
+
+            if content_changed:
+                print(f"  CONTENT CHANGED - keeping new xlsx")
+                cleanup_file(backup_path)
+                cleanup_file(csv_before_path)
+                cleanup_file(csv_after_path)
+            else:
+                print(f"  NO CONTENT CHANGE - rolling back to preserve original file")
+                cleanup_file(xlsx_path)
+                shutil.move(str(backup_path), str(xlsx_path))
+                cleanup_file(csv_before_path)
+                cleanup_file(csv_after_path)
+                print(f"\n*** XLSX NOT UPDATED (content unchanged) ***")
+        else:
+            cleanup_file(backup_path)
+            cleanup_file(csv_before_path)
+
     print(f"\nGenerated: {xlsx_path}")
     print(f"  - {len(wb.sheetnames)} worksheets")
 

@@ -35,6 +35,7 @@ try:
     from openpyxl import Workbook, load_workbook
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
     from openpyxl.utils import get_column_letter
+    from openpyxl.comments import Comment
 except ImportError:
     print("Error: openpyxl is required. Install with: pip install openpyxl")
     sys.exit(1)
@@ -440,6 +441,11 @@ def create_worksheet_from_table(workbook, table_name, table_data):
         cell = ws.cell(row=1, column=col_idx, value=field['name'])
         apply_header_style(cell)
 
+        # Add description as cell comment if available
+        description = field.get('Description', '')
+        if description:
+            cell.comment = Comment(description, "ERB Rulebook")
+
         # Set column width based on header length (minimum 12 chars)
         ws.column_dimensions[get_column_letter(col_idx)].width = max(len(field['name']) + 2, 12)
 
@@ -689,8 +695,13 @@ def main():
         print("Warning: No tables found in rulebook")
         sys.exit(1)
 
-    # Use first entity for content comparison
-    comparison_sheet = table_names[0]
+    # Find first valid table for content comparison (must have schema)
+    comparison_sheet = None
+    for name in table_names:
+        table_data = rulebook.get(name)
+        if isinstance(table_data, dict) and 'schema' in table_data:
+            comparison_sheet = name
+            break
 
     print(f"Found {len(table_names)} tables: {', '.join(table_names)}")
 
@@ -699,13 +710,16 @@ def main():
     print(f"\n--- Smart Update: Checking for actual content changes ---")
     has_existing_xlsx = output_path.exists()
     baseline_exported = False
-    
-    if has_existing_xlsx:
-        print(f"Step 1: Exporting '{comparison_sheet}' from existing xlsx to CSV...")
-        baseline_exported = export_sheet_to_csv(output_path, comparison_sheet, csv_before_path)
-        
+
+    if not comparison_sheet:
+        print(f"  No valid tables found for comparison - skipping smart update")
+    elif has_existing_xlsx:
+        # Use Python formula evaluation for baseline (since xlsx formulas may not have cached values)
+        print(f"Step 1: Computing baseline values for '{comparison_sheet}'...")
+        baseline_exported = compute_table_values_to_csv(rulebook, comparison_sheet, csv_before_path)
+
         if baseline_exported:
-            print(f"  Exported baseline to: {csv_before_path}")
+            print(f"  Computed baseline to: {csv_before_path}")
             
             # Step 2: Rename current xlsx to backup
             print(f"Step 2: Creating backup of existing xlsx...")
@@ -726,7 +740,7 @@ def main():
     print(f"  - {len(wb.sheetnames)} worksheets")
 
     # Step 4-6: Compare and decide whether to keep or rollback
-    if baseline_exported and backup_path.exists():
+    if comparison_sheet and baseline_exported and backup_path.exists():
         print(f"\nStep 4: Computing values for '{comparison_sheet}' to CSV...")
         # Use Python formula evaluation since the new xlsx doesn't have cached computed values yet
         after_exported = compute_table_values_to_csv(rulebook, comparison_sheet, csv_after_path)

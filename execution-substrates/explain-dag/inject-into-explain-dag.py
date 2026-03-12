@@ -197,10 +197,10 @@ def build_calc_order(calculated_fields: List[Dict], raw_field_names: Set[str]) -
             print(f"Warning: Failed to parse formula for {field['name']}: {e}")
             field_deps[field['name']] = set()
 
-    # Build dependency edges
+    # Build dependency edges (sorted for deterministic output)
     dep_edges = []
-    for field_name, deps in field_deps.items():
-        for dep in deps:
+    for field_name in sorted(field_deps.keys()):
+        for dep in sorted(field_deps[field_name]):
             dep_edges.append([dep, field_name])
 
     # Topological sort
@@ -267,6 +267,10 @@ def generate_explain_spec(rulebook: Dict) -> Dict[str, Any]:
         if not calculated_fields:
             continue  # Skip entities with no calculated fields
 
+        # Get entity description from rulebook
+        entity_data = rulebook.get(entity_name, {})
+        entity_description = entity_data.get('Description', '') if isinstance(entity_data, dict) else ''
+
         raw_fields = get_raw_fields(schema)
         raw_field_names = {f['name'] for f in raw_fields}
 
@@ -277,14 +281,18 @@ def generate_explain_spec(rulebook: Dict) -> Dict[str, Any]:
                 id_field = field['name']
                 break
 
-        # Build field info
+        # Build field info with descriptions
         fields_info = {}
         for field in schema:
-            fields_info[field['name']] = {
+            field_info = {
                 "datatype": field.get('datatype', 'string'),
                 "nullable": field.get('nullable', True),
                 "type": field.get('type', 'raw')
             }
+            # Include description if available
+            if field.get('Description'):
+                field_info["description"] = field.get('Description')
+            fields_info[field['name']] = field_info
 
         # Build calculation order and dependency edges
         calc_order, dep_edges = build_calc_order(calculated_fields, raw_field_names)
@@ -293,21 +301,26 @@ def generate_explain_spec(rulebook: Dict) -> Dict[str, Any]:
         expr_templates = {}
         for field in calculated_fields:
             formula = field.get('formula', '')
+            field_description = field.get('Description', '')
             try:
                 ast = parse_formula(formula)
                 graph = ast_to_graph(ast, field['name'])
                 template_hash = compute_template_hash(graph, formula)
 
-                expr_templates[field['name']] = {
+                template_info = {
                     "formula_source": formula,
                     "template_hash": template_hash,
                     "root_node": graph["root_node"],
                     "nodes": graph["nodes"],
                     "edges": graph["edges"]
                 }
+                # Include description if available
+                if field_description:
+                    template_info["description"] = field_description
+                expr_templates[field['name']] = template_info
             except Exception as e:
                 print(f"Warning: Failed to build template for {field['name']}: {e}")
-                expr_templates[field['name']] = {
+                template_info = {
                     "formula_source": formula,
                     "template_hash": "error",
                     "error": str(e),
@@ -315,8 +328,11 @@ def generate_explain_spec(rulebook: Dict) -> Dict[str, Any]:
                     "nodes": {},
                     "edges": []
                 }
+                if field_description:
+                    template_info["description"] = field_description
+                expr_templates[field['name']] = template_info
 
-        spec["entities"][entity_name] = {
+        entity_spec = {
             "id_field": id_field,
             "id_field_snake": to_snake_case(id_field) if id_field else None,
             "fields": fields_info,
@@ -324,6 +340,10 @@ def generate_explain_spec(rulebook: Dict) -> Dict[str, Any]:
             "dep_edges": dep_edges,
             "expr_templates": expr_templates
         }
+        # Include entity description if available
+        if entity_description:
+            entity_spec["description"] = entity_description
+        spec["entities"][entity_name] = entity_spec
 
     return spec
 
