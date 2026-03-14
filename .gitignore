@@ -22,3 +22,13 @@ execution-substrates/**/.grades.pkl
 execution-substrates/csv/test-data/
 devops/last-payload.json
 testing/_substrate_results.json
+
+# Rulebook cache (user cache for offline mode - NOT the repo cache)
+effortless-rulebook/.cache/
+
+# Environment files (secrets)
+.env
+!.env.example
+
+# Note: bases/*/ is NOT gitignored - it contains the repo cache
+# that ships with the repo for cold-start Docker support

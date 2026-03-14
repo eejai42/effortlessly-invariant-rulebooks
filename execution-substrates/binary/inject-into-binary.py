@@ -692,9 +692,9 @@ class AsmGenerator:
 
         # Function header with description and formula as comments
         if description:
-            lines.append(f"; {description}")
+            lines.append(f"// {description}")
         if formula:
-            lines.append(f"; Formula: {formula.replace(chr(10), ' ').strip()}")
+            lines.append(f"// Formula: {formula.replace(chr(10), ' ').strip()}")
         lines.append(f"    .globl _{func_name}")
         lines.append(f"    .p2align 2")
         lines.append(f"_{func_name}:")
@@ -1083,23 +1083,23 @@ def generate_assembly(ir: IRNode, field_name: str, string_literals: Dict[str, st
 def generate_string_runtime() -> str:
     """Generate the ARM64 string runtime library in assembly."""
     return """
-; String runtime for ERB Binary Substrate (ARM64 / Apple Silicon)
-; Calling convention: Apple ARM64 ABI
+// String runtime for ERB Binary Substrate (ARM64 / Apple Silicon)
+// Calling convention: Apple ARM64 ABI
 
     .text
     .p2align 2
 
-; bool _string_equals(const char* s1, size_t len1, const char* s2, size_t len2)
-; x0 = s1, x1 = len1, x2 = s2, x3 = len2
-; Returns 1 if strings are equal, 0 otherwise in w0
+// bool _string_equals(const char* s1, size_t len1, const char* s2, size_t len2)
+// x0 = s1, x1 = len1, x2 = s2, x3 = len2
+// Returns 1 if strings are equal, 0 otherwise in w0
     .globl _string_equals
 _string_equals:
-    cmp x1, x3                  ; Compare lengths first
+    cmp x1, x3                  // Compare lengths first
     b.ne Lstr_eq_false
-    cbz x1, Lstr_eq_true        ; If both empty, equal
+    cbz x1, Lstr_eq_true        // If both empty, equal
 
-    ; Compare byte by byte
-    mov x4, #0                  ; index
+    // Compare byte by byte
+    mov x4, #0                  // index
 Lstr_eq_loop:
     ldrb w5, [x0, x4]
     ldrb w6, [x2, x4]
@@ -1117,9 +1117,9 @@ Lstr_eq_false:
     mov w0, #0
     ret
 
-; char* _string_concat(char* dest, const char* s1, size_t len1, const char* s2, size_t len2)
-; x0 = dest, x1 = s1_ptr, x2 = s1_len, x3 = s2_ptr, x4 = s2_len
-; Returns dest in x0, total length in x1
+// char* _string_concat(char* dest, const char* s1, size_t len1, const char* s2, size_t len2)
+// x0 = dest, x1 = s1_ptr, x2 = s1_len, x3 = s2_ptr, x4 = s2_len
+// Returns dest in x0, total length in x1
     .globl _string_concat
 _string_concat:
     stp x29, x30, [sp, #-16]!
@@ -1127,13 +1127,13 @@ _string_concat:
     stp x19, x20, [sp, #-16]!
     stp x21, x22, [sp, #-16]!
 
-    mov x19, x0                 ; save dest
-    mov x20, x2                 ; save s1_len
-    mov x21, x4                 ; save s2_len
+    mov x19, x0                 // save dest
+    mov x20, x2                 // save s1_len
+    mov x21, x4                 // save s2_len
 
-    ; Copy s1 to dest
-    mov x5, #0                  ; index
-    cbz x2, Lconcat_s2          ; skip if s1 empty
+    // Copy s1 to dest
+    mov x5, #0                  // index
+    cbz x2, Lconcat_s2          // skip if s1 empty
 Lconcat_s1_loop:
     ldrb w6, [x1, x5]
     strb w6, [x0, x5]
@@ -1142,10 +1142,10 @@ Lconcat_s1_loop:
     b.lt Lconcat_s1_loop
 
 Lconcat_s2:
-    ; Copy s2 after s1
-    add x0, x19, x20            ; dest + s1_len
-    mov x5, #0                  ; index
-    cbz x21, Lconcat_done       ; skip if s2 empty
+    // Copy s2 after s1
+    add x0, x19, x20            // dest + s1_len
+    mov x5, #0                  // index
+    cbz x21, Lconcat_done       // skip if s2 empty
 Lconcat_s2_loop:
     ldrb w6, [x3, x5]
     strb w6, [x0, x5]
@@ -1154,17 +1154,17 @@ Lconcat_s2_loop:
     b.lt Lconcat_s2_loop
 
 Lconcat_done:
-    mov x0, x19                 ; return dest ptr
-    add x1, x20, x21            ; return total length
+    mov x0, x19                 // return dest ptr
+    add x1, x20, x21            // return total length
 
     ldp x21, x22, [sp], #16
     ldp x19, x20, [sp], #16
     ldp x29, x30, [sp], #16
     ret
 
-; int_to_string: convert integer to string
-; x0 = buffer, x1 = integer value
-; Returns: x0 = buffer ptr, x1 = string length
+// int_to_string: convert integer to string
+// x0 = buffer, x1 = integer value
+// Returns: x0 = buffer ptr, x1 = string length
     .globl _int_to_string
 _int_to_string:
     stp x29, x30, [sp, #-16]!
@@ -1172,11 +1172,11 @@ _int_to_string:
     stp x19, x20, [sp, #-16]!
     stp x21, x22, [sp, #-16]!
 
-    mov x19, x0                 ; save buffer start
-    mov x20, x0                 ; current position
-    mov x2, x1                  ; value to convert
+    mov x19, x0                 // save buffer start
+    mov x20, x0                 // current position
+    mov x2, x1                  // value to convert
 
-    ; Handle negative
+    // Handle negative
     cmp x2, #0
     b.ge Lits_positive
     neg x2, x2
@@ -1184,23 +1184,23 @@ _int_to_string:
     strb w3, [x20], #1
 
 Lits_positive:
-    mov x21, x20                ; start of digits
+    mov x21, x20                // start of digits
 
-    ; Generate digits in reverse
+    // Generate digits in reverse
     mov x3, #10
 Lits_loop:
-    udiv x4, x2, x3             ; quotient
-    msub x5, x4, x3, x2         ; remainder = x2 - (x4 * 10)
+    udiv x4, x2, x3             // quotient
+    msub x5, x4, x3, x2         // remainder = x2 - (x4 * 10)
     add w5, w5, #'0'
     strb w5, [x20], #1
     mov x2, x4
     cbnz x2, Lits_loop
 
-    ; Calculate length
-    sub x22, x20, x19           ; length
+    // Calculate length
+    sub x22, x20, x19           // length
 
-    ; Reverse digits (x21 = start, x20-1 = end)
-    sub x20, x20, #1            ; point to last digit
+    // Reverse digits (x21 = start, x20-1 = end)
+    sub x20, x20, #1            // point to last digit
 Lits_reverse:
     cmp x21, x20
     b.ge Lits_done
@@ -1212,8 +1212,8 @@ Lits_reverse:
     b Lits_reverse
 
 Lits_done:
-    mov x0, x19                 ; return buffer ptr
-    mov x1, x22                 ; return length
+    mov x0, x19                 // return buffer ptr
+    mov x1, x22                 // return length
 
     ldp x21, x22, [sp], #16
     ldp x19, x20, [sp], #16
@@ -1232,55 +1232,55 @@ _str_false:
     .text
     .p2align 2
 
-; char* _string_lower(char* dest, const char* src, size_t len)
-; x0 = dest, x1 = src, x2 = len
-; Returns dest in x0, length in x1
-; Converts ASCII uppercase A-Z to lowercase a-z
+// char* _string_lower(char* dest, const char* src, size_t len)
+// x0 = dest, x1 = src, x2 = len
+// Returns dest in x0, length in x1
+// Converts ASCII uppercase A-Z to lowercase a-z
     .globl _string_lower
 _string_lower:
     stp x29, x30, [sp, #-16]!
     mov x29, sp
     stp x19, x20, [sp, #-16]!
 
-    mov x19, x0                 ; save dest
-    mov x20, x2                 ; save len
+    mov x19, x0                 // save dest
+    mov x20, x2                 // save len
 
-    cbz x2, Llower_done         ; skip if empty
+    cbz x2, Llower_done         // skip if empty
 
-    mov x3, #0                  ; index
+    mov x3, #0                  // index
 Llower_loop:
-    ldrb w4, [x1, x3]           ; load byte from src
+    ldrb w4, [x1, x3]           // load byte from src
 
-    ; Check if uppercase A-Z (0x41-0x5A)
-    cmp w4, #0x41               ; 'A'
+    // Check if uppercase A-Z (0x41-0x5A)
+    cmp w4, #0x41               // 'A'
     b.lt Llower_store
-    cmp w4, #0x5A               ; 'Z'
+    cmp w4, #0x5A               // 'Z'
     b.gt Llower_store
 
-    ; Convert to lowercase by adding 0x20
+    // Convert to lowercase by adding 0x20
     add w4, w4, #0x20
 
 Llower_store:
-    strb w4, [x0, x3]           ; store byte to dest
+    strb w4, [x0, x3]           // store byte to dest
     add x3, x3, #1
     cmp x3, x2
     b.lt Llower_loop
 
 Llower_done:
-    mov x0, x19                 ; return dest ptr
-    mov x1, x20                 ; return length
+    mov x0, x19                 // return dest ptr
+    mov x1, x20                 // return length
 
     ldp x19, x20, [sp], #16
     ldp x29, x30, [sp], #16
     ret
 
 
-; char* _string_substitute(char* dest, const char* src, size_t src_len,
-;                          const char* old, size_t old_len,
-;                          const char* new, size_t new_len)
-; x0 = dest, x1 = src, x2 = src_len, x3 = old, x4 = old_len, x5 = new, x6 = new_len
-; Returns dest in x0, result length in x1
-; Replaces all occurrences of 'old' with 'new' in src
+// char* _string_substitute(char* dest, const char* src, size_t src_len,
+//                          const char* old, size_t old_len,
+//                          const char* new, size_t new_len)
+// x0 = dest, x1 = src, x2 = src_len, x3 = old, x4 = old_len, x5 = new, x6 = new_len
+// Returns dest in x0, result length in x1
+// Replaces all occurrences of 'old' with 'new' in src
     .globl _string_substitute
 _string_substitute:
     stp x29, x30, [sp, #-16]!
@@ -1291,35 +1291,35 @@ _string_substitute:
     stp x25, x26, [sp, #-16]!
     stp x27, x28, [sp, #-16]!
 
-    mov x19, x0                 ; dest
-    mov x20, x1                 ; src
-    mov x21, x2                 ; src_len
-    mov x22, x3                 ; old
-    mov x23, x4                 ; old_len
-    mov x24, x5                 ; new
-    mov x25, x6                 ; new_len
+    mov x19, x0                 // dest
+    mov x20, x1                 // src
+    mov x21, x2                 // src_len
+    mov x22, x3                 // old
+    mov x23, x4                 // old_len
+    mov x24, x5                 // new
+    mov x25, x6                 // new_len
 
-    mov x26, #0                 ; src_idx
-    mov x27, #0                 ; dest_idx
+    mov x26, #0                 // src_idx
+    mov x27, #0                 // dest_idx
 
-    ; Handle empty old string - just copy src
+    // Handle empty old string - just copy src
     cbz x23, Lsubst_copy_rest
 
 Lsubst_loop:
-    ; Check if we have enough chars left for a match
-    sub x7, x21, x26            ; remaining = src_len - src_idx
-    cmp x7, x23                 ; remaining < old_len?
-    b.lt Lsubst_copy_rest       ; not enough chars, copy rest
+    // Check if we have enough chars left for a match
+    sub x7, x21, x26            // remaining = src_len - src_idx
+    cmp x7, x23                 // remaining < old_len?
+    b.lt Lsubst_copy_rest       // not enough chars, copy rest
 
-    ; Try to match old string at current position
-    mov x8, #0                  ; match_idx
+    // Try to match old string at current position
+    mov x8, #0                  // match_idx
 Lsubst_match:
     cmp x8, x23
-    b.ge Lsubst_found           ; matched all chars
+    b.ge Lsubst_found           // matched all chars
 
-    add x9, x20, x26            ; src + src_idx
-    ldrb w10, [x9, x8]          ; src[src_idx + match_idx]
-    ldrb w11, [x22, x8]         ; old[match_idx]
+    add x9, x20, x26            // src + src_idx
+    ldrb w10, [x9, x8]          // src[src_idx + match_idx]
+    ldrb w11, [x22, x8]         // old[match_idx]
     cmp w10, w11
     b.ne Lsubst_no_match
 
@@ -1327,51 +1327,51 @@ Lsubst_match:
     b Lsubst_match
 
 Lsubst_found:
-    ; Match found - copy new string to dest
-    mov x8, #0                  ; new_idx
-    cbz x25, Lsubst_after_new   ; skip if new is empty
+    // Match found - copy new string to dest
+    mov x8, #0                  // new_idx
+    cbz x25, Lsubst_after_new   // skip if new is empty
 Lsubst_copy_new:
-    ldrb w10, [x24, x8]         ; new[new_idx]
-    add x9, x19, x27            ; dest + dest_idx
+    ldrb w10, [x24, x8]         // new[new_idx]
+    add x9, x19, x27            // dest + dest_idx
     strb w10, [x9]
-    add x27, x27, #1            ; dest_idx++
+    add x27, x27, #1            // dest_idx++
     add x8, x8, #1
     cmp x8, x25
     b.lt Lsubst_copy_new
 
 Lsubst_after_new:
-    add x26, x26, x23           ; src_idx += old_len (skip old string)
+    add x26, x26, x23           // src_idx += old_len (skip old string)
     cmp x26, x21
     b.lt Lsubst_loop
     b Lsubst_done
 
 Lsubst_no_match:
-    ; No match - copy one char and advance
-    add x9, x20, x26            ; src + src_idx
+    // No match - copy one char and advance
+    add x9, x20, x26            // src + src_idx
     ldrb w10, [x9]
-    add x9, x19, x27            ; dest + dest_idx
+    add x9, x19, x27            // dest + dest_idx
     strb w10, [x9]
-    add x26, x26, #1            ; src_idx++
-    add x27, x27, #1            ; dest_idx++
+    add x26, x26, #1            // src_idx++
+    add x27, x27, #1            // dest_idx++
     cmp x26, x21
     b.lt Lsubst_loop
     b Lsubst_done
 
 Lsubst_copy_rest:
-    ; Copy remaining chars from src to dest
+    // Copy remaining chars from src to dest
     cmp x26, x21
     b.ge Lsubst_done
-    add x9, x20, x26            ; src + src_idx
+    add x9, x20, x26            // src + src_idx
     ldrb w10, [x9]
-    add x9, x19, x27            ; dest + dest_idx
+    add x9, x19, x27            // dest + dest_idx
     strb w10, [x9]
     add x26, x26, #1
     add x27, x27, #1
     b Lsubst_copy_rest
 
 Lsubst_done:
-    mov x0, x19                 ; return dest ptr
-    mov x1, x27                 ; return result length
+    mov x0, x19                 // return dest ptr
+    mov x1, x27                 // return result length
 
     ldp x27, x28, [sp], #16
     ldp x25, x26, [sp], #16
@@ -1399,7 +1399,7 @@ def generate_data_section(string_literals: Dict[str, str], result_buffers: List[
 
     # Add static result buffers for functions that do string concatenation
     lines.append("")
-    lines.append("    ; Static result buffers for string concatenation")
+    lines.append("    // Static result buffers for string concatenation")
     lines.append("    .bss")
     for func_name in sorted(result_buffers):  # Sort for deterministic output
         buffer_label = f"_result_buf_{func_name}"
@@ -1487,6 +1487,18 @@ def main():
     print("Binary Execution Substrate - Formula-to-Assembly Compiler")
     print("=" * 70)
     print()
+
+    # Check platform - this substrate is designed for ARM64 macOS (Apple Silicon)
+    system = platform.system()
+    if system != "Darwin":
+        print(f"⚠️  Binary substrate is designed for ARM64 macOS (Apple Silicon).")
+        print(f"   Current platform: {system}")
+        print(f"   Skipping binary compilation on this platform.")
+        print()
+        print("=" * 70)
+        print("Binary substrate skipped (not on macOS)")
+        print("=" * 70)
+        return
 
     # Load the rulebook
     print("Loading rulebook...")
@@ -1616,11 +1628,11 @@ def main():
 
     # Combine all assembly
     full_asm = f"""
-; ERB Binary Substrate - Generated Assembly (ARM64 / Apple Silicon)
-; Generated from rulebook formulas - DO NOT HAND-EDIT
-;
-; This file is GENERATED by inject-into-binary.py
-; The formulas are the source of truth, not this assembly.
+// ERB Binary Substrate - Generated Assembly (ARM64 / Apple Silicon)
+// Generated from rulebook formulas - DO NOT HAND-EDIT
+//
+// This file is GENERATED by inject-into-binary.py
+// The formulas are the source of truth, not this assembly.
 
 {runtime}
 

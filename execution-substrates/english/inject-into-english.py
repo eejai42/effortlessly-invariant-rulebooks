@@ -10,19 +10,138 @@ This substrate reads the effortless-rulebook.json and uses an LLM to generate:
 The core insight: Let the LLM do the work. Instead of writing formula parsers,
 just send the rulebook JSON to the LLM and ask it to write the specification.
 
-Two LLM calls, zero formula parsing.
+OFFLINE MODE:
+If no OPENAI_API_KEY (or ANTHROPIC_API_KEY) is set, the substrate will:
+1. Check for a cached specification in bases/<name>/english-specification.md
+2. If found, use it without making any LLM calls
+3. If not found, skip with a clear message
+
+This enables Docker/offline operation from a fresh clone.
 """
 
 import sys
 import os
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 # Add project root to path for shared imports
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from orchestration.shared import load_rulebook, get_candidate_name_from_cwd, handle_clean_arg
+
+# =============================================================================
+# OFFLINE CACHE SUPPORT
+# =============================================================================
+
+BASES_JSON = PROJECT_ROOT / "orchestration" / "bases.json"
+SSOTME_JSON = PROJECT_ROOT / "ssotme.json"
+
+# Colors
+YELLOW = '\033[1;33m'
+GREEN = '\033[0;32m'
+CYAN = '\033[0;36m'
+DIM = '\033[2m'
+NC = '\033[0m'
+
+
+def get_current_base_id():
+    """Get the current base ID from ssotme.json."""
+    if not SSOTME_JSON.exists():
+        return None
+    try:
+        with open(SSOTME_JSON, 'r') as f:
+            config = json.load(f)
+        for setting in config.get('ProjectSettings', []):
+            if setting.get('Name') == 'baseId':
+                return setting.get('Value')
+    except Exception:
+        pass
+    return None
+
+
+def get_base_by_id(base_id: str):
+    """Get base config by ID."""
+    if not BASES_JSON.exists():
+        return None
+    try:
+        with open(BASES_JSON, 'r') as f:
+            bases = json.load(f)
+        for base in bases:
+            if base.get('id') == base_id:
+                return base
+    except Exception:
+        pass
+    return None
+
+
+def get_cached_specification_path(base_id: str = None) -> Path:
+    """Get the path to cached specification in repo cache."""
+    if base_id is None:
+        base_id = get_current_base_id()
+    if not base_id:
+        return None
+
+    base = get_base_by_id(base_id)
+    if base and base.get('docs'):
+        cache_path = PROJECT_ROOT / base['docs'] / "english-specification.md"
+        if cache_path.exists():
+            return cache_path
+    return None
+
+
+def has_api_key(provider: str = "openai") -> bool:
+    """Check if API key is available for the given provider."""
+    if provider == "openai":
+        return bool(os.environ.get("OPENAI_API_KEY"))
+    elif provider == "anthropic":
+        return bool(os.environ.get("ANTHROPIC_API_KEY"))
+    return False
+
+
+def restore_from_cache() -> bool:
+    """Restore specification from repo cache if available."""
+    cache_path = get_cached_specification_path()
+    if not cache_path:
+        return False
+
+    try:
+        target = SCRIPT_DIR / "specification.md"
+        shutil.copy2(cache_path, target)
+        print(f"  {GREEN}Restored specification from repo cache{NC}")
+        print(f"  {DIM}Source: {cache_path.relative_to(PROJECT_ROOT)}{NC}")
+        return True
+    except Exception as e:
+        print(f"  {YELLOW}Warning: Failed to restore from cache: {e}{NC}")
+        return False
+
+
+def save_to_cache() -> bool:
+    """Save current specification to repo cache."""
+    base_id = get_current_base_id()
+    if not base_id:
+        return False
+
+    base = get_base_by_id(base_id)
+    if not base or not base.get('docs'):
+        return False
+
+    source = SCRIPT_DIR / "specification.md"
+    if not source.exists():
+        return False
+
+    try:
+        target = PROJECT_ROOT / base['docs'] / "english-specification.md"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+        print(f"  {GREEN}Saved specification to repo cache{NC}")
+        print(f"  {DIM}Target: {target.relative_to(PROJECT_ROOT)}{NC}")
+        return True
+    except Exception:
+        return False
 
 # =============================================================================
 # MODEL TIER CONFIGURATION
@@ -176,10 +295,55 @@ def main():
         action="store_true",
         help="Skip interactive prompts"
     )
+    parser.add_argument(
+        "--use-cache",
+        action="store_true",
+        help="Use cached specification from repo (skip LLM)"
+    )
+    parser.add_argument(
+        "--save-cache",
+        action="store_true",
+        help="Save generated specification to repo cache after generation"
+    )
 
     args = parser.parse_args()
 
     candidate_name = get_candidate_name_from_cwd()
+    provider = args.provider
+
+    # ==========================================================================
+    # OFFLINE MODE: Check for API key, use cache if unavailable
+    # ==========================================================================
+    api_available = has_api_key(provider)
+    cache_path = get_cached_specification_path()
+
+    if args.use_cache:
+        # Explicit cache usage requested
+        print(f"\n{CYAN}Using cached specification (--use-cache){NC}")
+        if restore_from_cache():
+            return 0
+        else:
+            print(f"  {YELLOW}No cached specification available{NC}")
+            return 2
+
+    if not api_available and not args.regenerate:
+        # No API key - try to use cache
+        print(f"\n{YELLOW}No API key found for {provider.upper()}{NC}")
+
+        if cache_path:
+            print(f"  Using cached specification from repo...")
+            if restore_from_cache():
+                return 0
+
+        # No cache available
+        print(f"\n  {YELLOW}No cached specification available for this base.{NC}")
+        print(f"  {DIM}To generate a specification, set {provider.upper()}_API_KEY environment variable.{NC}")
+        print(f"  {DIM}Or run with --use-cache after caching a specification.{NC}")
+        return 2
+
+    # ==========================================================================
+    # NORMAL MODE: Generate via LLM
+    # ==========================================================================
 
     # Check if specification already exists
     spec_file = Path("specification.md")
@@ -235,6 +399,14 @@ def main():
     with open("specification.md", 'w', encoding='utf-8') as f:
         f.write(spec_content)
     print("  Created specification.md")
+
+    # AUTO-SAVE to repo cache (self-maintaining system)
+    # This ensures the cache stays up-to-date as specs are generated
+    print("\n=== Auto-saving to Repo Cache ===")
+    if save_to_cache():
+        print(f"  {DIM}(Cache will be used for offline/Docker runs){NC}")
+    else:
+        print(f"  {DIM}(No cache location configured for this base){NC}")
 
     print(f"\nDone generating {candidate_name} substrate.")
     return 0

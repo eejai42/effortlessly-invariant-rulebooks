@@ -116,13 +116,13 @@ Each base has its own [documentation](bases/) explaining what it demonstrates.
 
 ![Diagram showing Airtable UI exporting to effortless-rulebook.json, which generates code for multiple substrates (Python, Go, SQL, Excel, OWL) that all produce identical outputs verified by conformance tests](./effortless_rulebook_architecture.png)
 
-### The Canonical Trio (The Interface)
+### The Interface
 
 ```
-Airtable (UI) -> effortless-rulebook.json (IR) -> Postgres (Reference Implementation)
+Airtable (UI) -> effortless-rulebook.json (IR) -> Substrates (Python, Go, SQL, etc.)
 ```
 
-These three define **the interface**:
+The rulebook defines **the interface**:
 - **Schema**: what fields exist, their types, which are raw vs. calculated
 - **Formulas**: how calculated fields are derived
 - **Data**: the ground facts

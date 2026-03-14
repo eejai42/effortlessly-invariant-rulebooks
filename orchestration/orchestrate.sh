@@ -48,10 +48,16 @@ SUBSTRATE_COLORS=(
 # PARSE ARGUMENTS
 # =============================================================================
 CI_MODE=false
+DOCKER_MODE=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         --ci)
             CI_MODE=true
+            shift
+            ;;
+        --docker)
+            DOCKER_MODE=true
+            CI_MODE=true  # Docker mode implies CI mode (non-interactive)
             shift
             ;;
         *)
@@ -59,6 +65,12 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Also check environment variable for Docker mode
+if [ "${ERB_DOCKER_MODE:-}" = "true" ]; then
+    DOCKER_MODE=true
+    CI_MODE=true
+fi
 
 # =============================================================================
 # TOOL DETECTION
@@ -242,26 +254,25 @@ action_pull_airtable() {
     echo -e "  Base ID: ${WHITE}$CURRENT_BASE${NC}"
     echo ""
 
-    # Step 1: Pull from Airtable
+    # Step 1: Pull from Airtable (with offline fallback)
     echo -e "${BOLD}${BLUE}┌──────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 1:${NC} ${YELLOW}Pulling from Airtable (ssotme -buildall)...${NC}        ${BOLD}${BLUE}│${NC}"
+    echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 1:${NC} ${YELLOW}Syncing rulebook (with offline fallback)...${NC}        ${BOLD}${BLUE}│${NC}"
     echo -e "${BOLD}${BLUE}└──────────────────────────────────────────────────────────────┘${NC}"
     echo ""
 
     cd "$PROJECT_ROOT"
-    ssotme -buildall
+    python3 "$SCRIPT_DIR/rulebook-cache.py" sync
 
     echo ""
 
-    # Step 2: Generate answer keys from PostgreSQL
+    # Step 2: Generate answer keys from rulebook
     echo -e "${BOLD}${BLUE}┌──────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 2:${NC} ${YELLOW}Generating answer keys from PostgreSQL...${NC}          ${BOLD}${BLUE}│${NC}"
+    echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 2:${NC} ${YELLOW}Generating answer keys from rulebook...${NC}            ${BOLD}${BLUE}│${NC}"
     echo -e "${BOLD}${BLUE}└──────────────────────────────────────────────────────────────┘${NC}"
     echo ""
 
     python3 -c "
 import sys
-import psycopg2
 sys.path.insert(0, '$SCRIPT_DIR')
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
@@ -271,15 +282,13 @@ spec = spec_from_loader('test_orchestrator', SourceFileLoader('test_orchestrator
 test_orch = module_from_spec(spec)
 spec.loader.exec_module(test_orch)
 
-# Load rulebook and connect to database
+# Load rulebook (no database connection needed - answer keys come from rulebook seed data)
 rulebook = test_orch.load_rulebook()
-conn = psycopg2.connect(test_orch.DB_CONNECTION)
 
 # Generate answer keys and blank tests
-all_answer_keys = test_orch.generate_all_answer_keys(conn, rulebook)
+all_answer_keys = test_orch.generate_all_answer_keys(rulebook)
 test_orch.generate_all_blank_tests(all_answer_keys, rulebook)
 
-conn.close()
 print('Answer keys and blank tests generated.')
 "
 
@@ -471,7 +480,7 @@ action_change_base_id() {
     cd "$PROJECT_ROOT"
     # Use || to prevent set -e from killing the script on failure
     BUILDALL_FAILED=""
-    ssotme -buildall || BUILDALL_FAILED="true"
+    python3 "$SCRIPT_DIR/rulebook-cache.py" sync || BUILDALL_FAILED="true"
 
     if [ -z "$BUILDALL_FAILED" ]; then
         NEW_PROJECT_NAME=$(get_project_name)
@@ -700,7 +709,6 @@ echo -e "${BOLD}${BLUE}│${NC} ${BOLD}${WHITE}STEP 1:${NC} ${YELLOW}Generating 
 echo -e "${BOLD}${BLUE}└──────────────────────────────────────────────────────────────┘${NC}"
 python3 -c "
 import sys
-import psycopg2
 sys.path.insert(0, '$SCRIPT_DIR')
 from importlib.util import spec_from_loader, module_from_spec
 from importlib.machinery import SourceFileLoader
@@ -710,15 +718,12 @@ spec = spec_from_loader('test_orchestrator', SourceFileLoader('test_orchestrator
 test_orch = module_from_spec(spec)
 spec.loader.exec_module(test_orch)
 
-# Load rulebook and connect to database
+# Load rulebook (no database connection needed - answer keys come from rulebook seed data)
 rulebook = test_orch.load_rulebook()
-conn = psycopg2.connect(test_orch.DB_CONNECTION)
 
 # Run steps 1 and 2 (new generic functions)
-all_answer_keys = test_orch.generate_all_answer_keys(conn, rulebook)
+all_answer_keys = test_orch.generate_all_answer_keys(rulebook)
 test_orch.generate_all_blank_tests(all_answer_keys, rulebook)
-
-conn.close()
 "
 echo ""
 
@@ -1142,16 +1147,49 @@ return 0
 # MAIN LOOP
 # =============================================================================
 
-# CI MODE: Run all tests immediately and exit
+# DOCKER/CI MODE: Run all substrates non-interactively and exit
 if $CI_MODE; then
     echo ""
     echo -e "${BOLD}${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BOLD}${CYAN}║${NC}          ${BOLD}${WHITE}EXECUTION SUBSTRATE ORCHESTRATOR${NC}                  ${BOLD}${CYAN}║${NC}"
     echo -e "${BOLD}${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "${BOLD}Running in CI mode - executing all substrates...${NC}"
+
+    if $DOCKER_MODE; then
+        echo -e "${BOLD}Running in Docker mode - using cached data...${NC}"
+        echo ""
+
+        # Step 0: Set up from cache (use repo cache if no user cache)
+        echo -e "${BLUE}Setting up from cache...${NC}"
+        python3 "$SCRIPT_DIR/cache-manager.py" setup-offline 2>/dev/null || {
+            echo -e "${YELLOW}Cache manager not available, trying rulebook-cache...${NC}"
+            python3 "$SCRIPT_DIR/rulebook-cache.py" sync --offline --non-interactive || true
+        }
+        echo ""
+    else
+        echo -e "${BOLD}Running in CI mode - executing all substrates...${NC}"
+    fi
+
     run_substrates ""
-    exit $?
+    EXIT_CODE=$?
+
+    # In Docker mode, print a summary of where to find results
+    if $DOCKER_MODE; then
+        echo ""
+        echo -e "${BOLD}${GREEN}════════════════════════════════════════════════════════════════${NC}"
+        echo -e "${BOLD}${GREEN}  Docker execution complete!${NC}"
+        echo -e "${BOLD}${GREEN}════════════════════════════════════════════════════════════════${NC}"
+        echo ""
+        echo -e "  ${BOLD}Reports generated:${NC}"
+        echo -e "    • orchestration/orchestration-report.html"
+        echo -e "    • orchestration/all-tests-results.md"
+        echo -e "    • execution-substrates/*/substrate-report.html"
+        echo ""
+        echo -e "  ${DIM}(Reports are in your mounted volume - accessible from host)${NC}"
+        echo ""
+    fi
+
+    exit $EXIT_CODE
 fi
 
 # Interactive menu loop

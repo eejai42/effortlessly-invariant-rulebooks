@@ -4,33 +4,33 @@
 
 - **Rulebook:** `/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/effortless-rulebook/effortless-rulebook.json`
 - **Substrates Tested:** 10
-- **Computed Columns Tested:** 4
+- **Computed Columns Tested:** 1
 
 ## Summary by Substrate
 
 | Substrate | Passed | Failed | Total | Score | Duration | Status |
 |-----------|--------|--------|-------|-------|----------|--------|
-| explain-dag | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| python | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| uml | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| yaml | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| binary | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| csv | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| golang | 122 | 0 | 122 | 100.0% | < 1s | PASS |
-| owl | 122 | 0 | 122 | 100.0% | 10s | PASS |
-| english | 106 | 16 | 122 | 86.9% | 3m 49s | FAIL |
-| xlsx | 0 | 0 | 0 | 0.0% | < 1s | PASS |
+| csv | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| explain-dag | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| golang | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| python | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| uml | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| yaml | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| binary | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| owl | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| xlsx | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| english | 0 | 0 | 0 | 0.0% | 2s | ERROR: No test-answers found |
 
 ## Overall Statistics
 
 | Metric | Value |
 |--------|-------|
 | Total Substrates | 10 |
-| Total Fields Tested | 1098 |
-| Total Passed | 1082 |
-| Total Failed | 16 |
-| Overall Score | 98.5% |
-| Total Duration | 4m 2s |
+| Total Fields Tested | 27 |
+| Total Passed | 27 |
+| Total Failed | 0 |
+| Overall Score | 100.0% |
+| Total Duration | 4s |
 
 ---
 

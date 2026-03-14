@@ -3,7 +3,7 @@
 # GENERATE-REPORT.PY
 # =============================================================================
 # Generates a comprehensive, self-contained HTML report from orchestration data.
-# Includes all 12 substrates (11 generated + postgres as default answer-key substrate).
+# Includes all substrates found in execution-substrates/.
 #
 # Usage: python3 generate-report.py [--output path/to/report.html]
 # =============================================================================
@@ -186,8 +186,8 @@ def load_blank_tests():
 
 
 def get_substrates():
-    """Get list of all substrates (11 generated + postgres)"""
-    substrates = ['postgres']  # postgres is first (default answer-key substrate)
+    """Get list of all substrates from execution-substrates/"""
+    substrates = []
     if os.path.isdir(SUBSTRATES_DIR):
         for name in sorted(os.listdir(SUBSTRATES_DIR)):
             path = os.path.join(SUBSTRATES_DIR, name)
@@ -214,19 +214,6 @@ def load_run_metadata(substrate_name: str) -> dict:
 def load_substrate_grades(substrate_name: str) -> dict:
     """Load grades for a substrate from pickle or reconstruct from results"""
     # Try pickle file first (exists during orchestration)
-    if substrate_name == 'postgres':
-        # Postgres generates the answer key - always 100% by definition
-        return {
-            "substrate": "postgres",
-            "is_answer_key": True,
-            "total_fields_tested": 0,
-            "fields_passed": 0,
-            "fields_failed": 0,
-            "elapsed_seconds": 0.0,
-            "entities": {},
-            "error": None
-        }
-
     substrate_dir = os.path.join(SUBSTRATES_DIR, substrate_name)
     grades_file = os.path.join(substrate_dir, ".grades.pkl")
 
@@ -429,34 +416,14 @@ def collect_all_data():
     for substrate in substrates:
         grades = load_substrate_grades(substrate)
 
-        # For postgres, calculate based on answer keys
-        if substrate == 'postgres':
-            total_computed = 0
-            for entity, meta in metadata.items():
-                computed_cols = meta.get('computed_columns', [])
-                record_count = meta.get('record_count', 0)
-                total_computed += len(computed_cols) * record_count
-                grades["entities"][entity] = {
-                    "fields_tested": len(computed_cols) * record_count,
-                    "fields_passed": len(computed_cols) * record_count,
-                    "fields_failed": 0,
-                    "failures": [],
-                    "computed_columns": computed_cols
-                }
-            grades["total_fields_tested"] = total_computed
-            grades["fields_passed"] = total_computed
-
         # Load run metadata (for tracking failure/success status)
-        if substrate != 'postgres':
-            run_meta = load_run_metadata(substrate)
-            grades["run_metadata"] = run_meta
+        run_meta = load_run_metadata(substrate)
+        grades["run_metadata"] = run_meta
 
-            # Use duration from central metadata (last_successful_run) as source of truth
-            last_success = run_meta.get("last_successful_run")
-            if last_success and "duration_seconds" in last_success:
-                grades["elapsed_seconds"] = last_success["duration_seconds"]
-        else:
-            grades["run_metadata"] = {"last_run": None, "last_successful_run": None}
+        # Use duration from central metadata (last_successful_run) as source of truth
+        last_success = run_meta.get("last_successful_run")
+        if last_success and "duration_seconds" in last_success:
+            grades["elapsed_seconds"] = last_success["duration_seconds"]
 
         # Load test answers for this substrate
         grades["test_answers"] = load_substrate_test_answers(substrate)
@@ -711,7 +678,6 @@ def generate_matrix_rows(data: dict) -> str:
 
     for substrate_name in sorted_substrates(data):
         grades = data["substrates"][substrate_name]
-        is_answer_key = grades.get("is_answer_key", False)
 
         total = grades["total_fields_tested"]
         passed = grades["fields_passed"]
@@ -725,13 +691,13 @@ def generate_matrix_rows(data: dict) -> str:
         has_failure = last_run.get("status") == "failure" if last_run else False
         is_restored = has_failure and last_success is not None
 
-        row_class = "answer-key-row" if is_answer_key else ("restored-row" if is_restored else "")
+        row_class = "restored-row" if is_restored else ""
         score_class = get_score_class(score)
 
         cells = []
 
         # Substrate name cell with warning badge if last run failed
-        substrate_label = f"{substrate_name} (answer-key)" if is_answer_key else substrate_name
+        substrate_label = substrate_name
         warning_badge = ""
         if is_restored:
             error_msg = last_run.get("error_message", "Unknown error")
@@ -745,10 +711,7 @@ def generate_matrix_rows(data: dict) -> str:
             e_passed = entity_grades.get("fields_passed", 0)
             e_failed = entity_grades.get("fields_failed", 0)
 
-            if is_answer_key:
-                cell_class = "cell-answer-key"
-                symbol = "&#9733;"  # star
-            elif e_total == 0:
+            if e_total == 0:
                 cell_class = "cell-na"
                 symbol = "&mdash;"
             elif e_failed == 0:
@@ -766,10 +729,7 @@ def generate_matrix_rows(data: dict) -> str:
             )
 
         # Score cell
-        if is_answer_key:
-            cells.append('<td class="score-cell score-perfect">100%</td>')
-        else:
-            cells.append(f'<td class="score-cell score-{score_class}">{score:.1f}%</td>')
+        cells.append(f'<td class="score-cell score-{score_class}">{score:.1f}%</td>')
 
         # Time cell
         cells.append(f'<td class="time-cell">{elapsed:.1f}s</td>')
@@ -791,9 +751,7 @@ def generate_substrate_options(data: dict) -> str:
     """Generate <option> elements for substrate selector"""
     options = []
     for substrate in sorted_substrates(data):
-        is_answer_key = data["substrates"][substrate].get("is_answer_key", False)
-        label = f"{substrate} (answer-key)" if is_answer_key else substrate
-        options.append(f'<option value="{escape(substrate)}">{escape(label)}</option>')
+        options.append(f'<option value="{escape(substrate)}">{escape(substrate)}</option>')
     return '\n                    '.join(options)
 
 
@@ -810,10 +768,8 @@ def generate_substrate_tabs(data: dict) -> str:
     """Generate tab buttons for substrate selector"""
     tabs = []
     for i, substrate in enumerate(sorted_substrates(data)):
-        is_answer_key = data["substrates"][substrate].get("is_answer_key", False)
-        label = f"{substrate} (answer-key)" if is_answer_key else substrate
         active = "active" if i == 0 else ""
-        tabs.append(f'<button class="sub-tab {active}" data-substrate="{escape(substrate)}">{escape(label)}</button>')
+        tabs.append(f'<button class="sub-tab {active}" data-substrate="{escape(substrate)}">{escape(substrate)}</button>')
     return '\n                '.join(tabs)
 
 
@@ -822,13 +778,11 @@ def generate_substrate_links(data: dict) -> str:
     links = []
     for substrate in sorted_substrates(data):
         grades = data["substrates"][substrate]
-        is_answer_key = grades.get("is_answer_key", False)
         total = grades["total_fields_tested"]
         passed = grades["fields_passed"]
         score = (passed / total * 100) if total > 0 else 0
         score_class = get_score_class(score)
-        label = f"{substrate} (answer-key)" if is_answer_key else substrate
-        links.append(f'<a href="#" class="substrate-link score-{score_class}" data-substrate="{escape(substrate)}">{escape(label)}: {score:.0f}%</a>')
+        links.append(f'<a href="#" class="substrate-link score-{score_class}" data-substrate="{escape(substrate)}">{escape(substrate)}: {score:.0f}%</a>')
     return '\n                    '.join(links)
 
 
@@ -837,9 +791,6 @@ def generate_failure_details(data: dict) -> str:
     failures = []
 
     for substrate_name, grades in sorted(data["substrates"].items()):
-        if grades.get("is_answer_key"):
-            continue
-
         for entity_name, entity_grades in grades.get("entities", {}).items():
             for failure in entity_grades.get("failures", []):
                 failures.append({
@@ -1616,9 +1567,8 @@ function renderRuntimeBars() {
     const table = document.getElementById('health-matrix');
     if (!table || !REPORT_DATA.substrates) return;
 
-    // Calculate max time for scaling (exclude answer-key postgres)
+    // Calculate max time for scaling
     const times = Object.entries(REPORT_DATA.substrates)
-        .filter(([name]) => name !== 'postgres')
         .map(([name, data]) => data.elapsed_seconds || 0);
     const maxTime = Math.max(...times, 1);
 
@@ -1978,10 +1928,9 @@ function renderSubstrateDetails(substrateName, restoreViewTab = null, restoreEnt
     const failed = substrate.fields_failed;
     const score = total > 0 ? (passed / total * 100).toFixed(1) : 0;
     const elapsed = substrate.elapsed_seconds || 0;
-    const isAnswerKey = substrate.is_answer_key;
 
-    let statusText = isAnswerKey ? 'ANSWER KEY' : (failed === 0 ? 'PASS' : 'FAIL');
-    let statusClass = isAnswerKey ? 'score-perfect' : (failed === 0 ? 'score-good' : 'score-danger');
+    let statusText = failed === 0 ? 'PASS' : 'FAIL';
+    let statusClass = failed === 0 ? 'score-good' : 'score-danger';
 
     let html = '<div class="substrate-info">';
     html += `<h3>${escapeHtml(substrateName)}</h3>`;
@@ -2008,9 +1957,6 @@ function renderSubstrateDetails(substrateName, restoreViewTab = null, restoreEnt
     html += '<nav class="sub-tabs" id="substrate-view-tabs">';
     html += `<button class="sub-tab active" data-view="data">Data</button>`;
     html += `<button class="sub-tab" data-view="schema">Schema</button>`;
-    if (isAnswerKey) {
-        html += `<button class="sub-tab" data-view="about">About</button>`;
-    }
     // Substrate-specific tabs will be added dynamically after fetch
     html += '<span id="substrate-dynamic-tabs"></span>';
     html += '</nav>';
@@ -2106,33 +2052,6 @@ function renderSubstrateDetails(substrateName, restoreViewTab = null, restoreEnt
     });
     html += '</div>';
 
-    // About tab for postgres (answer key)
-    if (isAnswerKey) {
-        html += '<div id="substrate-about-view" class="substrate-view">';
-        html += '<div class="postgres-report">';
-        html += '<h4>PostgreSQL Reference Implementation</h4>';
-        html += '<p class="postgres-intro">PostgreSQL serves as the <strong>reference implementation</strong> for this rulebook. It is not privileged or special—it is simply the most reliable and consistent answer key generator due to its mature SQL engine and deterministic calculation behavior.</p>';
-        html += '<div class="postgres-details">';
-        html += '<h5>Why PostgreSQL?</h5>';
-        html += '<ul>';
-        html += '<li><strong>Deterministic calculations</strong> — SQL functions produce consistent, reproducible results</li>';
-        html += '<li><strong>Mature type system</strong> — Handles numeric precision, dates, and text reliably</li>';
-        html += '<li><strong>Declarative formulas</strong> — The rulebook formulas map directly to SQL expressions</li>';
-        html += '<li><strong>Battle-tested</strong> — Decades of production use ensures edge cases are handled correctly</li>';
-        html += '</ul>';
-        html += '<h5>The Point</h5>';
-        html += '<p>All substrates should converge on the same answers. PostgreSQL generates the "answer key" not because it is authoritative, but because it is the most <em>reliable</em> substrate for computing correct values. When other substrates match PostgreSQL, it validates that:</p>';
-        html += '<ol>';
-        html += '<li>The rulebook formulas are unambiguous across execution environments</li>';
-        html += '<li>Each substrate correctly interprets and executes the business logic</li>';
-        html += '<li>The same inputs produce the same outputs—regardless of implementation language</li>';
-        html += '</ol>';
-        html += '<p class="postgres-conclusion"><strong>Everything ends up agreeing—that is the point.</strong> The orchestration tests prove that diverse implementations (JavaScript, Python, Go, spreadsheets, etc.) all compute identical results from the same rulebook specification.</p>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-    }
-
     // Container for dynamically loaded substrate-specific tabs
     html += '<div id="substrate-dynamic-content"></div>';
 
@@ -2140,10 +2059,8 @@ function renderSubstrateDetails(substrateName, restoreViewTab = null, restoreEnt
 
     substrateDetails.innerHTML = html;
 
-    // Load substrate-specific tabs for non-answer-key substrates
-    if (!isAnswerKey) {
-        loadSubstrateTabs(substrateName);
-    }
+    // Load substrate-specific tabs
+    loadSubstrateTabs(substrateName);
 
     // Attach handlers to view tabs with URL tracking
     attachViewTabHandlers();
@@ -2539,8 +2456,17 @@ def main():
         print("Opening report in browser...")
         subprocess.run(['start', abs_path], shell=True, check=False)
     elif platform.system() == 'Linux':
-        print("Opening report in browser...")
-        subprocess.run(['xdg-open', abs_path], check=False)
+        # Check if we're in a headless environment (Docker, CI, etc.)
+        if os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY'):
+            print("Opening report in browser...")
+            try:
+                subprocess.run(['xdg-open', abs_path], check=False)
+            except FileNotFoundError:
+                print(f"(xdg-open not available)")
+                print(f"Open report: file://{abs_path}")
+        else:
+            print(f"(headless environment detected)")
+            print(f"Open report: file://{abs_path}")
     else:
         print(f"Open report: file://{abs_path}")
 

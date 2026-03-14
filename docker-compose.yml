@@ -1,0 +1,87 @@
+# =============================================================================
+# ERB (Effortlessly Invariant Rulesbooks) Docker Compose
+# =============================================================================
+# Runs the complete ERB stack:
+#   - PostgreSQL database
+#   - ERB orchestration environment
+#
+# ENVIRONMENT VARIABLES:
+# These can be set in your shell, or in a .env file in this directory.
+# See .env.example for documentation.
+#
+#   AIRTABLE_API_KEY  - For pulling fresh data from Airtable (optional)
+#   OPENAI_API_KEY    - For English substrate LLM generation (optional)
+#   ANTHROPIC_API_KEY - Alternative to OpenAI for LLM (optional)
+#
+# Without API keys, the system uses cached data from the repo.
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ===========================================================================
+  # PostgreSQL Database
+  # ===========================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: erb-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: erb
+    ports:
+      - "5433:5432"  # Use 5433 to avoid conflict with host postgres
+    volumes:
+      - erb-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================================================
+  # ERB Orchestration Environment
+  # ===========================================================================
+  erb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: erb-main
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Database connection (uses service name 'postgres' for docker networking)
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/erb
+
+      # API Keys (passed from host environment or .env file)
+      # These are OPTIONAL - system uses cached data when not set
+      AIRTABLE_API_KEY: ${AIRTABLE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+
+      # LLM Configuration (optional)
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      LLM_TIER: ${LLM_TIER:-medium}
+
+      # Docker/Offline mode settings
+      ERB_DOCKER_MODE: "true"
+      ERB_USE_CACHE: "true"
+      SSOTME_NONINTERACTIVE: "1"
+
+      # For interactive mode
+      TERM: xterm-256color
+    volumes:
+      # Mount the project for live updates
+      - .:/app
+      # Persist ssotme config
+      - erb-ssotme-config:/root/.ssotme
+    stdin_open: true
+    tty: true
+    working_dir: /app
+
+volumes:
+  erb-postgres-data:
+    name: erb-postgres-data
+  erb-ssotme-config:
+    name: erb-ssotme-config
