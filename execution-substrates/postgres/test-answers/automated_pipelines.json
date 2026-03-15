@@ -1,0 +1,107 @@
+[
+  {
+    "automated_pipeline_id": "calendar-integration",
+    "name": "calendar-integration",
+    "description": "Google Calendar Event to Teams Meeting",
+    "display_name": "Calendar Integration",
+    "roles": "tester"
+  },
+  {
+    "automated_pipeline_id": "cloud-storage-sync",
+    "name": "cloud-storage-sync",
+    "description": "Dropbox Upload to Google Drive",
+    "display_name": "Cloud Storage Sync",
+    "roles": "guest"
+  },
+  {
+    "automated_pipeline_id": "crm-data-sync",
+    "name": "crm-data-sync",
+    "description": "HubSpot Contact to Salesforce Lead",
+    "display_name": "CRM Data Sync",
+    "roles": "developer"
+  },
+  {
+    "automated_pipeline_id": "devops-integration",
+    "name": "devops-integration",
+    "description": "GitHub PR to Jira Story",
+    "display_name": "DevOps Integration",
+    "roles": "manager"
+  },
+  {
+    "automated_pipeline_id": "e-commerce-order-sync",
+    "name": "e-commerce-order-sync",
+    "description": "Shopify Order to QuickBooks Invoice",
+    "display_name": "E-commerce Order Sync",
+    "roles": "editor"
+  },
+  {
+    "automated_pipeline_id": "email-notification-pipeline",
+    "name": "email-notification-pipeline",
+    "description": "Outlook Email to Slack Channel",
+    "display_name": "Email Notification Pipeline",
+    "roles": "trainer"
+  },
+  {
+    "automated_pipeline_id": "finance-automation",
+    "name": "finance-automation",
+    "description": "Stripe Payment to Xero Invoice",
+    "display_name": "Finance Automation",
+    "roles": "support"
+  },
+  {
+    "automated_pipeline_id": "issue-tracking-bridge",
+    "name": "issue-tracking-bridge",
+    "description": "Jira Issue to Trello Card",
+    "display_name": "Issue Tracking Bridge",
+    "roles": "viewer"
+  },
+  {
+    "automated_pipeline_id": "lead-notification-pipeline",
+    "name": "lead-notification-pipeline",
+    "description": "Salesforce to Slack Lead Alert",
+    "display_name": "Lead Notification Pipeline",
+    "roles": "administrator"
+  },
+  {
+    "automated_pipeline_id": "newsletter-signup-sync",
+    "name": "newsletter-signup-sync",
+    "description": "Google Sheets to Mailchimp Subscriber",
+    "display_name": "Newsletter Signup Sync",
+    "roles": "moderator"
+  },
+  {
+    "automated_pipeline_id": "project-intake-pipeline",
+    "name": "project-intake-pipeline",
+    "description": "Airtable Form to Monday.com Item",
+    "display_name": "Project Intake Pipeline",
+    "roles": "analyst"
+  },
+  {
+    "automated_pipeline_id": "support-ticket-automation",
+    "name": "support-ticket-automation",
+    "description": "Zendesk Ticket to Asana Task",
+    "display_name": "Support Ticket Automation",
+    "roles": "contributor"
+  },
+  {
+    "automated_pipeline_id": "survey-data-export",
+    "name": "survey-data-export",
+    "description": "SurveyMonkey Response to Excel Sheet",
+    "display_name": "Survey Data Export",
+    "roles": "owner"
+  },
+  {
+    "automated_pipeline_id": "survey-data-pipeline",
+    "name": "survey-data-pipeline",
+    "description": "Typeform Response to Notion Database",
+    "display_name": "Survey Data Pipeline",
+    "roles": "hr"
+  },
+  {
+    "automated_pipeline_id": "task-management-sync",
+    "name": "task-management-sync",
+    "description": "Trello Card to Google Tasks",
+    "display_name": "Task Management Sync",
+    "roles": "finance"
+  }
+]

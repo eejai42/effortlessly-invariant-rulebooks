@@ -1,53 +1,112 @@
-# Specification Document for DEMO: Customer FullName Rulebook
+# Specification Document for Jessica Talisman - BASIC Ontology Parts 1-3
 
 ## Overview
-This specification document outlines the rules and calculations defined in the "DEMO: Customer FullName" rulebook. The rulebook is generated from an Airtable base and provides a schema for customer data, including fields for customer identification, email addresses, and names. The primary focus is on how to compute the `FullName` field based on the provided first and last names of customers.
+This document outlines the specifications for calculating fields within the "Jessica Talisman - BASIC Ontology Parts 1-3" rulebook. The rulebook is structured around workflows and their associated steps, providing a framework for managing and analyzing organizational processes. The calculated fields derive values based on raw input fields, enabling insights into workflow complexity and characteristics.
 
-## Customers Table
+## Workflows
 
 ### Input Fields
-The following input fields are defined in the Customers table, which are of type "raw":
-
-1. **CustomerId**
+1. **WorkflowId**
    - **Type:** String
-   - **Description:** Unique identifier for each customer. This field is mandatory and cannot be null.
+   - **Description:** Unique identifier for the workflow.
 
-2. **Customer**
+2. **DisplayName**
    - **Type:** String
-   - **Description:** Identifier for the customers. This field is optional and can be null.
+   - **Description:** Human-readable name for the workflow.
 
-3. **EmailAddress**
+3. **CountOfNonProposedSteps**
+   - **Type:** Integer
+   - **Description:** Count of workflow steps in this workflow.
+
+### Calculated Fields
+
+#### 1. Name
+- **Description:** A machine-friendly name for the workflow, used for programmatic reference and URL slug generation.
+- **Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.
+- **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
+- **Example:** For a workflow with `DisplayName` "Performance Review", the `Name` would be "performance-review".
+
+#### 2. HasMoreThan1Step
+- **Description:** Indicates whether the workflow contains more than one step.
+- **Calculation:** This field is computed by checking if `CountOfNonProposedSteps` is greater than 1.
+- **Formula:** `={{CountOfNonProposedSteps}} > 1`
+- **Example:** If `CountOfNonProposedSteps` is 3, then `HasMoreThan1Step` would be `true`. If it is 1, then `HasMoreThan1Step` would be `false`.
+
+## Workflow Steps
+
+### Input Fields
+1. **WorkflowStepId**
    - **Type:** String
-   - **Description:** The customer's email address. This field is optional and can be null.
+   - **Description:** Unique identifier for the workflow step.
 
-4. **FirstName**
+2. **DisplayName**
    - **Type:** String
-   - **Description:** First name of the customer, used to create the full name. This field is optional and can be null.
+   - **Description:** Human-readable name for the workflow step.
 
-5. **LastName**
+### Calculated Fields
+
+#### 1. Name
+- **Description:** A machine-friendly name for the workflow step, used for programmatic reference.
+- **Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.
+- **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
+- **Example:** For a step with `DisplayName` "Manager Review", the `Name` would be "manager-review".
+
+## Approval Gates
+
+### Input Fields
+1. **ApprovalGateId**
    - **Type:** String
-   - **Description:** Last name of the customer, used to create the full name. This field is optional and can be null.
+   - **Description:** Unique identifier for the approval gate.
 
-### Calculated Field
-The following calculated field is defined in the Customers table:
-
-1. **FullName**
+2. **DisplayName**
    - **Type:** String
-   - **Description:** The full name is computed by concatenating the first and last names of the customer.
-   - **Calculation Explanation:** 
-     - To compute the `FullName`, take the value from the `FirstName` field and concatenate it with a space and the value from the `LastName` field. 
-     - If either `FirstName` or `LastName` is null, the resulting `FullName` will reflect that by omitting the missing part.
-   - **Formula for Reference:** `={{FirstName}} & " " & {{LastName}}`
-   - **Concrete Example:**
-     - For a customer with the following data:
-       - `FirstName`: "Jane"
-       - `LastName`: "Smith"
-     - The computed `FullName` would be:
-       - **Result:** "Jane Smith"
-     - For a customer with:
-       - `FirstName`: "John"
-       - `LastName`: null
-     - The computed `FullName` would be:
-       - **Result:** "John" (the last name is omitted)
+   - **Description:** Human-readable name for the approval gate.
 
-This specification provides a clear understanding of how to compute the `FullName` field using the `FirstName` and `LastName` fields, ensuring that the computation can be replicated accurately based on the provided data.
+### Calculated Fields
+
+#### 1. Name
+- **Description:** A machine-friendly name for the approval gate, used for programmatic reference.
+- **Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.
+- **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
+- **Example:** For an approval gate with `DisplayName` "Manager Approval", the `Name` would be "manager-approval".
+
+## Precedes Steps
+
+### Input Fields
+1. **PrecedesStepId**
+   - **Type:** String
+   - **Description:** Unique identifier for the precedes step.
+
+2. **StepNumber**
+   - **Type:** Integer
+   - **Description:** Ordinal sequence number for the relationship.
+
+### Calculated Fields
+
+#### 1. DisplayName
+- **Description:** A formatted display name for the step based on its sequence number.
+- **Calculation:** The `DisplayName` is computed by concatenating the string "Step-" with the `StepNumber`.
+- **Formula:** `="Step-" & {{StepNumber}}`
+- **Example:** If `StepNumber` is 3, then `DisplayName` would be "Step-3".
+
+## Roles
+
+### Input Fields
+1. **RoleId**
+   - **Type:** String
+   - **Description:** Unique identifier for the role.
+
+2. **DisplayName**
+   - **Type:** String
+   - **Description:** Human-readable name for the role.
+
+### Calculated Fields
+
+#### 1. Name
+- **Description:** A machine-friendly name for the role, used for programmatic reference.
+- **Calculation:** The `Name` is computed by converting the `DisplayName` to lowercase.
+- **Formula:** `=LOWER({{DisplayName}})`
+- **Example:** For a role with `DisplayName` "Administrator", the `Name` would be "administrator".
+
+## Conclusion
+This specification document provides a detailed guide on how to compute calculated fields within the "Jessica Talisman - BASIC Ontology Parts 1-3" rulebook. By following the outlined calculations and examples, users can derive the necessary values for effective workflow management and analysis.

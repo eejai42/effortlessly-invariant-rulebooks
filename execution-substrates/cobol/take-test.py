@@ -72,15 +72,10 @@ def to_snake_case(name: str) -> str:
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
-def json_to_tsv(records: list, field_order: list) -> str:
+def json_to_tsv(records: list, field_order: list, raw_count: int) -> str:
     """Convert JSON records to tab-delimited string (raw fields only)."""
-    # Filter to raw fields only (first N fields before calculated ones)
-    # Calculated fields start with FullName, so stop before it
-    raw_fields = []
-    for f in field_order:
-        if f in ("FullName", "full_name"):
-            break
-        raw_fields.append(f)
+    # Use raw_count to determine which fields are raw vs calculated
+    raw_fields = field_order[:raw_count]
 
     lines = []
     for record in records:
@@ -113,13 +108,13 @@ def tsv_to_json(tsv_content: str, field_order: list) -> list:
     return records
 
 
-def process_entity(input_path: Path, output_path: Path, entity_name: str, field_order: list) -> int:
+def process_entity(input_path: Path, output_path: Path, entity_name: str, field_order: list, raw_count: int) -> int:
     """Process a single entity file using COBOL."""
     with open(input_path) as f:
         records = json.load(f)
 
     # Convert JSON to tab-delimited input
-    tsv_input = json_to_tsv(records, field_order)
+    tsv_input = json_to_tsv(records, field_order, raw_count)
 
     # Run COBOL program with stdin/stdout piping
     result = subprocess.run(
@@ -182,6 +177,12 @@ def main():
     # Load field order
     field_order_all = load_field_order()
 
+    # Get target entity (COBOL is generated for only ONE entity type)
+    target_entity = field_order_all.get("_target_entity")
+    if target_entity:
+        print(f"COBOL substrate targets: {target_entity}")
+        print()
+
     if not blank_tests_dir.is_dir():
         print(f"FATAL: {blank_tests_dir} not found")
         sys.exit(1)
@@ -197,14 +198,27 @@ def main():
             continue
         entity = filename.replace(".json", "")
 
-        # Get field order for this entity
-        field_order = field_order_all.get(entity) or field_order_all.get(entity.title())
-        if not field_order:
+        # Only process the entity that COBOL was generated for
+        if target_entity and entity != target_entity:
+            print(f"  Skipping {entity} (COBOL only supports {target_entity})")
+            continue
+
+        # Get field info for this entity (new format with fields + raw_count)
+        entity_info = field_order_all.get(entity) or field_order_all.get(entity.title())
+        if not entity_info:
             print(f"  Skipping {entity} (no calculated fields)")
             continue
 
+        # Handle both old format (list) and new format (dict with fields/raw_count)
+        if isinstance(entity_info, list):
+            field_order = entity_info
+            raw_count = len(field_order)  # Assume all raw if old format
+        else:
+            field_order = entity_info["fields"]
+            raw_count = entity_info["raw_count"]
+
         output_path = test_answers_dir / filename
-        count = process_entity(input_path, output_path, entity, field_order)
+        count = process_entity(input_path, output_path, entity, field_order, raw_count)
         total_records += count
         entity_count += 1
         print(f"  -> {entity}: {count} records")

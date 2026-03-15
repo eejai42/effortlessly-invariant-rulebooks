@@ -68,7 +68,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>122/122 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -111,14 +111,29 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
 
 golang: Starting test...
 golang: Compiling and running...
-Golang substrate: Processing 1 tables with calculated fields...
-  Expected tables: Customers
+Golang substrate: Processing 6 tables with calculated fields...
+  Expected tables: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments
 
-Processing Customers...
-  ✓ customers: 3 records processed
+Processing Workflows...
+  ✓ workflows: 15 records processed
+
+Processing WorkflowSteps...
+  ✓ workflow_steps: 20 records processed
+
+Processing ApprovalGates...
+  ✓ approval_gates: 11 records processed
+
+Processing PrecedesSteps...
+  ✓ precedes_steps: 16 records processed
+
+Processing Roles...
+  ✓ roles: 15 records processed
+
+Processing Departments...
+  ✓ departments: 15 records processed
 
 ════════════════════════════════════════════════════════════════
-Golang substrate: ALL 1 tables processed successfully (3 total records)
+Golang substrate: ALL 6 tables processed successfully (92 total records)
 ════════════════════════════════════════════════════════════════
 
 </pre>
@@ -129,9 +144,9 @@ Golang substrate: ALL 1 tables processed successfully (3 total records)
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">122</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">122</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -139,7 +154,7 @@ Golang substrate: ALL 1 tables processed successfully (3 total records)
             <div class="card">
                 <div class="code-header">
                     <h2>erb_sdk.go</h2>
-                    <div><span class="code-info">135 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
+                    <div><span class="code-info">562 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
                 </div>
                 <pre id="sdk-code">// ERB SDK - Go Implementation (GENERATED - DO NOT EDIT)
 // ======================================================
@@ -155,6 +170,7 @@ import (
 	&quot;fmt&quot;
 	&quot;os&quot;
 	&quot;strconv&quot;
+	&quot;strings&quot;
 )
 
 // =============================================================================
@@ -202,59 +218,340 @@ func boolToString(b bool) string {
 }
 
 // =============================================================================
-// CUSTOMERS TABLE
-// Table: Customers
+// WORKFLOWS TABLE
+// Table: Workflows
 // =============================================================================
 
-// Customer represents a row in the Customers table
-// Table: Customers
-type Customer struct {
-	CustomerId string `json:&quot;customer_id&quot;`
-	Customer *string `json:&quot;customer&quot;` // Identifier for the customers.
-	EmailAddress *string `json:&quot;email_address&quot;` // Thec ustomers email address
-	FirstName *string `json:&quot;first_name&quot;` // First Name of the customer - used to make the full name
-	LastName *string `json:&quot;last_name&quot;` // Last Name of the customer - used to make the full name
-	FullName *string `json:&quot;full_name&quot;` // Full name is computed from the first and last name of the customer
+// Workflow represents a row in the Workflows table
+// Table: Workflows
+type Workflow struct {
+	WorkflowId string `json:&quot;workflow_id&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+	Title *string `json:&quot;title&quot;` // Human-readable title of the workflow. Maps to dct:title from Dublin Core. Example: &#x27;Production Deployment Workflow&#x27;, &#x27;Employee Onboarding&#x27;.
+	Color *string `json:&quot;color&quot;`
+	Description *string `json:&quot;description&quot;` // Detailed description of the workflow&#x27;s purpose and scope. Maps to dct:description from Dublin Core. Should explain what business goal the workflow achieves.
+	Identifier *string `json:&quot;identifier&quot;` // External system identifier for cross-referencing. Maps to dct:identifier from Dublin Core. This is the join key back to document management systems, ticket systems, or other operational systems.
+	Modified *string `json:&quot;modified&quot;` // Last modification timestamp. Maps to dct:modified from Dublin Core. Critical for answering CQ5: &#x27;Which workflows haven&#x27;t been reviewed or updated in twelve months?&#x27;
+	WorkflowSteps *string `json:&quot;workflow_steps&quot;` // Reference to workflow steps. Represents the ntwf:hasStep relationship linking workflows to their constituent steps.
+	CountOfNonProposedSteps *int `json:&quot;count_of_non_proposed_steps&quot;` // Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting.
+	Name *string `json:&quot;name&quot;` // Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
+	HasMoreThan1Step *bool `json:&quot;has_more_than1_step&quot;`
 }
 
 // --- Individual Calculation Functions ---
 
-// CalcFullName computes the FullName calculated field
-// Full name is computed from the first and last name of the customer
-// Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
-func (tc *Customer) CalcFullName() string {
-	return stringVal(tc.FirstName) + &quot; &quot; + stringVal(tc.LastName)
+// CalcName computes the Name calculated field
+// Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+func (tc *Workflow) CalcName() string {
+	return strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+}
+
+// CalcHasMoreThan1Step computes the HasMoreThan1Step calculated field
+// Formula: ={{CountOfNonProposedSteps}} &gt; 1
+func (tc *Workflow) CalcHasMoreThan1Step() bool {
+	return (tc.CountOfNonProposedSteps != nil &amp;&amp; *tc.CountOfNonProposedSteps &gt; 1)
 }
 
 // --- Compute All Calculated Fields ---
 
 // ComputeAll computes all calculated fields and returns an updated struct
-func (tc *Customer) ComputeAll() *Customer {
+func (tc *Workflow) ComputeAll() *Workflow {
 	// Level 1 calculations
-	fullName := stringVal(tc.FirstName) + &quot; &quot; + stringVal(tc.LastName)
+	name := strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+	hasMoreThan1Step := (tc.CountOfNonProposedSteps != nil &amp;&amp; *tc.CountOfNonProposedSteps &gt; 1)
 
-	return &amp;Customer{
-		CustomerId: tc.CustomerId,
-		Customer: tc.Customer,
-		EmailAddress: tc.EmailAddress,
-		FirstName: tc.FirstName,
-		LastName: tc.LastName,
-		FullName: nilIfEmpty(fullName),
+	return &amp;Workflow{
+		WorkflowId: tc.WorkflowId,
+		DisplayName: tc.DisplayName,
+		Title: tc.Title,
+		Color: tc.Color,
+		Description: tc.Description,
+		Identifier: tc.Identifier,
+		Modified: tc.Modified,
+		WorkflowSteps: tc.WorkflowSteps,
+		CountOfNonProposedSteps: tc.CountOfNonProposedSteps,
+		Name: nilIfEmpty(name),
+		HasMoreThan1Step: &amp;hasMoreThan1Step,
 	}
+}
+
+// =============================================================================
+// WORKFLOWSTEPS TABLE
+// Table: WorkflowSteps
+// =============================================================================
+
+// WorkflowStep represents a row in the WorkflowSteps table
+// Table: WorkflowSteps
+type WorkflowStep struct {
+	WorkflowStepId string `json:&quot;workflow_step_id&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+	Workflow *string `json:&quot;workflow&quot;` // Foreign key to the parent workflow. Represents the inverse of ntwf:hasStep, enabling navigation from step to its containing workflow (ntwf:isStepOf).
+	SequencePosition *int `json:&quot;sequence_position&quot;` // Integer ordinal position of the step within its workflow. Maps to ntwf:sequencePosition, declared as owl:FunctionalProperty (each step has exactly one position). Enables positional queries.
+	AssignedRole *string `json:&quot;assigned_role&quot;` // Foreign key to the Role responsible for executing this step. Maps to ntwf:assignedRole. Critical for implementing Heuristic 2 (role-agent separation): steps point to roles, not directly to agents.
+	RequiresHumanApproval *bool `json:&quot;requires_human_approval&quot;` // Boolean flag indicating whether a human agent must fill the assigned role. Maps to ntwf:requiresHumanApproval. Enables answering CQ3: &#x27;Which steps require human decisions vs. AI execution?&#x27;
+	ApprovalGate *string `json:&quot;approval_gate&quot;` // Foreign key to ApprovalGate if this step is a decision checkpoint. When populated, indicates this step blocks workflow execution until explicit authorization is given.
+	PrecededBySteps *string `json:&quot;preceded_by_steps&quot;` // Reference to steps that must complete before this step can execute. Part of the ntwf:precedesStep transitive ordering relationship.
+	Name *string `json:&quot;name&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcName computes the Name calculated field
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+func (tc *WorkflowStep) CalcName() string {
+	return strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *WorkflowStep) ComputeAll() *WorkflowStep {
+	// Level 1 calculations
+	name := strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+
+	return &amp;WorkflowStep{
+		WorkflowStepId: tc.WorkflowStepId,
+		DisplayName: tc.DisplayName,
+		Workflow: tc.Workflow,
+		SequencePosition: tc.SequencePosition,
+		AssignedRole: tc.AssignedRole,
+		RequiresHumanApproval: tc.RequiresHumanApproval,
+		ApprovalGate: tc.ApprovalGate,
+		PrecededBySteps: tc.PrecededBySteps,
+		Name: nilIfEmpty(name),
+	}
+}
+
+// =============================================================================
+// APPROVALGATES TABLE
+// Table: ApprovalGates
+// =============================================================================
+
+// ApprovalGate represents a row in the ApprovalGates table
+// Table: ApprovalGates
+type ApprovalGate struct {
+	ApprovalGateId string `json:&quot;approval_gate_id&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+	WorkflowSteps *string `json:&quot;workflow_steps&quot;` // Back-reference to workflow steps that use this approval gate. Enables finding all steps requiring this specific gate.
+	EscalationThresholdHours *int `json:&quot;escalation_threshold_hours&quot;` // Integer number of hours that may elapse on a pending gate before the ntwf:delegatesTo chain activates. Maps to ntwf:escalationThresholdHours. Domain applies only to ApprovalGate individuals.
+	Name *string `json:&quot;name&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcName computes the Name calculated field
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+func (tc *ApprovalGate) CalcName() string {
+	return strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *ApprovalGate) ComputeAll() *ApprovalGate {
+	// Level 1 calculations
+	name := strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+
+	return &amp;ApprovalGate{
+		ApprovalGateId: tc.ApprovalGateId,
+		DisplayName: tc.DisplayName,
+		WorkflowSteps: tc.WorkflowSteps,
+		EscalationThresholdHours: tc.EscalationThresholdHours,
+		Name: nilIfEmpty(name),
+	}
+}
+
+// =============================================================================
+// PRECEDESSTEPS TABLE
+// Table: PrecedesSteps
+// =============================================================================
+
+// PrecedesStep represents a row in the PrecedesSteps table
+// Table: PrecedesSteps
+type PrecedesStep struct {
+	PrecedesStepId string `json:&quot;precedes_step_id&quot;`
+	Name *string `json:&quot;name&quot;` // Ordinal sequence number for the relationship. Used for sorting and display.
+	WorkflowStep *string `json:&quot;workflow_step&quot;` // Foreign key to the step that comes BEFORE. The source of the &#x27;precedes&#x27; relationship.
+	StepNumber *int `json:&quot;step_number&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcDisplayName computes the DisplayName calculated field
+// Formula: =&quot;Step-&quot; &amp; {{StepNumber}}
+func (tc *PrecedesStep) CalcDisplayName() string {
+	return &quot;Step-&quot; + intToString(tc.StepNumber)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *PrecedesStep) ComputeAll() *PrecedesStep {
+	// Level 1 calculations
+	displayName := &quot;Step-&quot; + intToString(tc.StepNumber)
+
+	return &amp;PrecedesStep{
+		PrecedesStepId: tc.PrecedesStepId,
+		Name: tc.Name,
+		WorkflowStep: tc.WorkflowStep,
+		StepNumber: tc.StepNumber,
+		DisplayName: nilIfEmpty(displayName),
+	}
+}
+
+// =============================================================================
+// ROLES TABLE
+// Table: Roles
+// =============================================================================
+
+// Role represents a row in the Roles table
+// Table: Roles
+type Role struct {
+	RoleId string `json:&quot;role_id&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+	Label *string `json:&quot;label&quot;` // Human-readable display name. Maps to rdfs:label. Per Heuristic 6: if you cannot write a clear label, you do not yet understand the concept well enough to model it.
+	Comment *string `json:&quot;comment&quot;` // Detailed description of the role&#x27;s responsibilities and scope. Maps to rdfs:comment. Should define what the role covers, what it excludes, and how it differs from adjacent roles.
+	FilledByHumanAgent *string `json:&quot;filled_by_human_agent&quot;`
+	FilledByAIAgent *string `json:&quot;filled_by_ai_agent&quot;`
+	FilledByAutomatedPipeline *string `json:&quot;filled_by_automated_pipeline&quot;`
+	OwnedBy *string `json:&quot;owned_by&quot;` // Foreign key to the Department that owns this role. Maps to ntwf:ownedBy (owl:FunctionalProperty). Enables answering CQ7: &#x27;Which workflows involve both Engineering and Legal?&#x27;
+	DelegatesTo *string `json:&quot;delegates_to&quot;` // Foreign key to the fallback Role in an escalation chain. Maps to ntwf:delegatesTo. Enables answering CQ6: &#x27;What happens when the VP of Engineering is unavailable?&#x27;
+	WorkflowSteps *string `json:&quot;workflow_steps&quot;` // Back-reference to workflow steps assigned to this role. Inverse of WorkflowSteps.AssignedRole.
+	FromDelegatesTo *string `json:&quot;from_delegates_to&quot;`
+	Name *string `json:&quot;name&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcName computes the Name calculated field
+// Formula: =LOWER({{DisplayName}})
+func (tc *Role) CalcName() string {
+	return strings.ToLower(stringVal(tc.DisplayName))
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *Role) ComputeAll() *Role {
+	// Level 1 calculations
+	name := strings.ToLower(stringVal(tc.DisplayName))
+
+	return &amp;Role{
+		RoleId: tc.RoleId,
+		DisplayName: tc.DisplayName,
+		Label: tc.Label,
+		Comment: tc.Comment,
+		FilledByHumanAgent: tc.FilledByHumanAgent,
+		FilledByAIAgent: tc.FilledByAIAgent,
+		FilledByAutomatedPipeline: tc.FilledByAutomatedPipeline,
+		OwnedBy: tc.OwnedBy,
+		DelegatesTo: tc.DelegatesTo,
+		WorkflowSteps: tc.WorkflowSteps,
+		FromDelegatesTo: tc.FromDelegatesTo,
+		Name: nilIfEmpty(name),
+	}
+}
+
+// =============================================================================
+// DEPARTMENTS TABLE
+// Table: Departments
+// =============================================================================
+
+// Department represents a row in the Departments table
+// Table: Departments
+type Department struct {
+	DepartmentId string `json:&quot;department_id&quot;`
+	Title *string `json:&quot;title&quot;` // Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+	DisplayName *string `json:&quot;display_name&quot;` // Machine-friendly name for programmatic reference.
+	Roles *string `json:&quot;roles&quot;` // Back-reference to roles owned by this department. Inverse of Roles.OwnedBy.
+	Name *string `json:&quot;name&quot;` // Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcName computes the Name calculated field
+// Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+func (tc *Department) CalcName() string {
+	return strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *Department) ComputeAll() *Department {
+	// Level 1 calculations
+	name := strings.ReplaceAll(strings.ToLower(stringVal(tc.DisplayName)), &quot; &quot;, &quot;-&quot;)
+
+	return &amp;Department{
+		DepartmentId: tc.DepartmentId,
+		Title: tc.Title,
+		DisplayName: tc.DisplayName,
+		Roles: tc.Roles,
+		Name: nilIfEmpty(name),
+	}
+}
+
+// =============================================================================
+// HUMANAGENTS TABLE
+// Table: HumanAgents
+// =============================================================================
+
+// HumanAgent represents a row in the HumanAgents table
+// Table: HumanAgents
+type HumanAgent struct {
+	HumanAgentId string `json:&quot;human_agent_id&quot;`
+	Name *string `json:&quot;name&quot;` // Full name of the person. Maps to foaf:name. Note: FOAF&#x27;s name property is appropriate for persons, not for software systems (which use schema:name).
+	DisplayName *string `json:&quot;display_name&quot;`
+	Mbox *string `json:&quot;mbox&quot;` // Email address of the person. Maps to foaf:mbox. Used for notifications and organizational directory integration.
+	Roles *string `json:&quot;roles&quot;` // Back-reference to roles currently filled by this agent. Inverse of Roles.FilledBy_HumanAgent.
+}
+
+// =============================================================================
+// AIAGENTS TABLE
+// Table: AIAgents
+// =============================================================================
+
+// AIAgent represents a row in the AIAgents table
+// Table: AIAgents
+type AIAgent struct {
+	AIAgentId string `json:&quot;ai_agent_id&quot;`
+	Name *string `json:&quot;name&quot;` // Display name of the AI agent. Maps to schema:name (not foaf:name, which is for persons).
+	Title *string `json:&quot;title&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+	ModelVersion *string `json:&quot;model_version&quot;` // Version string of the AI model. Maps to ntwf:modelVersion. Makes AI-produced artifacts auditable at the version level. The domain declaration means this property applies only to AIAgent individuals.
+	Roles *string `json:&quot;roles&quot;` // Back-reference to roles currently filled by this AI agent. Inverse of Roles.FilledBy_AIAgent.
+}
+
+// =============================================================================
+// AUTOMATEDPIPELINES TABLE
+// Table: AutomatedPipelines
+// =============================================================================
+
+// AutomatedPipeline represents a row in the AutomatedPipelines table
+// Table: AutomatedPipelines
+type AutomatedPipeline struct {
+	AutomatedPipelineId string `json:&quot;automated_pipeline_id&quot;`
+	Name *string `json:&quot;name&quot;` // Display name of the pipeline. Maps to schema:name (appropriate for software systems, unlike foaf:name which is for persons).
+	Description *string `json:&quot;description&quot;`
+	DisplayName *string `json:&quot;display_name&quot;`
+	Roles *string `json:&quot;roles&quot;` // Back-reference to roles currently filled by this pipeline. Inverse of Roles.FilledBy_AutomatedPipeline.
 }
 
 // =============================================================================
 // FILE I/O FUNCTIONS (for all tables with calculated fields)
 // =============================================================================
 
-// LoadCustomerRecords loads Customers records from a JSON file
-func LoadCustomerRecords(path string) ([]Customer, error) {
+// LoadWorkflowRecords loads Workflows records from a JSON file
+func LoadWorkflowRecords(path string) ([]Workflow, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
 	}
 
-	var records []Customer
+	var records []Workflow
 	if err := json.Unmarshal(data, &amp;records); err != nil {
 		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
 	}
@@ -262,8 +559,153 @@ func LoadCustomerRecords(path string) ([]Customer, error) {
 	return records, nil
 }
 
-// SaveCustomerRecords saves computed Customers records to a JSON file
-func SaveCustomerRecords(path string, records []Customer) error {
+// SaveWorkflowRecords saves computed Workflows records to a JSON file
+func SaveWorkflowRecords(path string, records []Workflow) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadWorkflowStepRecords loads WorkflowSteps records from a JSON file
+func LoadWorkflowStepRecords(path string) ([]WorkflowStep, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []WorkflowStep
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveWorkflowStepRecords saves computed WorkflowSteps records to a JSON file
+func SaveWorkflowStepRecords(path string, records []WorkflowStep) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadApprovalGateRecords loads ApprovalGates records from a JSON file
+func LoadApprovalGateRecords(path string) ([]ApprovalGate, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []ApprovalGate
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveApprovalGateRecords saves computed ApprovalGates records to a JSON file
+func SaveApprovalGateRecords(path string, records []ApprovalGate) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadPrecedesStepRecords loads PrecedesSteps records from a JSON file
+func LoadPrecedesStepRecords(path string) ([]PrecedesStep, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []PrecedesStep
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SavePrecedesStepRecords saves computed PrecedesSteps records to a JSON file
+func SavePrecedesStepRecords(path string, records []PrecedesStep) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadRoleRecords loads Roles records from a JSON file
+func LoadRoleRecords(path string) ([]Role, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []Role
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveRoleRecords saves computed Roles records to a JSON file
+func SaveRoleRecords(path string, records []Role) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadDepartmentRecords loads Departments records from a JSON file
+func LoadDepartmentRecords(path string) ([]Department, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []Department
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveDepartmentRecords saves computed Departments records to a JSON file
+func SaveDepartmentRecords(path string, records []Department) error {
 	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
 	if err != nil {
 		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
@@ -282,14 +724,15 @@ func SaveCustomerRecords(path string, records []Customer) error {
             <div class="card">
                 <div class="code-header">
                     <h2>main.go</h2>
-                    <div><span class="code-info">91 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
+                    <div><span class="code-info">264 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
                 </div>
                 <pre id="main-code">// ERB SDK - Go Test Runner (GENERATED - DO NOT EDIT)
 // =======================================================
 // This file is REGENERATED every time inject-into-golang.py runs.
 // It must stay in sync with erb_sdk.go and the rulebook.
 //
-// Tables with calculated fields: Customers
+// Tables with calculated fields: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments
+// Tables with aggregations: Workflows
 //
 // IMPORTANT: This runner processes ALL tables, not just a &quot;primary&quot; one.
 // If ANY table fails to process, the entire run fails with exit code 1.
@@ -319,8 +762,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(&quot;Golang substrate: Processing 1 tables with calculated fields...&quot;)
-	fmt.Println(&quot;  Expected tables: Customers&quot;)
+	fmt.Println(&quot;Golang substrate: Processing 6 tables with calculated fields...&quot;)
+	fmt.Println(&quot;  Expected tables: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments&quot;)
 	fmt.Println(&quot;&quot;)
 
 	// Track success/failure for ALL tables
@@ -328,30 +771,202 @@ func main() {
 	var totalRecords int
 
 	// ─────────────────────────────────────────────────────────────────
-	// Process Customers
+	// Load related tables for aggregation calculations
 	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing Customers...&quot;)
-	customersInput := filepath.Join(blankTestsDir, &quot;customers.json&quot;)
-	customersOutput := filepath.Join(testAnswersDir, &quot;customers.json&quot;)
-
-	customersRecords, err := LoadCustomerRecords(customersInput)
+	workflow_stepsData, err := LoadWorkflowStepRecords(filepath.Join(blankTestsDir, &quot;workflow_steps.json&quot;))
 	if err != nil {
-		errMsg := fmt.Sprintf(&quot;Customers: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;Warning: Could not load WorkflowSteps for aggregations: %v\n&quot;, err)
+		workflow_stepsData = nil
+	}
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process Workflows
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing Workflows...&quot;)
+	workflowsInput := filepath.Join(blankTestsDir, &quot;workflows.json&quot;)
+	workflowsOutput := filepath.Join(testAnswersDir, &quot;workflows.json&quot;)
+
+	workflowsRecords, err := LoadWorkflowRecords(workflowsInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;Workflows: failed to load - %v&quot;, err)
 		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
 		errors = append(errors, errMsg)
 	} else {
-		var computedCustomer []Customer
-		for _, r := range customersRecords {
-			computedCustomer = append(computedCustomer, *r.ComputeAll())
+		// Compute aggregations for Workflows
+		count_of_non_proposed_stepsCountMap := make(map[string]int)
+		if workflow_stepsData != nil {
+			for _, rel := range workflow_stepsData {
+				if rel.Workflow != nil {
+					count_of_non_proposed_stepsCountMap[*rel.Workflow]++
+				}
+			}
 		}
 
-		if err := SaveCustomerRecords(customersOutput, computedCustomer); err != nil {
-			errMsg := fmt.Sprintf(&quot;Customers: failed to save - %v&quot;, err)
+		// Update records with aggregation values
+		for i := range workflowsRecords {
+			if workflowsRecords[i].WorkflowId != &quot;&quot; {
+				count := count_of_non_proposed_stepsCountMap[workflowsRecords[i].WorkflowId]
+				workflowsRecords[i].CountOfNonProposedSteps = &amp;count
+			}
+		}
+
+		var computedWorkflow []Workflow
+		for _, r := range workflowsRecords {
+			computedWorkflow = append(computedWorkflow, *r.ComputeAll())
+		}
+
+		if err := SaveWorkflowRecords(workflowsOutput, computedWorkflow); err != nil {
+			errMsg := fmt.Sprintf(&quot;Workflows: failed to save - %v&quot;, err)
 			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
 			errors = append(errors, errMsg)
 		} else {
-			fmt.Printf(&quot;  ✓ customers: %d records processed\n&quot;, len(computedCustomer))
-			totalRecords += len(computedCustomer)
+			fmt.Printf(&quot;  ✓ workflows: %d records processed\n&quot;, len(computedWorkflow))
+			totalRecords += len(computedWorkflow)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process WorkflowSteps
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing WorkflowSteps...&quot;)
+	workflow_stepsInput := filepath.Join(blankTestsDir, &quot;workflow_steps.json&quot;)
+	workflow_stepsOutput := filepath.Join(testAnswersDir, &quot;workflow_steps.json&quot;)
+
+	workflow_stepsRecords, err := LoadWorkflowStepRecords(workflow_stepsInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;WorkflowSteps: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedWorkflowStep []WorkflowStep
+		for _, r := range workflow_stepsRecords {
+			computedWorkflowStep = append(computedWorkflowStep, *r.ComputeAll())
+		}
+
+		if err := SaveWorkflowStepRecords(workflow_stepsOutput, computedWorkflowStep); err != nil {
+			errMsg := fmt.Sprintf(&quot;WorkflowSteps: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ workflow_steps: %d records processed\n&quot;, len(computedWorkflowStep))
+			totalRecords += len(computedWorkflowStep)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process ApprovalGates
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing ApprovalGates...&quot;)
+	approval_gatesInput := filepath.Join(blankTestsDir, &quot;approval_gates.json&quot;)
+	approval_gatesOutput := filepath.Join(testAnswersDir, &quot;approval_gates.json&quot;)
+
+	approval_gatesRecords, err := LoadApprovalGateRecords(approval_gatesInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;ApprovalGates: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedApprovalGate []ApprovalGate
+		for _, r := range approval_gatesRecords {
+			computedApprovalGate = append(computedApprovalGate, *r.ComputeAll())
+		}
+
+		if err := SaveApprovalGateRecords(approval_gatesOutput, computedApprovalGate); err != nil {
+			errMsg := fmt.Sprintf(&quot;ApprovalGates: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ approval_gates: %d records processed\n&quot;, len(computedApprovalGate))
+			totalRecords += len(computedApprovalGate)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process PrecedesSteps
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing PrecedesSteps...&quot;)
+	precedes_stepsInput := filepath.Join(blankTestsDir, &quot;precedes_steps.json&quot;)
+	precedes_stepsOutput := filepath.Join(testAnswersDir, &quot;precedes_steps.json&quot;)
+
+	precedes_stepsRecords, err := LoadPrecedesStepRecords(precedes_stepsInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;PrecedesSteps: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedPrecedesStep []PrecedesStep
+		for _, r := range precedes_stepsRecords {
+			computedPrecedesStep = append(computedPrecedesStep, *r.ComputeAll())
+		}
+
+		if err := SavePrecedesStepRecords(precedes_stepsOutput, computedPrecedesStep); err != nil {
+			errMsg := fmt.Sprintf(&quot;PrecedesSteps: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ precedes_steps: %d records processed\n&quot;, len(computedPrecedesStep))
+			totalRecords += len(computedPrecedesStep)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process Roles
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing Roles...&quot;)
+	rolesInput := filepath.Join(blankTestsDir, &quot;roles.json&quot;)
+	rolesOutput := filepath.Join(testAnswersDir, &quot;roles.json&quot;)
+
+	rolesRecords, err := LoadRoleRecords(rolesInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;Roles: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedRole []Role
+		for _, r := range rolesRecords {
+			computedRole = append(computedRole, *r.ComputeAll())
+		}
+
+		if err := SaveRoleRecords(rolesOutput, computedRole); err != nil {
+			errMsg := fmt.Sprintf(&quot;Roles: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ roles: %d records processed\n&quot;, len(computedRole))
+			totalRecords += len(computedRole)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process Departments
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing Departments...&quot;)
+	departmentsInput := filepath.Join(blankTestsDir, &quot;departments.json&quot;)
+	departmentsOutput := filepath.Join(testAnswersDir, &quot;departments.json&quot;)
+
+	departmentsRecords, err := LoadDepartmentRecords(departmentsInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;Departments: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedDepartment []Department
+		for _, r := range departmentsRecords {
+			computedDepartment = append(computedDepartment, *r.ComputeAll())
+		}
+
+		if err := SaveDepartmentRecords(departmentsOutput, computedDepartment); err != nil {
+			errMsg := fmt.Sprintf(&quot;Departments: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ departments: %d records processed\n&quot;, len(computedDepartment))
+			totalRecords += len(computedDepartment)
 		}
 	}
 	fmt.Println(&quot;&quot;)
@@ -372,7 +987,7 @@ func main() {
 	}
 
 	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
-	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 1, totalRecords)
+	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 6, totalRecords)
 	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
 }</pre>
             </div>

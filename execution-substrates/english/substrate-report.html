@@ -88,8 +88,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>English (NLG) Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-warning">78.7%</span></div>
+            <div class="stat"><span>96/122 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -129,41 +129,1148 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <h2>Graded Test Data</h2>
                 <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">All columns shown. <span style="color: var(--accent-color); font-weight: 500;">Blue headers</span> indicate computed fields being tested. <span style="color: var(--success-color);">✓</span> = passed, <span style="color: var(--danger-color);">E/A</span> = failed (Expected vs Actual).</p>
                 <div class="entity-section">
-<h3 class="entity-name">customers</h3>
+<h3 class="entity-name">approval_gates</h3>
 <div class="table-scroll"><table class="graded-table"><thead><tr>
-<th class="">customer_id</th>
-<th class="">customer</th>
-<th class="">email_address</th>
-<th class="">first_name</th>
-<th class="">last_name</th>
-<th class="computed-header">full_name</th>
+<th class="">approval_gate_id</th>
+<th class="computed-header">name</th>
+<th class="">workflow_steps</th>
+<th class="">escalation_threshold_hours</th>
+<th class="">display_name</th>
 </tr></thead><tbody>
 <tr>
-<td class="cell-raw" title="cust0001">cust0001</td>
-<td class="cell-raw" title="CUST0001">CUST0001</td>
-<td class="cell-raw" title="jane.smith@email.com">jane.smith@email.com</td>
-<td class="cell-raw" title="Jane">Jane</td>
-<td class="cell-raw" title="Smith">Smith</td>
-<td class="cell-passed computed" title="Jane Smith">
-<span class="check">✓</span><code>Jane Smith</code></td>
+<td class="cell-raw" title="compliance-check">compliance-check</td>
+<td class="cell-passed computed" title="compliance-check">
+<span class="check">✓</span><code>compliance-check</code></td>
+<td class="cell-raw" title="document-verification">document-verification</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Compliance Check">Compliance Check</td>
 </tr>
 <tr>
-<td class="cell-raw" title="cust0002">cust0002</td>
-<td class="cell-raw" title="CUST0002">CUST0002</td>
-<td class="cell-raw" title="john.doe@email.com">john.doe@email.com</td>
-<td class="cell-raw" title="John">John</td>
-<td class="cell-raw" title="Doe">Doe</td>
-<td class="cell-passed computed" title="John Doe">
-<span class="check">✓</span><code>John Doe</code></td>
+<td class="cell-raw" title="customer-confirmation">customer-confirmation</td>
+<td class="cell-passed computed" title="customer-confirmation">
+<span class="check">✓</span><code>customer-confirmation</code></td>
+<td class="cell-raw" title="customer-feedback-collection">customer-feedback-collection</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Customer Confirmation">Customer Confirmation</td>
 </tr>
 <tr>
-<td class="cell-raw" title="cust0003">cust0003</td>
-<td class="cell-raw" title="CUST0003">CUST0003</td>
-<td class="cell-raw" title="emily.jones@email.com">emily.jones@email.com</td>
-<td class="cell-raw" title="Emily">Emily</td>
-<td class="cell-raw" title="Jones">Jones</td>
-<td class="cell-passed computed" title="Emily Jones">
-<span class="check">✓</span><code>Emily Jones</code></td>
+<td class="cell-raw" title="executive-sign-off">executive-sign-off</td>
+<td class="cell-passed computed" title="executive-sign-off">
+<span class="check">✓</span><code>executive-sign-off</code></td>
+<td class="cell-raw" title="close-workflow, assign-task-to-team">close-workflow, assign-task-to-team</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Executive Sign-off">Executive Sign-off</td>
+</tr>
+<tr>
+<td class="cell-raw" title="final-authorization">final-authorization</td>
+<td class="cell-passed computed" title="final-authorization">
+<span class="check">✓</span><code>final-authorization</code></td>
+<td class="cell-raw" title="system-notification-sent">system-notification-sent</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Final Authorization">Final Authorization</td>
+</tr>
+<tr>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-passed computed" title="finance-approval">
+<span class="check">✓</span><code>finance-approval</code></td>
+<td class="cell-raw" title="generate-report, finance-approval">generate-report, finance-approval</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Finance Approval">Finance Approval</td>
+</tr>
+<tr>
+<td class="cell-raw" title="initial-review">initial-review</td>
+<td class="cell-passed computed" title="initial-review">
+<span class="check">✓</span><code>initial-review</code></td>
+<td class="cell-raw" title="submit-request">submit-request</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Initial Review">Initial Review</td>
+</tr>
+<tr>
+<td class="cell-raw" title="it-security-gate">it-security-gate</td>
+<td class="cell-passed computed" title="it-security-gate">
+<span class="check">✓</span><code>it-security-gate</code></td>
+<td class="cell-raw" title="archive-request, automated-eligibility-check">archive-request, automated-eligibility-check</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="IT Security Gate">IT Security Gate</td>
+</tr>
+<tr>
+<td class="cell-raw" title="legal-review">legal-review</td>
+<td class="cell-passed computed" title="legal-review">
+<span class="check">✓</span><code>legal-review</code></td>
+<td class="cell-raw" title="team-lead-review, legal-compliance-check">team-lead-review, legal-compliance-check</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Legal Review">Legal Review</td>
+</tr>
+<tr>
+<td class="cell-raw" title="manager-approval">manager-approval</td>
+<td class="cell-passed computed" title="manager-approval">
+<span class="check">✓</span><code>manager-approval</code></td>
+<td class="cell-raw" title="final-approval, manager-review">final-approval, manager-review</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Manager Approval">Manager Approval</td>
+</tr>
+<tr>
+<td class="cell-raw" title="quality-assurance">quality-assurance</td>
+<td class="cell-passed computed" title="quality-assurance">
+<span class="check">✓</span><code>quality-assurance</code></td>
+<td class="cell-raw" title="quality-assurance-review">quality-assurance-review</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="Quality Assurance">Quality Assurance</td>
+</tr>
+<tr>
+<td class="cell-raw" title="some-new-gate">some-new-gate</td>
+<td class="cell-passed computed" title="some-new-gate">
+<span class="check">✓</span><code>some-new-gate</code></td>
+<td class="cell-raw" title="some-new-task">some-new-task</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title="some new gate">some new gate</td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">departments</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">department_id</th>
+<th class="computed-header">name</th>
+<th class="">roles</th>
+<th class="">display_name</th>
+<th class="">title</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="administration">administration</td>
+<td class="cell-passed computed" title="administration">
+<span class="check">✓</span><code>administration</code></td>
+<td class="cell-raw" title="hr">hr</td>
+<td class="cell-raw" title="Administration">Administration</td>
+<td class="cell-raw" title="Administration Department">Administration Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="customer-service">customer-service</td>
+<td class="cell-passed computed" title="customer-service">
+<span class="check">✓</span><code>customer-service</code></td>
+<td class="cell-raw" title="manager">manager</td>
+<td class="cell-raw" title="Customer Service">Customer Service</td>
+<td class="cell-raw" title="Customer Service Department">Customer Service Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="facilities-management">facilities-management</td>
+<td class="cell-passed computed" title="facilities-management">
+<span class="check">✓</span><code>facilities-management</code></td>
+<td class="cell-raw" title="trainer">trainer</td>
+<td class="cell-raw" title="Facilities Management">Facilities Management</td>
+<td class="cell-raw" title="Facilities Department">Facilities Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-passed computed" title="finance">
+<span class="check">✓</span><code>finance</code></td>
+<td class="cell-raw" title="editor">editor</td>
+<td class="cell-raw" title="Finance">Finance</td>
+<td class="cell-raw" title="Finance Department">Finance Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="human-resources">human-resources</td>
+<td class="cell-passed computed" title="human-resources">
+<span class="check">✓</span><code>human-resources</code></td>
+<td class="cell-raw" title="administrator">administrator</td>
+<td class="cell-raw" title="Human Resources">Human Resources</td>
+<td class="cell-raw" title="HR Department">HR Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="information-technology">information-technology</td>
+<td class="cell-passed computed" title="information-technology">
+<span class="check">✓</span><code>information-technology</code></td>
+<td class="cell-raw" title="viewer">viewer</td>
+<td class="cell-raw" title="Information Technology">Information Technology</td>
+<td class="cell-raw" title="IT Department">IT Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="legal">legal</td>
+<td class="cell-passed computed" title="legal">
+<span class="check">✓</span><code>legal</code></td>
+<td class="cell-raw" title="analyst">analyst</td>
+<td class="cell-raw" title="Legal">Legal</td>
+<td class="cell-raw" title="Legal Department">Legal Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="marketing">marketing</td>
+<td class="cell-passed computed" title="marketing">
+<span class="check">✓</span><code>marketing</code></td>
+<td class="cell-raw" title="moderator">moderator</td>
+<td class="cell-raw" title="Marketing">Marketing</td>
+<td class="cell-raw" title="Marketing Department">Marketing Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="operations">operations</td>
+<td class="cell-passed computed" title="operations">
+<span class="check">✓</span><code>operations</code></td>
+<td class="cell-raw" title="tester">tester</td>
+<td class="cell-raw" title="Operations">Operations</td>
+<td class="cell-raw" title="Operations Department">Operations Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="procurement">procurement</td>
+<td class="cell-passed computed" title="procurement">
+<span class="check">✓</span><code>procurement</code></td>
+<td class="cell-raw" title="developer">developer</td>
+<td class="cell-raw" title="Procurement">Procurement</td>
+<td class="cell-raw" title="Procurement Department">Procurement Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="public-relations">public-relations</td>
+<td class="cell-passed computed" title="public-relations">
+<span class="check">✓</span><code>public-relations</code></td>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-raw" title="Public Relations">Public Relations</td>
+<td class="cell-raw" title="PR Department">PR Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="quality-assurance">quality-assurance</td>
+<td class="cell-passed computed" title="quality-assurance">
+<span class="check">✓</span><code>quality-assurance</code></td>
+<td class="cell-raw" title="guest">guest</td>
+<td class="cell-raw" title="Quality Assurance">Quality Assurance</td>
+<td class="cell-raw" title="QA Department">QA Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="research-and-development">research-and-development</td>
+<td class="cell-passed computed" title="research-and-development">
+<span class="check">✓</span><code>research-and-development</code></td>
+<td class="cell-raw" title="support">support</td>
+<td class="cell-raw" title="Research and Development">Research and Development</td>
+<td class="cell-raw" title="R&amp;D Department">R&amp;D Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="sales">sales</td>
+<td class="cell-passed computed" title="sales">
+<span class="check">✓</span><code>sales</code></td>
+<td class="cell-raw" title="contributor">contributor</td>
+<td class="cell-raw" title="Sales">Sales</td>
+<td class="cell-raw" title="Sales Department">Sales Department</td>
+</tr>
+<tr>
+<td class="cell-raw" title="training-and-development">training-and-development</td>
+<td class="cell-passed computed" title="training-and-development">
+<span class="check">✓</span><code>training-and-development</code></td>
+<td class="cell-raw" title="owner">owner</td>
+<td class="cell-raw" title="Training and Development">Training and Development</td>
+<td class="cell-raw" title="Training Department">Training Department</td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">precedes_steps</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">precedes_step_id</th>
+<th class="">name</th>
+<th class="">workflow_step</th>
+<th class="">step_number</th>
+<th class="computed-header">display_name</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="assign-task-to-team">assign-task-to-team</td>
+<td class="cell-raw" title="assign-task-to-team">assign-task-to-team</td>
+<td class="cell-raw" title="some-new-task">some-new-task</td>
+<td class="cell-raw" title="16">16</td>
+<td class="cell-passed computed" title="Step-16">
+<span class="check">✓</span><code>Step-16</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-1">step-1</td>
+<td class="cell-raw" title="step-1">step-1</td>
+<td class="cell-raw" title="submit-request">submit-request</td>
+<td class="cell-raw" title="1">1</td>
+<td class="cell-passed computed" title="Step-1">
+<span class="check">✓</span><code>Step-1</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-10">step-10</td>
+<td class="cell-raw" title="step-10">step-10</td>
+<td class="cell-raw" title="customer-feedback-collection">customer-feedback-collection</td>
+<td class="cell-raw" title="10">10</td>
+<td class="cell-passed computed" title="Step-10">
+<span class="check">✓</span><code>Step-10</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-11">step-11</td>
+<td class="cell-raw" title="step-11">step-11</td>
+<td class="cell-raw" title="legal-compliance-check">legal-compliance-check</td>
+<td class="cell-raw" title="11">11</td>
+<td class="cell-passed computed" title="Step-11">
+<span class="check">✓</span><code>Step-11</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-12">step-12</td>
+<td class="cell-raw" title="step-12">step-12</td>
+<td class="cell-raw" title="assign-task-to-team">assign-task-to-team</td>
+<td class="cell-raw" title="12">12</td>
+<td class="cell-passed computed" title="Step-12">
+<span class="check">✓</span><code>Step-12</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-13">step-13</td>
+<td class="cell-raw" title="step-13">step-13</td>
+<td class="cell-raw" title="team-lead-review">team-lead-review</td>
+<td class="cell-raw" title="13">13</td>
+<td class="cell-passed computed" title="Step-13">
+<span class="check">✓</span><code>Step-13</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-14">step-14</td>
+<td class="cell-raw" title="step-14">step-14</td>
+<td class="cell-raw" title="generate-report">generate-report</td>
+<td class="cell-raw" title="14">14</td>
+<td class="cell-passed computed" title="Step-14">
+<span class="check">✓</span><code>Step-14</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-15">step-15</td>
+<td class="cell-raw" title="step-15">step-15</td>
+<td class="cell-raw" title="close-workflow">close-workflow</td>
+<td class="cell-raw" title="15">15</td>
+<td class="cell-passed computed" title="Step-15">
+<span class="check">✓</span><code>Step-15</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-2">step-2</td>
+<td class="cell-raw" title="step-2">step-2</td>
+<td class="cell-raw" title="manager-review">manager-review</td>
+<td class="cell-raw" title="2">2</td>
+<td class="cell-passed computed" title="Step-2">
+<span class="check">✓</span><code>Step-2</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-3">step-3</td>
+<td class="cell-raw" title="step-3">step-3</td>
+<td class="cell-raw" title="automated-eligibility-check">automated-eligibility-check</td>
+<td class="cell-raw" title="3">3</td>
+<td class="cell-passed computed" title="Step-3">
+<span class="check">✓</span><code>Step-3</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-4">step-4</td>
+<td class="cell-raw" title="step-4">step-4</td>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-raw" title="4">4</td>
+<td class="cell-passed computed" title="Step-4">
+<span class="check">✓</span><code>Step-4</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-5">step-5</td>
+<td class="cell-raw" title="step-5">step-5</td>
+<td class="cell-raw" title="document-verification">document-verification</td>
+<td class="cell-raw" title="5">5</td>
+<td class="cell-passed computed" title="Step-5">
+<span class="check">✓</span><code>Step-5</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-6">step-6</td>
+<td class="cell-raw" title="step-6">step-6</td>
+<td class="cell-raw" title="quality-assurance-review">quality-assurance-review</td>
+<td class="cell-raw" title="6">6</td>
+<td class="cell-passed computed" title="Step-6">
+<span class="check">✓</span><code>Step-6</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-7">step-7</td>
+<td class="cell-raw" title="step-7">step-7</td>
+<td class="cell-raw" title="system-notification-sent">system-notification-sent</td>
+<td class="cell-raw" title="7">7</td>
+<td class="cell-passed computed" title="Step-7">
+<span class="check">✓</span><code>Step-7</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-8">step-8</td>
+<td class="cell-raw" title="step-8">step-8</td>
+<td class="cell-raw" title="final-approval">final-approval</td>
+<td class="cell-raw" title="8">8</td>
+<td class="cell-passed computed" title="Step-8">
+<span class="check">✓</span><code>Step-8</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-9">step-9</td>
+<td class="cell-raw" title="step-9">step-9</td>
+<td class="cell-raw" title="archive-request">archive-request</td>
+<td class="cell-raw" title="9">9</td>
+<td class="cell-passed computed" title="Step-9">
+<span class="check">✓</span><code>Step-9</code></td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">roles</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">role_id</th>
+<th class="computed-header">name</th>
+<th class="">label</th>
+<th class="">comment</th>
+<th class="">filled_by_human_agent</th>
+<th class="">filled_by_ai_agent</th>
+<th class="">filled_by_automated_pipeline</th>
+<th class="">owned_by</th>
+<th class="">workflow_steps</th>
+<th class="">from_delegates_to</th>
+<th class="">display_name</th>
+<th class="">delegates_to</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="administrator">administrator</td>
+<td class="cell-passed computed" title="administrator">
+<span class="check">✓</span><code>administrator</code></td>
+<td class="cell-raw" title="Admin">Admin</td>
+<td class="cell-raw" title="Has full access to all system features and settings.">Has full access to all system features and settings.</td>
+<td class="cell-raw" title="agent-001">agent-001</td>
+<td class="cell-raw" title="ava">ava</td>
+<td class="cell-raw" title="lead-notification-pipeline">lead-notification-pipeline</td>
+<td class="cell-raw" title="human-resources">human-resources</td>
+<td class="cell-raw" title="submit-request">submit-request</td>
+<td class="cell-raw" title="editor">editor</td>
+<td class="cell-raw" title="Administrator">Administrator</td>
+<td class="cell-raw" title=""></td>
+</tr>
+<tr>
+<td class="cell-raw" title="analyst">analyst</td>
+<td class="cell-passed computed" title="analyst">
+<span class="check">✓</span><code>analyst</code></td>
+<td class="cell-raw" title="Data Analyst">Data Analyst</td>
+<td class="cell-raw" title="Has access to analytics and reporting tools.">Has access to analytics and reporting tools.</td>
+<td class="cell-raw" title="agent-008">agent-008</td>
+<td class="cell-raw" title="kai">kai</td>
+<td class="cell-raw" title="project-intake-pipeline">project-intake-pipeline</td>
+<td class="cell-raw" title="legal">legal</td>
+<td class="cell-raw" title="final-approval">final-approval</td>
+<td class="cell-raw" title="developer">developer</td>
+<td class="cell-raw" title="Analyst">Analyst</td>
+<td class="cell-raw" title="support">support</td>
+</tr>
+<tr>
+<td class="cell-raw" title="contributor">contributor</td>
+<td class="cell-passed computed" title="contributor">
+<span class="check">✓</span><code>contributor</code></td>
+<td class="cell-raw" title="Content Contributor">Content Contributor</td>
+<td class="cell-raw" title="Can submit new content for review but cannot publish directly.">Can submit new content for review but cannot publish directly.</td>
+<td class="cell-raw" title="agent-005">agent-005</td>
+<td class="cell-raw" title="zara">zara</td>
+<td class="cell-raw" title="support-ticket-automation">support-ticket-automation</td>
+<td class="cell-raw" title="sales">sales</td>
+<td class="cell-raw" title="document-verification">document-verification</td>
+<td class="cell-raw" title="manager">manager</td>
+<td class="cell-raw" title="Contributor">Contributor</td>
+<td class="cell-raw" title="moderator">moderator</td>
+</tr>
+<tr>
+<td class="cell-raw" title="developer">developer</td>
+<td class="cell-passed computed" title="developer">
+<span class="check">✓</span><code>developer</code></td>
+<td class="cell-raw" title="Software Developer">Software Developer</td>
+<td class="cell-raw" title="Can access and modify application code and integrations.">Can access and modify application code and integrations.</td>
+<td class="cell-raw" title="agent-009">agent-009</td>
+<td class="cell-raw" title="sophie">sophie</td>
+<td class="cell-raw" title="crm-data-sync">crm-data-sync</td>
+<td class="cell-raw" title="procurement">procurement</td>
+<td class="cell-raw" title="archive-request">archive-request</td>
+<td class="cell-raw" title="tester">tester</td>
+<td class="cell-raw" title="Developer">Developer</td>
+<td class="cell-raw" title="analyst">analyst</td>
+</tr>
+<tr>
+<td class="cell-raw" title="editor">editor</td>
+<td class="cell-passed computed" title="editor">
+<span class="check">✓</span><code>editor</code></td>
+<td class="cell-raw" title="Content Editor">Content Editor</td>
+<td class="cell-raw" title="Can create, edit, and delete content but cannot change system settings.">Can create, edit, and delete content but cannot change system settings.</td>
+<td class="cell-raw" title="agent-002">agent-002</td>
+<td class="cell-raw" title="leo">leo</td>
+<td class="cell-raw" title="e-commerce-order-sync">e-commerce-order-sync</td>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-raw" title="manager-review">manager-review</td>
+<td class="cell-raw" title="viewer">viewer</td>
+<td class="cell-raw" title="Editor">Editor</td>
+<td class="cell-raw" title="administrator">administrator</td>
+</tr>
+<tr>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-passed computed" title="finance">
+<span class="check">✓</span><code>finance</code></td>
+<td class="cell-raw" title="Finance Officer">Finance Officer</td>
+<td class="cell-raw" title="Handles billing, invoices, and financial reports.">Handles billing, invoices, and financial reports.</td>
+<td class="cell-raw" title="agent-012">agent-012</td>
+<td class="cell-raw" title="jade">jade</td>
+<td class="cell-raw" title="task-management-sync">task-management-sync</td>
+<td class="cell-raw" title="public-relations">public-relations</td>
+<td class="cell-raw" title="assign-task-to-team, some-new-task">assign-task-to-team, some-new-task</td>
+<td class="cell-raw" title="guest">guest</td>
+<td class="cell-raw" title="Finance">Finance</td>
+<td class="cell-raw" title="hr">hr</td>
+</tr>
+<tr>
+<td class="cell-raw" title="guest">guest</td>
+<td class="cell-passed computed" title="guest">
+<span class="check">✓</span><code>guest</code></td>
+<td class="cell-raw" title="Temporary Access">Temporary Access</td>
+<td class="cell-raw" title="Limited access for temporary users or external collaborators.">Limited access for temporary users or external collaborators.</td>
+<td class="cell-raw" title="agent-013">agent-013</td>
+<td class="cell-raw" title="mila">mila</td>
+<td class="cell-raw" title="cloud-storage-sync">cloud-storage-sync</td>
+<td class="cell-raw" title="quality-assurance">quality-assurance</td>
+<td class="cell-raw" title="team-lead-review">team-lead-review</td>
+<td class="cell-raw" title="trainer">trainer</td>
+<td class="cell-raw" title="Guest">Guest</td>
+<td class="cell-raw" title="finance">finance</td>
+</tr>
+<tr>
+<td class="cell-raw" title="hr">hr</td>
+<td class="cell-passed computed" title="hr">
+<span class="check">✓</span><code>hr</code></td>
+<td class="cell-raw" title="Human Resources">Human Resources</td>
+<td class="cell-raw" title="Manages employee records and recruitment processes.">Manages employee records and recruitment processes.</td>
+<td class="cell-raw" title="agent-011">agent-011</td>
+<td class="cell-raw" title="liam">liam</td>
+<td class="cell-raw" title="survey-data-pipeline">survey-data-pipeline</td>
+<td class="cell-raw" title="administration">administration</td>
+<td class="cell-raw" title="legal-compliance-check">legal-compliance-check</td>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-raw" title="HR">HR</td>
+<td class="cell-raw" title="tester">tester</td>
+</tr>
+<tr>
+<td class="cell-raw" title="manager">manager</td>
+<td class="cell-passed computed" title="manager">
+<span class="check">✓</span><code>manager</code></td>
+<td class="cell-raw" title="Project Manager">Project Manager</td>
+<td class="cell-raw" title="Oversees project progress and manages team assignments.">Oversees project progress and manages team assignments.</td>
+<td class="cell-raw" title="agent-006">agent-006</td>
+<td class="cell-raw" title="owen">owen</td>
+<td class="cell-raw" title="devops-integration">devops-integration</td>
+<td class="cell-raw" title="customer-service">customer-service</td>
+<td class="cell-raw" title="quality-assurance-review">quality-assurance-review</td>
+<td class="cell-raw" title="support">support</td>
+<td class="cell-raw" title="Manager">Manager</td>
+<td class="cell-raw" title="contributor">contributor</td>
+</tr>
+<tr>
+<td class="cell-raw" title="moderator">moderator</td>
+<td class="cell-passed computed" title="moderator">
+<span class="check">✓</span><code>moderator</code></td>
+<td class="cell-raw" title="Forum Moderator">Forum Moderator</td>
+<td class="cell-raw" title="Can manage user comments and moderate discussions.">Can manage user comments and moderate discussions.</td>
+<td class="cell-raw" title="agent-004">agent-004</td>
+<td class="cell-raw" title="eli">eli</td>
+<td class="cell-raw" title="newsletter-signup-sync">newsletter-signup-sync</td>
+<td class="cell-raw" title="marketing">marketing</td>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-raw" title="contributor">contributor</td>
+<td class="cell-raw" title="Moderator">Moderator</td>
+<td class="cell-raw" title="viewer">viewer</td>
+</tr>
+<tr>
+<td class="cell-raw" title="owner">owner</td>
+<td class="cell-passed computed" title="owner">
+<span class="check">✓</span><code>owner</code></td>
+<td class="cell-raw" title="System Owner">System Owner</td>
+<td class="cell-raw" title="Ultimate authority over the system, can assign or revoke any role.">Ultimate authority over the system, can assign or revoke any role.</td>
+<td class="cell-raw" title="agent-015">agent-015</td>
+<td class="cell-raw" title="ella">ella</td>
+<td class="cell-raw" title="survey-data-export">survey-data-export</td>
+<td class="cell-raw" title="training-and-development">training-and-development</td>
+<td class="cell-raw" title="close-workflow">close-workflow</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title="Owner">Owner</td>
+<td class="cell-raw" title="trainer">trainer</td>
+</tr>
+<tr>
+<td class="cell-raw" title="support">support</td>
+<td class="cell-passed computed" title="support">
+<span class="check">✓</span><code>support</code></td>
+<td class="cell-raw" title="Customer Support">Customer Support</td>
+<td class="cell-raw" title="Handles user inquiries and provides technical assistance.">Handles user inquiries and provides technical assistance.</td>
+<td class="cell-raw" title="agent-007">agent-007</td>
+<td class="cell-raw" title="nina">nina</td>
+<td class="cell-raw" title="finance-automation">finance-automation</td>
+<td class="cell-raw" title="research-and-development">research-and-development</td>
+<td class="cell-raw" title="system-notification-sent">system-notification-sent</td>
+<td class="cell-raw" title="analyst">analyst</td>
+<td class="cell-raw" title="Support">Support</td>
+<td class="cell-raw" title="manager">manager</td>
+</tr>
+<tr>
+<td class="cell-raw" title="tester">tester</td>
+<td class="cell-passed computed" title="tester">
+<span class="check">✓</span><code>tester</code></td>
+<td class="cell-raw" title="Quality Assurance">Quality Assurance</td>
+<td class="cell-raw" title="Responsible for testing new features and reporting bugs.">Responsible for testing new features and reporting bugs.</td>
+<td class="cell-raw" title="agent-010">agent-010</td>
+<td class="cell-raw" title="max">max</td>
+<td class="cell-raw" title="calendar-integration">calendar-integration</td>
+<td class="cell-raw" title="operations">operations</td>
+<td class="cell-raw" title="customer-feedback-collection">customer-feedback-collection</td>
+<td class="cell-raw" title="hr">hr</td>
+<td class="cell-raw" title="Tester">Tester</td>
+<td class="cell-raw" title="developer">developer</td>
+</tr>
+<tr>
+<td class="cell-raw" title="trainer">trainer</td>
+<td class="cell-passed computed" title="trainer">
+<span class="check">✓</span><code>trainer</code></td>
+<td class="cell-raw" title="Training Specialist">Training Specialist</td>
+<td class="cell-raw" title="Creates and delivers training materials to users.">Creates and delivers training materials to users.</td>
+<td class="cell-raw" title="agent-014">agent-014</td>
+<td class="cell-raw" title="noah">noah</td>
+<td class="cell-raw" title="email-notification-pipeline">email-notification-pipeline</td>
+<td class="cell-raw" title="facilities-management">facilities-management</td>
+<td class="cell-raw" title="generate-report">generate-report</td>
+<td class="cell-raw" title="owner">owner</td>
+<td class="cell-raw" title="Trainer">Trainer</td>
+<td class="cell-raw" title="guest">guest</td>
+</tr>
+<tr>
+<td class="cell-raw" title="viewer">viewer</td>
+<td class="cell-passed computed" title="viewer">
+<span class="check">✓</span><code>viewer</code></td>
+<td class="cell-raw" title="Read-Only">Read-Only</td>
+<td class="cell-raw" title="Can view content but cannot make any changes.">Can view content but cannot make any changes.</td>
+<td class="cell-raw" title="agent-003">agent-003</td>
+<td class="cell-raw" title="maya">maya</td>
+<td class="cell-raw" title="issue-tracking-bridge">issue-tracking-bridge</td>
+<td class="cell-raw" title="information-technology">information-technology</td>
+<td class="cell-raw" title="automated-eligibility-check">automated-eligibility-check</td>
+<td class="cell-raw" title="moderator">moderator</td>
+<td class="cell-raw" title="Viewer">Viewer</td>
+<td class="cell-raw" title="editor">editor</td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">workflow_steps</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">workflow_step_id</th>
+<th class="computed-header">name</th>
+<th class="">workflow</th>
+<th class="">sequence_position</th>
+<th class="">assigned_role</th>
+<th class="">approval_gate</th>
+<th class="">preceded_by_steps</th>
+<th class="">display_name</th>
+<th class="">requires_human_approval</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="archive-request">archive-request</td>
+<td class="cell-passed computed" title="archive-request">
+<span class="check">✓</span><code>archive-request</code></td>
+<td class="cell-raw" title="customer-feedback">customer-feedback</td>
+<td class="cell-raw" title="9">9</td>
+<td class="cell-raw" title="developer">developer</td>
+<td class="cell-raw" title="it-security-gate">it-security-gate</td>
+<td class="cell-raw" title="step-9">step-9</td>
+<td class="cell-raw" title="Archive Request">Archive Request</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="asdf">asdf</td>
+<td class="cell-passed computed" title="asdf">
+<span class="check">✓</span><code>asdf</code></td>
+<td class="cell-raw" title="change-management">change-management</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title="asdf">asdf</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="assign-task-to-team">assign-task-to-team</td>
+<td class="cell-passed computed" title="assign-task-to-team">
+<span class="check">✓</span><code>assign-task-to-team</code></td>
+<td class="cell-raw" title="asset-management">asset-management</td>
+<td class="cell-raw" title="12">12</td>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-raw" title="executive-sign-off">executive-sign-off</td>
+<td class="cell-raw" title="step-12">step-12</td>
+<td class="cell-raw" title="Assign Task to Team">Assign Task to Team</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="automated-eligibility-check">automated-eligibility-check</td>
+<td class="cell-passed computed" title="automated-eligibility-check">
+<span class="check">✓</span><code>automated-eligibility-check</code></td>
+<td class="cell-raw" title="content-publishing">content-publishing</td>
+<td class="cell-raw" title="3">3</td>
+<td class="cell-raw" title="viewer">viewer</td>
+<td class="cell-raw" title="it-security-gate">it-security-gate</td>
+<td class="cell-raw" title="step-3">step-3</td>
+<td class="cell-raw" title="Automated Eligibility Check">Automated Eligibility Check</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="close-workflow">close-workflow</td>
+<td class="cell-passed computed" title="close-workflow">
+<span class="check">✓</span><code>close-workflow</code></td>
+<td class="cell-raw" title="change-management">change-management</td>
+<td class="cell-raw" title="15">15</td>
+<td class="cell-raw" title="owner">owner</td>
+<td class="cell-raw" title="executive-sign-off">executive-sign-off</td>
+<td class="cell-raw" title="step-15">step-15</td>
+<td class="cell-raw" title="Close Workflow">Close Workflow</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="customer-feedback-collection">customer-feedback-collection</td>
+<td class="cell-passed computed" title="customer-feedback-collection">
+<span class="check">✓</span><code>customer-feedback-collection</code></td>
+<td class="cell-raw" title="project-kickoff">project-kickoff</td>
+<td class="cell-raw" title="10">10</td>
+<td class="cell-raw" title="tester">tester</td>
+<td class="cell-raw" title="customer-confirmation">customer-confirmation</td>
+<td class="cell-raw" title="step-10">step-10</td>
+<td class="cell-raw" title="Customer Feedback Collection">Customer Feedback Collection</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="document-verification">document-verification</td>
+<td class="cell-passed computed" title="document-verification">
+<span class="check">✓</span><code>document-verification</code></td>
+<td class="cell-raw" title="it-support">it-support</td>
+<td class="cell-raw" title="5">5</td>
+<td class="cell-raw" title="contributor">contributor</td>
+<td class="cell-raw" title="compliance-check">compliance-check</td>
+<td class="cell-raw" title="step-5">step-5</td>
+<td class="cell-raw" title="Document Verification">Document Verification</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="final-approval">final-approval</td>
+<td class="cell-passed computed" title="final-approval">
+<span class="check">✓</span><code>final-approval</code></td>
+<td class="cell-raw" title="procurement">procurement</td>
+<td class="cell-raw" title="8">8</td>
+<td class="cell-raw" title="analyst">analyst</td>
+<td class="cell-raw" title="manager-approval">manager-approval</td>
+<td class="cell-raw" title="step-8">step-8</td>
+<td class="cell-raw" title="Final Approval">Final Approval</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+<tr>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-passed computed" title="finance-approval">
+<span class="check">✓</span><code>finance-approval</code></td>
+<td class="cell-raw" title="leave-request">leave-request</td>
+<td class="cell-raw" title="4">4</td>
+<td class="cell-raw" title="moderator">moderator</td>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-raw" title="step-4">step-4</td>
+<td class="cell-raw" title="Finance Approval">Finance Approval</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+<tr>
+<td class="cell-raw" title="generate-report">generate-report</td>
+<td class="cell-passed computed" title="generate-report">
+<span class="check">✓</span><code>generate-report</code></td>
+<td class="cell-raw" title="incident-reporting">incident-reporting</td>
+<td class="cell-raw" title="14">14</td>
+<td class="cell-raw" title="trainer">trainer</td>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-raw" title="step-14">step-14</td>
+<td class="cell-raw" title="Generate Report">Generate Report</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="legal-compliance-check">legal-compliance-check</td>
+<td class="cell-passed computed" title="legal-compliance-check">
+<span class="check">✓</span><code>legal-compliance-check</code></td>
+<td class="cell-raw" title="contract-review">contract-review</td>
+<td class="cell-raw" title="11">11</td>
+<td class="cell-raw" title="hr">hr</td>
+<td class="cell-raw" title="legal-review">legal-review</td>
+<td class="cell-raw" title="step-11">step-11</td>
+<td class="cell-raw" title="Legal Compliance Check">Legal Compliance Check</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+<tr>
+<td class="cell-raw" title="manager-review">manager-review</td>
+<td class="cell-passed computed" title="manager-review">
+<span class="check">✓</span><code>manager-review</code></td>
+<td class="cell-raw" title="invoice-approval">invoice-approval</td>
+<td class="cell-raw" title="2">2</td>
+<td class="cell-raw" title="editor">editor</td>
+<td class="cell-raw" title="manager-approval">manager-approval</td>
+<td class="cell-raw" title="step-2">step-2</td>
+<td class="cell-raw" title="Manager Review">Manager Review</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+<tr>
+<td class="cell-raw" title="quality-assurance-review">quality-assurance-review</td>
+<td class="cell-passed computed" title="quality-assurance-review">
+<span class="check">✓</span><code>quality-assurance-review</code></td>
+<td class="cell-raw" title="expense-reimbursement">expense-reimbursement</td>
+<td class="cell-raw" title="6">6</td>
+<td class="cell-raw" title="manager">manager</td>
+<td class="cell-raw" title="quality-assurance">quality-assurance</td>
+<td class="cell-raw" title="step-6">step-6</td>
+<td class="cell-raw" title="Quality Assurance Review">Quality Assurance Review</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+<tr>
+<td class="cell-raw" title="recwwXHLqxKPhj6Mt">recwwXHLqxKPhj6Mt</td>
+<td class="cell-failed computed" title="Expected: &#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected"></code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="performance-review">performance-review</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="some-new-task">some-new-task</td>
+<td class="cell-passed computed" title="some-new-task">
+<span class="check">✓</span><code>some-new-task</code></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title="13">13</td>
+<td class="cell-raw" title="finance">finance</td>
+<td class="cell-raw" title="some-new-gate">some-new-gate</td>
+<td class="cell-raw" title="assign-task-to-team">assign-task-to-team</td>
+<td class="cell-raw" title="Some new task">Some new task</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="step-2">step-2</td>
+<td class="cell-passed computed" title="step-2">
+<span class="check">✓</span><code>step-2</code></td>
+<td class="cell-raw" title="performance-review">performance-review</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title="Step 2">Step 2</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="step1">step1</td>
+<td class="cell-passed computed" title="step1">
+<span class="check">✓</span><code>step1</code></td>
+<td class="cell-raw" title="change-management">change-management</td>
+<td class="cell-raw" title="0">0</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title=""></td>
+<td class="cell-raw" title="step1">step1</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="submit-request">submit-request</td>
+<td class="cell-passed computed" title="submit-request">
+<span class="check">✓</span><code>submit-request</code></td>
+<td class="cell-raw" title="onboarding">onboarding</td>
+<td class="cell-raw" title="1">1</td>
+<td class="cell-raw" title="administrator">administrator</td>
+<td class="cell-raw" title="initial-review">initial-review</td>
+<td class="cell-raw" title="step-1">step-1</td>
+<td class="cell-raw" title="Submit Request">Submit Request</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+<tr>
+<td class="cell-raw" title="system-notification-sent">system-notification-sent</td>
+<td class="cell-passed computed" title="system-notification-sent">
+<span class="check">✓</span><code>system-notification-sent</code></td>
+<td class="cell-raw" title="performance-review">performance-review</td>
+<td class="cell-raw" title="7">7</td>
+<td class="cell-raw" title="support">support</td>
+<td class="cell-raw" title="final-authorization">final-authorization</td>
+<td class="cell-raw" title="step-7">step-7</td>
+<td class="cell-raw" title="System Notification Sent">System Notification Sent</td>
+<td class="cell-raw" title="False">False</td>
+</tr>
+<tr>
+<td class="cell-raw" title="team-lead-review">team-lead-review</td>
+<td class="cell-passed computed" title="team-lead-review">
+<span class="check">✓</span><code>team-lead-review</code></td>
+<td class="cell-raw" title="recruitment">recruitment</td>
+<td class="cell-raw" title="13">13</td>
+<td class="cell-raw" title="guest">guest</td>
+<td class="cell-raw" title="legal-review">legal-review</td>
+<td class="cell-raw" title="step-13">step-13</td>
+<td class="cell-raw" title="Team Lead Review">Team Lead Review</td>
+<td class="cell-raw" title="True">True</td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">workflows</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">workflow_id</th>
+<th class="computed-header">name</th>
+<th class="">title</th>
+<th class="">description</th>
+<th class="">identifier</th>
+<th class="">modified</th>
+<th class="">workflow_steps</th>
+<th class="computed-header">count_of_non_proposed_steps</th>
+<th class="">display_name</th>
+<th class="">color</th>
+<th class="computed-header">has_more_than1_step</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="asset-management">asset-management</td>
+<td class="cell-passed computed" title="asset-management">
+<span class="check">✓</span><code>asset-management</code></td>
+<td class="cell-raw" title="Asset Management Process">Asset Management Process</td>
+<td class="cell-raw" title="Process for tracking, maintaining, and auditing company assets.">Process for tracking, maintaining, and auditing company assets.</td>
+<td class="cell-raw" title="WF-ASM-012">WF-ASM-012</td>
+<td class="cell-raw" title="2024-05-18">2024-05-18</td>
+<td class="cell-raw" title="assign-task-to-team">assign-task-to-team</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Asset Management">Asset Management</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="change-management">change-management</td>
+<td class="cell-passed computed" title="change-management">
+<span class="check">✓</span><code>change-management</code></td>
+<td class="cell-raw" title="Change Management Workflow">Change Management Workflow</td>
+<td class="cell-raw" title="Structured process for requesting, evaluating, and implementing organizational changes.">Structured process for requesting, evaluating, and implementing organizational changes.</td>
+<td class="cell-raw" title="WF-CHM-015">WF-CHM-015</td>
+<td class="cell-raw" title="2024-05-27">2024-05-27</td>
+<td class="cell-raw" title="close-workflow, step1, asdf">close-workflow, step1, asdf</td>
+<td class="cell-failed computed" title="Expected: 3&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">3</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Change Management">Change Management</td>
+<td class="cell-raw" title="green">green</td>
+<td class="cell-failed computed" title="Expected: True&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">True</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="content-publishing">content-publishing</td>
+<td class="cell-passed computed" title="content-publishing">
+<span class="check">✓</span><code>content-publishing</code></td>
+<td class="cell-raw" title="Content Publishing Process">Content Publishing Process</td>
+<td class="cell-raw" title="Workflow for drafting, reviewing, and publishing content to the company website.">Workflow for drafting, reviewing, and publishing content to the company website.</td>
+<td class="cell-raw" title="WF-CNT-003">WF-CNT-003</td>
+<td class="cell-raw" title="2024-05-28">2024-05-28</td>
+<td class="cell-raw" title="automated-eligibility-check">automated-eligibility-check</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Content Publishing">Content Publishing</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="contract-review">contract-review</td>
+<td class="cell-passed computed" title="contract-review">
+<span class="check">✓</span><code>contract-review</code></td>
+<td class="cell-raw" title="Contract Review Workflow">Contract Review Workflow</td>
+<td class="cell-raw" title="Workflow for legal and management review of contracts before signing.">Workflow for legal and management review of contracts before signing.</td>
+<td class="cell-raw" title="WF-CTR-011">WF-CTR-011</td>
+<td class="cell-raw" title="2024-06-04">2024-06-04</td>
+<td class="cell-raw" title="legal-compliance-check">legal-compliance-check</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Contract Review">Contract Review</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="customer-feedback">customer-feedback</td>
+<td class="cell-passed computed" title="customer-feedback">
+<span class="check">✓</span><code>customer-feedback</code></td>
+<td class="cell-raw" title="Customer Feedback Collection">Customer Feedback Collection</td>
+<td class="cell-raw" title="Workflow for collecting, analyzing, and acting on customer feedback.">Workflow for collecting, analyzing, and acting on customer feedback.</td>
+<td class="cell-raw" title="WF-CFB-009">WF-CFB-009</td>
+<td class="cell-raw" title="2024-05-25">2024-05-25</td>
+<td class="cell-raw" title="archive-request">archive-request</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Customer Feedback">Customer Feedback</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="expense-reimbursement">expense-reimbursement</td>
+<td class="cell-passed computed" title="expense-reimbursement">
+<span class="check">✓</span><code>expense-reimbursement</code></td>
+<td class="cell-raw" title="Expense Reimbursement Process">Expense Reimbursement Process</td>
+<td class="cell-raw" title="Steps for employees to submit expenses and receive reimbursements after approval.">Steps for employees to submit expenses and receive reimbursements after approval.</td>
+<td class="cell-raw" title="WF-EXP-006">WF-EXP-006</td>
+<td class="cell-raw" title="2024-06-03">2024-06-03</td>
+<td class="cell-raw" title="quality-assurance-review">quality-assurance-review</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Expense Reimbursement">Expense Reimbursement</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="incident-reporting">incident-reporting</td>
+<td class="cell-passed computed" title="incident-reporting">
+<span class="check">✓</span><code>incident-reporting</code></td>
+<td class="cell-raw" title="Incident Reporting Process">Incident Reporting Process</td>
+<td class="cell-raw" title="Steps for reporting, investigating, and resolving workplace incidents.">Steps for reporting, investigating, and resolving workplace incidents.</td>
+<td class="cell-raw" title="WF-INC-014">WF-INC-014</td>
+<td class="cell-raw" title="2024-06-06">2024-06-06</td>
+<td class="cell-raw" title="generate-report">generate-report</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Incident Reporting">Incident Reporting</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="invoice-approval">invoice-approval</td>
+<td class="cell-passed computed" title="invoice-approval">
+<span class="check">✓</span><code>invoice-approval</code></td>
+<td class="cell-raw" title="Invoice Approval Workflow">Invoice Approval Workflow</td>
+<td class="cell-raw" title="Automated workflow for reviewing, approving, and processing vendor invoices.">Automated workflow for reviewing, approving, and processing vendor invoices.</td>
+<td class="cell-raw" title="WF-INV-002">WF-INV-002</td>
+<td class="cell-raw" title="2024-06-01">2024-06-01</td>
+<td class="cell-raw" title="manager-review">manager-review</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Invoice Approval">Invoice Approval</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="it-support">it-support</td>
+<td class="cell-passed computed" title="it-support">
+<span class="check">✓</span><code>it-support</code></td>
+<td class="cell-raw" title="IT Support Ticketing">IT Support Ticketing</td>
+<td class="cell-raw" title="Workflow for submitting, triaging, and resolving IT support tickets.">Workflow for submitting, triaging, and resolving IT support tickets.</td>
+<td class="cell-raw" title="WF-ITS-005">WF-ITS-005</td>
+<td class="cell-raw" title="2024-05-30">2024-05-30</td>
+<td class="cell-raw" title="document-verification">document-verification</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="IT Support">IT Support</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="leave-request">leave-request</td>
+<td class="cell-passed computed" title="leave-request">
+<span class="check">✓</span><code>leave-request</code></td>
+<td class="cell-raw" title="Leave Request Workflow">Leave Request Workflow</td>
+<td class="cell-raw" title="Process for employees to submit, review, and approve leave requests.">Process for employees to submit, review, and approve leave requests.</td>
+<td class="cell-raw" title="WF-LRQ-004">WF-LRQ-004</td>
+<td class="cell-raw" title="2024-06-05">2024-06-05</td>
+<td class="cell-raw" title="finance-approval">finance-approval</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Leave Request">Leave Request</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="onboarding">onboarding</td>
+<td class="cell-passed computed" title="onboarding">
+<span class="check">✓</span><code>onboarding</code></td>
+<td class="cell-raw" title="Employee Onboarding">Employee Onboarding</td>
+<td class="cell-raw" title="A step-by-step process to onboard new employees, including document collection, orientation, and training.">A step-by-step process to onboard new employees, including document collection, orientation, and training.</td>
+<td class="cell-raw" title="WF-ONB-001">WF-ONB-001</td>
+<td class="cell-raw" title="2024-05-10">2024-05-10</td>
+<td class="cell-raw" title="submit-request">submit-request</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Onboarding">Onboarding</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="performance-review">performance-review</td>
+<td class="cell-passed computed" title="performance-review">
+<span class="check">✓</span><code>performance-review</code></td>
+<td class="cell-raw" title="Annual Performance Review">Annual Performance Review</td>
+<td class="cell-raw" title="Structured workflow for conducting annual employee performance evaluations.">Structured workflow for conducting annual employee performance evaluations.</td>
+<td class="cell-raw" title="WF-PRV-007">WF-PRV-007</td>
+<td class="cell-raw" title="2024-05-15">2024-05-15</td>
+<td class="cell-raw" title="system-notification-sent, step-2, recwwXHLqxKPhj6Mt">system-notification-sent, step-2, recwwXHLqxKPhj6Mt</td>
+<td class="cell-failed computed" title="Expected: 3&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">3</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Performance Review">Performance Review</td>
+<td class="cell-raw" title="red">red</td>
+<td class="cell-failed computed" title="Expected: True&#10;Actual: False">
+<div class="exp-act"><span class="label">E:</span><code class="expected">True</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">False</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="procurement">procurement</td>
+<td class="cell-passed computed" title="procurement">
+<span class="check">✓</span><code>procurement</code></td>
+<td class="cell-raw" title="Procurement Workflow">Procurement Workflow</td>
+<td class="cell-raw" title="Process for requesting, approving, and purchasing goods or services.">Process for requesting, approving, and purchasing goods or services.</td>
+<td class="cell-raw" title="WF-PRC-008">WF-PRC-008</td>
+<td class="cell-raw" title="2024-06-02">2024-06-02</td>
+<td class="cell-raw" title="final-approval">final-approval</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Procurement">Procurement</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="project-kickoff">project-kickoff</td>
+<td class="cell-passed computed" title="project-kickoff">
+<span class="check">✓</span><code>project-kickoff</code></td>
+<td class="cell-raw" title="Project Kickoff Process">Project Kickoff Process</td>
+<td class="cell-raw" title="Steps to initiate a new project, including team assignment and goal setting.">Steps to initiate a new project, including team assignment and goal setting.</td>
+<td class="cell-raw" title="WF-PKO-010">WF-PKO-010</td>
+<td class="cell-raw" title="2024-05-20">2024-05-20</td>
+<td class="cell-raw" title="customer-feedback-collection">customer-feedback-collection</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Project Kickoff">Project Kickoff</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="recruitment">recruitment</td>
+<td class="cell-passed computed" title="recruitment">
+<span class="check">✓</span><code>recruitment</code></td>
+<td class="cell-raw" title="Recruitment Workflow">Recruitment Workflow</td>
+<td class="cell-raw" title="Workflow for posting jobs, screening candidates, and scheduling interviews.">Workflow for posting jobs, screening candidates, and scheduling interviews.</td>
+<td class="cell-raw" title="WF-RCT-013">WF-RCT-013</td>
+<td class="cell-raw" title="2024-05-22">2024-05-22</td>
+<td class="cell-raw" title="team-lead-review">team-lead-review</td>
+<td class="cell-failed computed" title="Expected: 1&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">1</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="Recruitment">Recruitment</td>
+<td class="cell-raw" title=""></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
 </tr>
 </tbody></table></div></div>
             </div>
@@ -179,32 +1286,218 @@ Using ENGLISH PROSE documents (glossary.md, specification.md)
 ======================================================================
 
 Loading English specification documents...
-  Loaded specification.md (2545 chars)
+  Loaded specification.md (4586 chars)
 
 Loading rulebook for schema metadata...
-Discovered 1 entities: Customers
+Discovered 9 entities: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments, HumanAgents, AIAgents, AutomatedPipelines
 
-Processing customers...
-  Schema: 6 fields, 1 calculated
+Processing approval_gates...
+  Schema: 5 fields, 1 calculated
+    Processing 11 records in batches of 10...
+    Batch 1/2: records 1-10
     Using English prose documents (specification)
 ============================================================
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (113 total lines, 4403 chars)
+  ... (218 total lines, 7918 chars)
 ============================================================
 Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
 RESPONSE (first 2 lines):
   [
     {
-  ... (26 total lines, 584 chars)
+  ... (72 total lines, 2180 chars)
 ============================================================
-  -&gt; customers: 3 records, 3 computed fields filled
+    Batch 2/2: records 11-11
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (155 total lines, 6065 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (9 total lines, 193 chars)
+============================================================
+  -&gt; approval_gates: 11 records, 11 computed fields filled
+
+Processing departments...
+  Schema: 5 fields, 1 calculated
+    Processing 15 records in batches of 10...
+    Batch 1/2: records 1-10
+    Using English prose documents (specification)
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (218 total lines, 7500 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (72 total lines, 1730 chars)
+============================================================
+    Batch 2/2: records 11-15
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (183 total lines, 6709 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (37 total lines, 905 chars)
+============================================================
+  -&gt; departments: 15 records, 15 computed fields filled
+
+Processing precedes_steps...
+  Schema: 5 fields, 1 calculated
+    Processing 16 records in batches of 10...
+    Batch 1/2: records 1-10
+    Using English prose documents (specification)
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (218 total lines, 7490 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (72 total lines, 1646 chars)
+============================================================
+    Batch 2/2: records 11-16
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (190 total lines, 6829 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (44 total lines, 962 chars)
+============================================================
+  -&gt; precedes_steps: 16 records, 16 computed fields filled
+
+Processing roles...
+  Schema: 12 fields, 1 calculated
+    Processing 15 records in batches of 10...
+    Batch 1/2: records 1-10
+    Using English prose documents (specification)
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (288 total lines, 10571 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (142 total lines, 4753 chars)
+============================================================
+    Batch 2/2: records 11-15
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (218 total lines, 8253 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (72 total lines, 2400 chars)
+============================================================
+  -&gt; roles: 15 records, 15 computed fields filled
+
+Processing workflow_steps...
+  Schema: 9 fields, 1 calculated
+    Processing 20 records in batches of 10...
+    Batch 1/2: records 1-10
+    Using English prose documents (specification)
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (258 total lines, 9093 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (112 total lines, 3363 chars)
+============================================================
+    Batch 2/2: records 11-20
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (258 total lines, 8957 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (112 total lines, 3194 chars)
+============================================================
+  -&gt; workflow_steps: 20 records, 19 computed fields filled
+
+Processing workflows...
+  Schema: 11 fields, 2 calculated
+    Processing 15 records in batches of 10...
+    Batch 1/2: records 1-10
+    Using English prose documents (specification)
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (278 total lines, 10328 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (132 total lines, 4570 chars)
+============================================================
+    Batch 2/2: records 11-15
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (213 total lines, 8124 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (67 total lines, 2285 chars)
+============================================================
+  -&gt; workflows: 15 records, 20 computed fields filled
 
 ======================================================================
-English substrate: Processed 1 entities, 3 total records
-Filled 3 computed fields total
+English substrate: Processed 6 entities, 92 total records
+Filled 96 computed fields total
 ======================================================================
 
 </pre>
@@ -214,58 +1507,111 @@ Filled 3 computed fields total
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-warning">78.7%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">96</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">26</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">122</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
         <div id="specification" class="tab-content">
             <div class="card">
                 <h2>specification.md (LLM-Generated)</h2>
-                <div class="prose-container markdown-content"><h2>Specification Document for DEMO: Customer FullName Rulebook</h2>
+                <div class="prose-container markdown-content"><h2>Specification Document for Jessica Talisman - BASIC Ontology Parts 1-3</h2>
 <h3>Overview</h3>
-<p>This specification document outlines the rules and calculations defined in the "DEMO: Customer FullName" rulebook. The rulebook is generated from an Airtable base and provides a schema for customer data, including fields for customer identification, email addresses, and names. The primary focus is on how to compute the `FullName` field based on the provided first and last names of customers.</p>
-<h3>Customers Table</h3>
+<p>This document outlines the specifications for calculating fields within the "Jessica Talisman - BASIC Ontology Parts 1-3" rulebook. The rulebook is structured around workflows and their associated steps, providing a framework for managing and analyzing organizational processes. The calculated fields derive values based on raw input fields, enabling insights into workflow complexity and characteristics.</p>
+<h3>Workflows</h3>
 <h4>Input Fields</h4>
-<p>The following input fields are defined in the Customers table, which are of type "raw":</p>
-<p>1. <strong>CustomerId</strong></p>
+<p>1. <strong>WorkflowId</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Unique identifier for each customer. This field is mandatory and cannot be null.</p>
-<p>2. <strong>Customer</strong></p>
+<p>   - <strong>Description:</strong> Unique identifier for the workflow.</p>
+<p>2. <strong>DisplayName</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Identifier for the customers. This field is optional and can be null.</p>
-<p>3. <strong>EmailAddress</strong></p>
+<p>   - <strong>Description:</strong> Human-readable name for the workflow.</p>
+<p>3. <strong>CountOfNonProposedSteps</strong></p>
+<p>   - <strong>Type:</strong> Integer</p>
+<p>   - <strong>Description:</strong> Count of workflow steps in this workflow.</p>
+<h4>Calculated Fields</h4>
+<p>#### 1. Name</p>
+<ul>
+<li>**Description:** A machine-friendly name for the workflow, used for programmatic reference and URL slug generation.</li>
+<li>**Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.</li>
+<li>**Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)`</li>
+<li>**Example:** For a workflow with `DisplayName` &quot;Performance Review&quot;, the `Name` would be &quot;performance-review&quot;.</li>
+</ul>
+<p>#### 2. HasMoreThan1Step</p>
+<ul>
+<li>**Description:** Indicates whether the workflow contains more than one step.</li>
+<li>**Calculation:** This field is computed by checking if `CountOfNonProposedSteps` is greater than 1.</li>
+<li>**Formula:** `={{CountOfNonProposedSteps}} &gt; 1`</li>
+<li>**Example:** If `CountOfNonProposedSteps` is 3, then `HasMoreThan1Step` would be `true`. If it is 1, then `HasMoreThan1Step` would be `false`.</li>
+</ul>
+<h3>Workflow Steps</h3>
+<h4>Input Fields</h4>
+<p>1. <strong>WorkflowStepId</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> The customer's email address. This field is optional and can be null.</p>
-<p>4. <strong>FirstName</strong></p>
+<p>   - <strong>Description:</strong> Unique identifier for the workflow step.</p>
+<p>2. <strong>DisplayName</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> First name of the customer, used to create the full name. This field is optional and can be null.</p>
-<p>5. <strong>LastName</strong></p>
+<p>   - <strong>Description:</strong> Human-readable name for the workflow step.</p>
+<h4>Calculated Fields</h4>
+<p>#### 1. Name</p>
+<ul>
+<li>**Description:** A machine-friendly name for the workflow step, used for programmatic reference.</li>
+<li>**Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.</li>
+<li>**Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)`</li>
+<li>**Example:** For a step with `DisplayName` &quot;Manager Review&quot;, the `Name` would be &quot;manager-review&quot;.</li>
+</ul>
+<h3>Approval Gates</h3>
+<h4>Input Fields</h4>
+<p>1. <strong>ApprovalGateId</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Last name of the customer, used to create the full name. This field is optional and can be null.</p>
-<h4>Calculated Field</h4>
-<p>The following calculated field is defined in the Customers table:</p>
-<p>1. <strong>FullName</strong></p>
+<p>   - <strong>Description:</strong> Unique identifier for the approval gate.</p>
+<p>2. <strong>DisplayName</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> The full name is computed by concatenating the first and last names of the customer.</p>
-<p>   - <strong>Calculation Explanation:</strong> </p>
-<p>     - To compute the `FullName`, take the value from the `FirstName` field and concatenate it with a space and the value from the `LastName` field. </p>
-<p>     - If either `FirstName` or `LastName` is null, the resulting `FullName` will reflect that by omitting the missing part.</p>
-<p>   - <strong>Formula for Reference:</strong> `={{FirstName}} & " " & {{LastName}}`</p>
-<p>   - <strong>Concrete Example:</strong></p>
-<p>     - For a customer with the following data:</p>
-<p>       - `FirstName`: "Jane"</p>
-<p>       - `LastName`: "Smith"</p>
-<p>     - The computed `FullName` would be:</p>
-<p>       - <strong>Result:</strong> "Jane Smith"</p>
-<p>     - For a customer with:</p>
-<p>       - `FirstName`: "John"</p>
-<p>       - `LastName`: null</p>
-<p>     - The computed `FullName` would be:</p>
-<p>       - <strong>Result:</strong> "John" (the last name is omitted)</p>
-<p>This specification provides a clear understanding of how to compute the `FullName` field using the `FirstName` and `LastName` fields, ensuring that the computation can be replicated accurately based on the provided data.</p></div>
+<p>   - <strong>Description:</strong> Human-readable name for the approval gate.</p>
+<h4>Calculated Fields</h4>
+<p>#### 1. Name</p>
+<ul>
+<li>**Description:** A machine-friendly name for the approval gate, used for programmatic reference.</li>
+<li>**Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.</li>
+<li>**Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)`</li>
+<li>**Example:** For an approval gate with `DisplayName` &quot;Manager Approval&quot;, the `Name` would be &quot;manager-approval&quot;.</li>
+</ul>
+<h3>Precedes Steps</h3>
+<h4>Input Fields</h4>
+<p>1. <strong>PrecedesStepId</strong></p>
+<p>   - <strong>Type:</strong> String</p>
+<p>   - <strong>Description:</strong> Unique identifier for the precedes step.</p>
+<p>2. <strong>StepNumber</strong></p>
+<p>   - <strong>Type:</strong> Integer</p>
+<p>   - <strong>Description:</strong> Ordinal sequence number for the relationship.</p>
+<h4>Calculated Fields</h4>
+<p>#### 1. DisplayName</p>
+<ul>
+<li>**Description:** A formatted display name for the step based on its sequence number.</li>
+<li>**Calculation:** The `DisplayName` is computed by concatenating the string &quot;Step-&quot; with the `StepNumber`.</li>
+<li>**Formula:** `=&quot;Step-&quot; &amp; {{StepNumber}}`</li>
+<li>**Example:** If `StepNumber` is 3, then `DisplayName` would be &quot;Step-3&quot;.</li>
+</ul>
+<h3>Roles</h3>
+<h4>Input Fields</h4>
+<p>1. <strong>RoleId</strong></p>
+<p>   - <strong>Type:</strong> String</p>
+<p>   - <strong>Description:</strong> Unique identifier for the role.</p>
+<p>2. <strong>DisplayName</strong></p>
+<p>   - <strong>Type:</strong> String</p>
+<p>   - <strong>Description:</strong> Human-readable name for the role.</p>
+<h4>Calculated Fields</h4>
+<p>#### 1. Name</p>
+<ul>
+<li>**Description:** A machine-friendly name for the role, used for programmatic reference.</li>
+<li>**Calculation:** The `Name` is computed by converting the `DisplayName` to lowercase.</li>
+<li>**Formula:** `=LOWER({{DisplayName}})`</li>
+<li>**Example:** For a role with `DisplayName` &quot;Administrator&quot;, the `Name` would be &quot;administrator&quot;.</li>
+</ul>
+<h3>Conclusion</h3>
+<p>This specification document provides a detailed guide on how to compute calculated fields within the "Jessica Talisman - BASIC Ontology Parts 1-3" rulebook. By following the outlined calculations and examples, users can derive the necessary values for effective workflow management and analysis.</p></div>
             </div>
         </div>
     </main>

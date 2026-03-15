@@ -72,7 +72,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>122/122 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -120,12 +120,28 @@ Binary Execution Substrate - Multi-Entity Test Execution
 
 Loaded library: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/binary/erb_calc.dylib
 Loading rulebook...
-Discovered 1 entities: Customers
-  Schema for customers: 6 fields, 96 bytes
-    Found: eval_customers_full_name -&gt; string
-  -&gt; customers: 3 records
+Discovered 9 entities: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments, HumanAgents, AIAgents, AutomatedPipelines
+  Schema for approval_gates: 5 fields, 72 bytes
+    Found: eval_approval_gates_name -&gt; string
+  -&gt; approval_gates: 11 records
+  Schema for departments: 5 fields, 80 bytes
+    Found: eval_departments_name -&gt; string
+  -&gt; departments: 15 records
+  Schema for precedes_steps: 5 fields, 72 bytes
+    Found: eval_precedes_steps_display_name -&gt; string
+  -&gt; precedes_steps: 16 records
+  Schema for roles: 12 fields, 192 bytes
+    Found: eval_roles_name -&gt; string
+  -&gt; roles: 15 records
+  Schema for workflow_steps: 9 fields, 128 bytes
+    Found: eval_workflow_steps_name -&gt; string
+  -&gt; workflow_steps: 20 records
+  Schema for workflows: 11 fields, 160 bytes
+    Found: eval_workflows_name -&gt; string
+    Found: eval_workflows_has_more_than1_step -&gt; bool
+  -&gt; workflows: 15 records
 
-Binary substrate: Processed 1 entities, 3 total records
+Binary substrate: Processed 6 entities, 92 total records
 ======================================================================
 
 </pre>
@@ -136,9 +152,9 @@ Binary substrate: Processed 1 entities, 3 total records
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">122</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">122</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -146,7 +162,7 @@ Binary substrate: Processed 1 entities, 3 total records
             <div class="card">
                 <div class="code-header">
                     <h2>erb_calc.s (ARM64 Assembly)</h2>
-                    <div><span class="code-info">374 lines</span><button class="copy-btn" onclick="copyCode('asm-code')">Copy</button></div>
+                    <div><span class="code-info">645 lines</span><button class="copy-btn" onclick="copyCode('asm-code')">Copy</button></div>
                 </div>
                 <pre id="asm-code">
 // ERB Binary Substrate - Generated Assembly (ARM64 / Apple Silicon)
@@ -463,21 +479,290 @@ str_0:
     .globl str_0_len
 str_0_len:
     .quad 1
+    .globl str_1
+str_1:
+    .asciz &quot;-&quot;
+    .globl str_1_len
+str_1_len:
+    .quad 1
+    .globl str_2
+str_2:
+    .asciz &quot;Step-&quot;
+    .globl str_2_len
+str_2_len:
+    .quad 5
 
     // Static result buffers for string concatenation
     .bss
-    .globl _result_buf_eval_customers_full_name
+    .globl _result_buf_eval_approval_gates_name
     .p2align 3
-_result_buf_eval_customers_full_name:
+_result_buf_eval_approval_gates_name:
+    .space 1024
+    .globl _result_buf_eval_departments_name
+    .p2align 3
+_result_buf_eval_departments_name:
+    .space 1024
+    .globl _result_buf_eval_precedes_steps_display_name
+    .p2align 3
+_result_buf_eval_precedes_steps_display_name:
+    .space 1024
+    .globl _result_buf_eval_roles_name
+    .p2align 3
+_result_buf_eval_roles_name:
+    .space 1024
+    .globl _result_buf_eval_workflow_steps_name
+    .p2align 3
+_result_buf_eval_workflow_steps_name:
+    .space 1024
+    .globl _result_buf_eval_workflows_name
+    .p2align 3
+_result_buf_eval_workflows_name:
     .space 1024
 
     .text
 
-// Full name is computed from the first and last name of the customer
-// Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
-    .globl _eval_customers_full_name
+// Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+    .globl _eval_workflows_name
     .p2align 2
-_eval_customers_full_name:
+_eval_workflows_name:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #32]
+    ldr x1, [x19, #40]
+    adrp x2, _result_buf_eval_workflows_name@PAGE
+    add x2, x2, _result_buf_eval_workflows_name@PAGEOFF
+    mov x3, x1
+    mov x1, x0
+    mov x0, x2
+    mov x2, x3
+    bl _string_lower
+    str x0, [sp, #16]
+    str x1, [sp, #24]
+    adrp x0, str_0@PAGE
+    add x0, x0, str_0@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #32]
+    str x1, [sp, #40]
+    adrp x0, str_1@PAGE
+    add x0, x0, str_1@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #48]
+    str x1, [sp, #56]
+    adrp x20, _result_buf_eval_workflows_name@PAGE
+    add x20, x20, _result_buf_eval_workflows_name@PAGEOFF
+    ldr x1, [sp, #16]
+    ldr x2, [sp, #24]
+    ldr x3, [sp, #32]
+    ldr x4, [sp, #40]
+    ldr x5, [sp, #48]
+    ldr x6, [sp, #56]
+    mov x0, x20
+    bl _string_substitute
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: ={{CountOfNonProposedSteps}} &gt; 1
+    .globl _eval_workflows_has_more_than1_step
+    .p2align 2
+_eval_workflows_has_more_than1_step:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #144]
+    mov x20, x0
+    mov x0, #1
+    cmp x20, x0
+    cset w0, gt
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+    .globl _eval_workflow_steps_name
+    .p2align 2
+_eval_workflow_steps_name:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #32]
+    ldr x1, [x19, #40]
+    adrp x2, _result_buf_eval_workflow_steps_name@PAGE
+    add x2, x2, _result_buf_eval_workflow_steps_name@PAGEOFF
+    mov x3, x1
+    mov x1, x0
+    mov x0, x2
+    mov x2, x3
+    bl _string_lower
+    str x0, [sp, #16]
+    str x1, [sp, #24]
+    adrp x0, str_0@PAGE
+    add x0, x0, str_0@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #32]
+    str x1, [sp, #40]
+    adrp x0, str_1@PAGE
+    add x0, x0, str_1@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #48]
+    str x1, [sp, #56]
+    adrp x20, _result_buf_eval_workflow_steps_name@PAGE
+    add x20, x20, _result_buf_eval_workflow_steps_name@PAGEOFF
+    ldr x1, [sp, #16]
+    ldr x2, [sp, #24]
+    ldr x3, [sp, #32]
+    ldr x4, [sp, #40]
+    ldr x5, [sp, #48]
+    ldr x6, [sp, #56]
+    mov x0, x20
+    bl _string_substitute
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+    .globl _eval_approval_gates_name
+    .p2align 2
+_eval_approval_gates_name:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #32]
+    ldr x1, [x19, #40]
+    adrp x2, _result_buf_eval_approval_gates_name@PAGE
+    add x2, x2, _result_buf_eval_approval_gates_name@PAGEOFF
+    mov x3, x1
+    mov x1, x0
+    mov x0, x2
+    mov x2, x3
+    bl _string_lower
+    str x0, [sp, #16]
+    str x1, [sp, #24]
+    adrp x0, str_0@PAGE
+    add x0, x0, str_0@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #32]
+    str x1, [sp, #40]
+    adrp x0, str_1@PAGE
+    add x0, x0, str_1@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #48]
+    str x1, [sp, #56]
+    adrp x20, _result_buf_eval_approval_gates_name@PAGE
+    add x20, x20, _result_buf_eval_approval_gates_name@PAGEOFF
+    ldr x1, [sp, #16]
+    ldr x2, [sp, #24]
+    ldr x3, [sp, #32]
+    ldr x4, [sp, #40]
+    ldr x5, [sp, #48]
+    ldr x6, [sp, #56]
+    mov x0, x20
+    bl _string_substitute
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =&quot;Step-&quot; &amp; {{StepNumber}}
+    .globl _eval_precedes_steps_display_name
+    .p2align 2
+_eval_precedes_steps_display_name:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    adrp x0, str_2@PAGE
+    add x0, x0, str_2@PAGEOFF
+    mov x1, #5
+    str x0, [sp, #16]
+    str x1, [sp, #24]
+    ldr x0, [x19, #64]
+    mov x1, x0
+    sub x0, x29, #200
+    bl _int_to_string
+    str x0, [sp, #32]
+    str x1, [sp, #40]
+    ldr x0, [sp, #16]
+    ldr x1, [sp, #24]
+    adrp x22, _result_buf_eval_precedes_steps_display_name@PAGE
+    add x22, x22, _result_buf_eval_precedes_steps_display_name@PAGEOFF
+    ldr x4, [sp, #40]
+    ldr x3, [sp, #32]
+    mov x2, x1
+    mov x1, x0
+    mov x0, x22
+    bl _string_concat
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =LOWER({{DisplayName}})
+    .globl _eval_roles_name
+    .p2align 2
+_eval_roles_name:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #32]
+    ldr x1, [x19, #40]
+    adrp x2, _result_buf_eval_roles_name@PAGE
+    add x2, x2, _result_buf_eval_roles_name@PAGEOFF
+    mov x3, x1
+    mov x1, x0
+    mov x0, x2
+    mov x2, x3
+    bl _string_lower
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+    .globl _eval_departments_name
+    .p2align 2
+_eval_departments_name:
     stp x29, x30, [sp, #-16]!
     mov x29, sp
     stp x19, x20, [sp, #-16]!
@@ -487,6 +772,13 @@ _eval_customers_full_name:
     mov x19, x0
     ldr x0, [x19, #48]
     ldr x1, [x19, #56]
+    adrp x2, _result_buf_eval_departments_name@PAGE
+    add x2, x2, _result_buf_eval_departments_name@PAGEOFF
+    mov x3, x1
+    mov x1, x0
+    mov x0, x2
+    mov x2, x3
+    bl _string_lower
     str x0, [sp, #16]
     str x1, [sp, #24]
     adrp x0, str_0@PAGE
@@ -494,26 +786,21 @@ _eval_customers_full_name:
     mov x1, #1
     str x0, [sp, #32]
     str x1, [sp, #40]
-    ldr x0, [x19, #64]
-    ldr x1, [x19, #72]
+    adrp x0, str_1@PAGE
+    add x0, x0, str_1@PAGEOFF
+    mov x1, #1
     str x0, [sp, #48]
     str x1, [sp, #56]
-    ldr x0, [sp, #16]
-    ldr x1, [sp, #24]
-    adrp x22, _result_buf_eval_customers_full_name@PAGE
-    add x22, x22, _result_buf_eval_customers_full_name@PAGEOFF
-    ldr x4, [sp, #40]
+    adrp x20, _result_buf_eval_departments_name@PAGE
+    add x20, x20, _result_buf_eval_departments_name@PAGEOFF
+    ldr x1, [sp, #16]
+    ldr x2, [sp, #24]
     ldr x3, [sp, #32]
-    mov x2, x1
-    mov x1, x0
-    mov x0, x22
-    bl _string_concat
-    ldr x4, [sp, #56]
-    ldr x3, [sp, #48]
-    mov x2, x1
-    mov x1, x0
-    mov x0, x22
-    bl _string_concat
+    ldr x4, [sp, #40]
+    ldr x5, [sp, #48]
+    ldr x6, [sp, #56]
+    mov x0, x20
+    bl _string_substitute
     add sp, sp, #256
     ldp x23, x24, [sp], #16
     ldp x21, x22, [sp], #16
@@ -529,15 +816,15 @@ _eval_customers_full_name:
                 <h2>Generated Artifacts</h2>
                 <div class="binary-info">
                     <div class="binary-stat">
-                        <div class="binary-stat-value">33.1 KB</div>
+                        <div class="binary-stat-value">34.0 KB</div>
                         <div class="binary-stat-label">erb_calc.dylib</div>
                     </div>
                     <div class="binary-stat">
-                        <div class="binary-stat-value">1.7 KB</div>
+                        <div class="binary-stat-value">3.3 KB</div>
                         <div class="binary-stat-label">erb_calc.o</div>
                     </div>
                     <div class="binary-stat">
-                        <div class="binary-stat-value">9.4 KB</div>
+                        <div class="binary-stat-value">16.2 KB</div>
                         <div class="binary-stat-label">erb_calc.s</div>
                     </div>
                     <div class="binary-stat">

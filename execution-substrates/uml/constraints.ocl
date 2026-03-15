@@ -1,9 +1,47 @@
 -- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
 
--- Table: Customers
-context Customers
+-- Table: ApprovalGates
+context ApprovalGates
 
--- Full name is computed from the first and last name of the customer
--- Formula: ={{FirstName}} & " " & {{LastName}}
-derive FullName: self.firstName + ' ' + self.lastName
+-- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
+derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Table: Departments
+context Departments
+
+-- Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+-- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
+derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Table: PrecedesSteps
+context PrecedesSteps
+
+-- Formula: ="Step-" & {{StepNumber}}
+derive DisplayName: 'Step-' + self.stepNumber
+
+-- Table: Roles
+context Roles
+
+-- Formula: =LOWER({{DisplayName}})
+derive Name: self.displayName.toLower()
+
+-- Table: WorkflowSteps
+context WorkflowSteps
+
+-- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
+derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Table: Workflows
+context Workflows
+
+-- Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
+-- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
+derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting.
+-- Formula for CountOfNonProposedSteps - parse error: Unexpected character '!' at position 22
+-- Original: =COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})
+
+-- Formula: ={{CountOfNonProposedSteps}} > 1
+derive HasMoreThan1Step: (self.countOfNonProposedSteps > 1)

@@ -172,6 +172,39 @@ def generate_find_contains_paragraph() -> List[str]:
     ]
 
 
+def generate_substitute_paragraph() -> List[str]:
+    """Generate SUBSTITUTE-ALL helper paragraph (replace all occurrences)."""
+    # Note: We cannot use TRIM on WS-SUBST-OLD because TRIM(" ") = ""
+    # Instead, we use the actual length of the old/new strings (1 char each for simple cases)
+    return [
+        "",
+        "       SUBSTITUTE-ALL.",
+        "           MOVE SPACES TO WS-SUBST-OUTPUT",
+        "           MOVE 1 TO WS-SUBST-I",
+        "           MOVE 1 TO WS-SUBST-OUT-I",
+        "           COMPUTE WS-SUBST-INLEN = FUNCTION LENGTH(",
+        "               FUNCTION TRIM(WS-SUBST-INPUT))",
+        "*>         For single-char replacement, hardcode length to 1",
+        "           MOVE 1 TO WS-SUBST-OLDLEN",
+        "           MOVE 1 TO WS-SUBST-NEWLEN",
+        "           PERFORM UNTIL WS-SUBST-I > WS-SUBST-INLEN",
+        "               IF WS-SUBST-INPUT(WS-SUBST-I:1) = WS-SUBST-OLD(1:1)",
+        "                   MOVE WS-SUBST-NEW(1:1)",
+        "                       TO WS-SUBST-OUTPUT(WS-SUBST-OUT-I:1)",
+        "                   ADD 1 TO WS-SUBST-OUT-I",
+        "                   ADD 1 TO WS-SUBST-I",
+        "               ELSE",
+        "                   MOVE WS-SUBST-INPUT(WS-SUBST-I:1)",
+        "                       TO WS-SUBST-OUTPUT(WS-SUBST-OUT-I:1)",
+        "                   ADD 1 TO WS-SUBST-I",
+        "                   ADD 1 TO WS-SUBST-OUT-I",
+        "               END-IF",
+        "           END-PERFORM",
+        "       .",
+        "",
+    ]
+
+
 def generate_entity_section(
     entity_name: str,
     schema: List[Dict],
@@ -286,6 +319,7 @@ def generate_erb_calc(rulebook: Dict) -> str:
         )
     )
     lines.extend(generate_find_contains_paragraph())
+    lines.extend(generate_substitute_paragraph())
 
     return "\n".join(lines)
 
@@ -323,21 +357,35 @@ def generate_copybook(rulebook: Dict) -> str:
     return "\n".join(lines)
 
 
-def generate_field_order_json(rulebook: Dict) -> Dict[str, List[str]]:
-    """Generate manifest of entity -> ordered field names for Python driver."""
+def generate_field_order_json(rulebook: Dict) -> Dict[str, Any]:
+    """Generate manifest of entity -> field info for Python driver."""
     out = {}
+    target_entity = None
     entities = discover_entities(rulebook)
     for entity_name in entities:
         schema = get_entity_schema(rulebook, entity_name)
         calculated_fields = get_calculated_fields(schema)
         if not calculated_fields:
             continue
-        raw_field_names = {f["name"] for f in get_raw_fields(schema)}
+        # Raw count = all fields minus calculated fields
+        calculated_names = {f["name"] for f in calculated_fields}
+        non_calculated_fields = [f for f in schema if f["name"] not in calculated_names]
+        raw_field_names = {f["name"] for f in non_calculated_fields}
         dag_levels = build_dag_levels(calculated_fields, raw_field_names)
         order = get_field_order(schema, calculated_fields, dag_levels)
-        out[entity_name] = order
+        # Include both field order and raw field count for take-test.py
+        entity_info = {
+            "fields": order,
+            "raw_count": len(non_calculated_fields),
+        }
+        out[entity_name] = entity_info
         # Also snake_case key for lookup
-        out[to_snake_case(entity_name)] = order
+        out[to_snake_case(entity_name)] = entity_info
+        # Track first entity (this is what COBOL was generated for)
+        if target_entity is None:
+            target_entity = to_snake_case(entity_name)
+    # Add metadata about which entity the COBOL was generated for
+    out["_target_entity"] = target_entity
     return out
 
 
@@ -395,6 +443,19 @@ def generate_main_program(rulebook: Dict) -> str:
         "       01 WS-FIND-I       PIC 9(6).",
         "       01 WS-FIND-LEN     PIC 9(6).",
         "       01 WS-FIND-NLEN    PIC 9(6).",
+    ])
+
+    # Add SUBSTITUTE helper variables
+    lines.extend([
+        "       01 WS-SUBST-INPUT  PIC X(500).",
+        "       01 WS-SUBST-OLD    PIC X(100).",
+        "       01 WS-SUBST-NEW    PIC X(100).",
+        "       01 WS-SUBST-OUTPUT PIC X(500).",
+        "       01 WS-SUBST-I      PIC 9(6).",
+        "       01 WS-SUBST-OUT-I  PIC 9(6).",
+        "       01 WS-SUBST-INLEN  PIC 9(6).",
+        "       01 WS-SUBST-OLDLEN PIC 9(6).",
+        "       01 WS-SUBST-NEWLEN PIC 9(6).",
     ])
 
     # Inline record layout in working storage
@@ -504,6 +565,9 @@ def generate_main_program(rulebook: Dict) -> str:
         "           END-PERFORM",
         "           .",
     ])
+
+    # Add SUBSTITUTE-ALL helper
+    lines.extend(generate_substitute_paragraph())
 
     return "\n".join(lines)
 

@@ -1294,6 +1294,13 @@ def compile_to_cobol(expr: ExprNode, prefix: str = "RECORD") -> str:
         if expr.name == 'CAST':
             return compile_to_cobol(expr.args[0], prefix)
 
+        if expr.name == 'SUBSTITUTE':
+            # SUBSTITUTE(text, old_text, new_text)
+            text = compile_to_cobol(expr.args[0], prefix)
+            old_text = compile_to_cobol(expr.args[1], prefix)
+            new_text = compile_to_cobol(expr.args[2], prefix)
+            return ('SUBSTITUTE', text, old_text, new_text)
+
         raise ValueError(f"COBOL: Unknown function: {expr.name}")
 
     raise ValueError(f"COBOL: Unknown expression type: {type(expr)}")
@@ -1330,13 +1337,38 @@ def cobol_expr_to_statements(expr_result, result_var: str, temp_vars: list) -> l
                 parts.append(item)
         return parts
 
+    def is_comparison_expr(s):
+        """Check if string contains a COBOL comparison operator."""
+        # Look for comparison operators that indicate a boolean expression
+        # These cannot be used in MOVE statements
+        comparison_ops = [' > ', ' < ', ' >= ', ' <= ', ' NOT = ']
+        for op in comparison_ops:
+            if op in s:
+                return True
+        # Check for parenthesized equality comparison: (X = Y)
+        # BinaryOp comparisons are always wrapped in parens
+        # Avoid matching string literals like = "true"
+        import re
+        if re.match(r'^\([^"]+\s+=\s+[^"]+\)$', s):
+            return True
+        return False
+
     def process(expr, target_var):
         """Process an expression and return statements that store result in target_var."""
         stmts = []
 
         if isinstance(expr, str):
-            # Simple value - just MOVE it
-            stmts.append(f'MOVE {expr} TO {target_var}')
+            # Check if this is a comparison expression (boolean result)
+            if is_comparison_expr(expr):
+                # Comparisons must use IF/ELSE in COBOL, not MOVE
+                stmts.append(f'IF {expr}')
+                stmts.append(f'    MOVE "True" TO {target_var}')
+                stmts.append('ELSE')
+                stmts.append(f'    MOVE "False" TO {target_var}')
+                stmts.append('END-IF')
+            else:
+                # Simple value - just MOVE it
+                stmts.append(f'MOVE {expr} TO {target_var}')
 
         elif isinstance(expr, tuple):
             op = expr[0]
@@ -1412,6 +1444,29 @@ def cobol_expr_to_statements(expr_result, result_var: str, temp_vars: list) -> l
                 stmts.append(f'MOVE {haystack} TO WS-FIND-HAYSTACK')
                 stmts.append('PERFORM FIND-CONTAINS')
                 stmts.append(f'MOVE WS-FIND-RESULT TO {target_var}')
+
+            elif op == 'SUBSTITUTE':
+                # SUBSTITUTE(text, old_text, new_text)
+                _, text, old_text, new_text = expr
+                # Evaluate nested expressions to temps if needed
+                if isinstance(text, tuple):
+                    text_tmp = get_temp()
+                    stmts.extend(process(text, text_tmp))
+                    text = text_tmp
+                if isinstance(old_text, tuple):
+                    old_tmp = get_temp()
+                    stmts.extend(process(old_text, old_tmp))
+                    old_text = old_tmp
+                if isinstance(new_text, tuple):
+                    new_tmp = get_temp()
+                    stmts.extend(process(new_text, new_tmp))
+                    new_text = new_tmp
+                # Use helper variables for SUBSTITUTE
+                stmts.append(f'MOVE {text} TO WS-SUBST-INPUT')
+                stmts.append(f'MOVE {old_text} TO WS-SUBST-OLD')
+                stmts.append(f'MOVE {new_text} TO WS-SUBST-NEW')
+                stmts.append('PERFORM SUBSTITUTE-ALL')
+                stmts.append(f'MOVE WS-SUBST-OUTPUT TO {target_var}')
 
             else:
                 raise ValueError(f"Unknown COBOL tuple operation: {op}")

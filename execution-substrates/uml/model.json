@@ -1,69 +1,2006 @@
 {
   "classes": {
-    "Customers": {
+    "AIAgents": {
       "attributes": [
         {
-          "name": "CustomerId",
+          "name": "AIAgentId",
           "type": "string"
         },
         {
-          "name": "Customer",
+          "name": "Name",
           "type": "string"
         },
         {
-          "name": "EmailAddress",
+          "name": "Title",
           "type": "string"
         },
         {
-          "name": "FirstName",
+          "name": "DisplayName",
           "type": "string"
         },
         {
-          "name": "LastName",
+          "name": "ModelVersion",
+          "type": "string"
+        },
+        {
+          "name": "Roles",
+          "type": "string"
+        }
+      ],
+      "derived": []
+    },
+    "ApprovalGates": {
+      "attributes": [
+        {
+          "name": "ApprovalGateId",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "WorkflowSteps",
+          "type": "string"
+        },
+        {
+          "name": "EscalationThresholdHours",
+          "type": "integer"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Name",
+          "type": "string",
+          "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")"
+        }
+      ]
+    },
+    "AutomatedPipelines": {
+      "attributes": [
+        {
+          "name": "AutomatedPipelineId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Description",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "Roles",
+          "type": "string"
+        }
+      ],
+      "derived": []
+    },
+    "Departments": {
+      "attributes": [
+        {
+          "name": "DepartmentId",
+          "type": "string"
+        },
+        {
+          "name": "Title",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "Roles",
           "type": "string"
         }
       ],
       "derived": [
         {
-          "name": "FullName",
+          "name": "Name",
           "type": "string",
-          "formula": "={{FirstName}} & \" \" & {{LastName}}"
+          "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")"
+        }
+      ]
+    },
+    "HumanAgents": {
+      "attributes": [
+        {
+          "name": "HumanAgentId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "Mbox",
+          "type": "string"
+        },
+        {
+          "name": "Roles",
+          "type": "string"
+        }
+      ],
+      "derived": []
+    },
+    "PrecedesSteps": {
+      "attributes": [
+        {
+          "name": "PrecedesStepId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "WorkflowStep",
+          "type": "string"
+        },
+        {
+          "name": "StepNumber",
+          "type": "integer"
+        }
+      ],
+      "derived": [
+        {
+          "name": "DisplayName",
+          "type": "string",
+          "formula": "=\"Step-\" & {{StepNumber}}"
+        }
+      ]
+    },
+    "Roles": {
+      "attributes": [
+        {
+          "name": "RoleId",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "Label",
+          "type": "string"
+        },
+        {
+          "name": "Comment",
+          "type": "string"
+        },
+        {
+          "name": "FilledByHumanAgent",
+          "type": "string"
+        },
+        {
+          "name": "FilledByAIAgent",
+          "type": "string"
+        },
+        {
+          "name": "FilledByAutomatedPipeline",
+          "type": "string"
+        },
+        {
+          "name": "OwnedBy",
+          "type": "string"
+        },
+        {
+          "name": "DelegatesTo",
+          "type": "string"
+        },
+        {
+          "name": "WorkflowSteps",
+          "type": "string"
+        },
+        {
+          "name": "FromDelegatesTo",
+          "type": "string"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Name",
+          "type": "string",
+          "formula": "=LOWER({{DisplayName}})"
+        }
+      ]
+    },
+    "WorkflowSteps": {
+      "attributes": [
+        {
+          "name": "WorkflowStepId",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "Workflow",
+          "type": "string"
+        },
+        {
+          "name": "SequencePosition",
+          "type": "integer"
+        },
+        {
+          "name": "AssignedRole",
+          "type": "string"
+        },
+        {
+          "name": "RequiresHumanApproval",
+          "type": "boolean"
+        },
+        {
+          "name": "ApprovalGate",
+          "type": "string"
+        },
+        {
+          "name": "PrecededBySteps",
+          "type": "string"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Name",
+          "type": "string",
+          "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")"
+        }
+      ]
+    },
+    "Workflows": {
+      "attributes": [
+        {
+          "name": "WorkflowId",
+          "type": "string"
+        },
+        {
+          "name": "DisplayName",
+          "type": "string"
+        },
+        {
+          "name": "Title",
+          "type": "string"
+        },
+        {
+          "name": "Color",
+          "type": "string"
+        },
+        {
+          "name": "Description",
+          "type": "string"
+        },
+        {
+          "name": "Identifier",
+          "type": "string"
+        },
+        {
+          "name": "Modified",
+          "type": "datetime"
+        },
+        {
+          "name": "WorkflowSteps",
+          "type": "string"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Name",
+          "type": "string",
+          "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \" \", \"-\")"
+        },
+        {
+          "name": "CountOfNonProposedSteps",
+          "type": "integer",
+          "formula": "=COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})"
+        },
+        {
+          "name": "HasMoreThan1Step",
+          "type": "boolean",
+          "formula": "={{CountOfNonProposedSteps}} > 1"
         }
       ]
     }
   },
   "instances": [
     {
-      "class": "Customers",
-      "id": "Customers_0",
+      "class": "AIAgents",
+      "id": "AIAgents_0",
       "values": {
-        "CustomerId": "cust0001",
-        "Customer": "CUST0001",
-        "EmailAddress": "jane.smith@email.com",
-        "FirstName": "Jane",
-        "LastName": "Smith"
+        "AIAgentId": "ava",
+        "Name": "Ava",
+        "Title": "CustomerSupportBot",
+        "DisplayName": "Ava",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "administrator"
       }
     },
     {
-      "class": "Customers",
-      "id": "Customers_1",
+      "class": "AIAgents",
+      "id": "AIAgents_1",
       "values": {
-        "CustomerId": "cust0002",
-        "Customer": "CUST0002",
-        "EmailAddress": "john.doe@email.com",
-        "FirstName": "John",
-        "LastName": "Doe"
+        "AIAgentId": "leo",
+        "Name": "Leo",
+        "Title": "SalesAssistantAI",
+        "DisplayName": "Leo",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "editor"
       }
     },
     {
-      "class": "Customers",
-      "id": "Customers_2",
+      "class": "AIAgents",
+      "id": "AIAgents_2",
       "values": {
-        "CustomerId": "cust0003",
-        "Customer": "CUST0003",
-        "EmailAddress": "emily.jones@email.com",
-        "FirstName": "Emily",
-        "LastName": "Jones"
+        "AIAgentId": "maya",
+        "Name": "Maya",
+        "Title": "HRRecruiterBot",
+        "DisplayName": "Maya",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "viewer"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_3",
+      "values": {
+        "AIAgentId": "eli",
+        "Name": "Eli",
+        "Title": "FinanceAdvisorAI",
+        "DisplayName": "Eli",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "moderator"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_4",
+      "values": {
+        "AIAgentId": "zara",
+        "Name": "Zara",
+        "Title": "MarketingCopyAI",
+        "DisplayName": "Zara",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "contributor"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_5",
+      "values": {
+        "AIAgentId": "owen",
+        "Name": "Owen",
+        "Title": "LegalDraftBot",
+        "DisplayName": "Owen",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "manager"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_6",
+      "values": {
+        "AIAgentId": "nina",
+        "Name": "Nina",
+        "Title": "MedicalAssistantAI",
+        "DisplayName": "Nina",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "support"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_7",
+      "values": {
+        "AIAgentId": "kai",
+        "Name": "Kai",
+        "Title": "TravelPlannerBot",
+        "DisplayName": "Kai",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "analyst"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_8",
+      "values": {
+        "AIAgentId": "sophie",
+        "Name": "Sophie",
+        "Title": "EcommerceHelperAI",
+        "DisplayName": "Sophie",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "developer"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_9",
+      "values": {
+        "AIAgentId": "max",
+        "Name": "Max",
+        "Title": "EducationTutorBot",
+        "DisplayName": "Max",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "tester"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_10",
+      "values": {
+        "AIAgentId": "liam",
+        "Name": "Liam",
+        "Title": "RealEstateAdvisorAI",
+        "DisplayName": "Liam",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "hr"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_11",
+      "values": {
+        "AIAgentId": "jade",
+        "Name": "Jade",
+        "Title": "FitnessCoachBot",
+        "DisplayName": "Jade",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "finance"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_12",
+      "values": {
+        "AIAgentId": "mila",
+        "Name": "Mila",
+        "Title": "EventPlannerAI",
+        "DisplayName": "Mila",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "guest"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_13",
+      "values": {
+        "AIAgentId": "noah",
+        "Name": "Noah",
+        "Title": "PersonalFinanceBot",
+        "DisplayName": "Noah",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "trainer"
+      }
+    },
+    {
+      "class": "AIAgents",
+      "id": "AIAgents_14",
+      "values": {
+        "AIAgentId": "ella",
+        "Name": "Ella",
+        "Title": "ContentEditorAI",
+        "DisplayName": "Ella",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "owner"
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_0",
+      "values": {
+        "ApprovalGateId": "initial-review",
+        "DisplayName": "Initial Review",
+        "WorkflowSteps": "submit-request",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_1",
+      "values": {
+        "ApprovalGateId": "manager-approval",
+        "DisplayName": "Manager Approval",
+        "WorkflowSteps": "final-approval, manager-review",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_2",
+      "values": {
+        "ApprovalGateId": "compliance-check",
+        "DisplayName": "Compliance Check",
+        "WorkflowSteps": "document-verification",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_3",
+      "values": {
+        "ApprovalGateId": "final-authorization",
+        "DisplayName": "Final Authorization",
+        "WorkflowSteps": "system-notification-sent",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_4",
+      "values": {
+        "ApprovalGateId": "executive-sign-off",
+        "DisplayName": "Executive Sign-off",
+        "WorkflowSteps": "close-workflow, assign-task-to-team",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_5",
+      "values": {
+        "ApprovalGateId": "quality-assurance",
+        "DisplayName": "Quality Assurance",
+        "WorkflowSteps": "quality-assurance-review",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_6",
+      "values": {
+        "ApprovalGateId": "legal-review",
+        "DisplayName": "Legal Review",
+        "WorkflowSteps": "team-lead-review, legal-compliance-check",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_7",
+      "values": {
+        "ApprovalGateId": "finance-approval",
+        "DisplayName": "Finance Approval",
+        "WorkflowSteps": "generate-report, finance-approval",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_8",
+      "values": {
+        "ApprovalGateId": "it-security-gate",
+        "DisplayName": "IT Security Gate",
+        "WorkflowSteps": "archive-request, automated-eligibility-check",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_9",
+      "values": {
+        "ApprovalGateId": "customer-confirmation",
+        "DisplayName": "Customer Confirmation",
+        "WorkflowSteps": "customer-feedback-collection",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "ApprovalGates",
+      "id": "ApprovalGates_10",
+      "values": {
+        "ApprovalGateId": "some-new-gate",
+        "DisplayName": "some new gate",
+        "WorkflowSteps": "some-new-task",
+        "EscalationThresholdHours": 0
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_0",
+      "values": {
+        "AutomatedPipelineId": "lead-notification-pipeline",
+        "Name": "lead-notification-pipeline",
+        "Description": "Salesforce to Slack Lead Alert",
+        "DisplayName": "Lead Notification Pipeline",
+        "Roles": "administrator"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_1",
+      "values": {
+        "AutomatedPipelineId": "e-commerce-order-sync",
+        "Name": "e-commerce-order-sync",
+        "Description": "Shopify Order to QuickBooks Invoice",
+        "DisplayName": "E-commerce Order Sync",
+        "Roles": "editor"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_2",
+      "values": {
+        "AutomatedPipelineId": "issue-tracking-bridge",
+        "Name": "issue-tracking-bridge",
+        "Description": "Jira Issue to Trello Card",
+        "DisplayName": "Issue Tracking Bridge",
+        "Roles": "viewer"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_3",
+      "values": {
+        "AutomatedPipelineId": "newsletter-signup-sync",
+        "Name": "newsletter-signup-sync",
+        "Description": "Google Sheets to Mailchimp Subscriber",
+        "DisplayName": "Newsletter Signup Sync",
+        "Roles": "moderator"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_4",
+      "values": {
+        "AutomatedPipelineId": "support-ticket-automation",
+        "Name": "support-ticket-automation",
+        "Description": "Zendesk Ticket to Asana Task",
+        "DisplayName": "Support Ticket Automation",
+        "Roles": "contributor"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_5",
+      "values": {
+        "AutomatedPipelineId": "devops-integration",
+        "Name": "devops-integration",
+        "Description": "GitHub PR to Jira Story",
+        "DisplayName": "DevOps Integration",
+        "Roles": "manager"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_6",
+      "values": {
+        "AutomatedPipelineId": "finance-automation",
+        "Name": "finance-automation",
+        "Description": "Stripe Payment to Xero Invoice",
+        "DisplayName": "Finance Automation",
+        "Roles": "support"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_7",
+      "values": {
+        "AutomatedPipelineId": "project-intake-pipeline",
+        "Name": "project-intake-pipeline",
+        "Description": "Airtable Form to Monday.com Item",
+        "DisplayName": "Project Intake Pipeline",
+        "Roles": "analyst"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_8",
+      "values": {
+        "AutomatedPipelineId": "crm-data-sync",
+        "Name": "crm-data-sync",
+        "Description": "HubSpot Contact to Salesforce Lead",
+        "DisplayName": "CRM Data Sync",
+        "Roles": "developer"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_9",
+      "values": {
+        "AutomatedPipelineId": "calendar-integration",
+        "Name": "calendar-integration",
+        "Description": "Google Calendar Event to Teams Meeting",
+        "DisplayName": "Calendar Integration",
+        "Roles": "tester"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_10",
+      "values": {
+        "AutomatedPipelineId": "survey-data-pipeline",
+        "Name": "survey-data-pipeline",
+        "Description": "Typeform Response to Notion Database",
+        "DisplayName": "Survey Data Pipeline",
+        "Roles": "hr"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_11",
+      "values": {
+        "AutomatedPipelineId": "task-management-sync",
+        "Name": "task-management-sync",
+        "Description": "Trello Card to Google Tasks",
+        "DisplayName": "Task Management Sync",
+        "Roles": "finance"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_12",
+      "values": {
+        "AutomatedPipelineId": "cloud-storage-sync",
+        "Name": "cloud-storage-sync",
+        "Description": "Dropbox Upload to Google Drive",
+        "DisplayName": "Cloud Storage Sync",
+        "Roles": "guest"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_13",
+      "values": {
+        "AutomatedPipelineId": "email-notification-pipeline",
+        "Name": "email-notification-pipeline",
+        "Description": "Outlook Email to Slack Channel",
+        "DisplayName": "Email Notification Pipeline",
+        "Roles": "trainer"
+      }
+    },
+    {
+      "class": "AutomatedPipelines",
+      "id": "AutomatedPipelines_14",
+      "values": {
+        "AutomatedPipelineId": "survey-data-export",
+        "Name": "survey-data-export",
+        "Description": "SurveyMonkey Response to Excel Sheet",
+        "DisplayName": "Survey Data Export",
+        "Roles": "owner"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_0",
+      "values": {
+        "DepartmentId": "human-resources",
+        "Title": "HR Department",
+        "DisplayName": "Human Resources",
+        "Roles": "administrator"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_1",
+      "values": {
+        "DepartmentId": "finance",
+        "Title": "Finance Department",
+        "DisplayName": "Finance",
+        "Roles": "editor"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_2",
+      "values": {
+        "DepartmentId": "information-technology",
+        "Title": "IT Department",
+        "DisplayName": "Information Technology",
+        "Roles": "viewer"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_3",
+      "values": {
+        "DepartmentId": "marketing",
+        "Title": "Marketing Department",
+        "DisplayName": "Marketing",
+        "Roles": "moderator"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_4",
+      "values": {
+        "DepartmentId": "sales",
+        "Title": "Sales Department",
+        "DisplayName": "Sales",
+        "Roles": "contributor"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_5",
+      "values": {
+        "DepartmentId": "customer-service",
+        "Title": "Customer Service Department",
+        "DisplayName": "Customer Service",
+        "Roles": "manager"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_6",
+      "values": {
+        "DepartmentId": "research-and-development",
+        "Title": "R&D Department",
+        "DisplayName": "Research and Development",
+        "Roles": "support"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_7",
+      "values": {
+        "DepartmentId": "legal",
+        "Title": "Legal Department",
+        "DisplayName": "Legal",
+        "Roles": "analyst"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_8",
+      "values": {
+        "DepartmentId": "procurement",
+        "Title": "Procurement Department",
+        "DisplayName": "Procurement",
+        "Roles": "developer"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_9",
+      "values": {
+        "DepartmentId": "operations",
+        "Title": "Operations Department",
+        "DisplayName": "Operations",
+        "Roles": "tester"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_10",
+      "values": {
+        "DepartmentId": "administration",
+        "Title": "Administration Department",
+        "DisplayName": "Administration",
+        "Roles": "hr"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_11",
+      "values": {
+        "DepartmentId": "public-relations",
+        "Title": "PR Department",
+        "DisplayName": "Public Relations",
+        "Roles": "finance"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_12",
+      "values": {
+        "DepartmentId": "quality-assurance",
+        "Title": "QA Department",
+        "DisplayName": "Quality Assurance",
+        "Roles": "guest"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_13",
+      "values": {
+        "DepartmentId": "facilities-management",
+        "Title": "Facilities Department",
+        "DisplayName": "Facilities Management",
+        "Roles": "trainer"
+      }
+    },
+    {
+      "class": "Departments",
+      "id": "Departments_14",
+      "values": {
+        "DepartmentId": "training-and-development",
+        "Title": "Training Department",
+        "DisplayName": "Training and Development",
+        "Roles": "owner"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_0",
+      "values": {
+        "HumanAgentId": "agent-001",
+        "Name": "agent_001",
+        "DisplayName": "Alice Johnson",
+        "Mbox": "alice.johnson@example.com",
+        "Roles": "administrator"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_1",
+      "values": {
+        "HumanAgentId": "agent-002",
+        "Name": "agent_002",
+        "DisplayName": "Brian Smith",
+        "Mbox": "brian.smith@example.com",
+        "Roles": "editor"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_2",
+      "values": {
+        "HumanAgentId": "agent-003",
+        "Name": "agent_003",
+        "DisplayName": "Catherine Lee",
+        "Mbox": "catherine.lee@example.com",
+        "Roles": "viewer"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_3",
+      "values": {
+        "HumanAgentId": "agent-004",
+        "Name": "agent_004",
+        "DisplayName": "David Kim",
+        "Mbox": "david.kim@example.com",
+        "Roles": "moderator"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_4",
+      "values": {
+        "HumanAgentId": "agent-005",
+        "Name": "agent_005",
+        "DisplayName": "Emily Chen",
+        "Mbox": "emily.chen@example.com",
+        "Roles": "contributor"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_5",
+      "values": {
+        "HumanAgentId": "agent-006",
+        "Name": "agent_006",
+        "DisplayName": "Frank Miller",
+        "Mbox": "frank.miller@example.com",
+        "Roles": "manager"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_6",
+      "values": {
+        "HumanAgentId": "agent-007",
+        "Name": "agent_007",
+        "DisplayName": "Grace Park",
+        "Mbox": "grace.park@example.com",
+        "Roles": "support"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_7",
+      "values": {
+        "HumanAgentId": "agent-008",
+        "Name": "agent_008",
+        "DisplayName": "Henry Adams",
+        "Mbox": "henry.adams@example.com",
+        "Roles": "analyst"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_8",
+      "values": {
+        "HumanAgentId": "agent-009",
+        "Name": "agent_009",
+        "DisplayName": "Isabella Martinez",
+        "Mbox": "isabella.martinez@example.com",
+        "Roles": "developer"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_9",
+      "values": {
+        "HumanAgentId": "agent-010",
+        "Name": "agent_010",
+        "DisplayName": "Jack Wilson",
+        "Mbox": "jack.wilson@example.com",
+        "Roles": "tester"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_10",
+      "values": {
+        "HumanAgentId": "agent-011",
+        "Name": "agent_011",
+        "DisplayName": "Karen Patel",
+        "Mbox": "karen.patel@example.com",
+        "Roles": "hr"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_11",
+      "values": {
+        "HumanAgentId": "agent-012",
+        "Name": "agent_012",
+        "DisplayName": "Liam Nguyen",
+        "Mbox": "liam.nguyen@example.com",
+        "Roles": "finance"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_12",
+      "values": {
+        "HumanAgentId": "agent-013",
+        "Name": "agent_013",
+        "DisplayName": "Monica Rivera",
+        "Mbox": "monica.rivera@example.com",
+        "Roles": "guest"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_13",
+      "values": {
+        "HumanAgentId": "agent-014",
+        "Name": "agent_014",
+        "DisplayName": "Nathan Brown",
+        "Mbox": "nathan.brown@example.com",
+        "Roles": "trainer"
+      }
+    },
+    {
+      "class": "HumanAgents",
+      "id": "HumanAgents_14",
+      "values": {
+        "HumanAgentId": "agent-015",
+        "Name": "agent_015",
+        "DisplayName": "Olivia Clark",
+        "Mbox": "olivia.clark@example.com",
+        "Roles": "owner"
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_0",
+      "values": {
+        "PrecedesStepId": "step-1",
+        "Name": "step-1",
+        "WorkflowStep": "submit-request",
+        "StepNumber": 1
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_1",
+      "values": {
+        "PrecedesStepId": "step-2",
+        "Name": "step-2",
+        "WorkflowStep": "manager-review",
+        "StepNumber": 2
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_2",
+      "values": {
+        "PrecedesStepId": "step-3",
+        "Name": "step-3",
+        "WorkflowStep": "automated-eligibility-check",
+        "StepNumber": 3
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_3",
+      "values": {
+        "PrecedesStepId": "step-4",
+        "Name": "step-4",
+        "WorkflowStep": "finance-approval",
+        "StepNumber": 4
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_4",
+      "values": {
+        "PrecedesStepId": "step-5",
+        "Name": "step-5",
+        "WorkflowStep": "document-verification",
+        "StepNumber": 5
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_5",
+      "values": {
+        "PrecedesStepId": "step-6",
+        "Name": "step-6",
+        "WorkflowStep": "quality-assurance-review",
+        "StepNumber": 6
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_6",
+      "values": {
+        "PrecedesStepId": "step-7",
+        "Name": "step-7",
+        "WorkflowStep": "system-notification-sent",
+        "StepNumber": 7
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_7",
+      "values": {
+        "PrecedesStepId": "step-8",
+        "Name": "step-8",
+        "WorkflowStep": "final-approval",
+        "StepNumber": 8
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_8",
+      "values": {
+        "PrecedesStepId": "step-9",
+        "Name": "step-9",
+        "WorkflowStep": "archive-request",
+        "StepNumber": 9
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_9",
+      "values": {
+        "PrecedesStepId": "step-10",
+        "Name": "step-10",
+        "WorkflowStep": "customer-feedback-collection",
+        "StepNumber": 10
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_10",
+      "values": {
+        "PrecedesStepId": "step-11",
+        "Name": "step-11",
+        "WorkflowStep": "legal-compliance-check",
+        "StepNumber": 11
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_11",
+      "values": {
+        "PrecedesStepId": "step-12",
+        "Name": "step-12",
+        "WorkflowStep": "assign-task-to-team",
+        "StepNumber": 12
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_12",
+      "values": {
+        "PrecedesStepId": "step-13",
+        "Name": "step-13",
+        "WorkflowStep": "team-lead-review",
+        "StepNumber": 13
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_13",
+      "values": {
+        "PrecedesStepId": "step-14",
+        "Name": "step-14",
+        "WorkflowStep": "generate-report",
+        "StepNumber": 14
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_14",
+      "values": {
+        "PrecedesStepId": "step-15",
+        "Name": "step-15",
+        "WorkflowStep": "close-workflow",
+        "StepNumber": 15
+      }
+    },
+    {
+      "class": "PrecedesSteps",
+      "id": "PrecedesSteps_15",
+      "values": {
+        "PrecedesStepId": "assign-task-to-team",
+        "Name": "assign-task-to-team",
+        "WorkflowStep": "some-new-task",
+        "StepNumber": 16
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_0",
+      "values": {
+        "RoleId": "administrator",
+        "DisplayName": "Administrator",
+        "Label": "Admin",
+        "Comment": "Has full access to all system features and settings.",
+        "FilledByHumanAgent": "agent-001",
+        "FilledByAIAgent": "ava",
+        "FilledByAutomatedPipeline": "lead-notification-pipeline",
+        "OwnedBy": "human-resources",
+        "DelegatesTo": "",
+        "WorkflowSteps": "submit-request",
+        "FromDelegatesTo": "editor"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_1",
+      "values": {
+        "RoleId": "editor",
+        "DisplayName": "Editor",
+        "Label": "Content Editor",
+        "Comment": "Can create, edit, and delete content but cannot change system settings.",
+        "FilledByHumanAgent": "agent-002",
+        "FilledByAIAgent": "leo",
+        "FilledByAutomatedPipeline": "e-commerce-order-sync",
+        "OwnedBy": "finance",
+        "DelegatesTo": "administrator",
+        "WorkflowSteps": "manager-review",
+        "FromDelegatesTo": "viewer"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_2",
+      "values": {
+        "RoleId": "viewer",
+        "DisplayName": "Viewer",
+        "Label": "Read-Only",
+        "Comment": "Can view content but cannot make any changes.",
+        "FilledByHumanAgent": "agent-003",
+        "FilledByAIAgent": "maya",
+        "FilledByAutomatedPipeline": "issue-tracking-bridge",
+        "OwnedBy": "information-technology",
+        "DelegatesTo": "editor",
+        "WorkflowSteps": "automated-eligibility-check",
+        "FromDelegatesTo": "moderator"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_3",
+      "values": {
+        "RoleId": "moderator",
+        "DisplayName": "Moderator",
+        "Label": "Forum Moderator",
+        "Comment": "Can manage user comments and moderate discussions.",
+        "FilledByHumanAgent": "agent-004",
+        "FilledByAIAgent": "eli",
+        "FilledByAutomatedPipeline": "newsletter-signup-sync",
+        "OwnedBy": "marketing",
+        "DelegatesTo": "viewer",
+        "WorkflowSteps": "finance-approval",
+        "FromDelegatesTo": "contributor"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_4",
+      "values": {
+        "RoleId": "contributor",
+        "DisplayName": "Contributor",
+        "Label": "Content Contributor",
+        "Comment": "Can submit new content for review but cannot publish directly.",
+        "FilledByHumanAgent": "agent-005",
+        "FilledByAIAgent": "zara",
+        "FilledByAutomatedPipeline": "support-ticket-automation",
+        "OwnedBy": "sales",
+        "DelegatesTo": "moderator",
+        "WorkflowSteps": "document-verification",
+        "FromDelegatesTo": "manager"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_5",
+      "values": {
+        "RoleId": "manager",
+        "DisplayName": "Manager",
+        "Label": "Project Manager",
+        "Comment": "Oversees project progress and manages team assignments.",
+        "FilledByHumanAgent": "agent-006",
+        "FilledByAIAgent": "owen",
+        "FilledByAutomatedPipeline": "devops-integration",
+        "OwnedBy": "customer-service",
+        "DelegatesTo": "contributor",
+        "WorkflowSteps": "quality-assurance-review",
+        "FromDelegatesTo": "support"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_6",
+      "values": {
+        "RoleId": "support",
+        "DisplayName": "Support",
+        "Label": "Customer Support",
+        "Comment": "Handles user inquiries and provides technical assistance.",
+        "FilledByHumanAgent": "agent-007",
+        "FilledByAIAgent": "nina",
+        "FilledByAutomatedPipeline": "finance-automation",
+        "OwnedBy": "research-and-development",
+        "DelegatesTo": "manager",
+        "WorkflowSteps": "system-notification-sent",
+        "FromDelegatesTo": "analyst"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_7",
+      "values": {
+        "RoleId": "analyst",
+        "DisplayName": "Analyst",
+        "Label": "Data Analyst",
+        "Comment": "Has access to analytics and reporting tools.",
+        "FilledByHumanAgent": "agent-008",
+        "FilledByAIAgent": "kai",
+        "FilledByAutomatedPipeline": "project-intake-pipeline",
+        "OwnedBy": "legal",
+        "DelegatesTo": "support",
+        "WorkflowSteps": "final-approval",
+        "FromDelegatesTo": "developer"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_8",
+      "values": {
+        "RoleId": "developer",
+        "DisplayName": "Developer",
+        "Label": "Software Developer",
+        "Comment": "Can access and modify application code and integrations.",
+        "FilledByHumanAgent": "agent-009",
+        "FilledByAIAgent": "sophie",
+        "FilledByAutomatedPipeline": "crm-data-sync",
+        "OwnedBy": "procurement",
+        "DelegatesTo": "analyst",
+        "WorkflowSteps": "archive-request",
+        "FromDelegatesTo": "tester"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_9",
+      "values": {
+        "RoleId": "tester",
+        "DisplayName": "Tester",
+        "Label": "Quality Assurance",
+        "Comment": "Responsible for testing new features and reporting bugs.",
+        "FilledByHumanAgent": "agent-010",
+        "FilledByAIAgent": "max",
+        "FilledByAutomatedPipeline": "calendar-integration",
+        "OwnedBy": "operations",
+        "DelegatesTo": "developer",
+        "WorkflowSteps": "customer-feedback-collection",
+        "FromDelegatesTo": "hr"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_10",
+      "values": {
+        "RoleId": "hr",
+        "DisplayName": "HR",
+        "Label": "Human Resources",
+        "Comment": "Manages employee records and recruitment processes.",
+        "FilledByHumanAgent": "agent-011",
+        "FilledByAIAgent": "liam",
+        "FilledByAutomatedPipeline": "survey-data-pipeline",
+        "OwnedBy": "administration",
+        "DelegatesTo": "tester",
+        "WorkflowSteps": "legal-compliance-check",
+        "FromDelegatesTo": "finance"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_11",
+      "values": {
+        "RoleId": "finance",
+        "DisplayName": "Finance",
+        "Label": "Finance Officer",
+        "Comment": "Handles billing, invoices, and financial reports.",
+        "FilledByHumanAgent": "agent-012",
+        "FilledByAIAgent": "jade",
+        "FilledByAutomatedPipeline": "task-management-sync",
+        "OwnedBy": "public-relations",
+        "DelegatesTo": "hr",
+        "WorkflowSteps": "assign-task-to-team, some-new-task",
+        "FromDelegatesTo": "guest"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_12",
+      "values": {
+        "RoleId": "guest",
+        "DisplayName": "Guest",
+        "Label": "Temporary Access",
+        "Comment": "Limited access for temporary users or external collaborators.",
+        "FilledByHumanAgent": "agent-013",
+        "FilledByAIAgent": "mila",
+        "FilledByAutomatedPipeline": "cloud-storage-sync",
+        "OwnedBy": "quality-assurance",
+        "DelegatesTo": "finance",
+        "WorkflowSteps": "team-lead-review",
+        "FromDelegatesTo": "trainer"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_13",
+      "values": {
+        "RoleId": "trainer",
+        "DisplayName": "Trainer",
+        "Label": "Training Specialist",
+        "Comment": "Creates and delivers training materials to users.",
+        "FilledByHumanAgent": "agent-014",
+        "FilledByAIAgent": "noah",
+        "FilledByAutomatedPipeline": "email-notification-pipeline",
+        "OwnedBy": "facilities-management",
+        "DelegatesTo": "guest",
+        "WorkflowSteps": "generate-report",
+        "FromDelegatesTo": "owner"
+      }
+    },
+    {
+      "class": "Roles",
+      "id": "Roles_14",
+      "values": {
+        "RoleId": "owner",
+        "DisplayName": "Owner",
+        "Label": "System Owner",
+        "Comment": "Ultimate authority over the system, can assign or revoke any role.",
+        "FilledByHumanAgent": "agent-015",
+        "FilledByAIAgent": "ella",
+        "FilledByAutomatedPipeline": "survey-data-export",
+        "OwnedBy": "training-and-development",
+        "DelegatesTo": "trainer",
+        "WorkflowSteps": "close-workflow",
+        "FromDelegatesTo": ""
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_0",
+      "values": {
+        "WorkflowStepId": "submit-request",
+        "DisplayName": "Submit Request",
+        "Workflow": "onboarding",
+        "SequencePosition": 1,
+        "AssignedRole": "administrator",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "initial-review",
+        "PrecededBySteps": "step-1"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_1",
+      "values": {
+        "WorkflowStepId": "manager-review",
+        "DisplayName": "Manager Review",
+        "Workflow": "invoice-approval",
+        "SequencePosition": 2,
+        "AssignedRole": "editor",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "manager-approval",
+        "PrecededBySteps": "step-2"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_2",
+      "values": {
+        "WorkflowStepId": "recwwXHLqxKPhj6Mt",
+        "DisplayName": "",
+        "Workflow": "performance-review",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_3",
+      "values": {
+        "WorkflowStepId": "automated-eligibility-check",
+        "DisplayName": "Automated Eligibility Check",
+        "Workflow": "content-publishing",
+        "SequencePosition": 3,
+        "AssignedRole": "viewer",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "it-security-gate",
+        "PrecededBySteps": "step-3"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_4",
+      "values": {
+        "WorkflowStepId": "finance-approval",
+        "DisplayName": "Finance Approval",
+        "Workflow": "leave-request",
+        "SequencePosition": 4,
+        "AssignedRole": "moderator",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "finance-approval",
+        "PrecededBySteps": "step-4"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_5",
+      "values": {
+        "WorkflowStepId": "document-verification",
+        "DisplayName": "Document Verification",
+        "Workflow": "it-support",
+        "SequencePosition": 5,
+        "AssignedRole": "contributor",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "compliance-check",
+        "PrecededBySteps": "step-5"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_6",
+      "values": {
+        "WorkflowStepId": "quality-assurance-review",
+        "DisplayName": "Quality Assurance Review",
+        "Workflow": "expense-reimbursement",
+        "SequencePosition": 6,
+        "AssignedRole": "manager",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "quality-assurance",
+        "PrecededBySteps": "step-6"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_7",
+      "values": {
+        "WorkflowStepId": "system-notification-sent",
+        "DisplayName": "System Notification Sent",
+        "Workflow": "performance-review",
+        "SequencePosition": 7,
+        "AssignedRole": "support",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "final-authorization",
+        "PrecededBySteps": "step-7"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_8",
+      "values": {
+        "WorkflowStepId": "final-approval",
+        "DisplayName": "Final Approval",
+        "Workflow": "procurement",
+        "SequencePosition": 8,
+        "AssignedRole": "analyst",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "manager-approval",
+        "PrecededBySteps": "step-8"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_9",
+      "values": {
+        "WorkflowStepId": "archive-request",
+        "DisplayName": "Archive Request",
+        "Workflow": "customer-feedback",
+        "SequencePosition": 9,
+        "AssignedRole": "developer",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "it-security-gate",
+        "PrecededBySteps": "step-9"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_10",
+      "values": {
+        "WorkflowStepId": "customer-feedback-collection",
+        "DisplayName": "Customer Feedback Collection",
+        "Workflow": "project-kickoff",
+        "SequencePosition": 10,
+        "AssignedRole": "tester",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "customer-confirmation",
+        "PrecededBySteps": "step-10"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_11",
+      "values": {
+        "WorkflowStepId": "legal-compliance-check",
+        "DisplayName": "Legal Compliance Check",
+        "Workflow": "contract-review",
+        "SequencePosition": 11,
+        "AssignedRole": "hr",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "legal-review",
+        "PrecededBySteps": "step-11"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_12",
+      "values": {
+        "WorkflowStepId": "assign-task-to-team",
+        "DisplayName": "Assign Task to Team",
+        "Workflow": "asset-management",
+        "SequencePosition": 12,
+        "AssignedRole": "finance",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "executive-sign-off",
+        "PrecededBySteps": "step-12"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_13",
+      "values": {
+        "WorkflowStepId": "some-new-task",
+        "DisplayName": "Some new task",
+        "Workflow": "",
+        "SequencePosition": 13,
+        "AssignedRole": "finance",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "some-new-gate",
+        "PrecededBySteps": "assign-task-to-team"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_14",
+      "values": {
+        "WorkflowStepId": "team-lead-review",
+        "DisplayName": "Team Lead Review",
+        "Workflow": "recruitment",
+        "SequencePosition": 13,
+        "AssignedRole": "guest",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "legal-review",
+        "PrecededBySteps": "step-13"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_15",
+      "values": {
+        "WorkflowStepId": "generate-report",
+        "DisplayName": "Generate Report",
+        "Workflow": "incident-reporting",
+        "SequencePosition": 14,
+        "AssignedRole": "trainer",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "finance-approval",
+        "PrecededBySteps": "step-14"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_16",
+      "values": {
+        "WorkflowStepId": "close-workflow",
+        "DisplayName": "Close Workflow",
+        "Workflow": "change-management",
+        "SequencePosition": 15,
+        "AssignedRole": "owner",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "executive-sign-off",
+        "PrecededBySteps": "step-15"
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_17",
+      "values": {
+        "WorkflowStepId": "step1",
+        "DisplayName": "step1",
+        "Workflow": "change-management",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_18",
+      "values": {
+        "WorkflowStepId": "asdf",
+        "DisplayName": "asdf",
+        "Workflow": "change-management",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      }
+    },
+    {
+      "class": "WorkflowSteps",
+      "id": "WorkflowSteps_19",
+      "values": {
+        "WorkflowStepId": "step-2",
+        "DisplayName": "Step 2",
+        "Workflow": "performance-review",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_0",
+      "values": {
+        "WorkflowId": "performance-review",
+        "DisplayName": "Performance Review",
+        "Title": "Annual Performance Review",
+        "Color": "red",
+        "Description": "Structured workflow for conducting annual employee performance evaluations.",
+        "Identifier": "WF-PRV-007",
+        "Modified": "2024-05-15",
+        "WorkflowSteps": "system-notification-sent, step-2, recwwXHLqxKPhj6Mt",
+        "CountOfNonProposedSteps": 3
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_1",
+      "values": {
+        "WorkflowId": "change-management",
+        "DisplayName": "Change Management",
+        "Title": "Change Management Workflow",
+        "Color": "green",
+        "Description": "Structured process for requesting, evaluating, and implementing organizational changes.",
+        "Identifier": "WF-CHM-015",
+        "Modified": "2024-05-27",
+        "WorkflowSteps": "close-workflow, step1, asdf",
+        "CountOfNonProposedSteps": 3
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_2",
+      "values": {
+        "WorkflowId": "incident-reporting",
+        "DisplayName": "Incident Reporting",
+        "Title": "Incident Reporting Process",
+        "Color": "",
+        "Description": "Steps for reporting, investigating, and resolving workplace incidents.",
+        "Identifier": "WF-INC-014",
+        "Modified": "2024-06-06",
+        "WorkflowSteps": "generate-report",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_3",
+      "values": {
+        "WorkflowId": "customer-feedback",
+        "DisplayName": "Customer Feedback",
+        "Title": "Customer Feedback Collection",
+        "Color": "",
+        "Description": "Workflow for collecting, analyzing, and acting on customer feedback.",
+        "Identifier": "WF-CFB-009",
+        "Modified": "2024-05-25",
+        "WorkflowSteps": "archive-request",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_4",
+      "values": {
+        "WorkflowId": "project-kickoff",
+        "DisplayName": "Project Kickoff",
+        "Title": "Project Kickoff Process",
+        "Color": "",
+        "Description": "Steps to initiate a new project, including team assignment and goal setting.",
+        "Identifier": "WF-PKO-010",
+        "Modified": "2024-05-20",
+        "WorkflowSteps": "customer-feedback-collection",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_5",
+      "values": {
+        "WorkflowId": "onboarding",
+        "DisplayName": "Onboarding",
+        "Title": "Employee Onboarding",
+        "Color": "",
+        "Description": "A step-by-step process to onboard new employees, including document collection, orientation, and training.",
+        "Identifier": "WF-ONB-001",
+        "Modified": "2024-05-10",
+        "WorkflowSteps": "submit-request",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_6",
+      "values": {
+        "WorkflowId": "content-publishing",
+        "DisplayName": "Content Publishing",
+        "Title": "Content Publishing Process",
+        "Color": "",
+        "Description": "Workflow for drafting, reviewing, and publishing content to the company website.",
+        "Identifier": "WF-CNT-003",
+        "Modified": "2024-05-28",
+        "WorkflowSteps": "automated-eligibility-check",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_7",
+      "values": {
+        "WorkflowId": "expense-reimbursement",
+        "DisplayName": "Expense Reimbursement",
+        "Title": "Expense Reimbursement Process",
+        "Color": "",
+        "Description": "Steps for employees to submit expenses and receive reimbursements after approval.",
+        "Identifier": "WF-EXP-006",
+        "Modified": "2024-06-03",
+        "WorkflowSteps": "quality-assurance-review",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_8",
+      "values": {
+        "WorkflowId": "procurement",
+        "DisplayName": "Procurement",
+        "Title": "Procurement Workflow",
+        "Color": "",
+        "Description": "Process for requesting, approving, and purchasing goods or services.",
+        "Identifier": "WF-PRC-008",
+        "Modified": "2024-06-02",
+        "WorkflowSteps": "final-approval",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_9",
+      "values": {
+        "WorkflowId": "invoice-approval",
+        "DisplayName": "Invoice Approval",
+        "Title": "Invoice Approval Workflow",
+        "Color": "",
+        "Description": "Automated workflow for reviewing, approving, and processing vendor invoices.",
+        "Identifier": "WF-INV-002",
+        "Modified": "2024-06-01",
+        "WorkflowSteps": "manager-review",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_10",
+      "values": {
+        "WorkflowId": "asset-management",
+        "DisplayName": "Asset Management",
+        "Title": "Asset Management Process",
+        "Color": "",
+        "Description": "Process for tracking, maintaining, and auditing company assets.",
+        "Identifier": "WF-ASM-012",
+        "Modified": "2024-05-18",
+        "WorkflowSteps": "assign-task-to-team",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_11",
+      "values": {
+        "WorkflowId": "contract-review",
+        "DisplayName": "Contract Review",
+        "Title": "Contract Review Workflow",
+        "Color": "",
+        "Description": "Workflow for legal and management review of contracts before signing.",
+        "Identifier": "WF-CTR-011",
+        "Modified": "2024-06-04",
+        "WorkflowSteps": "legal-compliance-check",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_12",
+      "values": {
+        "WorkflowId": "recruitment",
+        "DisplayName": "Recruitment",
+        "Title": "Recruitment Workflow",
+        "Color": "",
+        "Description": "Workflow for posting jobs, screening candidates, and scheduling interviews.",
+        "Identifier": "WF-RCT-013",
+        "Modified": "2024-05-22",
+        "WorkflowSteps": "team-lead-review",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_13",
+      "values": {
+        "WorkflowId": "it-support",
+        "DisplayName": "IT Support",
+        "Title": "IT Support Ticketing",
+        "Color": "",
+        "Description": "Workflow for submitting, triaging, and resolving IT support tickets.",
+        "Identifier": "WF-ITS-005",
+        "Modified": "2024-05-30",
+        "WorkflowSteps": "document-verification",
+        "CountOfNonProposedSteps": 1
+      }
+    },
+    {
+      "class": "Workflows",
+      "id": "Workflows_14",
+      "values": {
+        "WorkflowId": "leave-request",
+        "DisplayName": "Leave Request",
+        "Title": "Leave Request Workflow",
+        "Color": "",
+        "Description": "Process for employees to submit, review, and approve leave requests.",
+        "Identifier": "WF-LRQ-004",
+        "Modified": "2024-06-05",
+        "WorkflowSteps": "finance-approval",
+        "CountOfNonProposedSteps": 1
       }
     }
   ]

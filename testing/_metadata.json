@@ -1,9 +1,46 @@
 {
-  "customers": {
-    "primary_key": "customer_id",
+  "workflows": {
+    "primary_key": "workflow_id",
     "computed_columns": [
-      "full_name"
+      "name",
+      "count_of_non_proposed_steps",
+      "has_more_than1_step"
     ],
-    "record_count": 3
+    "record_count": 15
+  },
+  "workflow_steps": {
+    "primary_key": "workflow_step_id",
+    "computed_columns": [
+      "name"
+    ],
+    "record_count": 20
+  },
+  "approval_gates": {
+    "primary_key": "approval_gate_id",
+    "computed_columns": [
+      "name"
+    ],
+    "record_count": 11
+  },
+  "precedes_steps": {
+    "primary_key": "precedes_step_id",
+    "computed_columns": [
+      "display_name"
+    ],
+    "record_count": 16
+  },
+  "roles": {
+    "primary_key": "role_id",
+    "computed_columns": [
+      "name"
+    ],
+    "record_count": 15
+  },
+  "departments": {
+    "primary_key": "department_id",
+    "computed_columns": [
+      "name"
+    ],
+    "record_count": 15
   }
 }

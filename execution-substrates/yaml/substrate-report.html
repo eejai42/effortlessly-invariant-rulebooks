@@ -69,7 +69,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>122/122 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -115,8 +115,13 @@ YAML substrate: Loaded schema with 5 calculated fields
   - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
   - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
   - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
-  -&gt; customers: 3 records
-YAML substrate: Processed 1 entities, 3 total records
+  -&gt; approval_gates: 11 records
+  -&gt; departments: 15 records
+  -&gt; precedes_steps: 16 records
+  -&gt; roles: 15 records
+  -&gt; workflow_steps: 20 records
+  -&gt; workflows: 15 records
+YAML substrate: Processed 6 entities, 92 total records
 
 </pre>
             </div>
@@ -126,9 +131,9 @@ YAML substrate: Processed 1 entities, 3 total records
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">122</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">122</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>

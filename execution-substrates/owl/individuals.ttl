@@ -3,25 +3,1162 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Individuals: Customers ===
+# === Individuals: AIAgents ===
 
-erb:Customers_0 a erb:Customers ;
-    erb:customerId "cust0001" ;
-    erb:customer "CUST0001" ;
-    erb:emailAddress "jane.smith@email.com" ;
-    erb:firstName "Jane" ;
-    erb:lastName "Smith" .
+erb:AIAgents_0 a erb:AIAgents ;
+    erb:aIAgentId "ava" ;
+    erb:name "Ava" ;
+    erb:title "CustomerSupportBot" ;
+    erb:displayName "Ava" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "administrator" .
 
-erb:Customers_1 a erb:Customers ;
-    erb:customerId "cust0002" ;
-    erb:customer "CUST0002" ;
-    erb:emailAddress "john.doe@email.com" ;
-    erb:firstName "John" ;
-    erb:lastName "Doe" .
+erb:AIAgents_1 a erb:AIAgents ;
+    erb:aIAgentId "leo" ;
+    erb:name "Leo" ;
+    erb:title "SalesAssistantAI" ;
+    erb:displayName "Leo" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "editor" .
 
-erb:Customers_2 a erb:Customers ;
-    erb:customerId "cust0003" ;
-    erb:customer "CUST0003" ;
-    erb:emailAddress "emily.jones@email.com" ;
-    erb:firstName "Emily" ;
-    erb:lastName "Jones" .
+erb:AIAgents_2 a erb:AIAgents ;
+    erb:aIAgentId "maya" ;
+    erb:name "Maya" ;
+    erb:title "HRRecruiterBot" ;
+    erb:displayName "Maya" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "viewer" .
+
+erb:AIAgents_3 a erb:AIAgents ;
+    erb:aIAgentId "eli" ;
+    erb:name "Eli" ;
+    erb:title "FinanceAdvisorAI" ;
+    erb:displayName "Eli" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "moderator" .
+
+erb:AIAgents_4 a erb:AIAgents ;
+    erb:aIAgentId "zara" ;
+    erb:name "Zara" ;
+    erb:title "MarketingCopyAI" ;
+    erb:displayName "Zara" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "contributor" .
+
+erb:AIAgents_5 a erb:AIAgents ;
+    erb:aIAgentId "owen" ;
+    erb:name "Owen" ;
+    erb:title "LegalDraftBot" ;
+    erb:displayName "Owen" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "manager" .
+
+erb:AIAgents_6 a erb:AIAgents ;
+    erb:aIAgentId "nina" ;
+    erb:name "Nina" ;
+    erb:title "MedicalAssistantAI" ;
+    erb:displayName "Nina" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "support" .
+
+erb:AIAgents_7 a erb:AIAgents ;
+    erb:aIAgentId "kai" ;
+    erb:name "Kai" ;
+    erb:title "TravelPlannerBot" ;
+    erb:displayName "Kai" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "analyst" .
+
+erb:AIAgents_8 a erb:AIAgents ;
+    erb:aIAgentId "sophie" ;
+    erb:name "Sophie" ;
+    erb:title "EcommerceHelperAI" ;
+    erb:displayName "Sophie" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "developer" .
+
+erb:AIAgents_9 a erb:AIAgents ;
+    erb:aIAgentId "max" ;
+    erb:name "Max" ;
+    erb:title "EducationTutorBot" ;
+    erb:displayName "Max" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "tester" .
+
+erb:AIAgents_10 a erb:AIAgents ;
+    erb:aIAgentId "liam" ;
+    erb:name "Liam" ;
+    erb:title "RealEstateAdvisorAI" ;
+    erb:displayName "Liam" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "hr" .
+
+erb:AIAgents_11 a erb:AIAgents ;
+    erb:aIAgentId "jade" ;
+    erb:name "Jade" ;
+    erb:title "FitnessCoachBot" ;
+    erb:displayName "Jade" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "finance" .
+
+erb:AIAgents_12 a erb:AIAgents ;
+    erb:aIAgentId "mila" ;
+    erb:name "Mila" ;
+    erb:title "EventPlannerAI" ;
+    erb:displayName "Mila" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "guest" .
+
+erb:AIAgents_13 a erb:AIAgents ;
+    erb:aIAgentId "noah" ;
+    erb:name "Noah" ;
+    erb:title "PersonalFinanceBot" ;
+    erb:displayName "Noah" ;
+    erb:modelVersion "GPT-3.5" ;
+    erb:roles "trainer" .
+
+erb:AIAgents_14 a erb:AIAgents ;
+    erb:aIAgentId "ella" ;
+    erb:name "Ella" ;
+    erb:title "ContentEditorAI" ;
+    erb:displayName "Ella" ;
+    erb:modelVersion "GPT-4.0" ;
+    erb:roles "owner" .
+
+# === Individuals: ApprovalGates ===
+
+erb:ApprovalGates_0 a erb:ApprovalGates ;
+    erb:approvalGateId "initial-review" ;
+    erb:displayName "Initial Review" ;
+    erb:workflowSteps "submit-request" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_1 a erb:ApprovalGates ;
+    erb:approvalGateId "manager-approval" ;
+    erb:displayName "Manager Approval" ;
+    erb:workflowSteps "final-approval, manager-review" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_2 a erb:ApprovalGates ;
+    erb:approvalGateId "compliance-check" ;
+    erb:displayName "Compliance Check" ;
+    erb:workflowSteps "document-verification" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_3 a erb:ApprovalGates ;
+    erb:approvalGateId "final-authorization" ;
+    erb:displayName "Final Authorization" ;
+    erb:workflowSteps "system-notification-sent" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_4 a erb:ApprovalGates ;
+    erb:approvalGateId "executive-sign-off" ;
+    erb:displayName "Executive Sign-off" ;
+    erb:workflowSteps "close-workflow, assign-task-to-team" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_5 a erb:ApprovalGates ;
+    erb:approvalGateId "quality-assurance" ;
+    erb:displayName "Quality Assurance" ;
+    erb:workflowSteps "quality-assurance-review" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_6 a erb:ApprovalGates ;
+    erb:approvalGateId "legal-review" ;
+    erb:displayName "Legal Review" ;
+    erb:workflowSteps "team-lead-review, legal-compliance-check" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_7 a erb:ApprovalGates ;
+    erb:approvalGateId "finance-approval" ;
+    erb:displayName "Finance Approval" ;
+    erb:workflowSteps "generate-report, finance-approval" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_8 a erb:ApprovalGates ;
+    erb:approvalGateId "it-security-gate" ;
+    erb:displayName "IT Security Gate" ;
+    erb:workflowSteps "archive-request, automated-eligibility-check" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_9 a erb:ApprovalGates ;
+    erb:approvalGateId "customer-confirmation" ;
+    erb:displayName "Customer Confirmation" ;
+    erb:workflowSteps "customer-feedback-collection" ;
+    erb:escalationThresholdHours 0 .
+
+erb:ApprovalGates_10 a erb:ApprovalGates ;
+    erb:approvalGateId "some-new-gate" ;
+    erb:displayName "some new gate" ;
+    erb:workflowSteps "some-new-task" ;
+    erb:escalationThresholdHours 0 .
+
+# === Individuals: AutomatedPipelines ===
+
+erb:AutomatedPipelines_0 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "lead-notification-pipeline" ;
+    erb:name "lead-notification-pipeline" ;
+    erb:description "Salesforce to Slack Lead Alert" ;
+    erb:displayName "Lead Notification Pipeline" ;
+    erb:roles "administrator" .
+
+erb:AutomatedPipelines_1 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "e-commerce-order-sync" ;
+    erb:name "e-commerce-order-sync" ;
+    erb:description "Shopify Order to QuickBooks Invoice" ;
+    erb:displayName "E-commerce Order Sync" ;
+    erb:roles "editor" .
+
+erb:AutomatedPipelines_2 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "issue-tracking-bridge" ;
+    erb:name "issue-tracking-bridge" ;
+    erb:description "Jira Issue to Trello Card" ;
+    erb:displayName "Issue Tracking Bridge" ;
+    erb:roles "viewer" .
+
+erb:AutomatedPipelines_3 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "newsletter-signup-sync" ;
+    erb:name "newsletter-signup-sync" ;
+    erb:description "Google Sheets to Mailchimp Subscriber" ;
+    erb:displayName "Newsletter Signup Sync" ;
+    erb:roles "moderator" .
+
+erb:AutomatedPipelines_4 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "support-ticket-automation" ;
+    erb:name "support-ticket-automation" ;
+    erb:description "Zendesk Ticket to Asana Task" ;
+    erb:displayName "Support Ticket Automation" ;
+    erb:roles "contributor" .
+
+erb:AutomatedPipelines_5 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "devops-integration" ;
+    erb:name "devops-integration" ;
+    erb:description "GitHub PR to Jira Story" ;
+    erb:displayName "DevOps Integration" ;
+    erb:roles "manager" .
+
+erb:AutomatedPipelines_6 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "finance-automation" ;
+    erb:name "finance-automation" ;
+    erb:description "Stripe Payment to Xero Invoice" ;
+    erb:displayName "Finance Automation" ;
+    erb:roles "support" .
+
+erb:AutomatedPipelines_7 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "project-intake-pipeline" ;
+    erb:name "project-intake-pipeline" ;
+    erb:description "Airtable Form to Monday.com Item" ;
+    erb:displayName "Project Intake Pipeline" ;
+    erb:roles "analyst" .
+
+erb:AutomatedPipelines_8 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "crm-data-sync" ;
+    erb:name "crm-data-sync" ;
+    erb:description "HubSpot Contact to Salesforce Lead" ;
+    erb:displayName "CRM Data Sync" ;
+    erb:roles "developer" .
+
+erb:AutomatedPipelines_9 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "calendar-integration" ;
+    erb:name "calendar-integration" ;
+    erb:description "Google Calendar Event to Teams Meeting" ;
+    erb:displayName "Calendar Integration" ;
+    erb:roles "tester" .
+
+erb:AutomatedPipelines_10 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "survey-data-pipeline" ;
+    erb:name "survey-data-pipeline" ;
+    erb:description "Typeform Response to Notion Database" ;
+    erb:displayName "Survey Data Pipeline" ;
+    erb:roles "hr" .
+
+erb:AutomatedPipelines_11 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "task-management-sync" ;
+    erb:name "task-management-sync" ;
+    erb:description "Trello Card to Google Tasks" ;
+    erb:displayName "Task Management Sync" ;
+    erb:roles "finance" .
+
+erb:AutomatedPipelines_12 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "cloud-storage-sync" ;
+    erb:name "cloud-storage-sync" ;
+    erb:description "Dropbox Upload to Google Drive" ;
+    erb:displayName "Cloud Storage Sync" ;
+    erb:roles "guest" .
+
+erb:AutomatedPipelines_13 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "email-notification-pipeline" ;
+    erb:name "email-notification-pipeline" ;
+    erb:description "Outlook Email to Slack Channel" ;
+    erb:displayName "Email Notification Pipeline" ;
+    erb:roles "trainer" .
+
+erb:AutomatedPipelines_14 a erb:AutomatedPipelines ;
+    erb:automatedPipelineId "survey-data-export" ;
+    erb:name "survey-data-export" ;
+    erb:description "SurveyMonkey Response to Excel Sheet" ;
+    erb:displayName "Survey Data Export" ;
+    erb:roles "owner" .
+
+# === Individuals: Departments ===
+
+erb:Departments_0 a erb:Departments ;
+    erb:departmentId "human-resources" ;
+    erb:title "HR Department" ;
+    erb:displayName "Human Resources" ;
+    erb:roles "administrator" .
+
+erb:Departments_1 a erb:Departments ;
+    erb:departmentId "finance" ;
+    erb:title "Finance Department" ;
+    erb:displayName "Finance" ;
+    erb:roles "editor" .
+
+erb:Departments_2 a erb:Departments ;
+    erb:departmentId "information-technology" ;
+    erb:title "IT Department" ;
+    erb:displayName "Information Technology" ;
+    erb:roles "viewer" .
+
+erb:Departments_3 a erb:Departments ;
+    erb:departmentId "marketing" ;
+    erb:title "Marketing Department" ;
+    erb:displayName "Marketing" ;
+    erb:roles "moderator" .
+
+erb:Departments_4 a erb:Departments ;
+    erb:departmentId "sales" ;
+    erb:title "Sales Department" ;
+    erb:displayName "Sales" ;
+    erb:roles "contributor" .
+
+erb:Departments_5 a erb:Departments ;
+    erb:departmentId "customer-service" ;
+    erb:title "Customer Service Department" ;
+    erb:displayName "Customer Service" ;
+    erb:roles "manager" .
+
+erb:Departments_6 a erb:Departments ;
+    erb:departmentId "research-and-development" ;
+    erb:title "R&D Department" ;
+    erb:displayName "Research and Development" ;
+    erb:roles "support" .
+
+erb:Departments_7 a erb:Departments ;
+    erb:departmentId "legal" ;
+    erb:title "Legal Department" ;
+    erb:displayName "Legal" ;
+    erb:roles "analyst" .
+
+erb:Departments_8 a erb:Departments ;
+    erb:departmentId "procurement" ;
+    erb:title "Procurement Department" ;
+    erb:displayName "Procurement" ;
+    erb:roles "developer" .
+
+erb:Departments_9 a erb:Departments ;
+    erb:departmentId "operations" ;
+    erb:title "Operations Department" ;
+    erb:displayName "Operations" ;
+    erb:roles "tester" .
+
+erb:Departments_10 a erb:Departments ;
+    erb:departmentId "administration" ;
+    erb:title "Administration Department" ;
+    erb:displayName "Administration" ;
+    erb:roles "hr" .
+
+erb:Departments_11 a erb:Departments ;
+    erb:departmentId "public-relations" ;
+    erb:title "PR Department" ;
+    erb:displayName "Public Relations" ;
+    erb:roles "finance" .
+
+erb:Departments_12 a erb:Departments ;
+    erb:departmentId "quality-assurance" ;
+    erb:title "QA Department" ;
+    erb:displayName "Quality Assurance" ;
+    erb:roles "guest" .
+
+erb:Departments_13 a erb:Departments ;
+    erb:departmentId "facilities-management" ;
+    erb:title "Facilities Department" ;
+    erb:displayName "Facilities Management" ;
+    erb:roles "trainer" .
+
+erb:Departments_14 a erb:Departments ;
+    erb:departmentId "training-and-development" ;
+    erb:title "Training Department" ;
+    erb:displayName "Training and Development" ;
+    erb:roles "owner" .
+
+# === Individuals: HumanAgents ===
+
+erb:HumanAgents_0 a erb:HumanAgents ;
+    erb:humanAgentId "agent-001" ;
+    erb:name "agent_001" ;
+    erb:displayName "Alice Johnson" ;
+    erb:mbox "alice.johnson@example.com" ;
+    erb:roles "administrator" .
+
+erb:HumanAgents_1 a erb:HumanAgents ;
+    erb:humanAgentId "agent-002" ;
+    erb:name "agent_002" ;
+    erb:displayName "Brian Smith" ;
+    erb:mbox "brian.smith@example.com" ;
+    erb:roles "editor" .
+
+erb:HumanAgents_2 a erb:HumanAgents ;
+    erb:humanAgentId "agent-003" ;
+    erb:name "agent_003" ;
+    erb:displayName "Catherine Lee" ;
+    erb:mbox "catherine.lee@example.com" ;
+    erb:roles "viewer" .
+
+erb:HumanAgents_3 a erb:HumanAgents ;
+    erb:humanAgentId "agent-004" ;
+    erb:name "agent_004" ;
+    erb:displayName "David Kim" ;
+    erb:mbox "david.kim@example.com" ;
+    erb:roles "moderator" .
+
+erb:HumanAgents_4 a erb:HumanAgents ;
+    erb:humanAgentId "agent-005" ;
+    erb:name "agent_005" ;
+    erb:displayName "Emily Chen" ;
+    erb:mbox "emily.chen@example.com" ;
+    erb:roles "contributor" .
+
+erb:HumanAgents_5 a erb:HumanAgents ;
+    erb:humanAgentId "agent-006" ;
+    erb:name "agent_006" ;
+    erb:displayName "Frank Miller" ;
+    erb:mbox "frank.miller@example.com" ;
+    erb:roles "manager" .
+
+erb:HumanAgents_6 a erb:HumanAgents ;
+    erb:humanAgentId "agent-007" ;
+    erb:name "agent_007" ;
+    erb:displayName "Grace Park" ;
+    erb:mbox "grace.park@example.com" ;
+    erb:roles "support" .
+
+erb:HumanAgents_7 a erb:HumanAgents ;
+    erb:humanAgentId "agent-008" ;
+    erb:name "agent_008" ;
+    erb:displayName "Henry Adams" ;
+    erb:mbox "henry.adams@example.com" ;
+    erb:roles "analyst" .
+
+erb:HumanAgents_8 a erb:HumanAgents ;
+    erb:humanAgentId "agent-009" ;
+    erb:name "agent_009" ;
+    erb:displayName "Isabella Martinez" ;
+    erb:mbox "isabella.martinez@example.com" ;
+    erb:roles "developer" .
+
+erb:HumanAgents_9 a erb:HumanAgents ;
+    erb:humanAgentId "agent-010" ;
+    erb:name "agent_010" ;
+    erb:displayName "Jack Wilson" ;
+    erb:mbox "jack.wilson@example.com" ;
+    erb:roles "tester" .
+
+erb:HumanAgents_10 a erb:HumanAgents ;
+    erb:humanAgentId "agent-011" ;
+    erb:name "agent_011" ;
+    erb:displayName "Karen Patel" ;
+    erb:mbox "karen.patel@example.com" ;
+    erb:roles "hr" .
+
+erb:HumanAgents_11 a erb:HumanAgents ;
+    erb:humanAgentId "agent-012" ;
+    erb:name "agent_012" ;
+    erb:displayName "Liam Nguyen" ;
+    erb:mbox "liam.nguyen@example.com" ;
+    erb:roles "finance" .
+
+erb:HumanAgents_12 a erb:HumanAgents ;
+    erb:humanAgentId "agent-013" ;
+    erb:name "agent_013" ;
+    erb:displayName "Monica Rivera" ;
+    erb:mbox "monica.rivera@example.com" ;
+    erb:roles "guest" .
+
+erb:HumanAgents_13 a erb:HumanAgents ;
+    erb:humanAgentId "agent-014" ;
+    erb:name "agent_014" ;
+    erb:displayName "Nathan Brown" ;
+    erb:mbox "nathan.brown@example.com" ;
+    erb:roles "trainer" .
+
+erb:HumanAgents_14 a erb:HumanAgents ;
+    erb:humanAgentId "agent-015" ;
+    erb:name "agent_015" ;
+    erb:displayName "Olivia Clark" ;
+    erb:mbox "olivia.clark@example.com" ;
+    erb:roles "owner" .
+
+# === Individuals: PrecedesSteps ===
+
+erb:PrecedesSteps_0 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-1" ;
+    erb:name "step-1" ;
+    erb:workflowStep "submit-request" ;
+    erb:stepNumber 1 .
+
+erb:PrecedesSteps_1 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-2" ;
+    erb:name "step-2" ;
+    erb:workflowStep "manager-review" ;
+    erb:stepNumber 2 .
+
+erb:PrecedesSteps_2 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-3" ;
+    erb:name "step-3" ;
+    erb:workflowStep "automated-eligibility-check" ;
+    erb:stepNumber 3 .
+
+erb:PrecedesSteps_3 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-4" ;
+    erb:name "step-4" ;
+    erb:workflowStep "finance-approval" ;
+    erb:stepNumber 4 .
+
+erb:PrecedesSteps_4 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-5" ;
+    erb:name "step-5" ;
+    erb:workflowStep "document-verification" ;
+    erb:stepNumber 5 .
+
+erb:PrecedesSteps_5 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-6" ;
+    erb:name "step-6" ;
+    erb:workflowStep "quality-assurance-review" ;
+    erb:stepNumber 6 .
+
+erb:PrecedesSteps_6 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-7" ;
+    erb:name "step-7" ;
+    erb:workflowStep "system-notification-sent" ;
+    erb:stepNumber 7 .
+
+erb:PrecedesSteps_7 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-8" ;
+    erb:name "step-8" ;
+    erb:workflowStep "final-approval" ;
+    erb:stepNumber 8 .
+
+erb:PrecedesSteps_8 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-9" ;
+    erb:name "step-9" ;
+    erb:workflowStep "archive-request" ;
+    erb:stepNumber 9 .
+
+erb:PrecedesSteps_9 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-10" ;
+    erb:name "step-10" ;
+    erb:workflowStep "customer-feedback-collection" ;
+    erb:stepNumber 10 .
+
+erb:PrecedesSteps_10 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-11" ;
+    erb:name "step-11" ;
+    erb:workflowStep "legal-compliance-check" ;
+    erb:stepNumber 11 .
+
+erb:PrecedesSteps_11 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-12" ;
+    erb:name "step-12" ;
+    erb:workflowStep "assign-task-to-team" ;
+    erb:stepNumber 12 .
+
+erb:PrecedesSteps_12 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-13" ;
+    erb:name "step-13" ;
+    erb:workflowStep "team-lead-review" ;
+    erb:stepNumber 13 .
+
+erb:PrecedesSteps_13 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-14" ;
+    erb:name "step-14" ;
+    erb:workflowStep "generate-report" ;
+    erb:stepNumber 14 .
+
+erb:PrecedesSteps_14 a erb:PrecedesSteps ;
+    erb:precedesStepId "step-15" ;
+    erb:name "step-15" ;
+    erb:workflowStep "close-workflow" ;
+    erb:stepNumber 15 .
+
+erb:PrecedesSteps_15 a erb:PrecedesSteps ;
+    erb:precedesStepId "assign-task-to-team" ;
+    erb:name "assign-task-to-team" ;
+    erb:workflowStep "some-new-task" ;
+    erb:stepNumber 16 .
+
+# === Individuals: Roles ===
+
+erb:Roles_0 a erb:Roles ;
+    erb:roleId "administrator" ;
+    erb:displayName "Administrator" ;
+    erb:label "Admin" ;
+    erb:comment "Has full access to all system features and settings." ;
+    erb:filledByHumanAgent "agent-001" ;
+    erb:filledByAIAgent "ava" ;
+    erb:filledByAutomatedPipeline "lead-notification-pipeline" ;
+    erb:ownedBy "human-resources" ;
+    erb:delegatesTo "" ;
+    erb:workflowSteps "submit-request" ;
+    erb:fromDelegatesTo "editor" .
+
+erb:Roles_1 a erb:Roles ;
+    erb:roleId "editor" ;
+    erb:displayName "Editor" ;
+    erb:label "Content Editor" ;
+    erb:comment "Can create, edit, and delete content but cannot change system settings." ;
+    erb:filledByHumanAgent "agent-002" ;
+    erb:filledByAIAgent "leo" ;
+    erb:filledByAutomatedPipeline "e-commerce-order-sync" ;
+    erb:ownedBy "finance" ;
+    erb:delegatesTo "administrator" ;
+    erb:workflowSteps "manager-review" ;
+    erb:fromDelegatesTo "viewer" .
+
+erb:Roles_2 a erb:Roles ;
+    erb:roleId "viewer" ;
+    erb:displayName "Viewer" ;
+    erb:label "Read-Only" ;
+    erb:comment "Can view content but cannot make any changes." ;
+    erb:filledByHumanAgent "agent-003" ;
+    erb:filledByAIAgent "maya" ;
+    erb:filledByAutomatedPipeline "issue-tracking-bridge" ;
+    erb:ownedBy "information-technology" ;
+    erb:delegatesTo "editor" ;
+    erb:workflowSteps "automated-eligibility-check" ;
+    erb:fromDelegatesTo "moderator" .
+
+erb:Roles_3 a erb:Roles ;
+    erb:roleId "moderator" ;
+    erb:displayName "Moderator" ;
+    erb:label "Forum Moderator" ;
+    erb:comment "Can manage user comments and moderate discussions." ;
+    erb:filledByHumanAgent "agent-004" ;
+    erb:filledByAIAgent "eli" ;
+    erb:filledByAutomatedPipeline "newsletter-signup-sync" ;
+    erb:ownedBy "marketing" ;
+    erb:delegatesTo "viewer" ;
+    erb:workflowSteps "finance-approval" ;
+    erb:fromDelegatesTo "contributor" .
+
+erb:Roles_4 a erb:Roles ;
+    erb:roleId "contributor" ;
+    erb:displayName "Contributor" ;
+    erb:label "Content Contributor" ;
+    erb:comment "Can submit new content for review but cannot publish directly." ;
+    erb:filledByHumanAgent "agent-005" ;
+    erb:filledByAIAgent "zara" ;
+    erb:filledByAutomatedPipeline "support-ticket-automation" ;
+    erb:ownedBy "sales" ;
+    erb:delegatesTo "moderator" ;
+    erb:workflowSteps "document-verification" ;
+    erb:fromDelegatesTo "manager" .
+
+erb:Roles_5 a erb:Roles ;
+    erb:roleId "manager" ;
+    erb:displayName "Manager" ;
+    erb:label "Project Manager" ;
+    erb:comment "Oversees project progress and manages team assignments." ;
+    erb:filledByHumanAgent "agent-006" ;
+    erb:filledByAIAgent "owen" ;
+    erb:filledByAutomatedPipeline "devops-integration" ;
+    erb:ownedBy "customer-service" ;
+    erb:delegatesTo "contributor" ;
+    erb:workflowSteps "quality-assurance-review" ;
+    erb:fromDelegatesTo "support" .
+
+erb:Roles_6 a erb:Roles ;
+    erb:roleId "support" ;
+    erb:displayName "Support" ;
+    erb:label "Customer Support" ;
+    erb:comment "Handles user inquiries and provides technical assistance." ;
+    erb:filledByHumanAgent "agent-007" ;
+    erb:filledByAIAgent "nina" ;
+    erb:filledByAutomatedPipeline "finance-automation" ;
+    erb:ownedBy "research-and-development" ;
+    erb:delegatesTo "manager" ;
+    erb:workflowSteps "system-notification-sent" ;
+    erb:fromDelegatesTo "analyst" .
+
+erb:Roles_7 a erb:Roles ;
+    erb:roleId "analyst" ;
+    erb:displayName "Analyst" ;
+    erb:label "Data Analyst" ;
+    erb:comment "Has access to analytics and reporting tools." ;
+    erb:filledByHumanAgent "agent-008" ;
+    erb:filledByAIAgent "kai" ;
+    erb:filledByAutomatedPipeline "project-intake-pipeline" ;
+    erb:ownedBy "legal" ;
+    erb:delegatesTo "support" ;
+    erb:workflowSteps "final-approval" ;
+    erb:fromDelegatesTo "developer" .
+
+erb:Roles_8 a erb:Roles ;
+    erb:roleId "developer" ;
+    erb:displayName "Developer" ;
+    erb:label "Software Developer" ;
+    erb:comment "Can access and modify application code and integrations." ;
+    erb:filledByHumanAgent "agent-009" ;
+    erb:filledByAIAgent "sophie" ;
+    erb:filledByAutomatedPipeline "crm-data-sync" ;
+    erb:ownedBy "procurement" ;
+    erb:delegatesTo "analyst" ;
+    erb:workflowSteps "archive-request" ;
+    erb:fromDelegatesTo "tester" .
+
+erb:Roles_9 a erb:Roles ;
+    erb:roleId "tester" ;
+    erb:displayName "Tester" ;
+    erb:label "Quality Assurance" ;
+    erb:comment "Responsible for testing new features and reporting bugs." ;
+    erb:filledByHumanAgent "agent-010" ;
+    erb:filledByAIAgent "max" ;
+    erb:filledByAutomatedPipeline "calendar-integration" ;
+    erb:ownedBy "operations" ;
+    erb:delegatesTo "developer" ;
+    erb:workflowSteps "customer-feedback-collection" ;
+    erb:fromDelegatesTo "hr" .
+
+erb:Roles_10 a erb:Roles ;
+    erb:roleId "hr" ;
+    erb:displayName "HR" ;
+    erb:label "Human Resources" ;
+    erb:comment "Manages employee records and recruitment processes." ;
+    erb:filledByHumanAgent "agent-011" ;
+    erb:filledByAIAgent "liam" ;
+    erb:filledByAutomatedPipeline "survey-data-pipeline" ;
+    erb:ownedBy "administration" ;
+    erb:delegatesTo "tester" ;
+    erb:workflowSteps "legal-compliance-check" ;
+    erb:fromDelegatesTo "finance" .
+
+erb:Roles_11 a erb:Roles ;
+    erb:roleId "finance" ;
+    erb:displayName "Finance" ;
+    erb:label "Finance Officer" ;
+    erb:comment "Handles billing, invoices, and financial reports." ;
+    erb:filledByHumanAgent "agent-012" ;
+    erb:filledByAIAgent "jade" ;
+    erb:filledByAutomatedPipeline "task-management-sync" ;
+    erb:ownedBy "public-relations" ;
+    erb:delegatesTo "hr" ;
+    erb:workflowSteps "assign-task-to-team, some-new-task" ;
+    erb:fromDelegatesTo "guest" .
+
+erb:Roles_12 a erb:Roles ;
+    erb:roleId "guest" ;
+    erb:displayName "Guest" ;
+    erb:label "Temporary Access" ;
+    erb:comment "Limited access for temporary users or external collaborators." ;
+    erb:filledByHumanAgent "agent-013" ;
+    erb:filledByAIAgent "mila" ;
+    erb:filledByAutomatedPipeline "cloud-storage-sync" ;
+    erb:ownedBy "quality-assurance" ;
+    erb:delegatesTo "finance" ;
+    erb:workflowSteps "team-lead-review" ;
+    erb:fromDelegatesTo "trainer" .
+
+erb:Roles_13 a erb:Roles ;
+    erb:roleId "trainer" ;
+    erb:displayName "Trainer" ;
+    erb:label "Training Specialist" ;
+    erb:comment "Creates and delivers training materials to users." ;
+    erb:filledByHumanAgent "agent-014" ;
+    erb:filledByAIAgent "noah" ;
+    erb:filledByAutomatedPipeline "email-notification-pipeline" ;
+    erb:ownedBy "facilities-management" ;
+    erb:delegatesTo "guest" ;
+    erb:workflowSteps "generate-report" ;
+    erb:fromDelegatesTo "owner" .
+
+erb:Roles_14 a erb:Roles ;
+    erb:roleId "owner" ;
+    erb:displayName "Owner" ;
+    erb:label "System Owner" ;
+    erb:comment "Ultimate authority over the system, can assign or revoke any role." ;
+    erb:filledByHumanAgent "agent-015" ;
+    erb:filledByAIAgent "ella" ;
+    erb:filledByAutomatedPipeline "survey-data-export" ;
+    erb:ownedBy "training-and-development" ;
+    erb:delegatesTo "trainer" ;
+    erb:workflowSteps "close-workflow" ;
+    erb:fromDelegatesTo "" .
+
+# === Individuals: WorkflowSteps ===
+
+erb:WorkflowSteps_0 a erb:WorkflowSteps ;
+    erb:workflowStepId "submit-request" ;
+    erb:displayName "Submit Request" ;
+    erb:workflow "onboarding" ;
+    erb:sequencePosition 1 ;
+    erb:assignedRole "administrator" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "initial-review" ;
+    erb:precededBySteps "step-1" .
+
+erb:WorkflowSteps_1 a erb:WorkflowSteps ;
+    erb:workflowStepId "manager-review" ;
+    erb:displayName "Manager Review" ;
+    erb:workflow "invoice-approval" ;
+    erb:sequencePosition 2 ;
+    erb:assignedRole "editor" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "manager-approval" ;
+    erb:precededBySteps "step-2" .
+
+erb:WorkflowSteps_2 a erb:WorkflowSteps ;
+    erb:workflowStepId "recwwXHLqxKPhj6Mt" ;
+    erb:displayName "" ;
+    erb:workflow "performance-review" ;
+    erb:sequencePosition 0 ;
+    erb:assignedRole "" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "" ;
+    erb:precededBySteps "" .
+
+erb:WorkflowSteps_3 a erb:WorkflowSteps ;
+    erb:workflowStepId "automated-eligibility-check" ;
+    erb:displayName "Automated Eligibility Check" ;
+    erb:workflow "content-publishing" ;
+    erb:sequencePosition 3 ;
+    erb:assignedRole "viewer" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "it-security-gate" ;
+    erb:precededBySteps "step-3" .
+
+erb:WorkflowSteps_4 a erb:WorkflowSteps ;
+    erb:workflowStepId "finance-approval" ;
+    erb:displayName "Finance Approval" ;
+    erb:workflow "leave-request" ;
+    erb:sequencePosition 4 ;
+    erb:assignedRole "moderator" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "finance-approval" ;
+    erb:precededBySteps "step-4" .
+
+erb:WorkflowSteps_5 a erb:WorkflowSteps ;
+    erb:workflowStepId "document-verification" ;
+    erb:displayName "Document Verification" ;
+    erb:workflow "it-support" ;
+    erb:sequencePosition 5 ;
+    erb:assignedRole "contributor" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "compliance-check" ;
+    erb:precededBySteps "step-5" .
+
+erb:WorkflowSteps_6 a erb:WorkflowSteps ;
+    erb:workflowStepId "quality-assurance-review" ;
+    erb:displayName "Quality Assurance Review" ;
+    erb:workflow "expense-reimbursement" ;
+    erb:sequencePosition 6 ;
+    erb:assignedRole "manager" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "quality-assurance" ;
+    erb:precededBySteps "step-6" .
+
+erb:WorkflowSteps_7 a erb:WorkflowSteps ;
+    erb:workflowStepId "system-notification-sent" ;
+    erb:displayName "System Notification Sent" ;
+    erb:workflow "performance-review" ;
+    erb:sequencePosition 7 ;
+    erb:assignedRole "support" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "final-authorization" ;
+    erb:precededBySteps "step-7" .
+
+erb:WorkflowSteps_8 a erb:WorkflowSteps ;
+    erb:workflowStepId "final-approval" ;
+    erb:displayName "Final Approval" ;
+    erb:workflow "procurement" ;
+    erb:sequencePosition 8 ;
+    erb:assignedRole "analyst" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "manager-approval" ;
+    erb:precededBySteps "step-8" .
+
+erb:WorkflowSteps_9 a erb:WorkflowSteps ;
+    erb:workflowStepId "archive-request" ;
+    erb:displayName "Archive Request" ;
+    erb:workflow "customer-feedback" ;
+    erb:sequencePosition 9 ;
+    erb:assignedRole "developer" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "it-security-gate" ;
+    erb:precededBySteps "step-9" .
+
+erb:WorkflowSteps_10 a erb:WorkflowSteps ;
+    erb:workflowStepId "customer-feedback-collection" ;
+    erb:displayName "Customer Feedback Collection" ;
+    erb:workflow "project-kickoff" ;
+    erb:sequencePosition 10 ;
+    erb:assignedRole "tester" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "customer-confirmation" ;
+    erb:precededBySteps "step-10" .
+
+erb:WorkflowSteps_11 a erb:WorkflowSteps ;
+    erb:workflowStepId "legal-compliance-check" ;
+    erb:displayName "Legal Compliance Check" ;
+    erb:workflow "contract-review" ;
+    erb:sequencePosition 11 ;
+    erb:assignedRole "hr" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "legal-review" ;
+    erb:precededBySteps "step-11" .
+
+erb:WorkflowSteps_12 a erb:WorkflowSteps ;
+    erb:workflowStepId "assign-task-to-team" ;
+    erb:displayName "Assign Task to Team" ;
+    erb:workflow "asset-management" ;
+    erb:sequencePosition 12 ;
+    erb:assignedRole "finance" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "executive-sign-off" ;
+    erb:precededBySteps "step-12" .
+
+erb:WorkflowSteps_13 a erb:WorkflowSteps ;
+    erb:workflowStepId "some-new-task" ;
+    erb:displayName "Some new task" ;
+    erb:workflow "" ;
+    erb:sequencePosition 13 ;
+    erb:assignedRole "finance" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "some-new-gate" ;
+    erb:precededBySteps "assign-task-to-team" .
+
+erb:WorkflowSteps_14 a erb:WorkflowSteps ;
+    erb:workflowStepId "team-lead-review" ;
+    erb:displayName "Team Lead Review" ;
+    erb:workflow "recruitment" ;
+    erb:sequencePosition 13 ;
+    erb:assignedRole "guest" ;
+    erb:requiresHumanApproval true ;
+    erb:approvalGate "legal-review" ;
+    erb:precededBySteps "step-13" .
+
+erb:WorkflowSteps_15 a erb:WorkflowSteps ;
+    erb:workflowStepId "generate-report" ;
+    erb:displayName "Generate Report" ;
+    erb:workflow "incident-reporting" ;
+    erb:sequencePosition 14 ;
+    erb:assignedRole "trainer" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "finance-approval" ;
+    erb:precededBySteps "step-14" .
+
+erb:WorkflowSteps_16 a erb:WorkflowSteps ;
+    erb:workflowStepId "close-workflow" ;
+    erb:displayName "Close Workflow" ;
+    erb:workflow "change-management" ;
+    erb:sequencePosition 15 ;
+    erb:assignedRole "owner" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "executive-sign-off" ;
+    erb:precededBySteps "step-15" .
+
+erb:WorkflowSteps_17 a erb:WorkflowSteps ;
+    erb:workflowStepId "step1" ;
+    erb:displayName "step1" ;
+    erb:workflow "change-management" ;
+    erb:sequencePosition 0 ;
+    erb:assignedRole "" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "" ;
+    erb:precededBySteps "" .
+
+erb:WorkflowSteps_18 a erb:WorkflowSteps ;
+    erb:workflowStepId "asdf" ;
+    erb:displayName "asdf" ;
+    erb:workflow "change-management" ;
+    erb:sequencePosition 0 ;
+    erb:assignedRole "" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "" ;
+    erb:precededBySteps "" .
+
+erb:WorkflowSteps_19 a erb:WorkflowSteps ;
+    erb:workflowStepId "step-2" ;
+    erb:displayName "Step 2" ;
+    erb:workflow "performance-review" ;
+    erb:sequencePosition 0 ;
+    erb:assignedRole "" ;
+    erb:requiresHumanApproval false ;
+    erb:approvalGate "" ;
+    erb:precededBySteps "" .
+
+# === Individuals: Workflows ===
+
+erb:Workflows_0 a erb:Workflows ;
+    erb:workflowId "performance-review" ;
+    erb:displayName "Performance Review" ;
+    erb:title "Annual Performance Review" ;
+    erb:color "red" ;
+    erb:description "Structured workflow for conducting annual employee performance evaluations." ;
+    erb:identifier "WF-PRV-007" ;
+    erb:modified "2024-05-15" ;
+    erb:workflowSteps "system-notification-sent, step-2, recwwXHLqxKPhj6Mt" ;
+    erb:countOfNonProposedSteps 3 .
+
+erb:Workflows_1 a erb:Workflows ;
+    erb:workflowId "change-management" ;
+    erb:displayName "Change Management" ;
+    erb:title "Change Management Workflow" ;
+    erb:color "green" ;
+    erb:description "Structured process for requesting, evaluating, and implementing organizational changes." ;
+    erb:identifier "WF-CHM-015" ;
+    erb:modified "2024-05-27" ;
+    erb:workflowSteps "close-workflow, step1, asdf" ;
+    erb:countOfNonProposedSteps 3 .
+
+erb:Workflows_2 a erb:Workflows ;
+    erb:workflowId "incident-reporting" ;
+    erb:displayName "Incident Reporting" ;
+    erb:title "Incident Reporting Process" ;
+    erb:color "" ;
+    erb:description "Steps for reporting, investigating, and resolving workplace incidents." ;
+    erb:identifier "WF-INC-014" ;
+    erb:modified "2024-06-06" ;
+    erb:workflowSteps "generate-report" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_3 a erb:Workflows ;
+    erb:workflowId "customer-feedback" ;
+    erb:displayName "Customer Feedback" ;
+    erb:title "Customer Feedback Collection" ;
+    erb:color "" ;
+    erb:description "Workflow for collecting, analyzing, and acting on customer feedback." ;
+    erb:identifier "WF-CFB-009" ;
+    erb:modified "2024-05-25" ;
+    erb:workflowSteps "archive-request" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_4 a erb:Workflows ;
+    erb:workflowId "project-kickoff" ;
+    erb:displayName "Project Kickoff" ;
+    erb:title "Project Kickoff Process" ;
+    erb:color "" ;
+    erb:description "Steps to initiate a new project, including team assignment and goal setting." ;
+    erb:identifier "WF-PKO-010" ;
+    erb:modified "2024-05-20" ;
+    erb:workflowSteps "customer-feedback-collection" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_5 a erb:Workflows ;
+    erb:workflowId "onboarding" ;
+    erb:displayName "Onboarding" ;
+    erb:title "Employee Onboarding" ;
+    erb:color "" ;
+    erb:description "A step-by-step process to onboard new employees, including document collection, orientation, and training." ;
+    erb:identifier "WF-ONB-001" ;
+    erb:modified "2024-05-10" ;
+    erb:workflowSteps "submit-request" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_6 a erb:Workflows ;
+    erb:workflowId "content-publishing" ;
+    erb:displayName "Content Publishing" ;
+    erb:title "Content Publishing Process" ;
+    erb:color "" ;
+    erb:description "Workflow for drafting, reviewing, and publishing content to the company website." ;
+    erb:identifier "WF-CNT-003" ;
+    erb:modified "2024-05-28" ;
+    erb:workflowSteps "automated-eligibility-check" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_7 a erb:Workflows ;
+    erb:workflowId "expense-reimbursement" ;
+    erb:displayName "Expense Reimbursement" ;
+    erb:title "Expense Reimbursement Process" ;
+    erb:color "" ;
+    erb:description "Steps for employees to submit expenses and receive reimbursements after approval." ;
+    erb:identifier "WF-EXP-006" ;
+    erb:modified "2024-06-03" ;
+    erb:workflowSteps "quality-assurance-review" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_8 a erb:Workflows ;
+    erb:workflowId "procurement" ;
+    erb:displayName "Procurement" ;
+    erb:title "Procurement Workflow" ;
+    erb:color "" ;
+    erb:description "Process for requesting, approving, and purchasing goods or services." ;
+    erb:identifier "WF-PRC-008" ;
+    erb:modified "2024-06-02" ;
+    erb:workflowSteps "final-approval" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_9 a erb:Workflows ;
+    erb:workflowId "invoice-approval" ;
+    erb:displayName "Invoice Approval" ;
+    erb:title "Invoice Approval Workflow" ;
+    erb:color "" ;
+    erb:description "Automated workflow for reviewing, approving, and processing vendor invoices." ;
+    erb:identifier "WF-INV-002" ;
+    erb:modified "2024-06-01" ;
+    erb:workflowSteps "manager-review" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_10 a erb:Workflows ;
+    erb:workflowId "asset-management" ;
+    erb:displayName "Asset Management" ;
+    erb:title "Asset Management Process" ;
+    erb:color "" ;
+    erb:description "Process for tracking, maintaining, and auditing company assets." ;
+    erb:identifier "WF-ASM-012" ;
+    erb:modified "2024-05-18" ;
+    erb:workflowSteps "assign-task-to-team" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_11 a erb:Workflows ;
+    erb:workflowId "contract-review" ;
+    erb:displayName "Contract Review" ;
+    erb:title "Contract Review Workflow" ;
+    erb:color "" ;
+    erb:description "Workflow for legal and management review of contracts before signing." ;
+    erb:identifier "WF-CTR-011" ;
+    erb:modified "2024-06-04" ;
+    erb:workflowSteps "legal-compliance-check" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_12 a erb:Workflows ;
+    erb:workflowId "recruitment" ;
+    erb:displayName "Recruitment" ;
+    erb:title "Recruitment Workflow" ;
+    erb:color "" ;
+    erb:description "Workflow for posting jobs, screening candidates, and scheduling interviews." ;
+    erb:identifier "WF-RCT-013" ;
+    erb:modified "2024-05-22" ;
+    erb:workflowSteps "team-lead-review" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_13 a erb:Workflows ;
+    erb:workflowId "it-support" ;
+    erb:displayName "IT Support" ;
+    erb:title "IT Support Ticketing" ;
+    erb:color "" ;
+    erb:description "Workflow for submitting, triaging, and resolving IT support tickets." ;
+    erb:identifier "WF-ITS-005" ;
+    erb:modified "2024-05-30" ;
+    erb:workflowSteps "document-verification" ;
+    erb:countOfNonProposedSteps 1 .
+
+erb:Workflows_14 a erb:Workflows ;
+    erb:workflowId "leave-request" ;
+    erb:displayName "Leave Request" ;
+    erb:title "Leave Request Workflow" ;
+    erb:color "" ;
+    erb:description "Process for employees to submit, review, and approve leave requests." ;
+    erb:identifier "WF-LRQ-004" ;
+    erb:modified "2024-06-05" ;
+    erb:workflowSteps "finance-approval" ;
+    erb:countOfNonProposedSteps 1 .

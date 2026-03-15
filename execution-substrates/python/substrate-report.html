@@ -209,7 +209,7 @@ pre {
                 <span class="stat-value score-perfect">100.0%</span>
             </div>
             <div class="stat">
-                <span>3/3 passed</span>
+                <span>122/122 passed</span>
             </div>
         </div>
         <button id="theme-toggle" title="Toggle theme">
@@ -249,7 +249,7 @@ pre {
 ├─────────────────────────────────────────────────────────────┤
 │   1. Load rulebook JSON (structured data)                    │
 │                          ↓                                   │
-│   2. Parse Excel-dialect formulas into Expression              │
+│   2. Parse Excel-dialect formulas into expression tree       │
 │                          ↓                                   │
 │   3. Build dependency DAG for calculation ordering           │
 │                          ↓                                   │
@@ -286,8 +286,13 @@ pre {
                 <h2>Execution Log</h2>
                 <pre>=== Python Substrate Test Run ===
 
-  -&gt; customers: 3 records
-Python substrate: Processed 1 entities, 3 total records
+  -&gt; approval_gates: 11 records
+  -&gt; departments: 15 records
+  -&gt; precedes_steps: 16 records
+  -&gt; roles: 15 records
+  -&gt; workflow_steps: 20 records
+  -&gt; workflows: 15 records
+Python substrate: Processed 6 entities, 92 total records
 
 </pre>
             </div>
@@ -302,7 +307,7 @@ Python substrate: Processed 1 entities, 3 total records
                         <div class="result-label">Score</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value score-perfect">3</div>
+                        <div class="result-value score-perfect">122</div>
                         <div class="result-label">Passed</div>
                     </div>
                     <div class="result-item">
@@ -310,7 +315,7 @@ Python substrate: Processed 1 entities, 3 total records
                         <div class="result-label">Failed</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value">3</div>
+                        <div class="result-value">122</div>
                         <div class="result-label">Total</div>
                     </div>
                 </div>
@@ -320,7 +325,7 @@ Python substrate: Processed 1 entities, 3 total records
                 <div class="markdown-content">
                     <h3>language_candidates</h3>
                     <ul>
-                        <li>Fields: 3/3 (100.0%)</li>
+                        <li>Fields: 122/122 (100.0%)</li>
                         <li>Computed columns: has_grammar, question, predicted_answer, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept</li>
                     </ul>
                 </div>
@@ -332,7 +337,7 @@ Python substrate: Processed 1 entities, 3 total records
                 <div class="code-header">
                     <h2>erb_calc.py</h2>
                     <div>
-                        <span class="code-info">77 lines</span>
+                        <span class="code-info">250 lines</span>
                         <button class="copy-btn" onclick="copyCode('calc-code')">Copy</button>
                     </div>
                 </div>
@@ -349,34 +354,197 @@ from typing import Optional, Any
 
 
 # =============================================================================
-# CUSTOMERS CALCULATIONS
-# Table: Customers
+# WORKFLOWS CALCULATIONS
+# Table: Workflows
 # =============================================================================
 
 # Level 1
 
-def calc_customers_full_name(first_name, last_name):
+def calc_workflows_name(display_name):
     &quot;&quot;&quot;
-    Full name is computed from the first and last name of the customer
+    Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
     
-    Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
+    Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
     &quot;&quot;&quot;
-    return (str(first_name or &quot;&quot;) + &#x27; &#x27; + str(last_name or &quot;&quot;))
+    return ((((display_name or &quot;&quot;).lower()) or &quot;&quot;).replace(&#x27; &#x27;, &#x27;-&#x27;))
+
+# Level 2
+
+def calc_workflows_has_more_than1_step(count_of_non_proposed_steps):
+    &quot;&quot;&quot;Formula: ={{CountOfNonProposedSteps}} &gt; 1&quot;&quot;&quot;
+    return (count_of_non_proposed_steps &gt; 1)
 
 
-def compute_customers_fields(record: dict) -&gt; dict:
+def compute_workflows_fields(record: dict) -&gt; dict:
     &quot;&quot;&quot;
-    Compute all calculated fields for Customers.
+    Compute all calculated fields for Workflows.
     
-    Table: Customers
+    Table: Workflows
     &quot;&quot;&quot;
     result = dict(record)
 
     # Level 1 calculations
-    result[&#x27;full_name&#x27;] = calc_customers_full_name(result.get(&#x27;first_name&#x27;), result.get(&#x27;last_name&#x27;))
+    result[&#x27;name&#x27;] = calc_workflows_name(result.get(&#x27;display_name&#x27;))
+
+    # Level 2 calculations
+    result[&#x27;has_more_than1_step&#x27;] = calc_workflows_has_more_than1_step(result.get(&#x27;count_of_non_proposed_steps&#x27;))
 
     # Convert empty strings to None for string fields
-    for key in [&#x27;full_name&#x27;]:
+    for key in [&#x27;name&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+# =============================================================================
+# WORKFLOWSTEPS CALCULATIONS
+# Table: WorkflowSteps
+# =============================================================================
+
+# Level 1
+
+def calc_workflow_steps_name(display_name):
+    &quot;&quot;&quot;Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)&quot;&quot;&quot;
+    return ((((display_name or &quot;&quot;).lower()) or &quot;&quot;).replace(&#x27; &#x27;, &#x27;-&#x27;))
+
+
+def compute_workflow_steps_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for WorkflowSteps.
+    
+    Table: WorkflowSteps
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;name&#x27;] = calc_workflow_steps_name(result.get(&#x27;display_name&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;name&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+# =============================================================================
+# APPROVALGATES CALCULATIONS
+# Table: ApprovalGates
+# =============================================================================
+
+# Level 1
+
+def calc_approval_gates_name(display_name):
+    &quot;&quot;&quot;Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)&quot;&quot;&quot;
+    return ((((display_name or &quot;&quot;).lower()) or &quot;&quot;).replace(&#x27; &#x27;, &#x27;-&#x27;))
+
+
+def compute_approval_gates_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for ApprovalGates.
+    
+    Table: ApprovalGates
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;name&#x27;] = calc_approval_gates_name(result.get(&#x27;display_name&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;name&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+# =============================================================================
+# PRECEDESSTEPS CALCULATIONS
+# Table: PrecedesSteps
+# =============================================================================
+
+# Level 1
+
+def calc_precedes_steps_display_name(step_number):
+    &quot;&quot;&quot;Formula: =&quot;Step-&quot; &amp; {{StepNumber}}&quot;&quot;&quot;
+    return (&#x27;Step-&#x27; + str(step_number or &quot;&quot;))
+
+
+def compute_precedes_steps_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for PrecedesSteps.
+    
+    Table: PrecedesSteps
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;display_name&#x27;] = calc_precedes_steps_display_name(result.get(&#x27;step_number&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;display_name&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+# =============================================================================
+# ROLES CALCULATIONS
+# Table: Roles
+# =============================================================================
+
+# Level 1
+
+def calc_roles_name(display_name):
+    &quot;&quot;&quot;Formula: =LOWER({{DisplayName}})&quot;&quot;&quot;
+    return ((display_name or &quot;&quot;).lower())
+
+
+def compute_roles_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for Roles.
+    
+    Table: Roles
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;name&#x27;] = calc_roles_name(result.get(&#x27;display_name&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;name&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+# =============================================================================
+# DEPARTMENTS CALCULATIONS
+# Table: Departments
+# =============================================================================
+
+# Level 1
+
+def calc_departments_name(display_name):
+    &quot;&quot;&quot;
+    Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+    
+    Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+    &quot;&quot;&quot;
+    return ((((display_name or &quot;&quot;).lower()) or &quot;&quot;).replace(&#x27; &#x27;, &#x27;-&#x27;))
+
+
+def compute_departments_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for Departments.
+    
+    Table: Departments
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;name&#x27;] = calc_departments_name(result.get(&#x27;display_name&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;name&#x27;]:
         if result.get(key) == &#x27;&#x27;:
             result[key] = None
 
@@ -408,8 +576,18 @@ def compute_all_calculated_fields(record: dict, entity_name: str = None) -&gt; d
     # Normalize to snake_case to support &quot;LineItem&quot;, &quot;line_item&quot;, &quot;line-item&quot;
     entity_lower = entity_name.lower().replace(&#x27;-&#x27;, &#x27;_&#x27;)
 
-    if entity_lower == &#x27;customers&#x27;:
-        return compute_customers_fields(record)
+    if entity_lower == &#x27;workflows&#x27;:
+        return compute_workflows_fields(record)
+    elif entity_lower == &#x27;workflow_steps&#x27;:
+        return compute_workflow_steps_fields(record)
+    elif entity_lower == &#x27;approval_gates&#x27;:
+        return compute_approval_gates_fields(record)
+    elif entity_lower == &#x27;precedes_steps&#x27;:
+        return compute_precedes_steps_fields(record)
+    elif entity_lower == &#x27;roles&#x27;:
+        return compute_roles_fields(record)
+    elif entity_lower == &#x27;departments&#x27;:
+        return compute_departments_fields(record)
     else:
         # Unknown entity - return record unchanged (no error)
         return dict(record)</pre>

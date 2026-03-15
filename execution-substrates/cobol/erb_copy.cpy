@@ -2,9 +2,14 @@
        *> COPY "erb_copy" in erb_calc.cbl
        01 RECORD.
 
-          02 CUSTOMER-ID PIC X(500).
-          02 CUSTOMER PIC X(500).
-          02 EMAIL-ADDRESS PIC X(500).
-          02 FIRST-NAME PIC X(500).
-          02 LAST-NAME PIC X(500).
-          02 FULL-NAME PIC X(500).
+          02 WORKFLOW-ID PIC X(500).
+          02 DISPLAY-NAME PIC X(500).
+          02 TITLE PIC X(500).
+          02 COLOR PIC X(500).
+          02 DESCRIPTION PIC X(500).
+          02 IDENTIFIER PIC X(500).
+          02 MODIFIED PIC X(500).
+          02 WORKFLOW-STEPS PIC X(500).
+          02 COUNT-OF-NON-PROPOSED-STEPS PIC 9(10).
+          02 NAME PIC X(500).
+          02 HAS-MORE-THAN1-STEP PIC X(5).

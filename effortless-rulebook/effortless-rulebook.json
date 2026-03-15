@@ -1,85 +1,1762 @@
 {
   "$schema": "https://example.com/cmcc-schema/v1",
-  "Name": "DEMO: Customer FullName",
-  "Description": "Rulebook generated from Airtable base \u0027DEMO: Customer FullName\u0027.",
-  "Customers": {
-    "Description": "Table: Customers",
+  "Name": "Jessica Talisman - BASIC Ontology Parts 1-3",
+  "Description": "Rulebook generated from Airtable base \u0027Jessica Talisman - BASIC Ontology Parts 1-3\u0027.",
+  "Workflows": {
+    "Description": "Table: Workflows",
     "schema": [
       {
-        "name": "CustomerId",
+        "name": "WorkflowId",
         "datatype": "string",
         "type": "raw",
         "nullable": false
       },
       {
-        "name": "Customer",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Identifier for the customers."
-      },
-      {
-        "name": "EmailAddress",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Thec ustomers email address"
-      },
-      {
-        "name": "FirstName",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "First Name of the customer - used to make the full name"
-      },
-      {
-        "name": "LastName",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Last Name of the customer - used to make the full name"
-      },
-      {
-        "name": "FullName",
+        "name": "Name",
         "datatype": "string",
         "type": "calculated",
         "nullable": true,
-        "Description": "Full name is computed from the first and last name of the customer",
-        "formula": "={{FirstName}} \u0026 \u0022 \u0022 \u0026 {{LastName}}"
+        "Description": "Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.",
+        "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \u0022 \u0022, \u0022-\u0022)"
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Title",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Human-readable title of the workflow. Maps to dct:title from Dublin Core. Example: \u0027Production Deployment Workflow\u0027, \u0027Employee Onboarding\u0027."
+      },
+      {
+        "name": "Color",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Description",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Detailed description of the workflow\u0027s purpose and scope. Maps to dct:description from Dublin Core. Should explain what business goal the workflow achieves."
+      },
+      {
+        "name": "Identifier",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "External system identifier for cross-referencing. Maps to dct:identifier from Dublin Core. This is the join key back to document management systems, ticket systems, or other operational systems."
+      },
+      {
+        "name": "Modified",
+        "datatype": "datetime",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Last modification timestamp. Maps to dct:modified from Dublin Core. Critical for answering CQ5: \u0027Which workflows haven\u0027t been reviewed or updated in twelve months?\u0027"
+      },
+      {
+        "name": "WorkflowSteps",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Reference to workflow steps. Represents the ntwf:hasStep relationship linking workflows to their constituent steps.",
+        "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "CountOfNonProposedSteps",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "Description": "Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting.",
+        "formula": "=COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})"
+      },
+      {
+        "name": "HasMoreThan1Step",
+        "datatype": "boolean",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "={{CountOfNonProposedSteps}} \u003E 1"
       }
     ],
     "data": [
       {
-        "CustomerId": "cust0001",
-        "Customer": "CUST0001",
-        "EmailAddress": "jane.smith@email.com",
-        "FirstName": "Jane",
-        "LastName": "Smith",
-        "FullName": "Jane Smith"
+        "WorkflowId": "performance-review",
+        "Name": "performance-review",
+        "Title": "Annual Performance Review",
+        "Description": "Structured workflow for conducting annual employee performance evaluations.",
+        "Identifier": "WF-PRV-007",
+        "Modified": "2024-05-15",
+        "WorkflowSteps": "system-notification-sent, step-2, recwwXHLqxKPhj6Mt",
+        "CountOfNonProposedSteps": 3,
+        "DisplayName": "Performance Review",
+        "HasMoreThan1Step": true,
+        "Color": "red"
       },
       {
-        "CustomerId": "cust0002",
-        "Customer": "CUST0002",
-        "EmailAddress": "john.doe@email.com",
-        "FirstName": "John",
-        "LastName": "Doe",
-        "FullName": "John Doe"
+        "WorkflowId": "change-management",
+        "Name": "change-management",
+        "Title": "Change Management Workflow",
+        "Description": "Structured process for requesting, evaluating, and implementing organizational changes.",
+        "Identifier": "WF-CHM-015",
+        "Modified": "2024-05-27",
+        "WorkflowSteps": "close-workflow, step1, asdf",
+        "CountOfNonProposedSteps": 3,
+        "DisplayName": "Change Management",
+        "HasMoreThan1Step": true,
+        "Color": "green"
       },
       {
-        "CustomerId": "cust0003",
-        "Customer": "CUST0003",
-        "EmailAddress": "emily.jones@email.com",
-        "FirstName": "Emily",
-        "LastName": "Jones",
-        "FullName": "Emily Jones"
+        "WorkflowId": "incident-reporting",
+        "Name": "incident-reporting",
+        "Title": "Incident Reporting Process",
+        "Description": "Steps for reporting, investigating, and resolving workplace incidents.",
+        "Identifier": "WF-INC-014",
+        "Modified": "2024-06-06",
+        "WorkflowSteps": "generate-report",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Incident Reporting",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "customer-feedback",
+        "Name": "customer-feedback",
+        "Title": "Customer Feedback Collection",
+        "Description": "Workflow for collecting, analyzing, and acting on customer feedback.",
+        "Identifier": "WF-CFB-009",
+        "Modified": "2024-05-25",
+        "WorkflowSteps": "archive-request",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Customer Feedback",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "project-kickoff",
+        "Name": "project-kickoff",
+        "Title": "Project Kickoff Process",
+        "Description": "Steps to initiate a new project, including team assignment and goal setting.",
+        "Identifier": "WF-PKO-010",
+        "Modified": "2024-05-20",
+        "WorkflowSteps": "customer-feedback-collection",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Project Kickoff",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "onboarding",
+        "Name": "onboarding",
+        "Title": "Employee Onboarding",
+        "Description": "A step-by-step process to onboard new employees, including document collection, orientation, and training.",
+        "Identifier": "WF-ONB-001",
+        "Modified": "2024-05-10",
+        "WorkflowSteps": "submit-request",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Onboarding",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "content-publishing",
+        "Name": "content-publishing",
+        "Title": "Content Publishing Process",
+        "Description": "Workflow for drafting, reviewing, and publishing content to the company website.",
+        "Identifier": "WF-CNT-003",
+        "Modified": "2024-05-28",
+        "WorkflowSteps": "automated-eligibility-check",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Content Publishing",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "expense-reimbursement",
+        "Name": "expense-reimbursement",
+        "Title": "Expense Reimbursement Process",
+        "Description": "Steps for employees to submit expenses and receive reimbursements after approval.",
+        "Identifier": "WF-EXP-006",
+        "Modified": "2024-06-03",
+        "WorkflowSteps": "quality-assurance-review",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Expense Reimbursement",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "procurement",
+        "Name": "procurement",
+        "Title": "Procurement Workflow",
+        "Description": "Process for requesting, approving, and purchasing goods or services.",
+        "Identifier": "WF-PRC-008",
+        "Modified": "2024-06-02",
+        "WorkflowSteps": "final-approval",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Procurement",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "invoice-approval",
+        "Name": "invoice-approval",
+        "Title": "Invoice Approval Workflow",
+        "Description": "Automated workflow for reviewing, approving, and processing vendor invoices.",
+        "Identifier": "WF-INV-002",
+        "Modified": "2024-06-01",
+        "WorkflowSteps": "manager-review",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Invoice Approval",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "asset-management",
+        "Name": "asset-management",
+        "Title": "Asset Management Process",
+        "Description": "Process for tracking, maintaining, and auditing company assets.",
+        "Identifier": "WF-ASM-012",
+        "Modified": "2024-05-18",
+        "WorkflowSteps": "assign-task-to-team",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Asset Management",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "contract-review",
+        "Name": "contract-review",
+        "Title": "Contract Review Workflow",
+        "Description": "Workflow for legal and management review of contracts before signing.",
+        "Identifier": "WF-CTR-011",
+        "Modified": "2024-06-04",
+        "WorkflowSteps": "legal-compliance-check",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Contract Review",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "recruitment",
+        "Name": "recruitment",
+        "Title": "Recruitment Workflow",
+        "Description": "Workflow for posting jobs, screening candidates, and scheduling interviews.",
+        "Identifier": "WF-RCT-013",
+        "Modified": "2024-05-22",
+        "WorkflowSteps": "team-lead-review",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Recruitment",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "it-support",
+        "Name": "it-support",
+        "Title": "IT Support Ticketing",
+        "Description": "Workflow for submitting, triaging, and resolving IT support tickets.",
+        "Identifier": "WF-ITS-005",
+        "Modified": "2024-05-30",
+        "WorkflowSteps": "document-verification",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "IT Support",
+        "Color": "",
+        "HasMoreThan1Step": false
+      },
+      {
+        "WorkflowId": "leave-request",
+        "Name": "leave-request",
+        "Title": "Leave Request Workflow",
+        "Description": "Process for employees to submit, review, and approve leave requests.",
+        "Identifier": "WF-LRQ-004",
+        "Modified": "2024-06-05",
+        "WorkflowSteps": "finance-approval",
+        "CountOfNonProposedSteps": 1,
+        "DisplayName": "Leave Request",
+        "Color": "",
+        "HasMoreThan1Step": false
+      }
+    ]
+  },
+  "WorkflowSteps": {
+    "Description": "Table: WorkflowSteps",
+    "schema": [
+      {
+        "name": "WorkflowStepId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \u0022 \u0022, \u0022-\u0022)"
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Workflow",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Foreign key to the parent workflow. Represents the inverse of ntwf:hasStep, enabling navigation from step to its containing workflow (ntwf:isStepOf).",
+        "RelatedTo": "Workflows"
+      },
+      {
+        "name": "SequencePosition",
+        "datatype": "integer",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Integer ordinal position of the step within its workflow. Maps to ntwf:sequencePosition, declared as owl:FunctionalProperty (each step has exactly one position). Enables positional queries."
+      },
+      {
+        "name": "AssignedRole",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Foreign key to the Role responsible for executing this step. Maps to ntwf:assignedRole. Critical for implementing Heuristic 2 (role-agent separation): steps point to roles, not directly to agents.",
+        "RelatedTo": "Roles"
+      },
+      {
+        "name": "RequiresHumanApproval",
+        "datatype": "boolean",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Boolean flag indicating whether a human agent must fill the assigned role. Maps to ntwf:requiresHumanApproval. Enables answering CQ3: \u0027Which steps require human decisions vs. AI execution?\u0027"
+      },
+      {
+        "name": "ApprovalGate",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Foreign key to ApprovalGate if this step is a decision checkpoint. When populated, indicates this step blocks workflow execution until explicit authorization is given.",
+        "RelatedTo": "ApprovalGates"
+      },
+      {
+        "name": "PrecededBySteps",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Reference to steps that must complete before this step can execute. Part of the ntwf:precedesStep transitive ordering relationship.",
+        "RelatedTo": "PrecedesSteps"
+      }
+    ],
+    "data": [
+      {
+        "WorkflowStepId": "submit-request",
+        "Name": "submit-request",
+        "Workflow": "onboarding",
+        "SequencePosition": 1,
+        "AssignedRole": "administrator",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "initial-review",
+        "PrecededBySteps": "step-1",
+        "DisplayName": "Submit Request"
+      },
+      {
+        "WorkflowStepId": "manager-review",
+        "Name": "manager-review",
+        "Workflow": "invoice-approval",
+        "SequencePosition": 2,
+        "AssignedRole": "editor",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "manager-approval",
+        "PrecededBySteps": "step-2",
+        "DisplayName": "Manager Review"
+      },
+      {
+        "WorkflowStepId": "recwwXHLqxKPhj6Mt",
+        "Workflow": "performance-review",
+        "Name": "",
+        "DisplayName": "",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      },
+      {
+        "WorkflowStepId": "automated-eligibility-check",
+        "Name": "automated-eligibility-check",
+        "Workflow": "content-publishing",
+        "SequencePosition": 3,
+        "AssignedRole": "viewer",
+        "ApprovalGate": "it-security-gate",
+        "PrecededBySteps": "step-3",
+        "DisplayName": "Automated Eligibility Check",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "finance-approval",
+        "Name": "finance-approval",
+        "Workflow": "leave-request",
+        "SequencePosition": 4,
+        "AssignedRole": "moderator",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "finance-approval",
+        "PrecededBySteps": "step-4",
+        "DisplayName": "Finance Approval"
+      },
+      {
+        "WorkflowStepId": "document-verification",
+        "Name": "document-verification",
+        "Workflow": "it-support",
+        "SequencePosition": 5,
+        "AssignedRole": "contributor",
+        "ApprovalGate": "compliance-check",
+        "PrecededBySteps": "step-5",
+        "DisplayName": "Document Verification",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "quality-assurance-review",
+        "Name": "quality-assurance-review",
+        "Workflow": "expense-reimbursement",
+        "SequencePosition": 6,
+        "AssignedRole": "manager",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "quality-assurance",
+        "PrecededBySteps": "step-6",
+        "DisplayName": "Quality Assurance Review"
+      },
+      {
+        "WorkflowStepId": "system-notification-sent",
+        "Name": "system-notification-sent",
+        "Workflow": "performance-review",
+        "SequencePosition": 7,
+        "AssignedRole": "support",
+        "ApprovalGate": "final-authorization",
+        "PrecededBySteps": "step-7",
+        "DisplayName": "System Notification Sent",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "final-approval",
+        "Name": "final-approval",
+        "Workflow": "procurement",
+        "SequencePosition": 8,
+        "AssignedRole": "analyst",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "manager-approval",
+        "PrecededBySteps": "step-8",
+        "DisplayName": "Final Approval"
+      },
+      {
+        "WorkflowStepId": "archive-request",
+        "Name": "archive-request",
+        "Workflow": "customer-feedback",
+        "SequencePosition": 9,
+        "AssignedRole": "developer",
+        "ApprovalGate": "it-security-gate",
+        "PrecededBySteps": "step-9",
+        "DisplayName": "Archive Request",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "customer-feedback-collection",
+        "Name": "customer-feedback-collection",
+        "Workflow": "project-kickoff",
+        "SequencePosition": 10,
+        "AssignedRole": "tester",
+        "ApprovalGate": "customer-confirmation",
+        "PrecededBySteps": "step-10",
+        "DisplayName": "Customer Feedback Collection",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "legal-compliance-check",
+        "Name": "legal-compliance-check",
+        "Workflow": "contract-review",
+        "SequencePosition": 11,
+        "AssignedRole": "hr",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "legal-review",
+        "PrecededBySteps": "step-11",
+        "DisplayName": "Legal Compliance Check"
+      },
+      {
+        "WorkflowStepId": "assign-task-to-team",
+        "Name": "assign-task-to-team",
+        "Workflow": "asset-management",
+        "SequencePosition": 12,
+        "AssignedRole": "finance",
+        "ApprovalGate": "executive-sign-off",
+        "PrecededBySteps": "step-12",
+        "DisplayName": "Assign Task to Team",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "some-new-task",
+        "Name": "some-new-task",
+        "SequencePosition": 13,
+        "AssignedRole": "finance",
+        "ApprovalGate": "some-new-gate",
+        "PrecededBySteps": "assign-task-to-team",
+        "DisplayName": "Some new task",
+        "Workflow": "",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "team-lead-review",
+        "Name": "team-lead-review",
+        "Workflow": "recruitment",
+        "SequencePosition": 13,
+        "AssignedRole": "guest",
+        "RequiresHumanApproval": true,
+        "ApprovalGate": "legal-review",
+        "PrecededBySteps": "step-13",
+        "DisplayName": "Team Lead Review"
+      },
+      {
+        "WorkflowStepId": "generate-report",
+        "Name": "generate-report",
+        "Workflow": "incident-reporting",
+        "SequencePosition": 14,
+        "AssignedRole": "trainer",
+        "ApprovalGate": "finance-approval",
+        "PrecededBySteps": "step-14",
+        "DisplayName": "Generate Report",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "close-workflow",
+        "Name": "close-workflow",
+        "Workflow": "change-management",
+        "SequencePosition": 15,
+        "AssignedRole": "owner",
+        "ApprovalGate": "executive-sign-off",
+        "PrecededBySteps": "step-15",
+        "DisplayName": "Close Workflow",
+        "RequiresHumanApproval": false
+      },
+      {
+        "WorkflowStepId": "step1",
+        "Name": "step1",
+        "Workflow": "change-management",
+        "DisplayName": "step1",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      },
+      {
+        "WorkflowStepId": "asdf",
+        "Name": "asdf",
+        "Workflow": "change-management",
+        "DisplayName": "asdf",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      },
+      {
+        "WorkflowStepId": "step-2",
+        "Name": "step-2",
+        "Workflow": "performance-review",
+        "DisplayName": "Step 2",
+        "SequencePosition": 0,
+        "AssignedRole": "",
+        "RequiresHumanApproval": false,
+        "ApprovalGate": "",
+        "PrecededBySteps": ""
+      }
+    ]
+  },
+  "ApprovalGates": {
+    "Description": "Table: ApprovalGates",
+    "schema": [
+      {
+        "name": "ApprovalGateId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \u0022 \u0022, \u0022-\u0022)"
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "WorkflowSteps",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Back-reference to workflow steps that use this approval gate. Enables finding all steps requiring this specific gate.",
+        "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "EscalationThresholdHours",
+        "datatype": "integer",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Integer number of hours that may elapse on a pending gate before the ntwf:delegatesTo chain activates. Maps to ntwf:escalationThresholdHours. Domain applies only to ApprovalGate individuals."
+      }
+    ],
+    "data": [
+      {
+        "ApprovalGateId": "initial-review",
+        "Name": "initial-review",
+        "WorkflowSteps": "submit-request",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Initial Review"
+      },
+      {
+        "ApprovalGateId": "manager-approval",
+        "Name": "manager-approval",
+        "WorkflowSteps": "final-approval, manager-review",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Manager Approval"
+      },
+      {
+        "ApprovalGateId": "compliance-check",
+        "Name": "compliance-check",
+        "WorkflowSteps": "document-verification",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Compliance Check"
+      },
+      {
+        "ApprovalGateId": "final-authorization",
+        "Name": "final-authorization",
+        "WorkflowSteps": "system-notification-sent",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Final Authorization"
+      },
+      {
+        "ApprovalGateId": "executive-sign-off",
+        "Name": "executive-sign-off",
+        "WorkflowSteps": "close-workflow, assign-task-to-team",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Executive Sign-off"
+      },
+      {
+        "ApprovalGateId": "quality-assurance",
+        "Name": "quality-assurance",
+        "WorkflowSteps": "quality-assurance-review",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Quality Assurance"
+      },
+      {
+        "ApprovalGateId": "legal-review",
+        "Name": "legal-review",
+        "WorkflowSteps": "team-lead-review, legal-compliance-check",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Legal Review"
+      },
+      {
+        "ApprovalGateId": "finance-approval",
+        "Name": "finance-approval",
+        "WorkflowSteps": "generate-report, finance-approval",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Finance Approval"
+      },
+      {
+        "ApprovalGateId": "it-security-gate",
+        "Name": "it-security-gate",
+        "WorkflowSteps": "archive-request, automated-eligibility-check",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "IT Security Gate"
+      },
+      {
+        "ApprovalGateId": "customer-confirmation",
+        "Name": "customer-confirmation",
+        "WorkflowSteps": "customer-feedback-collection",
+        "EscalationThresholdHours": 0,
+        "DisplayName": "Customer Confirmation"
+      },
+      {
+        "ApprovalGateId": "some-new-gate",
+        "Name": "some-new-gate",
+        "WorkflowSteps": "some-new-task",
+        "DisplayName": "some new gate",
+        "EscalationThresholdHours": 0
+      }
+    ]
+  },
+  "PrecedesSteps": {
+    "Description": "Table: PrecedesSteps",
+    "schema": [
+      {
+        "name": "PrecedesStepId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Ordinal sequence number for the relationship. Used for sorting and display."
+      },
+      {
+        "name": "WorkflowStep",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Foreign key to the step that comes BEFORE. The source of the \u0027precedes\u0027 relationship.",
+        "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=\u0022Step-\u0022 \u0026 {{StepNumber}}"
+      },
+      {
+        "name": "StepNumber",
+        "datatype": "integer",
+        "type": "raw",
+        "nullable": true
+      }
+    ],
+    "data": [
+      {
+        "PrecedesStepId": "step-1",
+        "Name": "step-1",
+        "WorkflowStep": "submit-request",
+        "StepNumber": 1,
+        "DisplayName": "Step-1"
+      },
+      {
+        "PrecedesStepId": "step-2",
+        "Name": "step-2",
+        "WorkflowStep": "manager-review",
+        "StepNumber": 2,
+        "DisplayName": "Step-2"
+      },
+      {
+        "PrecedesStepId": "step-3",
+        "Name": "step-3",
+        "WorkflowStep": "automated-eligibility-check",
+        "StepNumber": 3,
+        "DisplayName": "Step-3"
+      },
+      {
+        "PrecedesStepId": "step-4",
+        "Name": "step-4",
+        "WorkflowStep": "finance-approval",
+        "StepNumber": 4,
+        "DisplayName": "Step-4"
+      },
+      {
+        "PrecedesStepId": "step-5",
+        "Name": "step-5",
+        "WorkflowStep": "document-verification",
+        "StepNumber": 5,
+        "DisplayName": "Step-5"
+      },
+      {
+        "PrecedesStepId": "step-6",
+        "Name": "step-6",
+        "WorkflowStep": "quality-assurance-review",
+        "StepNumber": 6,
+        "DisplayName": "Step-6"
+      },
+      {
+        "PrecedesStepId": "step-7",
+        "Name": "step-7",
+        "WorkflowStep": "system-notification-sent",
+        "StepNumber": 7,
+        "DisplayName": "Step-7"
+      },
+      {
+        "PrecedesStepId": "step-8",
+        "Name": "step-8",
+        "WorkflowStep": "final-approval",
+        "StepNumber": 8,
+        "DisplayName": "Step-8"
+      },
+      {
+        "PrecedesStepId": "step-9",
+        "Name": "step-9",
+        "WorkflowStep": "archive-request",
+        "StepNumber": 9,
+        "DisplayName": "Step-9"
+      },
+      {
+        "PrecedesStepId": "step-10",
+        "Name": "step-10",
+        "WorkflowStep": "customer-feedback-collection",
+        "StepNumber": 10,
+        "DisplayName": "Step-10"
+      },
+      {
+        "PrecedesStepId": "step-11",
+        "Name": "step-11",
+        "WorkflowStep": "legal-compliance-check",
+        "StepNumber": 11,
+        "DisplayName": "Step-11"
+      },
+      {
+        "PrecedesStepId": "step-12",
+        "Name": "step-12",
+        "WorkflowStep": "assign-task-to-team",
+        "StepNumber": 12,
+        "DisplayName": "Step-12"
+      },
+      {
+        "PrecedesStepId": "step-13",
+        "Name": "step-13",
+        "WorkflowStep": "team-lead-review",
+        "StepNumber": 13,
+        "DisplayName": "Step-13"
+      },
+      {
+        "PrecedesStepId": "step-14",
+        "Name": "step-14",
+        "WorkflowStep": "generate-report",
+        "StepNumber": 14,
+        "DisplayName": "Step-14"
+      },
+      {
+        "PrecedesStepId": "step-15",
+        "Name": "step-15",
+        "WorkflowStep": "close-workflow",
+        "StepNumber": 15,
+        "DisplayName": "Step-15"
+      },
+      {
+        "PrecedesStepId": "assign-task-to-team",
+        "Name": "assign-task-to-team",
+        "WorkflowStep": "some-new-task",
+        "StepNumber": 16,
+        "DisplayName": "Step-16"
+      }
+    ]
+  },
+  "Roles": {
+    "Description": "Table: Roles",
+    "schema": [
+      {
+        "name": "RoleId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=LOWER({{DisplayName}})"
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Label",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Human-readable display name. Maps to rdfs:label. Per Heuristic 6: if you cannot write a clear label, you do not yet understand the concept well enough to model it."
+      },
+      {
+        "name": "Comment",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Detailed description of the role\u0027s responsibilities and scope. Maps to rdfs:comment. Should define what the role covers, what it excludes, and how it differs from adjacent roles."
+      },
+      {
+        "name": "FilledByHumanAgent",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "HumanAgents"
+      },
+      {
+        "name": "FilledByAIAgent",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "AIAgents"
+      },
+      {
+        "name": "FilledByAutomatedPipeline",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "AutomatedPipelines"
+      },
+      {
+        "name": "OwnedBy",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Foreign key to the Department that owns this role. Maps to ntwf:ownedBy (owl:FunctionalProperty). Enables answering CQ7: \u0027Which workflows involve both Engineering and Legal?\u0027",
+        "RelatedTo": "Departments"
+      },
+      {
+        "name": "DelegatesTo",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Foreign key to the fallback Role in an escalation chain. Maps to ntwf:delegatesTo. Enables answering CQ6: \u0027What happens when the VP of Engineering is unavailable?\u0027",
+        "RelatedTo": "Roles"
+      },
+      {
+        "name": "WorkflowSteps",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Back-reference to workflow steps assigned to this role. Inverse of WorkflowSteps.AssignedRole.",
+        "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "FromDelegatesTo",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "RoleId": "administrator",
+        "Name": "administrator",
+        "Label": "Admin",
+        "Comment": "Has full access to all system features and settings.",
+        "FilledByHumanAgent": "agent-001",
+        "FilledByAIAgent": "ava",
+        "FilledByAutomatedPipeline": "lead-notification-pipeline",
+        "OwnedBy": "human-resources",
+        "WorkflowSteps": "submit-request",
+        "FromDelegatesTo": "editor",
+        "DisplayName": "Administrator",
+        "DelegatesTo": ""
+      },
+      {
+        "RoleId": "editor",
+        "Name": "editor",
+        "Label": "Content Editor",
+        "Comment": "Can create, edit, and delete content but cannot change system settings.",
+        "FilledByHumanAgent": "agent-002",
+        "FilledByAIAgent": "leo",
+        "FilledByAutomatedPipeline": "e-commerce-order-sync",
+        "OwnedBy": "finance",
+        "DelegatesTo": "administrator",
+        "WorkflowSteps": "manager-review",
+        "FromDelegatesTo": "viewer",
+        "DisplayName": "Editor"
+      },
+      {
+        "RoleId": "viewer",
+        "Name": "viewer",
+        "Label": "Read-Only",
+        "Comment": "Can view content but cannot make any changes.",
+        "FilledByHumanAgent": "agent-003",
+        "FilledByAIAgent": "maya",
+        "FilledByAutomatedPipeline": "issue-tracking-bridge",
+        "OwnedBy": "information-technology",
+        "DelegatesTo": "editor",
+        "WorkflowSteps": "automated-eligibility-check",
+        "FromDelegatesTo": "moderator",
+        "DisplayName": "Viewer"
+      },
+      {
+        "RoleId": "moderator",
+        "Name": "moderator",
+        "Label": "Forum Moderator",
+        "Comment": "Can manage user comments and moderate discussions.",
+        "FilledByHumanAgent": "agent-004",
+        "FilledByAIAgent": "eli",
+        "FilledByAutomatedPipeline": "newsletter-signup-sync",
+        "OwnedBy": "marketing",
+        "DelegatesTo": "viewer",
+        "WorkflowSteps": "finance-approval",
+        "FromDelegatesTo": "contributor",
+        "DisplayName": "Moderator"
+      },
+      {
+        "RoleId": "contributor",
+        "Name": "contributor",
+        "Label": "Content Contributor",
+        "Comment": "Can submit new content for review but cannot publish directly.",
+        "FilledByHumanAgent": "agent-005",
+        "FilledByAIAgent": "zara",
+        "FilledByAutomatedPipeline": "support-ticket-automation",
+        "OwnedBy": "sales",
+        "DelegatesTo": "moderator",
+        "WorkflowSteps": "document-verification",
+        "FromDelegatesTo": "manager",
+        "DisplayName": "Contributor"
+      },
+      {
+        "RoleId": "manager",
+        "Name": "manager",
+        "Label": "Project Manager",
+        "Comment": "Oversees project progress and manages team assignments.",
+        "FilledByHumanAgent": "agent-006",
+        "FilledByAIAgent": "owen",
+        "FilledByAutomatedPipeline": "devops-integration",
+        "OwnedBy": "customer-service",
+        "DelegatesTo": "contributor",
+        "WorkflowSteps": "quality-assurance-review",
+        "FromDelegatesTo": "support",
+        "DisplayName": "Manager"
+      },
+      {
+        "RoleId": "support",
+        "Name": "support",
+        "Label": "Customer Support",
+        "Comment": "Handles user inquiries and provides technical assistance.",
+        "FilledByHumanAgent": "agent-007",
+        "FilledByAIAgent": "nina",
+        "FilledByAutomatedPipeline": "finance-automation",
+        "OwnedBy": "research-and-development",
+        "DelegatesTo": "manager",
+        "WorkflowSteps": "system-notification-sent",
+        "FromDelegatesTo": "analyst",
+        "DisplayName": "Support"
+      },
+      {
+        "RoleId": "analyst",
+        "Name": "analyst",
+        "Label": "Data Analyst",
+        "Comment": "Has access to analytics and reporting tools.",
+        "FilledByHumanAgent": "agent-008",
+        "FilledByAIAgent": "kai",
+        "FilledByAutomatedPipeline": "project-intake-pipeline",
+        "OwnedBy": "legal",
+        "DelegatesTo": "support",
+        "WorkflowSteps": "final-approval",
+        "FromDelegatesTo": "developer",
+        "DisplayName": "Analyst"
+      },
+      {
+        "RoleId": "developer",
+        "Name": "developer",
+        "Label": "Software Developer",
+        "Comment": "Can access and modify application code and integrations.",
+        "FilledByHumanAgent": "agent-009",
+        "FilledByAIAgent": "sophie",
+        "FilledByAutomatedPipeline": "crm-data-sync",
+        "OwnedBy": "procurement",
+        "DelegatesTo": "analyst",
+        "WorkflowSteps": "archive-request",
+        "FromDelegatesTo": "tester",
+        "DisplayName": "Developer"
+      },
+      {
+        "RoleId": "tester",
+        "Name": "tester",
+        "Label": "Quality Assurance",
+        "Comment": "Responsible for testing new features and reporting bugs.",
+        "FilledByHumanAgent": "agent-010",
+        "FilledByAIAgent": "max",
+        "FilledByAutomatedPipeline": "calendar-integration",
+        "OwnedBy": "operations",
+        "DelegatesTo": "developer",
+        "WorkflowSteps": "customer-feedback-collection",
+        "FromDelegatesTo": "hr",
+        "DisplayName": "Tester"
+      },
+      {
+        "RoleId": "hr",
+        "Name": "hr",
+        "Label": "Human Resources",
+        "Comment": "Manages employee records and recruitment processes.",
+        "FilledByHumanAgent": "agent-011",
+        "FilledByAIAgent": "liam",
+        "FilledByAutomatedPipeline": "survey-data-pipeline",
+        "OwnedBy": "administration",
+        "DelegatesTo": "tester",
+        "WorkflowSteps": "legal-compliance-check",
+        "FromDelegatesTo": "finance",
+        "DisplayName": "HR"
+      },
+      {
+        "RoleId": "finance",
+        "Name": "finance",
+        "Label": "Finance Officer",
+        "Comment": "Handles billing, invoices, and financial reports.",
+        "FilledByHumanAgent": "agent-012",
+        "FilledByAIAgent": "jade",
+        "FilledByAutomatedPipeline": "task-management-sync",
+        "OwnedBy": "public-relations",
+        "DelegatesTo": "hr",
+        "WorkflowSteps": "assign-task-to-team, some-new-task",
+        "FromDelegatesTo": "guest",
+        "DisplayName": "Finance"
+      },
+      {
+        "RoleId": "guest",
+        "Name": "guest",
+        "Label": "Temporary Access",
+        "Comment": "Limited access for temporary users or external collaborators.",
+        "FilledByHumanAgent": "agent-013",
+        "FilledByAIAgent": "mila",
+        "FilledByAutomatedPipeline": "cloud-storage-sync",
+        "OwnedBy": "quality-assurance",
+        "DelegatesTo": "finance",
+        "WorkflowSteps": "team-lead-review",
+        "FromDelegatesTo": "trainer",
+        "DisplayName": "Guest"
+      },
+      {
+        "RoleId": "trainer",
+        "Name": "trainer",
+        "Label": "Training Specialist",
+        "Comment": "Creates and delivers training materials to users.",
+        "FilledByHumanAgent": "agent-014",
+        "FilledByAIAgent": "noah",
+        "FilledByAutomatedPipeline": "email-notification-pipeline",
+        "OwnedBy": "facilities-management",
+        "DelegatesTo": "guest",
+        "WorkflowSteps": "generate-report",
+        "FromDelegatesTo": "owner",
+        "DisplayName": "Trainer"
+      },
+      {
+        "RoleId": "owner",
+        "Name": "owner",
+        "Label": "System Owner",
+        "Comment": "Ultimate authority over the system, can assign or revoke any role.",
+        "FilledByHumanAgent": "agent-015",
+        "FilledByAIAgent": "ella",
+        "FilledByAutomatedPipeline": "survey-data-export",
+        "OwnedBy": "training-and-development",
+        "DelegatesTo": "trainer",
+        "WorkflowSteps": "close-workflow",
+        "DisplayName": "Owner",
+        "FromDelegatesTo": ""
+      }
+    ]
+  },
+  "Departments": {
+    "Description": "Table: Departments",
+    "schema": [
+      {
+        "name": "DepartmentId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "Description": "Human-readable display name of the department. Should match organizational terminology for stakeholder communication.",
+        "formula": "=SUBSTITUTE(LOWER({{DisplayName}}), \u0022 \u0022, \u0022-\u0022)"
+      },
+      {
+        "name": "Title",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Human-readable display name of the department. Should match organizational terminology for stakeholder communication."
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Machine-friendly name for programmatic reference."
+      },
+      {
+        "name": "Roles",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Back-reference to roles owned by this department. Inverse of Roles.OwnedBy.",
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "DepartmentId": "human-resources",
+        "Name": "human-resources",
+        "Roles": "administrator",
+        "DisplayName": "Human Resources",
+        "Title": "HR Department"
+      },
+      {
+        "DepartmentId": "finance",
+        "Name": "finance",
+        "Roles": "editor",
+        "DisplayName": "Finance",
+        "Title": "Finance Department"
+      },
+      {
+        "DepartmentId": "information-technology",
+        "Name": "information-technology",
+        "Roles": "viewer",
+        "DisplayName": "Information Technology",
+        "Title": "IT Department"
+      },
+      {
+        "DepartmentId": "marketing",
+        "Name": "marketing",
+        "Roles": "moderator",
+        "DisplayName": "Marketing",
+        "Title": "Marketing Department"
+      },
+      {
+        "DepartmentId": "sales",
+        "Name": "sales",
+        "Roles": "contributor",
+        "DisplayName": "Sales",
+        "Title": "Sales Department"
+      },
+      {
+        "DepartmentId": "customer-service",
+        "Name": "customer-service",
+        "Roles": "manager",
+        "DisplayName": "Customer Service",
+        "Title": "Customer Service Department"
+      },
+      {
+        "DepartmentId": "research-and-development",
+        "Name": "research-and-development",
+        "Roles": "support",
+        "DisplayName": "Research and Development",
+        "Title": "R\u0026D Department"
+      },
+      {
+        "DepartmentId": "legal",
+        "Name": "legal",
+        "Roles": "analyst",
+        "DisplayName": "Legal",
+        "Title": "Legal Department"
+      },
+      {
+        "DepartmentId": "procurement",
+        "Name": "procurement",
+        "Roles": "developer",
+        "DisplayName": "Procurement",
+        "Title": "Procurement Department"
+      },
+      {
+        "DepartmentId": "operations",
+        "Name": "operations",
+        "Roles": "tester",
+        "DisplayName": "Operations",
+        "Title": "Operations Department"
+      },
+      {
+        "DepartmentId": "administration",
+        "Name": "administration",
+        "Roles": "hr",
+        "DisplayName": "Administration",
+        "Title": "Administration Department"
+      },
+      {
+        "DepartmentId": "public-relations",
+        "Name": "public-relations",
+        "Roles": "finance",
+        "DisplayName": "Public Relations",
+        "Title": "PR Department"
+      },
+      {
+        "DepartmentId": "quality-assurance",
+        "Name": "quality-assurance",
+        "Roles": "guest",
+        "DisplayName": "Quality Assurance",
+        "Title": "QA Department"
+      },
+      {
+        "DepartmentId": "facilities-management",
+        "Name": "facilities-management",
+        "Roles": "trainer",
+        "DisplayName": "Facilities Management",
+        "Title": "Facilities Department"
+      },
+      {
+        "DepartmentId": "training-and-development",
+        "Name": "training-and-development",
+        "Roles": "owner",
+        "DisplayName": "Training and Development",
+        "Title": "Training Department"
+      }
+    ]
+  },
+  "HumanAgents": {
+    "Description": "Table: HumanAgents",
+    "schema": [
+      {
+        "name": "HumanAgentId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Full name of the person. Maps to foaf:name. Note: FOAF\u0027s name property is appropriate for persons, not for software systems (which use schema:name)."
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Mbox",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Email address of the person. Maps to foaf:mbox. Used for notifications and organizational directory integration."
+      },
+      {
+        "name": "Roles",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Back-reference to roles currently filled by this agent. Inverse of Roles.FilledBy_HumanAgent.",
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "HumanAgentId": "agent-001",
+        "Name": "agent_001",
+        "DisplayName": "Alice Johnson",
+        "Mbox": "alice.johnson@example.com",
+        "Roles": "administrator"
+      },
+      {
+        "HumanAgentId": "agent-002",
+        "Name": "agent_002",
+        "DisplayName": "Brian Smith",
+        "Mbox": "brian.smith@example.com",
+        "Roles": "editor"
+      },
+      {
+        "HumanAgentId": "agent-003",
+        "Name": "agent_003",
+        "DisplayName": "Catherine Lee",
+        "Mbox": "catherine.lee@example.com",
+        "Roles": "viewer"
+      },
+      {
+        "HumanAgentId": "agent-004",
+        "Name": "agent_004",
+        "DisplayName": "David Kim",
+        "Mbox": "david.kim@example.com",
+        "Roles": "moderator"
+      },
+      {
+        "HumanAgentId": "agent-005",
+        "Name": "agent_005",
+        "DisplayName": "Emily Chen",
+        "Mbox": "emily.chen@example.com",
+        "Roles": "contributor"
+      },
+      {
+        "HumanAgentId": "agent-006",
+        "Name": "agent_006",
+        "DisplayName": "Frank Miller",
+        "Mbox": "frank.miller@example.com",
+        "Roles": "manager"
+      },
+      {
+        "HumanAgentId": "agent-007",
+        "Name": "agent_007",
+        "DisplayName": "Grace Park",
+        "Mbox": "grace.park@example.com",
+        "Roles": "support"
+      },
+      {
+        "HumanAgentId": "agent-008",
+        "Name": "agent_008",
+        "DisplayName": "Henry Adams",
+        "Mbox": "henry.adams@example.com",
+        "Roles": "analyst"
+      },
+      {
+        "HumanAgentId": "agent-009",
+        "Name": "agent_009",
+        "DisplayName": "Isabella Martinez",
+        "Mbox": "isabella.martinez@example.com",
+        "Roles": "developer"
+      },
+      {
+        "HumanAgentId": "agent-010",
+        "Name": "agent_010",
+        "DisplayName": "Jack Wilson",
+        "Mbox": "jack.wilson@example.com",
+        "Roles": "tester"
+      },
+      {
+        "HumanAgentId": "agent-011",
+        "Name": "agent_011",
+        "DisplayName": "Karen Patel",
+        "Mbox": "karen.patel@example.com",
+        "Roles": "hr"
+      },
+      {
+        "HumanAgentId": "agent-012",
+        "Name": "agent_012",
+        "DisplayName": "Liam Nguyen",
+        "Mbox": "liam.nguyen@example.com",
+        "Roles": "finance"
+      },
+      {
+        "HumanAgentId": "agent-013",
+        "Name": "agent_013",
+        "DisplayName": "Monica Rivera",
+        "Mbox": "monica.rivera@example.com",
+        "Roles": "guest"
+      },
+      {
+        "HumanAgentId": "agent-014",
+        "Name": "agent_014",
+        "DisplayName": "Nathan Brown",
+        "Mbox": "nathan.brown@example.com",
+        "Roles": "trainer"
+      },
+      {
+        "HumanAgentId": "agent-015",
+        "Name": "agent_015",
+        "DisplayName": "Olivia Clark",
+        "Mbox": "olivia.clark@example.com",
+        "Roles": "owner"
+      }
+    ]
+  },
+  "AIAgents": {
+    "Description": "Table: AIAgents",
+    "schema": [
+      {
+        "name": "AIAgentId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Display name of the AI agent. Maps to schema:name (not foaf:name, which is for persons)."
+      },
+      {
+        "name": "Title",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "ModelVersion",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Version string of the AI model. Maps to ntwf:modelVersion. Makes AI-produced artifacts auditable at the version level. The domain declaration means this property applies only to AIAgent individuals."
+      },
+      {
+        "name": "Roles",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Back-reference to roles currently filled by this AI agent. Inverse of Roles.FilledBy_AIAgent.",
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "AIAgentId": "ava",
+        "Name": "Ava",
+        "DisplayName": "Ava",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "administrator",
+        "Title": "CustomerSupportBot"
+      },
+      {
+        "AIAgentId": "leo",
+        "Name": "Leo",
+        "DisplayName": "Leo",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "editor",
+        "Title": "SalesAssistantAI"
+      },
+      {
+        "AIAgentId": "maya",
+        "Name": "Maya",
+        "DisplayName": "Maya",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "viewer",
+        "Title": "HRRecruiterBot"
+      },
+      {
+        "AIAgentId": "eli",
+        "Name": "Eli",
+        "DisplayName": "Eli",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "moderator",
+        "Title": "FinanceAdvisorAI"
+      },
+      {
+        "AIAgentId": "zara",
+        "Name": "Zara",
+        "DisplayName": "Zara",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "contributor",
+        "Title": "MarketingCopyAI"
+      },
+      {
+        "AIAgentId": "owen",
+        "Name": "Owen",
+        "DisplayName": "Owen",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "manager",
+        "Title": "LegalDraftBot"
+      },
+      {
+        "AIAgentId": "nina",
+        "Name": "Nina",
+        "DisplayName": "Nina",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "support",
+        "Title": "MedicalAssistantAI"
+      },
+      {
+        "AIAgentId": "kai",
+        "Name": "Kai",
+        "DisplayName": "Kai",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "analyst",
+        "Title": "TravelPlannerBot"
+      },
+      {
+        "AIAgentId": "sophie",
+        "Name": "Sophie",
+        "DisplayName": "Sophie",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "developer",
+        "Title": "EcommerceHelperAI"
+      },
+      {
+        "AIAgentId": "max",
+        "Name": "Max",
+        "DisplayName": "Max",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "tester",
+        "Title": "EducationTutorBot"
+      },
+      {
+        "AIAgentId": "liam",
+        "Name": "Liam",
+        "DisplayName": "Liam",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "hr",
+        "Title": "RealEstateAdvisorAI"
+      },
+      {
+        "AIAgentId": "jade",
+        "Name": "Jade",
+        "DisplayName": "Jade",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "finance",
+        "Title": "FitnessCoachBot"
+      },
+      {
+        "AIAgentId": "mila",
+        "Name": "Mila",
+        "DisplayName": "Mila",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "guest",
+        "Title": "EventPlannerAI"
+      },
+      {
+        "AIAgentId": "noah",
+        "Name": "Noah",
+        "DisplayName": "Noah",
+        "ModelVersion": "GPT-3.5",
+        "Roles": "trainer",
+        "Title": "PersonalFinanceBot"
+      },
+      {
+        "AIAgentId": "ella",
+        "Name": "Ella",
+        "DisplayName": "Ella",
+        "ModelVersion": "GPT-4.0",
+        "Roles": "owner",
+        "Title": "ContentEditorAI"
+      }
+    ]
+  },
+  "AutomatedPipelines": {
+    "Description": "Table: AutomatedPipelines",
+    "schema": [
+      {
+        "name": "AutomatedPipelineId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Display name of the pipeline. Maps to schema:name (appropriate for software systems, unlike foaf:name which is for persons)."
+      },
+      {
+        "name": "Description",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "DisplayName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Roles",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Back-reference to roles currently filled by this pipeline. Inverse of Roles.FilledBy_AutomatedPipeline.",
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "AutomatedPipelineId": "lead-notification-pipeline",
+        "Name": "lead-notification-pipeline",
+        "DisplayName": "Lead Notification Pipeline",
+        "Roles": "administrator",
+        "Description": "Salesforce to Slack Lead Alert"
+      },
+      {
+        "AutomatedPipelineId": "e-commerce-order-sync",
+        "Name": "e-commerce-order-sync",
+        "DisplayName": "E-commerce Order Sync",
+        "Roles": "editor",
+        "Description": "Shopify Order to QuickBooks Invoice"
+      },
+      {
+        "AutomatedPipelineId": "issue-tracking-bridge",
+        "Name": "issue-tracking-bridge",
+        "DisplayName": "Issue Tracking Bridge",
+        "Roles": "viewer",
+        "Description": "Jira Issue to Trello Card"
+      },
+      {
+        "AutomatedPipelineId": "newsletter-signup-sync",
+        "Name": "newsletter-signup-sync",
+        "DisplayName": "Newsletter Signup Sync",
+        "Roles": "moderator",
+        "Description": "Google Sheets to Mailchimp Subscriber"
+      },
+      {
+        "AutomatedPipelineId": "support-ticket-automation",
+        "Name": "support-ticket-automation",
+        "DisplayName": "Support Ticket Automation",
+        "Roles": "contributor",
+        "Description": "Zendesk Ticket to Asana Task"
+      },
+      {
+        "AutomatedPipelineId": "devops-integration",
+        "Name": "devops-integration",
+        "DisplayName": "DevOps Integration",
+        "Roles": "manager",
+        "Description": "GitHub PR to Jira Story"
+      },
+      {
+        "AutomatedPipelineId": "finance-automation",
+        "Name": "finance-automation",
+        "DisplayName": "Finance Automation",
+        "Roles": "support",
+        "Description": "Stripe Payment to Xero Invoice"
+      },
+      {
+        "AutomatedPipelineId": "project-intake-pipeline",
+        "Name": "project-intake-pipeline",
+        "DisplayName": "Project Intake Pipeline",
+        "Roles": "analyst",
+        "Description": "Airtable Form to Monday.com Item"
+      },
+      {
+        "AutomatedPipelineId": "crm-data-sync",
+        "Name": "crm-data-sync",
+        "DisplayName": "CRM Data Sync",
+        "Roles": "developer",
+        "Description": "HubSpot Contact to Salesforce Lead"
+      },
+      {
+        "AutomatedPipelineId": "calendar-integration",
+        "Name": "calendar-integration",
+        "DisplayName": "Calendar Integration",
+        "Roles": "tester",
+        "Description": "Google Calendar Event to Teams Meeting"
+      },
+      {
+        "AutomatedPipelineId": "survey-data-pipeline",
+        "Name": "survey-data-pipeline",
+        "DisplayName": "Survey Data Pipeline",
+        "Roles": "hr",
+        "Description": "Typeform Response to Notion Database"
+      },
+      {
+        "AutomatedPipelineId": "task-management-sync",
+        "Name": "task-management-sync",
+        "DisplayName": "Task Management Sync",
+        "Roles": "finance",
+        "Description": "Trello Card to Google Tasks"
+      },
+      {
+        "AutomatedPipelineId": "cloud-storage-sync",
+        "Name": "cloud-storage-sync",
+        "DisplayName": "Cloud Storage Sync",
+        "Roles": "guest",
+        "Description": "Dropbox Upload to Google Drive"
+      },
+      {
+        "AutomatedPipelineId": "email-notification-pipeline",
+        "Name": "email-notification-pipeline",
+        "DisplayName": "Email Notification Pipeline",
+        "Roles": "trainer",
+        "Description": "Outlook Email to Slack Channel"
+      },
+      {
+        "AutomatedPipelineId": "survey-data-export",
+        "Name": "survey-data-export",
+        "DisplayName": "Survey Data Export",
+        "Roles": "owner",
+        "Description": "SurveyMonkey Response to Excel Sheet"
       }
     ]
   },
   "_meta": {
     "_CMCC_Summary": "Airtable export with schema-first type mapping: Schemas, Data, Relationships (FK links), Lookups (INDEX/MATCH), Aggregations (SUMIFS/COUNTIFS/Rollups), and Calculated fields (formulas) in Excel dialect. Field types are determined from Airtable\u0027s schema metadata FIRST (no coercion), with intelligent fallback to formula/data analysis only when schema is unavailable.",
     "_conversion_metadata": {
-      "source_base_id": "appWrXPvXbkgQGOxt",
-      "table_count": 1,
+      "source_base_id": "applThn0rikpCR9C3",
+      "table_count": 9,
       "tool_version": "2.0.0",
       "field_type_mapping": "checkbox\u2192boolean, number\u2192number/integer, multipleRecordLinks\u2192relationship, multipleLookupValues\u2192lookup, rollup\u2192aggregation, count\u2192aggregation, formula\u2192calculated",
       "export_mode": "schema_first_type_mapping",

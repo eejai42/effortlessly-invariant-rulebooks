@@ -1,0 +1,114 @@
+[
+  {
+    "precedes_step_id": "assign-task-to-team",
+    "name": "assign-task-to-team",
+    "workflow_step": "some-new-task",
+    "step_number": 16,
+    "display_name": "Step-16"
+  },
+  {
+    "precedes_step_id": "step-1",
+    "name": "step-1",
+    "workflow_step": "submit-request",
+    "step_number": 1,
+    "display_name": "Step-1"
+  },
+  {
+    "precedes_step_id": "step-10",
+    "name": "step-10",
+    "workflow_step": "customer-feedback-collection",
+    "step_number": 10,
+    "display_name": "Step-10"
+  },
+  {
+    "precedes_step_id": "step-11",
+    "name": "step-11",
+    "workflow_step": "legal-compliance-check",
+    "step_number": 11,
+    "display_name": "Step-11"
+  },
+  {
+    "precedes_step_id": "step-12",
+    "name": "step-12",
+    "workflow_step": "assign-task-to-team",
+    "step_number": 12,
+    "display_name": "Step-12"
+  },
+  {
+    "precedes_step_id": "step-13",
+    "name": "step-13",
+    "workflow_step": "team-lead-review",
+    "step_number": 13,
+    "display_name": "Step-13"
+  },
+  {
+    "precedes_step_id": "step-14",
+    "name": "step-14",
+    "workflow_step": "generate-report",
+    "step_number": 14,
+    "display_name": "Step-14"
+  },
+  {
+    "precedes_step_id": "step-15",
+    "name": "step-15",
+    "workflow_step": "close-workflow",
+    "step_number": 15,
+    "display_name": "Step-15"
+  },
+  {
+    "precedes_step_id": "step-2",
+    "name": "step-2",
+    "workflow_step": "manager-review",
+    "step_number": 2,
+    "display_name": "Step-2"
+  },
+  {
+    "precedes_step_id": "step-3",
+    "name": "step-3",
+    "workflow_step": "automated-eligibility-check",
+    "step_number": 3,
+    "display_name": "Step-3"
+  },
+  {
+    "precedes_step_id": "step-4",
+    "name": "step-4",
+    "workflow_step": "finance-approval",
+    "step_number": 4,
+    "display_name": "Step-4"
+  },
+  {
+    "precedes_step_id": "step-5",
+    "name": "step-5",
+    "workflow_step": "document-verification",
+    "step_number": 5,
+    "display_name": "Step-5"
+  },
+  {
+    "precedes_step_id": "step-6",
+    "name": "step-6",
+    "workflow_step": "quality-assurance-review",
+    "step_number": 6,
+    "display_name": "Step-6"
+  },
+  {
+    "precedes_step_id": "step-7",
+    "name": "step-7",
+    "workflow_step": "system-notification-sent",
+    "step_number": 7,
+    "display_name": "Step-7"
+  },
+  {
+    "precedes_step_id": "step-8",
+    "name": "step-8",
+    "workflow_step": "final-approval",
+    "step_number": 8,
+    "display_name": "Step-8"
+  },
+  {
+    "precedes_step_id": "step-9",
+    "name": "step-9",
+    "workflow_step": "archive-request",
+    "step_number": 9,
+    "display_name": "Step-9"
+  }
+]

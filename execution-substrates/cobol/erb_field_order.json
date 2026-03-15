@@ -1,18 +1,157 @@
 {
-  "Customers": [
-    "CustomerId",
-    "Customer",
-    "EmailAddress",
-    "FirstName",
-    "LastName",
-    "FullName"
-  ],
-  "customers": [
-    "CustomerId",
-    "Customer",
-    "EmailAddress",
-    "FirstName",
-    "LastName",
-    "FullName"
-  ]
+  "Workflows": {
+    "fields": [
+      "WorkflowId",
+      "DisplayName",
+      "Title",
+      "Color",
+      "Description",
+      "Identifier",
+      "Modified",
+      "WorkflowSteps",
+      "CountOfNonProposedSteps",
+      "Name",
+      "HasMoreThan1Step"
+    ],
+    "raw_count": 9
+  },
+  "workflows": {
+    "fields": [
+      "WorkflowId",
+      "DisplayName",
+      "Title",
+      "Color",
+      "Description",
+      "Identifier",
+      "Modified",
+      "WorkflowSteps",
+      "CountOfNonProposedSteps",
+      "Name",
+      "HasMoreThan1Step"
+    ],
+    "raw_count": 9
+  },
+  "WorkflowSteps": {
+    "fields": [
+      "WorkflowStepId",
+      "DisplayName",
+      "Workflow",
+      "SequencePosition",
+      "AssignedRole",
+      "RequiresHumanApproval",
+      "ApprovalGate",
+      "PrecededBySteps",
+      "Name"
+    ],
+    "raw_count": 8
+  },
+  "workflow_steps": {
+    "fields": [
+      "WorkflowStepId",
+      "DisplayName",
+      "Workflow",
+      "SequencePosition",
+      "AssignedRole",
+      "RequiresHumanApproval",
+      "ApprovalGate",
+      "PrecededBySteps",
+      "Name"
+    ],
+    "raw_count": 8
+  },
+  "ApprovalGates": {
+    "fields": [
+      "ApprovalGateId",
+      "DisplayName",
+      "WorkflowSteps",
+      "EscalationThresholdHours",
+      "Name"
+    ],
+    "raw_count": 4
+  },
+  "approval_gates": {
+    "fields": [
+      "ApprovalGateId",
+      "DisplayName",
+      "WorkflowSteps",
+      "EscalationThresholdHours",
+      "Name"
+    ],
+    "raw_count": 4
+  },
+  "PrecedesSteps": {
+    "fields": [
+      "PrecedesStepId",
+      "Name",
+      "WorkflowStep",
+      "StepNumber",
+      "DisplayName"
+    ],
+    "raw_count": 4
+  },
+  "precedes_steps": {
+    "fields": [
+      "PrecedesStepId",
+      "Name",
+      "WorkflowStep",
+      "StepNumber",
+      "DisplayName"
+    ],
+    "raw_count": 4
+  },
+  "Roles": {
+    "fields": [
+      "RoleId",
+      "DisplayName",
+      "Label",
+      "Comment",
+      "FilledByHumanAgent",
+      "FilledByAIAgent",
+      "FilledByAutomatedPipeline",
+      "OwnedBy",
+      "DelegatesTo",
+      "WorkflowSteps",
+      "FromDelegatesTo",
+      "Name"
+    ],
+    "raw_count": 11
+  },
+  "roles": {
+    "fields": [
+      "RoleId",
+      "DisplayName",
+      "Label",
+      "Comment",
+      "FilledByHumanAgent",
+      "FilledByAIAgent",
+      "FilledByAutomatedPipeline",
+      "OwnedBy",
+      "DelegatesTo",
+      "WorkflowSteps",
+      "FromDelegatesTo",
+      "Name"
+    ],
+    "raw_count": 11
+  },
+  "Departments": {
+    "fields": [
+      "DepartmentId",
+      "Title",
+      "DisplayName",
+      "Roles",
+      "Name"
+    ],
+    "raw_count": 4
+  },
+  "departments": {
+    "fields": [
+      "DepartmentId",
+      "Title",
+      "DisplayName",
+      "Roles",
+      "Name"
+    ],
+    "raw_count": 4
+  },
+  "_target_entity": "workflows"
 }

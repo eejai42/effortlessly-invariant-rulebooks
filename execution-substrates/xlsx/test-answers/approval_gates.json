@@ -1,0 +1,79 @@
+[
+  {
+    "approval_gate_id": "compliance-check",
+    "name": "compliance-check",
+    "workflow_steps": "document-verification",
+    "escalation_threshold_hours": 0,
+    "display_name": "Compliance Check"
+  },
+  {
+    "approval_gate_id": "customer-confirmation",
+    "name": "customer-confirmation",
+    "workflow_steps": "customer-feedback-collection",
+    "escalation_threshold_hours": 0,
+    "display_name": "Customer Confirmation"
+  },
+  {
+    "approval_gate_id": "executive-sign-off",
+    "name": "executive-sign-off",
+    "workflow_steps": "close-workflow, assign-task-to-team",
+    "escalation_threshold_hours": 0,
+    "display_name": "Executive Sign-off"
+  },
+  {
+    "approval_gate_id": "final-authorization",
+    "name": "final-authorization",
+    "workflow_steps": "system-notification-sent",
+    "escalation_threshold_hours": 0,
+    "display_name": "Final Authorization"
+  },
+  {
+    "approval_gate_id": "finance-approval",
+    "name": "finance-approval",
+    "workflow_steps": "generate-report, finance-approval",
+    "escalation_threshold_hours": 0,
+    "display_name": "Finance Approval"
+  },
+  {
+    "approval_gate_id": "initial-review",
+    "name": "initial-review",
+    "workflow_steps": "submit-request",
+    "escalation_threshold_hours": 0,
+    "display_name": "Initial Review"
+  },
+  {
+    "approval_gate_id": "it-security-gate",
+    "name": "it-security-gate",
+    "workflow_steps": "archive-request, automated-eligibility-check",
+    "escalation_threshold_hours": 0,
+    "display_name": "IT Security Gate"
+  },
+  {
+    "approval_gate_id": "legal-review",
+    "name": "legal-review",
+    "workflow_steps": "team-lead-review, legal-compliance-check",
+    "escalation_threshold_hours": 0,
+    "display_name": "Legal Review"
+  },
+  {
+    "approval_gate_id": "manager-approval",
+    "name": "manager-approval",
+    "workflow_steps": "final-approval, manager-review",
+    "escalation_threshold_hours": 0,
+    "display_name": "Manager Approval"
+  },
+  {
+    "approval_gate_id": "quality-assurance",
+    "name": "quality-assurance",
+    "workflow_steps": "quality-assurance-review",
+    "escalation_threshold_hours": 0,
+    "display_name": "Quality Assurance"
+  },
+  {
+    "approval_gate_id": "some-new-gate",
+    "name": "some-new-gate",
+    "workflow_steps": "some-new-task",
+    "display_name": "some new gate",
+    "escalation_threshold_hours": 0
+  }
+]
