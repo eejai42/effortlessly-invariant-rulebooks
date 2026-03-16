@@ -66,30 +66,30 @@ The *thing that changes per substrate* is: **what "injection" produces**, **how 
 
 | Substrate | Role | Injection Produces (Domain-Agnostic) | Executable? |
 |-----------|------|--------------------------------------|:-----------:|
-| **PostgreSQL** | SQL computation engine (tested equally) | Tables (1:1 with entities), `calc_*()` functions (1:1 with computed columns), views | ✓ Full |
-| **XLSX** | Spreadsheet runtime for formulas | Worksheets (1:1 with entities), formula columns (1:1 with computed columns) | ✓ Full |
-| **CSV** | Tabular schema export | Field definitions (1:1 with entities/fields) | ✓ Full |
-| **Python** | SDK runtime (dataclass + methods) | `@dataclass` classes (1:1 with entities), `calc_*()` methods (1:1 with computed columns) | ✓ Limited |
-| **Go** | Compiled typed runtime (structs + methods) | Go `struct` types (1:1 with entities), `Calc*()` methods (1:1 with computed columns) | ✓ Limited |
-| **GraphQL** | Computation via resolvers | Type definitions (1:1 with entities), resolvers (1:1 with computed columns) | ✓ Limited |
-| **RDF/Turtle** | Semantic-web schema + rules | Classes/properties (1:1 with entities/fields), optional SPARQL rules | ✓ Limited |
-| **OWL** | Ontology + reasoning | OWL classes (1:1 with entities), optional SWRL rules | ✓ Limited |
-| **YAML** | LLM-friendly schema serialization | Schema definitions (1:1 with entities/fields) | ✓ Limited |
-| **UML** | Structural model / diagrams | Class diagrams (1:1 with entities) | ✓ Limited |
-| **DOCX** | Human-readable document export | Document sections (1:1 with entities/formulas) | ✓ Limited |
-| **Binary** | Compiled native execution | C structs (1:1 with entities), C functions (1:1 with computed columns) | ✓ Limited |
-| **English** | Human-readable specification | Prose descriptions (1:1 with entities/formulas) | 🔮 Fuzzy |
+| **PostgreSQL** | **Effortless tool** — SQL computation engine (no limitations) | Tables (1:1 with entities), `calc_*()` functions (1:1 with computed columns), views | ✓ Full |
+| **XLSX** | Local: Spreadsheet runtime for formulas | Worksheets (1:1 with entities), formula columns (1:1 with computed columns) | ✓ Full |
+| **CSV** | Local: Tabular schema export | Field definitions (1:1 with entities/fields) | ✓ Full |
+| **Python** | Local: SDK runtime (dataclass + methods) | `@dataclass` classes (1:1 with entities), `calc_*()` methods (1:1 with computed columns) | ✓ Limited |
+| **Go** | Local: Compiled typed runtime (structs + methods) | Go `struct` types (1:1 with entities), `Calc*()` methods (1:1 with computed columns) | ✓ Limited |
+| **GraphQL** | Local: Computation via resolvers | Type definitions (1:1 with entities), resolvers (1:1 with computed columns) | ✓ Limited |
+| **RDF/Turtle** | Local: Semantic-web schema + rules | Classes/properties (1:1 with entities/fields), optional SPARQL rules | ✓ Limited |
+| **OWL** | Local: Ontology + reasoning | OWL classes (1:1 with entities), optional SWRL rules | ✓ Limited |
+| **YAML** | Local: LLM-friendly schema serialization | Schema definitions (1:1 with entities/fields) | ✓ Limited |
+| **UML** | Local: Structural model / diagrams | Class diagrams (1:1 with entities) | ✓ Limited |
+| **DOCX** | Local: Human-readable document export | Document sections (1:1 with entities/formulas) | ✓ Limited |
+| **Binary** | Local: Compiled native execution | C structs (1:1 with entities), C functions (1:1 with computed columns) | ✓ Limited |
+| **English** | Local: Human-readable specification | Prose descriptions (1:1 with entities/formulas) | 🔮 Fuzzy |
 
 **Legend**:
-- **✓ Full** = Production-ready deterministic execution (ssotme/effortless tools with comprehensive formula support)
-- **✓ Limited** = Deterministic execution with partial formula support (toy implementations demonstrating the pattern — supports COUNT/SUM/AVERAGE, CONCATENATE, etc. but not MEDIAN/MOD, LEFT/RIGHT substring ops, etc. Unsupported formulas score 0%.)
+- **✓ Full** = Production-ready deterministic execution. **PostgreSQL** (rulebook-to-postgres) is an Effortless tool with no limitations — complex aggregations, JOINs, window functions, all formula types. Other Full substrates (XLSX, CSV) are local implementations that happen to cover the demonstrated formula set.
+- **✓ Limited** = Local implementations that demonstrate the pattern but have not been extended for every formula type. COUNT/SUM/AVERAGE, CONCATENATE, etc. are demonstrated; MEDIAN/MOD, LEFT/RIGHT substring ops, etc. may not yet be implemented. Undemonstrated formulas score 0%. **This is a demonstration gap, not a capability limit** — gaps can be filled locally.
 - **🔮 Fuzzy** = LLM-based non-deterministic grading (see [Fuzzy Evaluation Layer](#3-fuzzy-evaluation-layer)). Only English uses this — it's 2-3 orders of magnitude slower but handles novel formulas gracefully (~80%+ typical).
 
 ### All Execution Substrates
 
 | Layer | Description | Run | README |
 |-------|-------------|-----|--------|
-| **PostgreSQL** | SQL tables, calc functions, views (tested equally) | [take-test.sh](execution-substrates/postgres/take-test.sh) | [README](execution-substrates/postgres/README.md) |
+| **PostgreSQL** | **Effortless tool.** SQL tables, calc functions, views. No limitations. | [take-test.sh](execution-substrates/postgres/take-test.sh) | [README](execution-substrates/postgres/README.md) |
 | **XLSX** | Excel workbook with native formulas | [run.sh](execution-substrates/xlsx/run.sh) | [README](execution-substrates/xlsx/README.md) |
 | **Python** | SDK with dataclasses and calc methods | [run.sh](execution-substrates/python/run.sh) | [README](execution-substrates/python/README.md) |
 | **Go** | Structs with calculation methods | [run.sh](execution-substrates/golang/run.sh) | [README](execution-substrates/golang/README.md) |
@@ -470,6 +470,12 @@ The English substrate receives:
 ## 4. Transpilers
 
 The build pipeline uses `ssotme` transpilers to generate all execution layers from the single source of truth. Each transpiler reads from `effortless-rulebook.json` and produces a specific output format.
+
+### Effortless Tools vs. Local Implementations
+
+**PostgreSQL is the exception.** The three Effortless tools — **airtable-to-rulebook**, **rulebook-to-postgres**, **rulebook-to-airtable** — form a hub-and-spokes around Airtable. The `rulebook-to-postgres` tool has **no limitations**: complex aggregations, multi-table JOINs, window functions, and all formula types are fully supported.
+
+The other substrates (Python, Go, XLSX, OWL, etc.) included in this repo are **local implementations** — hello-world-style injectors that demonstrate the pattern. They have not been extended to demonstrate every capability. Gaps can be filled locally for any domain (and often work well), but improvements help only once, and all dependencies must be installed on build infrastructure. The Effortless tools require only one CLI to access any published ssotme tool — like git for business rules.
 
 ### Source Sync
 

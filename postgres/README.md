@@ -1,6 +1,8 @@
 # PostgreSQL Execution Substrate
 
-PostgreSQL is one of many execution substrates in the ERB system. It implements the rulebook's calculated fields using SQL functions and views.
+PostgreSQL is one of the **three Effortless tools** (airtable-to-rulebook, rulebook-to-postgres, rulebook-to-airtable). It implements the rulebook's calculated fields using SQL functions and views.
+
+**PostgreSQL has no limitations.** Unlike the local substrate implementations in this repo (Python, Go, XLSX, etc.), which are hello-world demonstrations with formula gaps, the `rulebook-to-postgres` tool fully supports complex aggregations, multi-table JOINs, window functions, and all formula types. It is production-ready.
 
 ## No Privileged Position
 

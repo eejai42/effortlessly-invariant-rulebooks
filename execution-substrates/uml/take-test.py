@@ -29,7 +29,7 @@ from enum import Enum, auto
 # Add project root to path for shared imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from orchestration.shared import load_rulebook, compute_aggregations
+from orchestration.shared import load_rulebook, compute_aggregations, compute_lookups
 
 # Add Python substrate directory to path for shared library
 script_dir = Path(__file__).parent.resolve()
@@ -707,8 +707,10 @@ def process_entity(input_path: str, output_path: str, entity_name: str,
     with open(input_path, 'r', encoding='utf-8') as f:
         records = json.load(f)
 
-    # Compute aggregation fields first (e.g., COUNTIFS)
     if rulebook is not None and project_root is not None:
+        # Compute lookup fields first (INDEX/MATCH)
+        records = compute_lookups(records, entity_name, rulebook, project_root)
+        # Then compute aggregation fields (COUNTIFS, SUMIFS)
         records = compute_aggregations(records, entity_name, rulebook, project_root)
 
     # Convert entity name to PascalCase for OCL class lookup

@@ -120,7 +120,7 @@ COBOL lacks native string manipulation intrinsics. Implementing SUBSTITUTE requi
 
 ### 2. No Cross-Table Lookups
 
-Formulas like `COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})` reference data across tables. Modern substrates (Python, Go, SQL) handle this naturally with dictionaries, maps, or JOINs.
+Formulas like `COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})` reference data across tables. **PostgreSQL** (via rulebook-to-postgres, one of the three Effortless tools) handles this natively with no limitations. Local substrates (Python, Go) also handle cross-table formulas in their demonstrated scope.
 
 COBOL's record-at-a-time processing model has no built-in concept of relational lookups. Supporting COUNTIFS would require:
 - Pre-loading related tables into WORKING-STORAGE arrays
@@ -135,7 +135,7 @@ This architectural mismatch makes COBOL poorly suited for rulebooks with relatio
 - **Mainframe compliance**: Environments where only COBOL is approved
 - **CardDemo-style modernization**: Extracting rules from legacy COBOL into a portable rulebook, then optionally regenerating COBOL for continuity
 
-For greenfield projects, prefer Python, Go, or PostgreSQL substrates.
+For greenfield projects, prefer **PostgreSQL** (Effortless tool, no limitations) or, for local implementations, Python or Go substrates.
 
 ## Source
 

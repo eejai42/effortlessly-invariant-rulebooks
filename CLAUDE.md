@@ -2,6 +2,8 @@
 
 ## Architecture Overview
 
+**Three Effortless tools** form a hub-and-spokes around Airtable: **airtable-to-rulebook**, **rulebook-to-postgres**, **rulebook-to-airtable**. The rulebook is a disposable IR. **PostgreSQL has no limitations** — it fully supports complex aggregations, JOINs, and all formula types. All other substrates in this repo are local implementations with demonstration gaps.
+
 This repo follows a **three-layer architecture**:
 
 ```
@@ -26,8 +28,9 @@ This repo follows a **three-layer architecture**:
 ┌─────────────────────────────────────────────────────────┐
 │              EXECUTION SUBSTRATES                       │
 │              execution-substrates/*/                    │
-│   - python/: Python dataclasses + calc functions       │
-│   - golang/: Go structs + business logic               │
+│   - postgres/: Effortless tool — no limitations        │
+│   - python/: Local: Python dataclasses + calc functions│
+│   - golang/: Local: Go structs + business logic        │
 │   - binary/: ARM64 assembly (proof of concept)         │
 │   - csv/xlsx/: Spreadsheet exports                     │
 │   - uml/: PlantUML diagrams + OCL constraints          │

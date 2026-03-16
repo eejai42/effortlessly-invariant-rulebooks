@@ -11,17 +11,17 @@ from typing import Optional, Any
 
 
 # =============================================================================
-# WORKFLOWS CALCULATIONS
-# Table: Workflows
+# CUSTOMERS CALCULATIONS
+# Table: Customers
 # =============================================================================
 
 # Level 1
 
-def calc_workflows_name(display_name):
+def calc_customers_full_name(first_name, last_name):
     """
-    Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
+    Full name is computed from the first and last name of the customer
     
-    Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
+    Formula: ={{FirstName}} & " " & {{LastName}}
     """
     return ((((display_name or "").lower()) or "").replace(' ', '-'))
 
@@ -32,11 +32,11 @@ def calc_workflows_has_more_than1_step(count_of_steps):
     return (count_of_steps > 1)
 
 
-def compute_workflows_fields(record: dict) -> dict:
+def compute_customers_fields(record: dict) -> dict:
     """
-    Compute all calculated fields for Workflows.
+    Compute all calculated fields for Customers.
     
-    Table: Workflows
+    Table: Customers
     """
     result = dict(record)
 

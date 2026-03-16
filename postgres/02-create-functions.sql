@@ -9,7 +9,8 @@
 -- These functions perform lookups via foreign key relationships
 -- ============================================================================
 
-CREATE OR REPLACE FUNCTION get_workflow_steps_display_name(p_workflow_step_id TEXT)
+
+CREATE OR REPLACE FUNCTION calc_customers_full_name(p_customer_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
   RETURN (SELECT display_name FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id);

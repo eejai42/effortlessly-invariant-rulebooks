@@ -29,7 +29,7 @@
            GOBACK.
        .
 
-       *> ========== WORKFLOWS ==========
+       *> ========== CUSTOMERS ==========
        *> Level 1
        CALC-NAME.
            MOVE FUNCTION LOWER-CASE(RECORD-DISPLAY-NAME) TO WS-TEMP-1
@@ -50,8 +50,7 @@
        .
 
        COMPUTE-ALL-FIELDS.
-           PERFORM CALC-NAME
-           PERFORM CALC-HAS-MORE-THAN1-STEP
+           PERFORM CALC-FULL-NAME
        .
        FIND-CONTAINS.
            MOVE "false" TO WS-FIND-RESULT

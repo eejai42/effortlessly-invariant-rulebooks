@@ -1,5 +1,7 @@
 # PostgreSQL Execution Substrate
 
+PostgreSQL is one of the **three Effortless tools** — the only substrate with **no limitations**. The `rulebook-to-postgres` tool fully supports complex aggregations, multi-table JOINs, window functions, and all formula types. All caveats about "demonstrated" or "limited" formula support apply only to the local substrates (Python, Go, etc.), not to PostgreSQL.
+
 This substrate tests the PostgreSQL implementation of calculated fields against the
 canonical answer keys derived from the rulebook.
 

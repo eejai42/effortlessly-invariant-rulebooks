@@ -44,7 +44,7 @@ func main() {
 	var totalRecords int
 
 	// ─────────────────────────────────────────────────────────────────
-	// Load related tables for aggregation calculations
+	// Process Customers
 	// ─────────────────────────────────────────────────────────────────
 	// Note: SUMIFS loads from answer-keys (has computed fields)
 	//       COUNTIFS loads from blank-tests
@@ -68,16 +68,9 @@ func main() {
 		})
 	}
 
-	// ─────────────────────────────────────────────────────────────────
-	// Process Workflows
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing Workflows...")
-	workflowsInput := filepath.Join(blankTestsDir, "workflows.json")
-	workflowsOutput := filepath.Join(testAnswersDir, "workflows.json")
-
-	workflowsRecords, err := LoadWorkflowRecords(workflowsInput)
+	customersRecords, err := LoadCustomerRecords(customersInput)
 	if err != nil {
-		errMsg := fmt.Sprintf("Workflows: failed to load - %v", err)
+		errMsg := fmt.Sprintf("Customers: failed to load - %v", err)
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
 		errors = append(errors, errMsg)
 	} else {
@@ -276,6 +269,6 @@ func main() {
 	}
 
 	fmt.Println("════════════════════════════════════════════════════════════════")
-	fmt.Printf("Golang substrate: ALL %d tables processed successfully (%d total records)\n", 6, totalRecords)
+	fmt.Printf("Golang substrate: ALL %d tables processed successfully (%d total records)\n", 1, totalRecords)
 	fmt.Println("════════════════════════════════════════════════════════════════")
 }

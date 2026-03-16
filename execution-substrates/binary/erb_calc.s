@@ -373,11 +373,11 @@ _result_buf_eval_workflows_name:
 
     .text
 
-// Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
-// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
-    .globl _eval_workflows_name
+// Full name is computed from the first and last name of the customer
+// Formula: ={{FirstName}} & " " & {{LastName}}
+    .globl _eval_customers_full_name
     .p2align 2
-_eval_workflows_name:
+_eval_customers_full_name:
     stp x29, x30, [sp, #-16]!
     mov x29, sp
     stp x19, x20, [sp, #-16]!
@@ -385,15 +385,8 @@ _eval_workflows_name:
     stp x23, x24, [sp, #-16]!
     sub sp, sp, #256
     mov x19, x0
-    ldr x0, [x19, #32]
-    ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_workflows_name@PAGE
-    add x2, x2, _result_buf_eval_workflows_name@PAGEOFF
-    mov x3, x1
-    mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
+    ldr x0, [x19, #48]
+    ldr x1, [x19, #56]
     str x0, [sp, #16]
     str x1, [sp, #24]
     adrp x0, str_0@PAGE
@@ -568,91 +561,20 @@ _eval_precedes_steps_display_name:
     str x1, [sp, #40]
     ldr x0, [sp, #16]
     ldr x1, [sp, #24]
-    adrp x22, _result_buf_eval_precedes_steps_display_name@PAGE
-    add x22, x22, _result_buf_eval_precedes_steps_display_name@PAGEOFF
+    adrp x22, _result_buf_eval_customers_full_name@PAGE
+    add x22, x22, _result_buf_eval_customers_full_name@PAGEOFF
     ldr x4, [sp, #40]
     ldr x3, [sp, #32]
     mov x2, x1
     mov x1, x0
     mov x0, x22
     bl _string_concat
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-// Formula: =LOWER({{DisplayName}})
-    .globl _eval_roles_name
-    .p2align 2
-_eval_roles_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #32]
-    ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_roles_name@PAGE
-    add x2, x2, _result_buf_eval_roles_name@PAGEOFF
-    mov x3, x1
+    ldr x4, [sp, #56]
+    ldr x3, [sp, #48]
+    mov x2, x1
     mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    add sp, sp, #256
-    ldp x23, x24, [sp], #16
-    ldp x21, x22, [sp], #16
-    ldp x19, x20, [sp], #16
-    ldp x29, x30, [sp], #16
-    ret
-
-// Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
-// Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
-    .globl _eval_departments_name
-    .p2align 2
-_eval_departments_name:
-    stp x29, x30, [sp, #-16]!
-    mov x29, sp
-    stp x19, x20, [sp, #-16]!
-    stp x21, x22, [sp, #-16]!
-    stp x23, x24, [sp, #-16]!
-    sub sp, sp, #256
-    mov x19, x0
-    ldr x0, [x19, #48]
-    ldr x1, [x19, #56]
-    adrp x2, _result_buf_eval_departments_name@PAGE
-    add x2, x2, _result_buf_eval_departments_name@PAGEOFF
-    mov x3, x1
-    mov x1, x0
-    mov x0, x2
-    mov x2, x3
-    bl _string_lower
-    str x0, [sp, #16]
-    str x1, [sp, #24]
-    adrp x0, str_0@PAGE
-    add x0, x0, str_0@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #32]
-    str x1, [sp, #40]
-    adrp x0, str_1@PAGE
-    add x0, x0, str_1@PAGEOFF
-    mov x1, #1
-    str x0, [sp, #48]
-    str x1, [sp, #56]
-    adrp x20, _result_buf_eval_departments_name@PAGE
-    add x20, x20, _result_buf_eval_departments_name@PAGEOFF
-    ldr x1, [sp, #16]
-    ldr x2, [sp, #24]
-    ldr x3, [sp, #32]
-    ldr x4, [sp, #40]
-    ldr x5, [sp, #48]
-    ldr x6, [sp, #56]
-    mov x0, x20
-    bl _string_substitute
+    mov x0, x22
+    bl _string_concat
     add sp, sp, #256
     ldp x23, x24, [sp], #16
     ldp x21, x22, [sp], #16

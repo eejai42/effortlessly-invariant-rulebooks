@@ -5,7 +5,7 @@
 -- Total Views: 14
 -- ============================================================================
 
-CREATE OR REPLACE VIEW vw_workflows WITH (security_invoker = ON) AS
+CREATE OR REPLACE VIEW vw_customers WITH (security_invoker = ON) AS
 SELECT
   t.workflow_id,
   calc_workflows_name(t.workflow_id) AS name,

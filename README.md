@@ -1,6 +1,6 @@
 # Effortless Rulebook (ERB) - Multi-Base Ontology Platform
 
-**One repo. Five ontologies. Eleven execution substrates. Complete conformance.**
+**One repo. 5+ ontologies. 10+ execution substrates. Complete conformance.**
 
 > Swap between completely different domains — workflows, media catalogs, philosophical arguments — and watch Python, Go, SQL, Excel, OWL, and English all regenerate in sync.
 
@@ -10,7 +10,7 @@
 
 ## TL;DR
 
-Write your business rules once in a declarative JSON format. ERB generates working code in Python, Go, SQL, Excel, and more. All versions compute identical results — proven by automated conformance tests. **Switch to a different ontology, and everything regenerates.** This repo includes 5 ready-to-run bases demonstrating the pattern at different complexity levels.
+Write your business rules once in a declarative JSON format. ERB generates working code in Python, Go, SQL, Excel, and more. All versions compute identical results — proven by automated conformance tests. **Switch to a different ontology, and everything regenerates.** This repo includes 5+ ready-to-run bases demonstrating the pattern at different complexity levels.
 
 ---
 
@@ -34,9 +34,10 @@ Start simple, scale to sophistication. Each base demonstrates different ERB capa
 
 | Term | Meaning |
 |------|---------|
-| **Substrate** | A runtime environment that executes rules (Python, Go, SQL, Excel, etc.) |
+| **Substrate** | A runtime environment that executes rules (PostgreSQL, Python, Go, SQL, Excel, etc.) |
+| **Effortless tools** | The three production tools: airtable-to-rulebook, rulebook-to-postgres, rulebook-to-airtable |
 | **Ontology** | The structure of your data — what entities exist and how they relate |
-| **Rulebook** | The JSON file defining your schema, formulas, and data |
+| **Rulebook** | The JSON file defining your schema, formulas, and data (disposable IR) |
 | **IR** | Intermediate Representation — the canonical JSON format between UI and code |
 | **DAG** | Directed Acyclic Graph — how calculated fields depend on each other |
 | **Conformance** | Whether a substrate produces the same outputs as the reference |
@@ -116,10 +117,20 @@ Each base has its own [documentation](bases/) explaining what it demonstrates.
 
 ![Diagram showing Airtable UI exporting to effortless-rulebook.json, which generates code for multiple substrates (Python, Go, SQL, Excel, OWL) that all produce identical outputs verified by conformance tests](./effortless_rulebook_architecture.png)
 
+### Hub and Spokes Around Airtable
+
+The Effortless toolchain forms a **hub-and-spokes** architecture:
+
+1. **airtable-to-rulebook** — Pulls schema + data from Airtable into `effortless-rulebook.json`
+2. **rulebook-to-postgres** — Generates PostgreSQL DDL, functions, views (one of the 3 production Effortless tools)
+3. **rulebook-to-airtable** — Pushes changes back to Airtable
+
+The **rulebook is a disposable IR** — an intermediate representation used to generate substrates. Airtable is the hub; the rulebook exists only to project into PostgreSQL, Python, Go, Excel, and the other execution environments.
+
 ### The Interface
 
 ```
-Airtable (UI) -> effortless-rulebook.json (IR) -> Substrates (Python, Go, SQL, etc.)
+Airtable (UI) -> effortless-rulebook.json (IR) -> Substrates (Postgres, Python, Go, etc.)
 ```
 
 The rulebook defines **the interface**:
@@ -193,19 +204,21 @@ The repo demonstrates **operational drift** through a 3-commit narrative:
 
 Each substrate independently derives answers from the same rulebook. Conformance is measured against a reference execution:
 
+**PostgreSQL is the exception:** It is one of the **three Effortless tools** (airtable-to-rulebook, rulebook-to-postgres, rulebook-to-airtable). The `rulebook-to-postgres` tool has **no limitations** — complex aggregations, multi-table JOINs, window functions, and all other formula capabilities are fully supported. All caveats below apply only to the *local* substrate implementations included in this repo, not to PostgreSQL.
+
 | Substrate | Type | Status | Conformance | Description |
 |-----------|------|:------:|:-----------:|-------------|
-| **PostgreSQL** | Database | Pass | 100% | Tables, `calc_*()` functions, views |
-| **Python** | SDK | Pass | 100% | Dataclasses with `calc_*()` methods |
-| **Go** | SDK | Pass | 100% | Structs with `Calc*()` methods |
-| **XLSX** | Spreadsheet | Pass | 100% | Excel workbook with native formulas |
-| **OWL** | Semantic | Pass | 100%* | Semantic web ontology with SWRL rules |
-| **YAML** | Schema | Pass | 100% | LLM-friendly schema |
-| **CSV** | Tabular | Pass | 100% | Field definitions with computed values |
-| **UML** | Diagram | Pass | 100% | PlantUML class diagrams with OCL constraints |
-| **ExplainDAG** | Audit | Pass | 100% | Derivation DAGs with witnessed values |
-| **Binary** | Native | Pass | 100% | C structs + x86 assembly |
-| **English** | Prose | LLM | ~85% | Human-readable specification (LLM graded) |
+| **PostgreSQL** | Database | Pass | 100% | **Effortless tool.** Tables, `calc_*()` functions, views. No limitations. |
+| **Python** | SDK | Pass | 100% | Local: dataclasses with `calc_*()` methods |
+| **Go** | SDK | Pass | 100% | Local: structs with `Calc*()` methods |
+| **XLSX** | Spreadsheet | Pass | 100% | Local: Excel workbook with native formulas |
+| **OWL** | Semantic | Pass | 100%* | Local: semantic web ontology with SWRL rules |
+| **YAML** | Schema | Pass | 100% | Local: LLM-friendly schema |
+| **CSV** | Tabular | Pass | 100% | Local: field definitions with computed values |
+| **UML** | Diagram | Pass | 100% | Local: PlantUML class diagrams with OCL constraints |
+| **ExplainDAG** | Audit | Pass | 100% | Local: derivation DAGs with witnessed values |
+| **Binary** | Native | Pass | 100% | Local: C structs + x86 assembly |
+| **English** | Prose | LLM | ~85% | Local: human-readable specification (LLM graded) |
 
 **Note on conformance scores**: "100%" means typed-identical output on the tested fragment. Substrates like OWL (*) have richer native semantics - the score reflects agreement on the shared subset, not full semantic equivalence across paradigms.
 
@@ -266,7 +279,7 @@ You can trace any derived value back to its inputs mechanically.
 
 ## 6. Available Ontologies
 
-This repo includes **5 ready-to-run bases** demonstrating the ERB pattern across different domains:
+This repo includes **5+ ready-to-run bases** demonstrating the ERB pattern across different domains:
 
 ### CustomerDemo (Start Here)
 The minimal example: 1 table, 1 formula, 3 rows. See [bases/customer-fullname/](bases/customer-fullname/).
@@ -347,16 +360,23 @@ Airtable formula -> expression tree -> Python/Go/SQL/Excel expression
 
 ---
 
-## 9. Limitations / What This Doesn't Do
+## 9. What This Repo Demonstrates (Local vs. Effortless Tools)
 
-This is a **minimal open-source demonstration**. It does not support:
+This repo includes **local implementations** of substrate generators (Python, Go, XLSX, OWL, etc.) — hello-world-style tools that demonstrate the ERB pattern. The limitation is not that these tools *cannot* support complex features; it is that **this specific repo has not been extended to demonstrate** every capability. Features like complex aggregations (window functions, GROUP BY), recursive formulas, bi-temporal support, and arbitrary multi-table JOINs in formulas are **not yet demonstrated** by the local injectors included here.
 
-- Complex aggregations (window functions, GROUP BY)
-- Recursive formulas
-- Bi-temporal support (valid-time + transaction-time)
-- Multi-table JOINs in formulas
+**PostgreSQL is the exception.** The `rulebook-to-postgres` Effortless tool (one of the three: airtable-to-rulebook, rulebook-to-postgres, rulebook-to-airtable) has no such gaps — it fully supports all formula types, JOINs, and complex aggregations.
 
-The commercial ERB tool handles these cases. This repo shows the core pattern.
+### Local Tools: One Benefit, Two Costs
+
+**Benefit:** Any gap in the local tools can be filled in locally for your domain. Add the missing formula handler, extend the injector, and it works — often remarkably well.
+
+**Costs:**
+1. **Improvements help only once** — Changes to your local injector benefit only your project. They don't propagate to anyone else.
+2. **All dependencies required locally** — Every substrate's runtime and build tooling must be installed on your build infrastructure (Python, Go, Node, COBOL, etc.).
+
+### Effortless Rulebook Tools: Like Git for Business Rules
+
+The Effortless tools (published by EffortlessAPI or others) require **only one CLI** to access any ssotme/rulebook tool. No need to clone, maintain, or extend local injectors. Pull the tool for your target substrate and run it — like `git pull` for business rules.
 
 ---
 
@@ -366,7 +386,7 @@ The commercial ERB tool handles these cases. This repo shows the core pattern.
 No, Airtable is the UI. The exported `effortless-rulebook.json` is the canonical artifact. You could use any UI that produces the same JSON format.
 
 **"What about the English substrate? Isn't it non-deterministic?"**
-Yes — English is the **only** non-deterministic substrate. It uses an LLM to interpret prose documentation and infer computed values. All other substrates (Python, Go, OWL, UML, etc.) are 100% deterministic — same input always produces same output. The "limited" substrates simply don't implement every formula type; when they hit an unsupported formula, they fail deterministically (potentially scoring 0%). English, while slower (2-3 orders of magnitude) and imprecise, rarely fails completely (~80%+ typical).
+Yes — English is the **only** non-deterministic substrate. It uses an LLM to interpret prose documentation and infer computed values. All other substrates (Python, Go, OWL, UML, etc.) are 100% deterministic — same input always produces same output. The local substrate implementations in this repo have not been extended to demonstrate every formula type; when they hit a formula they don't yet handle, they fail deterministically (potentially scoring 0%). **PostgreSQL** (via rulebook-to-postgres) has no such gaps. English, while slower (2-3 orders of magnitude) and imprecise, rarely fails completely (~80%+ typical).
 
 **"How is this different from dbt/MetricFlow/DMN/Substrait?"**
 Those tools solve subsets of the problem:

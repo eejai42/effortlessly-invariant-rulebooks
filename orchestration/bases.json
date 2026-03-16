@@ -8,16 +8,16 @@
     "default": true
   },
   {
-    "id": "applThn0rikpCR9C3",
-    "name": "BASIC: Jessica Talisman's Ontology",
+    "id": "app6afUqa0zBTiMzM",
+    "name": "Jessica Talisman's Special Solutions, Llc",
     "description": "9-table workflow model: Workflows, Steps, Roles, Agents with approval gates and delegation chains",
     "docs": "bases/jessica-basic",
     "complexity": "moderate"
   },
   {
     "id": "appwN9EAp8IeIxM23",
-    "name": "ADVANCED: Jessica Talisman's Ontology",
-    "description": "Extends BASIC with additional business rules, inferences, and cross-entity calculations",
+    "name": "Jessica Talisman's Special Solutions, Inc",
+    "description": "Extends LLC's Ontology with additional business rules, inferences, and cross-entity calculations",
     "docs": "bases/jessica-advanced",
     "complexity": "advanced"
   },
@@ -27,6 +27,13 @@
     "description": "Meta-ontology exploring the thesis that all representations are languages with syntax, semantics, and pragmatics",
     "docs": "bases/is-everything-a-language",
     "complexity": "philosophical"
+  },
+  {
+    "id": "appTXw0qig9id0Y87",
+    "name": "Hangman Game",
+    "description": "A simple hangman game with a word bank and a list of words to choose from",
+    "docs": "bases/hangman-game",
+    "complexity": "minimal"
   },
   {
     "id": "appqwWQxIWFtyDsiL",
