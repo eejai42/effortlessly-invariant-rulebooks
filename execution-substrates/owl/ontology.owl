@@ -46,38 +46,67 @@ erb:roles a owl:DatatypeProperty ;
     rdfs:label "Roles" ;
     rdfs:comment "Back-reference to roles currently filled by this AI agent. Inverse of Roles.FilledBy_AIAgent." .
 
-# === Class: ApprovalGates ===
-erb:ApprovalGates a owl:Class ;
-    rdfs:label "ApprovalGates" ;
-    rdfs:comment "Table: ApprovalGates" .
-
-erb:approvalGateId a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
+erb:workflowArtifacts a owl:DatatypeProperty ;
+    rdfs:domain erb:AIAgents ;
     rdfs:range xsd:string ;
-    rdfs:label "ApprovalGateId" .
+    rdfs:label "WorkflowArtifacts" .
+
+# === Class: Approvals ===
+erb:Approvals a owl:Class ;
+    rdfs:label "Approvals" ;
+    rdfs:comment "Table: Approvals" .
+
+erb:approvalId a owl:DatatypeProperty ;
+    rdfs:domain erb:Approvals ;
+    rdfs:range xsd:string ;
+    rdfs:label "ApprovalId" .
 
 erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
+    rdfs:domain erb:Approvals ;
     rdfs:range xsd:string ;
     rdfs:label "Name" .
     # calculated: calculated
 
 erb:displayName a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
+    rdfs:domain erb:Approvals ;
     rdfs:range xsd:string ;
     rdfs:label "DisplayName" .
 
 erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
+    rdfs:domain erb:Approvals ;
     rdfs:range xsd:string ;
     rdfs:label "WorkflowSteps" ;
     rdfs:comment "Back-reference to workflow steps that use this approval gate. Enables finding all steps requiring this specific gate." .
 
 erb:escalationThresholdHours a owl:DatatypeProperty ;
-    rdfs:domain erb:ApprovalGates ;
+    rdfs:domain erb:Approvals ;
     rdfs:range xsd:integer ;
     rdfs:label "EscalationThresholdHours" ;
     rdfs:comment "Integer number of hours that may elapse on a pending gate before the ntwf:delegatesTo chain activates. Maps to ntwf:escalationThresholdHours. Domain applies only to ApprovalGate individuals." .
+
+erb:workflow_from_WorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Approvals ;
+    rdfs:range xsd:string ;
+    rdfs:label "Workflow_from_WorkflowSteps" .
+    # calculated: lookup
+
+erb:assigned_Role_from_WorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Approvals ;
+    rdfs:range xsd:string ;
+    rdfs:label "Assigned_Role_from_WorkflowSteps" .
+    # calculated: lookup
+
+erb:sequence_Position_from_WorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Approvals ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Sequence_Position_from_WorkflowSteps" .
+    # calculated: lookup
+
+erb:requires_Human_Approval_from_WorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Approvals ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "Requires_Human_Approval_from_WorkflowSteps" .
+    # calculated: lookup
 
 # === Class: AutomatedPipelines ===
 erb:AutomatedPipelines a owl:Class ;
@@ -110,6 +139,11 @@ erb:roles a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:label "Roles" ;
     rdfs:comment "Back-reference to roles currently filled by this pipeline. Inverse of Roles.FilledBy_AutomatedPipeline." .
+
+erb:workflowArtifacts a owl:DatatypeProperty ;
+    rdfs:domain erb:AutomatedPipelines ;
+    rdfs:range xsd:string ;
+    rdfs:label "WorkflowArtifacts" .
 
 # === Class: Departments ===
 erb:Departments a owl:Class ;
@@ -146,6 +180,99 @@ erb:roles a owl:DatatypeProperty ;
     rdfs:label "Roles" ;
     rdfs:comment "Back-reference to roles owned by this department. Inverse of Roles.OwnedBy." .
 
+erb:all_Owned_Roles a owl:DatatypeProperty ;
+    rdfs:domain erb:Departments ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Owned_Roles" .
+    # calculated: lookup
+
+erb:all_Related_Workflow_Steps a owl:DatatypeProperty ;
+    rdfs:domain erb:Departments ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Related_Workflow_Steps" .
+    # calculated: lookup
+
+erb:all_Distinct_Workflows_for_Owned_Roles a owl:DatatypeProperty ;
+    rdfs:domain erb:Departments ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Distinct_Workflows_for_Owned_Roles" .
+    # calculated: lookup
+
+# === Class: ERBCustomizations ===
+erb:ERBCustomizations a owl:Class ;
+    rdfs:label "ERBCustomizations" ;
+    rdfs:comment "Table: ERBCustomizations" .
+
+erb:eRBCustomizationId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "ERBCustomizationId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:title a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "Title" .
+
+erb:sQLCode a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "SQLCode" .
+
+erb:sQLTarget a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "SQLTarget" .
+
+erb:customizationType a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "CustomizationType" .
+
+# === Class: ERBVersions ===
+erb:ERBVersions a owl:Class ;
+    rdfs:label "ERBVersions" ;
+    rdfs:comment "Table: ERBVersions" .
+
+erb:eRBVersionId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "ERBVersionId" .
+
+erb:baseId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "BaseId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:message a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Message" .
+
+erb:notes a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Notes" .
+
+erb:commitDate a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "CommitDate" .
+
+erb:isPublished a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsPublished" .
+
 # === Class: HumanAgents ===
 erb:HumanAgents a owl:Class ;
     rdfs:label "HumanAgents" ;
@@ -179,6 +306,29 @@ erb:roles a owl:DatatypeProperty ;
     rdfs:label "Roles" ;
     rdfs:comment "Back-reference to roles currently filled by this agent. Inverse of Roles.FilledBy_HumanAgent." .
 
+erb:all_Linked_Roles a owl:DatatypeProperty ;
+    rdfs:domain erb:HumanAgents ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Linked_Roles" .
+    # calculated: lookup
+
+erb:all_Related_Workflow_Steps a owl:DatatypeProperty ;
+    rdfs:domain erb:HumanAgents ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Related_Workflow_Steps" .
+    # calculated: lookup
+
+erb:all_Distinct_Workflows_for_Linked_Roles a owl:DatatypeProperty ;
+    rdfs:domain erb:HumanAgents ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Distinct_Workflows_for_Linked_Roles" .
+    # calculated: lookup
+
+erb:workflowArtifacts a owl:DatatypeProperty ;
+    rdfs:domain erb:HumanAgents ;
+    rdfs:range xsd:string ;
+    rdfs:label "WorkflowArtifacts" .
+
 # === Class: PrecedesSteps ===
 erb:PrecedesSteps a owl:Class ;
     rdfs:label "PrecedesSteps" ;
@@ -195,12 +345,6 @@ erb:name a owl:DatatypeProperty ;
     rdfs:label "Name" ;
     rdfs:comment "Ordinal sequence number for the relationship. Used for sorting and display." .
 
-erb:workflowStep a owl:DatatypeProperty ;
-    rdfs:domain erb:PrecedesSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowStep" ;
-    rdfs:comment "Foreign key to the step that comes BEFORE. The source of the 'precedes' relationship." .
-
 erb:displayName a owl:DatatypeProperty ;
     rdfs:domain erb:PrecedesSteps ;
     rdfs:range xsd:string ;
@@ -211,6 +355,12 @@ erb:stepNumber a owl:DatatypeProperty ;
     rdfs:domain erb:PrecedesSteps ;
     rdfs:range xsd:integer ;
     rdfs:label "StepNumber" .
+
+erb:workflowStep a owl:DatatypeProperty ;
+    rdfs:domain erb:PrecedesSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "WorkflowStep" ;
+    rdfs:comment "Foreign key to the step that comes BEFORE. The source of the 'precedes' relationship." .
 
 # === Class: Roles ===
 erb:Roles a owl:Class ;
@@ -283,6 +433,120 @@ erb:fromDelegatesTo a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:label "FromDelegatesTo" .
 
+erb:all_Linked_Workflow_Steps a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label "All_Linked_Workflow_Steps" .
+    # calculated: lookup
+
+erb:distinct_Workflows_for_Linked_Steps a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label "Distinct_Workflows_for_Linked_Steps" .
+    # calculated: lookup
+
+erb:workflowArtifacts a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label "WorkflowArtifacts" .
+
+# === Class: StepTransitions ===
+erb:StepTransitions a owl:Class ;
+    rdfs:label "StepTransitions" ;
+    rdfs:comment "Table: StepTransitions" .
+
+erb:stepTransitionId a owl:DatatypeProperty ;
+    rdfs:domain erb:StepTransitions ;
+    rdfs:range xsd:string ;
+    rdfs:label "StepTransitionId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:StepTransitions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:from_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:StepTransitions ;
+    rdfs:range xsd:string ;
+    rdfs:label "From_Step" .
+
+erb:to_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:StepTransitions ;
+    rdfs:range xsd:string ;
+    rdfs:label "To_Step" .
+
+erb:workflow_from_From_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:StepTransitions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Workflow_from_From_Step" .
+    # calculated: lookup
+
+# === Class: WorkflowArtifacts ===
+erb:WorkflowArtifacts a owl:Class ;
+    rdfs:label "WorkflowArtifacts" ;
+    rdfs:comment "Table: WorkflowArtifacts" .
+
+erb:workflowArtifactId a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "WorkflowArtifactId" .
+
+erb:artifact_Name a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Artifact_Name" .
+
+erb:produced_By_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Produced_By_Step" .
+
+erb:workflow_from_Produced_By_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Workflow_from_Produced_By_Step" .
+    # calculated: lookup
+
+erb:attributed_Role a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Attributed_Role" .
+
+erb:attributed_Human_Agent a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Attributed_Human_Agent" .
+
+erb:attributed_AI_Agent a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Attributed_AI_Agent" .
+
+erb:attributed_Pipeline a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Attributed_Pipeline" .
+
+erb:derived_From_Artifact a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Derived_From_Artifact" .
+
+erb:artifact_Description a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Artifact_Description" .
+
+erb:artifact_File a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "Artifact_File" .
+
+erb:from_field_Derived_From_Artifact a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowArtifacts ;
+    rdfs:range xsd:string ;
+    rdfs:label "From_field_Derived_From_Artifact" .
+
 # === Class: WorkflowSteps ===
 erb:WorkflowSteps a owl:Class ;
     rdfs:label "WorkflowSteps" ;
@@ -340,6 +604,39 @@ erb:precededBySteps a owl:DatatypeProperty ;
     rdfs:label "PrecededBySteps" ;
     rdfs:comment "Reference to steps that must complete before this step can execute. Part of the ntwf:precedesStep transitive ordering relationship." .
 
+erb:executionActorType a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "ExecutionActorType" .
+    # calculated: calculated
+
+erb:assignedRoleDepartment a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "AssignedRoleDepartment" .
+    # calculated: lookup
+
+erb:approvalGateEscalationThresholdHours a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:integer ;
+    rdfs:label "ApprovalGateEscalationThresholdHours" .
+    # calculated: lookup
+
+erb:stepTransitions_From_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "StepTransitions_From_Step" .
+
+erb:stepTransitions_To_Step a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "StepTransitions_To_Step" .
+
+erb:workflowArtifacts a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "WorkflowArtifacts" .
+
 # === Class: Workflows ===
 erb:Workflows a owl:Class ;
     rdfs:label "Workflows" ;
@@ -368,11 +665,6 @@ erb:title a owl:DatatypeProperty ;
     rdfs:label "Title" ;
     rdfs:comment "Human-readable title of the workflow. Maps to dct:title from Dublin Core. Example: 'Production Deployment Workflow', 'Employee Onboarding'." .
 
-erb:color a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Color" .
-
 erb:description a owl:DatatypeProperty ;
     rdfs:domain erb:Workflows ;
     rdfs:range xsd:string ;
@@ -397,10 +689,10 @@ erb:workflowSteps a owl:DatatypeProperty ;
     rdfs:label "WorkflowSteps" ;
     rdfs:comment "Reference to workflow steps. Represents the ntwf:hasStep relationship linking workflows to their constituent steps." .
 
-erb:countOfNonProposedSteps a owl:DatatypeProperty ;
+erb:countOfSteps a owl:DatatypeProperty ;
     rdfs:domain erb:Workflows ;
     rdfs:range xsd:integer ;
-    rdfs:label "CountOfNonProposedSteps" ;
+    rdfs:label "CountOfSteps" ;
     rdfs:comment "Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting." .
     # calculated: aggregation
 

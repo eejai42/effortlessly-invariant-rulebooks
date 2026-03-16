@@ -1,16 +1,16 @@
 {
   "ShowHidden": false,
   "ShowAllFiles": false,
-  "Name": "BASIC: Jessica Talisman's Ontology",
+  "Name": "ADVANCED: Jessica Talisman's Ontology",
   "Description": "IMPORTANT!!!! ** BASIC baseId: applThn0rikpCR9C3, ADVANCED baseId: appwN9EAp8IeIxM23",
   "ProjectSettings": [
     {
       "Name": "baseId",
-      "Value": "applThn0rikpCR9C3"
+      "Value": "appwN9EAp8IeIxM23"
     },
     {
       "Name": "project-name",
-      "Value": "BASIC: Jessica Talisman's Ontology"
+      "Value": "ADVANCED: Jessica Talisman's Ontology"
     },
     {
       "Name": "_apikey_",

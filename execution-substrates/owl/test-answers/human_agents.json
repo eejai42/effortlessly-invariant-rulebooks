@@ -1,0 +1,35 @@
+[
+  {
+    "human_agent_id": "maria-gonzalez",
+    "name": "maria-gonzalez",
+    "display_name": "Maria Gonzalez",
+    "mbox": "mailto:maria.gonzalez@specialsolutions.example",
+    "roles": "release-manager",
+    "all_linked_roles": "release manager",
+    "all_related_workflow_steps": "release-approval-gate, post-deployment-review",
+    "all_distinct_workflows_for_linked_roles": "production-deployment, production-deployment",
+    "workflow_artifacts": null
+  },
+  {
+    "human_agent_id": "james-okafor",
+    "name": "james-okafor",
+    "display_name": "James Okafor",
+    "mbox": "mailto:james.okafor@specialsolutions.example",
+    "roles": "vp-engineering",
+    "all_linked_roles": "vp engineering",
+    "all_related_workflow_steps": null,
+    "all_distinct_workflows_for_linked_roles": null,
+    "workflow_artifacts": null
+  },
+  {
+    "human_agent_id": "chen-wei",
+    "name": "chen-wei",
+    "display_name": "Chen Wei",
+    "mbox": "mailto:chen.wei@specialsolutions.example",
+    "roles": "cto",
+    "all_linked_roles": "cto",
+    "all_related_workflow_steps": null,
+    "all_distinct_workflows_for_linked_roles": null,
+    "workflow_artifacts": null
+  }
+]

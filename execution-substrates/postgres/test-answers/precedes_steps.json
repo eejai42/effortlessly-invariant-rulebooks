@@ -1,114 +1,37 @@
 [
   {
-    "precedes_step_id": "assign-task-to-team",
-    "name": "assign-task-to-team",
-    "workflow_step": "some-new-task",
-    "display_name": "Step-16",
-    "step_number": 16
-  },
-  {
     "precedes_step_id": "step-1",
     "name": "step-1",
-    "workflow_step": "submit-request",
-    "display_name": "Step-1",
-    "step_number": 1
-  },
-  {
-    "precedes_step_id": "step-10",
-    "name": "step-10",
-    "workflow_step": "customer-feedback-collection",
-    "display_name": "Step-10",
-    "step_number": 10
-  },
-  {
-    "precedes_step_id": "step-11",
-    "name": "step-11",
-    "workflow_step": "legal-compliance-check",
-    "display_name": "Step-11",
-    "step_number": 11
-  },
-  {
-    "precedes_step_id": "step-12",
-    "name": "step-12",
-    "workflow_step": "assign-task-to-team",
-    "display_name": "Step-12",
-    "step_number": 12
-  },
-  {
-    "precedes_step_id": "step-13",
-    "name": "step-13",
-    "workflow_step": "team-lead-review",
-    "display_name": "Step-13",
-    "step_number": 13
-  },
-  {
-    "precedes_step_id": "step-14",
-    "name": "step-14",
-    "workflow_step": "generate-report",
-    "display_name": "Step-14",
-    "step_number": 14
-  },
-  {
-    "precedes_step_id": "step-15",
-    "name": "step-15",
-    "workflow_step": "close-workflow",
-    "display_name": "Step-15",
-    "step_number": 15
+    "display_name": "Step-32",
+    "step_number": 32,
+    "workflow_step": "legal-clearance"
   },
   {
     "precedes_step_id": "step-2",
     "name": "step-2",
-    "workflow_step": "manager-review",
-    "display_name": "Step-2",
-    "step_number": 2
+    "display_name": "Step-33",
+    "step_number": 33,
+    "workflow_step": "release-approval-gate"
   },
   {
     "precedes_step_id": "step-3",
     "name": "step-3",
-    "workflow_step": "automated-eligibility-check",
-    "display_name": "Step-3",
-    "step_number": 3
+    "display_name": "Step-34",
+    "step_number": 34,
+    "workflow_step": "deployment-execution"
   },
   {
     "precedes_step_id": "step-4",
     "name": "step-4",
-    "workflow_step": "finance-approval",
-    "display_name": "Step-4",
-    "step_number": 4
+    "display_name": "Step-35",
+    "step_number": 35,
+    "workflow_step": "post-deployment-review"
   },
   {
     "precedes_step_id": "step-5",
     "name": "step-5",
-    "workflow_step": "document-verification",
-    "display_name": "Step-5",
-    "step_number": 5
-  },
-  {
-    "precedes_step_id": "step-6",
-    "name": "step-6",
-    "workflow_step": "quality-assurance-review",
-    "display_name": "Step-6",
-    "step_number": 6
-  },
-  {
-    "precedes_step_id": "step-7",
-    "name": "step-7",
-    "workflow_step": "system-notification-sent",
-    "display_name": "Step-7",
-    "step_number": 7
-  },
-  {
-    "precedes_step_id": "step-8",
-    "name": "step-8",
-    "workflow_step": "final-approval",
-    "display_name": "Step-8",
-    "step_number": 8
-  },
-  {
-    "precedes_step_id": "step-9",
-    "name": "step-9",
-    "workflow_step": "archive-request",
-    "display_name": "Step-9",
-    "step_number": 9
+    "display_name": "Step-36",
+    "step_number": 36,
+    "workflow_step": ""
   }
 ]

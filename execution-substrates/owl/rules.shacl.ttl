@@ -4,12 +4,12 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Shape with rules for ApprovalGates ===
-erb:ApprovalGatesShape a sh:NodeShape ;
-    sh:targetClass erb:ApprovalGates ;
+# === Shape with rules for Approvals ===
+erb:ApprovalsShape a sh:NodeShape ;
+    sh:targetClass erb:Approvals ;
     sh:rule [
         a sh:SPARQLRule ;
-        rdfs:label "rule_ApprovalGates_Name" ;
+        rdfs:label "rule_Approvals_Name" ;
         sh:prefixes erb: ;
         sh:construct """
             PREFIX erb: <http://example.org/erb#>
@@ -18,12 +18,16 @@ erb:ApprovalGatesShape a sh:NodeShape ;
                 $this erb:name ?_result .
             }
             WHERE {
-    $this a erb:ApprovalGates .
+    $this a erb:Approvals .
     OPTIONAL { $this erb:displayName ?display_name . }
                 BIND(REPLACE(LCASE(?display_name), " ", "-") AS ?_result)
             }
         """ ;
     ] .
+# Rule for Workflow_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+# Rule for Assigned_Role_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+# Rule for Sequence_Position_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+# Rule for Requires_Human_Approval_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
 
 # === Shape with rules for Departments ===
 erb:DepartmentsShape a sh:NodeShape ;
@@ -45,6 +49,16 @@ erb:DepartmentsShape a sh:NodeShape ;
             }
         """ ;
     ] .
+# Rule for All_Owned_Roles - parse error: Unexpected character '!' at position 11
+# Rule for All_Related_Workflow_Steps - parse error: Unexpected character '!' at position 11
+# Rule for All_Distinct_Workflows_for_Owned_Roles - parse error: Unexpected character '!' at position 11
+
+# === Shape with rules for HumanAgents ===
+erb:HumanAgentsShape a sh:NodeShape ;
+    sh:targetClass erb:HumanAgents .
+# Rule for All_Linked_Roles - parse error: Unexpected character '!' at position 11
+# Rule for All_Related_Workflow_Steps - parse error: Unexpected character '!' at position 11
+# Rule for All_Distinct_Workflows_for_Linked_Roles - parse error: Unexpected character '!' at position 11
 
 # === Shape with rules for PrecedesSteps ===
 erb:PrecedesStepsShape a sh:NodeShape ;
@@ -87,6 +101,18 @@ erb:RolesShape a sh:NodeShape ;
             }
         """ ;
     ] .
+# Rule for All_Linked_Workflow_Steps - parse error: Unexpected character '!' at position 19
+# Rule for Distinct_Workflows_for_Linked_Steps - parse error: Unexpected character '!' at position 19
+
+# === Shape with rules for StepTransitions ===
+erb:StepTransitionsShape a sh:NodeShape ;
+    sh:targetClass erb:StepTransitions .
+# Rule for Workflow_from_From_Step - parse error: Unexpected character '!' at position 19
+
+# === Shape with rules for WorkflowArtifacts ===
+erb:WorkflowArtifactsShape a sh:NodeShape ;
+    sh:targetClass erb:WorkflowArtifacts .
+# Rule for Workflow_from_Produced_By_Step - parse error: Unexpected character '!' at position 19
 
 # === Shape with rules for WorkflowSteps ===
 erb:WorkflowStepsShape a sh:NodeShape ;
@@ -108,6 +134,9 @@ erb:WorkflowStepsShape a sh:NodeShape ;
             }
         """ ;
     ] .
+# Rule for ExecutionActorType - parse error: Unknown function: BLANK
+# Rule for AssignedRoleDepartment - parse error: Unexpected character '!' at position 11
+# Rule for ApprovalGateEscalationThresholdHours - parse error: Unexpected character '!' at position 15
 
 # === Shape with rules for Workflows ===
 erb:WorkflowsShape a sh:NodeShape ;
@@ -141,11 +170,11 @@ erb:WorkflowsShape a sh:NodeShape ;
             }
             WHERE {
     $this a erb:Workflows .
-    OPTIONAL { $this erb:countOfNonProposedSteps ?count_of_non_proposed_steps . }
-                BIND((?count_of_non_proposed_steps > 1) AS ?_result)
+    OPTIONAL { $this erb:countOfSteps ?count_of_steps . }
+                BIND((?count_of_steps > 1) AS ?_result)
             }
         """ ;
     ] .
-# Rule for CountOfNonProposedSteps - parse error: Unexpected character '!' at position 22
+# Rule for CountOfSteps - parse error: Unexpected character '!' at position 22
 
 # Generated 7 SHACL rules

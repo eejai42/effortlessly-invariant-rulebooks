@@ -215,43 +215,18 @@ python3 take-test.py
 
 | Metric | Value |
 |--------|-------|
-| Total Fields Tested | 122 |
-| Passed | 122 |
+| Total Fields Tested | 264 |
+| Passed | 264 |
 | Failed | 0 |
 | Score | 100.0% |
-| Duration | 2s |
+| Duration | &lt; 1s |
 
 ## Results by Entity
 
-### roles
+### language_candidates
 
-- Fields: 15/15 (100.0%)
-- Computed columns: name
-
-### workflow_steps
-
-- Fields: 20/20 (100.0%)
-- Computed columns: name
-
-### workflows
-
-- Fields: 45/45 (100.0%)
-- Computed columns: name, count_of_non_proposed_steps, has_more_than1_step
-
-### precedes_steps
-
-- Fields: 16/16 (100.0%)
-- Computed columns: display_name
-
-### departments
-
-- Fields: 15/15 (100.0%)
-- Computed columns: name
-
-### approval_gates
-
-- Fields: 11/11 (100.0%)
-- Computed columns: name
+- Fields: 264/264 (100.0%)
+- Computed columns: has_grammar, question, predicted_answer, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
 </pre>
         </div>
     </div>
@@ -265,17 +240,21 @@ postgres: Starting test...
 postgres: Connecting to database and querying views...
 PostgreSQL Substrate: Starting test...
 PostgreSQL Substrate: Connected to database
-PostgreSQL Substrate: Found 9 views
-  -&gt; ai_agents: 15 records
-  -&gt; approval_gates: 11 records
-  -&gt; automated_pipelines: 15 records
-  -&gt; departments: 15 records
-  -&gt; human_agents: 15 records
-  -&gt; precedes_steps: 16 records
-  -&gt; roles: 15 records
-  -&gt; workflow_steps: 20 records
-  -&gt; workflows: 15 records
-PostgreSQL Substrate: Processed 9 views, 137 total records
+PostgreSQL Substrate: Found 13 views
+  -&gt; ai_agents: 1 records
+  -&gt; approvals: 1 records
+  -&gt; automated_pipelines: 1 records
+  -&gt; departments: 2 records
+  -&gt; erb_customizations: 5 records
+  -&gt; erb_versions: 0 records
+  -&gt; human_agents: 3 records
+  -&gt; precedes_steps: 5 records
+  -&gt; roles: 6 records
+  -&gt; step_transitions: 1 records
+  -&gt; workflow_artifacts: 1 records
+  -&gt; workflow_steps: 5 records
+  -&gt; workflows: 1 records
+PostgreSQL Substrate: Processed 13 views, 32 total records
 
 </pre>
         </div>

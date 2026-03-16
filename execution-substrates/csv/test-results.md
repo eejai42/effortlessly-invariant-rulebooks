@@ -4,8 +4,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Fields Tested | 122 |
-| Passed | 122 |
+| Total Fields Tested | 27 |
+| Passed | 27 |
 | Failed | 0 |
 | Score | 100.0% |
 | Duration | < 1s |
@@ -14,30 +14,30 @@
 
 ### roles
 
-- Fields: 15/15 (100.0%)
+- Fields: 6/6 (100.0%)
 - Computed columns: name
 
 ### workflow_steps
 
-- Fields: 20/20 (100.0%)
-- Computed columns: name
+- Fields: 10/10 (100.0%)
+- Computed columns: name, execution_actor_type
 
 ### workflows
 
-- Fields: 45/45 (100.0%)
-- Computed columns: name, count_of_non_proposed_steps, has_more_than1_step
+- Fields: 3/3 (100.0%)
+- Computed columns: name, count_of_steps, has_more_than1_step
 
 ### precedes_steps
 
-- Fields: 16/16 (100.0%)
+- Fields: 5/5 (100.0%)
 - Computed columns: display_name
 
 ### departments
 
-- Fields: 15/15 (100.0%)
+- Fields: 2/2 (100.0%)
 - Computed columns: name
 
-### approval_gates
+### approvals
 
-- Fields: 11/11 (100.0%)
+- Fields: 1/1 (100.0%)
 - Computed columns: name

@@ -325,25 +325,59 @@ def parse_countifs_formula(formula: str) -> tuple:
     return (None, None, None)
 
 
+def parse_sumifs_formula(formula: str) -> tuple:
+    """
+    Parse a SUMIFS formula to extract the related table, sum field, criteria field, and match field.
+
+    Formula format: =SUMIFS(RelatedTable!{{SumField}}, RelatedTable!{{CriteriaField}}, CurrentTable!{{MatchField}})
+    Example: =SUMIFS(WorkflowSteps!{{Name}}, WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})
+
+    Returns: (related_table, sum_field, criteria_field, match_field) or (None, None, None, None) if not parseable
+    """
+    import re
+    # Match pattern: SUMIFS(Table!{{Field}}, Table!{{Field}}, Table!{{Field}})
+    pattern = r'=SUMIFS\((\w+)!\{\{(\w+)\}\},\s*(\w+)!\{\{(\w+)\}\},\s*\w+!\{\{(\w+)\}\}\)'
+    match = re.match(pattern, formula)
+    if match:
+        related_table = match.group(1)  # e.g., "WorkflowSteps"
+        sum_field = match.group(2)      # e.g., "Name"
+        # criteria_table = match.group(3) - should match related_table
+        criteria_field = match.group(4) # e.g., "AssignedRole"
+        match_field = match.group(5)    # e.g., "RoleId"
+        return (related_table, sum_field, criteria_field, match_field)
+    return (None, None, None, None)
+
+
 def load_related_data(project_root: Path, related_table: str) -> list:
     """
-    Load data from testing/blank-tests for a related table.
+    Load data from testing/answer-keys for a related table.
+
+    Prefers answer-keys (which have computed fields) over blank-tests.
+    This is necessary for aggregations that reference calculated fields
+    in related tables (e.g., SUMIFS on a computed Name field).
 
     Args:
         project_root: Path to the project root
         related_table: PascalCase name of the related table
 
     Returns:
-        List of records from the related table's blank-tests file
+        List of records from the related table's data file
     """
     snake_name = to_snake_case(related_table)
+
+    # Prefer answer-keys (has computed fields) over blank-tests
+    answer_keys_path = project_root / "testing" / "answer-keys" / f"{snake_name}.json"
+    if answer_keys_path.exists():
+        with open(answer_keys_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+
+    # Fall back to blank-tests
     blank_tests_path = project_root / "testing" / "blank-tests" / f"{snake_name}.json"
+    if blank_tests_path.exists():
+        with open(blank_tests_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
 
-    if not blank_tests_path.exists():
-        return []
-
-    with open(blank_tests_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+    return []
 
 
 def estimate_llm_time(rulebook: dict, seconds_per_unit: float = 2.0) -> str:
@@ -390,7 +424,7 @@ def compute_aggregations(records: list, entity_name: str, rulebook: dict, projec
     Compute aggregation fields for a list of records.
 
     This function identifies aggregation fields in the schema, loads related data,
-    and computes the aggregated values (e.g., COUNTIFS).
+    and computes the aggregated values (e.g., COUNTIFS, SUMIFS).
 
     Args:
         records: List of records to update with aggregation values
@@ -415,33 +449,135 @@ def compute_aggregations(records: list, entity_name: str, rulebook: dict, projec
         formula = field.get('formula', '')
         snake_field_name = to_snake_case(field_name)
 
-        # Parse the formula
+        # Try COUNTIFS first
         related_table, lookup_field, match_field = parse_countifs_formula(formula)
 
-        if not related_table:
+        if related_table:
+            # Handle COUNTIFS - count matching records
+            if related_table not in related_data_cache:
+                related_data_cache[related_table] = load_related_data(project_root, related_table)
+
+            related_records = related_data_cache[related_table]
+            snake_lookup_field = to_snake_case(lookup_field)
+            snake_match_field = to_snake_case(match_field)
+
+            # Build a count map: match_value -> count
+            count_map = {}
+            for related_record in related_records:
+                lookup_value = related_record.get(snake_lookup_field)
+                if lookup_value is not None:
+                    count_map[lookup_value] = count_map.get(lookup_value, 0) + 1
+
+            # Update each record with the aggregation value
+            for record in records:
+                match_value = record.get(snake_match_field)
+                if match_value is not None:
+                    record[snake_field_name] = count_map.get(match_value, 0)
+                else:
+                    record[snake_field_name] = 0
             continue
 
-        # Load related data (with caching)
-        if related_table not in related_data_cache:
-            related_data_cache[related_table] = load_related_data(project_root, related_table)
+        # Try SUMIFS
+        related_table, sum_field, criteria_field, match_field = parse_sumifs_formula(formula)
 
-        related_records = related_data_cache[related_table]
-        snake_lookup_field = to_snake_case(lookup_field)
-        snake_match_field = to_snake_case(match_field)
+        if related_table:
+            # Handle SUMIFS - collect and concatenate matching values
+            if related_table not in related_data_cache:
+                related_data_cache[related_table] = load_related_data(project_root, related_table)
 
-        # Build a count map: match_value -> count
-        count_map = {}
-        for related_record in related_records:
-            lookup_value = related_record.get(snake_lookup_field)
-            if lookup_value is not None:
-                count_map[lookup_value] = count_map.get(lookup_value, 0) + 1
+            related_records = related_data_cache[related_table]
+            snake_sum_field = to_snake_case(sum_field)
+            snake_criteria_field = to_snake_case(criteria_field)
+            snake_match_field = to_snake_case(match_field)
 
-        # Update each record with the aggregation value
-        for record in records:
-            match_value = record.get(snake_match_field)
-            if match_value is not None:
-                record[snake_field_name] = count_map.get(match_value, 0)
-            else:
-                record[snake_field_name] = 0
+            # Check if this is a "distinct" aggregation (deduplication needed)
+            is_distinct = 'distinct' in field_name.lower()
+
+            # Find the primary key field for related records (for lookup by ID)
+            related_pk_field = to_snake_case(related_table[:-1] + 'Id')  # e.g., "Roles" -> "role_id"
+            # Build a lookup map: pk_value -> record
+            pk_to_record = {}
+            for rec in related_records:
+                pk_val = rec.get(related_pk_field)
+                if pk_val:
+                    pk_to_record[pk_val] = rec
+
+            # Find relationship field in current schema that points to related table
+            # This determines the ordering
+            relationship_field = None
+            for f in schema:
+                if f.get('type') == 'relationship' and f.get('RelatedTo') == related_table:
+                    relationship_field = to_snake_case(f.get('name'))
+                    break
+
+            # Update each record with the aggregation value
+            for record in records:
+                match_value = record.get(snake_match_field)
+                values = []
+                has_any_match = False
+
+                # If we have a relationship field, use its order
+                if relationship_field and relationship_field in record and record[relationship_field]:
+                    rel_ids = [rid.strip() for rid in str(record[relationship_field]).split(',') if rid.strip()]
+                    for rel_id in rel_ids:
+                        rel_rec = pk_to_record.get(rel_id)
+                        if rel_rec:
+                            # Check if criteria matches (for chained aggregations)
+                            criteria_value = rel_rec.get(snake_criteria_field)
+                            if criteria_value == match_value:
+                                has_any_match = True
+                                sum_value = rel_rec.get(snake_sum_field)
+                                # Include value (or empty string for 0/"" values)
+                                if sum_value is not None and sum_value != '' and sum_value != 0:
+                                    str_value = str(sum_value)
+                                    if is_distinct:
+                                        if str_value not in values:
+                                            values.append(str_value)
+                                    else:
+                                        values.append(str_value)
+                                else:
+                                    # Include empty placeholder for 0 or "" values
+                                    values.append('')
+                else:
+                    # No relationship field - fall back to sequence_position sorting
+                    sorted_records = sorted(
+                        related_records,
+                        key=lambda r: r.get('sequence_position', 0) if r.get('sequence_position') is not None else 0
+                    )
+                    for related_record in sorted_records:
+                        criteria_value = related_record.get(snake_criteria_field)
+                        if criteria_value == match_value:
+                            has_any_match = True
+                            sum_value = related_record.get(snake_sum_field)
+                            if sum_value is not None and sum_value != '' and sum_value != 0:
+                                str_value = str(sum_value)
+                                if is_distinct:
+                                    if str_value not in values:
+                                        values.append(str_value)
+                                else:
+                                    values.append(str_value)
+
+                # Set the aggregation value
+                # - For distinct fields: only join non-empty values, no empty placeholders
+                # - For non-distinct fields: include all values including empty placeholders
+                # - When no matches found: return "" for distinct, 0 for non-distinct
+                # - When matches found but all values empty: return 0
+                non_empty_values = [v for v in values if v]
+                if non_empty_values:
+                    if is_distinct:
+                        # Distinct: only join non-empty unique values
+                        record[snake_field_name] = ', '.join(non_empty_values)
+                    else:
+                        # Non-distinct: include all values (with empty placeholders)
+                        record[snake_field_name] = ', '.join(values)
+                elif has_any_match:
+                    # Matches found but all values are empty -> 0
+                    record[snake_field_name] = 0
+                elif is_distinct:
+                    # No matches found, distinct field -> ""
+                    record[snake_field_name] = ""
+                else:
+                    # No matches found, non-distinct field -> 0
+                    record[snake_field_name] = 0
 
     return records

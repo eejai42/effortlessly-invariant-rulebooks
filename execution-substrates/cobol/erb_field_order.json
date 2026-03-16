@@ -4,32 +4,30 @@
       "WorkflowId",
       "DisplayName",
       "Title",
-      "Color",
       "Description",
       "Identifier",
       "Modified",
       "WorkflowSteps",
-      "CountOfNonProposedSteps",
+      "CountOfSteps",
       "Name",
       "HasMoreThan1Step"
     ],
-    "raw_count": 9
+    "raw_count": 8
   },
   "workflows": {
     "fields": [
       "WorkflowId",
       "DisplayName",
       "Title",
-      "Color",
       "Description",
       "Identifier",
       "Modified",
       "WorkflowSteps",
-      "CountOfNonProposedSteps",
+      "CountOfSteps",
       "Name",
       "HasMoreThan1Step"
     ],
-    "raw_count": 9
+    "raw_count": 8
   },
   "WorkflowSteps": {
     "fields": [
@@ -41,9 +39,15 @@
       "RequiresHumanApproval",
       "ApprovalGate",
       "PrecededBySteps",
-      "Name"
+      "AssignedRoleDepartment",
+      "ApprovalGateEscalationThresholdHours",
+      "StepTransitions_From_Step",
+      "StepTransitions_To_Step",
+      "WorkflowArtifacts",
+      "Name",
+      "ExecutionActorType"
     ],
-    "raw_count": 8
+    "raw_count": 13
   },
   "workflow_steps": {
     "fields": [
@@ -55,36 +59,50 @@
       "RequiresHumanApproval",
       "ApprovalGate",
       "PrecededBySteps",
+      "AssignedRoleDepartment",
+      "ApprovalGateEscalationThresholdHours",
+      "StepTransitions_From_Step",
+      "StepTransitions_To_Step",
+      "WorkflowArtifacts",
+      "Name",
+      "ExecutionActorType"
+    ],
+    "raw_count": 13
+  },
+  "Approvals": {
+    "fields": [
+      "ApprovalId",
+      "DisplayName",
+      "WorkflowSteps",
+      "EscalationThresholdHours",
+      "Workflow_from_WorkflowSteps",
+      "Assigned_Role_from_WorkflowSteps",
+      "Sequence_Position_from_WorkflowSteps",
+      "Requires_Human_Approval_from_WorkflowSteps",
       "Name"
     ],
     "raw_count": 8
   },
-  "ApprovalGates": {
+  "approvals": {
     "fields": [
-      "ApprovalGateId",
+      "ApprovalId",
       "DisplayName",
       "WorkflowSteps",
       "EscalationThresholdHours",
+      "Workflow_from_WorkflowSteps",
+      "Assigned_Role_from_WorkflowSteps",
+      "Sequence_Position_from_WorkflowSteps",
+      "Requires_Human_Approval_from_WorkflowSteps",
       "Name"
     ],
-    "raw_count": 4
-  },
-  "approval_gates": {
-    "fields": [
-      "ApprovalGateId",
-      "DisplayName",
-      "WorkflowSteps",
-      "EscalationThresholdHours",
-      "Name"
-    ],
-    "raw_count": 4
+    "raw_count": 8
   },
   "PrecedesSteps": {
     "fields": [
       "PrecedesStepId",
       "Name",
-      "WorkflowStep",
       "StepNumber",
+      "WorkflowStep",
       "DisplayName"
     ],
     "raw_count": 4
@@ -93,8 +111,8 @@
     "fields": [
       "PrecedesStepId",
       "Name",
-      "WorkflowStep",
       "StepNumber",
+      "WorkflowStep",
       "DisplayName"
     ],
     "raw_count": 4
@@ -112,9 +130,12 @@
       "DelegatesTo",
       "WorkflowSteps",
       "FromDelegatesTo",
+      "All_Linked_Workflow_Steps",
+      "Distinct_Workflows_for_Linked_Steps",
+      "WorkflowArtifacts",
       "Name"
     ],
-    "raw_count": 11
+    "raw_count": 14
   },
   "roles": {
     "fields": [
@@ -129,9 +150,12 @@
       "DelegatesTo",
       "WorkflowSteps",
       "FromDelegatesTo",
+      "All_Linked_Workflow_Steps",
+      "Distinct_Workflows_for_Linked_Steps",
+      "WorkflowArtifacts",
       "Name"
     ],
-    "raw_count": 11
+    "raw_count": 14
   },
   "Departments": {
     "fields": [
@@ -139,9 +163,12 @@
       "Title",
       "DisplayName",
       "Roles",
+      "All_Owned_Roles",
+      "All_Related_Workflow_Steps",
+      "All_Distinct_Workflows_for_Owned_Roles",
       "Name"
     ],
-    "raw_count": 4
+    "raw_count": 7
   },
   "departments": {
     "fields": [
@@ -149,9 +176,12 @@
       "Title",
       "DisplayName",
       "Roles",
+      "All_Owned_Roles",
+      "All_Related_Workflow_Steps",
+      "All_Distinct_Workflows_for_Owned_Roles",
       "Name"
     ],
-    "raw_count": 4
+    "raw_count": 7
   },
   "_target_entity": "workflows"
 }

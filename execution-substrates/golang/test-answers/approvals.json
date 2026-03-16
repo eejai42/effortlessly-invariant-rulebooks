@@ -1,0 +1,13 @@
+[
+  {
+    "approval_id": "release-approval-gate",
+    "display_name": "Release Approval Gate",
+    "workflow_steps": "release-approval-gate",
+    "escalation_threshold_hours": 24,
+    "workflow_from_workflow_steps": "production-deployment",
+    "assigned_role_from_workflow_steps": "release-manager",
+    "sequence_position_from_workflow_steps": 3,
+    "requires_human_approval_from_workflow_steps": true,
+    "name": "release-approval-gate"
+  }
+]

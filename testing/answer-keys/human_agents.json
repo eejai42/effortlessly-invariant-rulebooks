@@ -1,107 +1,35 @@
 [
   {
-    "human_agent_id": "agent-001",
-    "name": "agent_001",
-    "display_name": "Alice Johnson",
-    "mbox": "alice.johnson@example.com",
-    "roles": "administrator"
+    "human_agent_id": "chen-wei",
+    "name": "chen-wei",
+    "display_name": "Chen Wei",
+    "mbox": "mailto:chen.wei@specialsolutions.example",
+    "roles": "cto",
+    "all_linked_roles": "cto",
+    "all_related_workflow_steps": "",
+    "all_distinct_workflows_for_linked_roles": "",
+    "workflow_artifacts": ""
   },
   {
-    "human_agent_id": "agent-002",
-    "name": "agent_002",
-    "display_name": "Brian Smith",
-    "mbox": "brian.smith@example.com",
-    "roles": "editor"
+    "human_agent_id": "james-okafor",
+    "name": "james-okafor",
+    "display_name": "James Okafor",
+    "mbox": "mailto:james.okafor@specialsolutions.example",
+    "roles": "vp-engineering",
+    "all_linked_roles": "vp engineering",
+    "all_related_workflow_steps": "",
+    "all_distinct_workflows_for_linked_roles": "",
+    "workflow_artifacts": ""
   },
   {
-    "human_agent_id": "agent-003",
-    "name": "agent_003",
-    "display_name": "Catherine Lee",
-    "mbox": "catherine.lee@example.com",
-    "roles": "viewer"
-  },
-  {
-    "human_agent_id": "agent-004",
-    "name": "agent_004",
-    "display_name": "David Kim",
-    "mbox": "david.kim@example.com",
-    "roles": "moderator"
-  },
-  {
-    "human_agent_id": "agent-005",
-    "name": "agent_005",
-    "display_name": "Emily Chen",
-    "mbox": "emily.chen@example.com",
-    "roles": "contributor"
-  },
-  {
-    "human_agent_id": "agent-006",
-    "name": "agent_006",
-    "display_name": "Frank Miller",
-    "mbox": "frank.miller@example.com",
-    "roles": "manager"
-  },
-  {
-    "human_agent_id": "agent-007",
-    "name": "agent_007",
-    "display_name": "Grace Park",
-    "mbox": "grace.park@example.com",
-    "roles": "support"
-  },
-  {
-    "human_agent_id": "agent-008",
-    "name": "agent_008",
-    "display_name": "Henry Adams",
-    "mbox": "henry.adams@example.com",
-    "roles": "analyst"
-  },
-  {
-    "human_agent_id": "agent-009",
-    "name": "agent_009",
-    "display_name": "Isabella Martinez",
-    "mbox": "isabella.martinez@example.com",
-    "roles": "developer"
-  },
-  {
-    "human_agent_id": "agent-010",
-    "name": "agent_010",
-    "display_name": "Jack Wilson",
-    "mbox": "jack.wilson@example.com",
-    "roles": "tester"
-  },
-  {
-    "human_agent_id": "agent-011",
-    "name": "agent_011",
-    "display_name": "Karen Patel",
-    "mbox": "karen.patel@example.com",
-    "roles": "hr"
-  },
-  {
-    "human_agent_id": "agent-012",
-    "name": "agent_012",
-    "display_name": "Liam Nguyen",
-    "mbox": "liam.nguyen@example.com",
-    "roles": "finance"
-  },
-  {
-    "human_agent_id": "agent-013",
-    "name": "agent_013",
-    "display_name": "Monica Rivera",
-    "mbox": "monica.rivera@example.com",
-    "roles": "guest"
-  },
-  {
-    "human_agent_id": "agent-014",
-    "name": "agent_014",
-    "display_name": "Nathan Brown",
-    "mbox": "nathan.brown@example.com",
-    "roles": "trainer"
-  },
-  {
-    "human_agent_id": "agent-015",
-    "name": "agent_015",
-    "display_name": "Olivia Clark",
-    "mbox": "olivia.clark@example.com",
-    "roles": "owner"
+    "human_agent_id": "maria-gonzalez",
+    "name": "maria-gonzalez",
+    "display_name": "Maria Gonzalez",
+    "mbox": "mailto:maria.gonzalez@specialsolutions.example",
+    "roles": "release-manager",
+    "all_linked_roles": "release manager",
+    "all_related_workflow_steps": "release-approval-gate, post-deployment-review",
+    "all_distinct_workflows_for_linked_roles": "production-deployment, production-deployment",
+    "workflow_artifacts": ""
   }
 ]

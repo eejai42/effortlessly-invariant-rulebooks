@@ -42,10 +42,10 @@
 
        *> Level 2
        CALC-HAS-MORE-THAN1-STEP.
-           IF (RECORD-COUNT-OF-NON-PROPOSED-STEPS > 1)
-               MOVE "True" TO RECORD-HAS-MORE-THAN1-STEP
+           IF (RECORD-COUNT-OF-STEPS > 1)
+               MOVE "true" TO RECORD-HAS-MORE-THAN1-STEP
            ELSE
-               MOVE "False" TO RECORD-HAS-MORE-THAN1-STEP
+               MOVE "false" TO RECORD-HAS-MORE-THAN1-STEP
            END-IF
        .
 

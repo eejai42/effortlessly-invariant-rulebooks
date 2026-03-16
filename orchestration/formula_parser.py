@@ -520,6 +520,10 @@ def compile_to_python(expr: ExprNode) -> str:
             new_text = compile_to_python(expr.args[2])
             return f'(({text} or "").replace({old_text}, {new_text}))'
 
+        if expr.name == 'BLANK':
+            # BLANK() -> None (empty/null value)
+            return 'None'
+
         raise ValueError(f"Unknown function: {expr.name}")
 
     if isinstance(expr, Concat):
@@ -623,6 +627,10 @@ def compile_to_javascript(expr: ExprNode, obj_name: str = 'candidate') -> str:
                 return '0'
             parts = [compile_to_javascript(arg, obj_name) for arg in expr.args]
             return '(' + ' + '.join(parts) + ')'
+
+        if expr.name == 'BLANK':
+            # BLANK() -> null
+            return 'null'
 
         raise ValueError(f"Unknown function: {expr.name}")
 
@@ -850,6 +858,10 @@ def compile_to_go(expr: ExprNode, struct_name: str = 'lc', field_types: dict = N
             if isinstance(expr.args[0], FieldRef):
                 text = f'stringVal({text})'
             return f'strings.ReplaceAll({text}, {old_text}, {new_text})'
+
+        if expr.name == 'BLANK':
+            # BLANK() -> "" (empty string in Go context)
+            return '""'
 
         raise ValueError(f"Unknown function: {expr.name}")
 
@@ -1143,6 +1155,10 @@ def _eval_func(node: FuncCall, ctx: dict) -> any:
                 values.append(val)
         return max(values) if values else None
 
+    if name == 'BLANK':
+        # BLANK() -> None (empty/null value)
+        return None
+
     raise ValueError(f"Unknown function: {name}")
 
 
@@ -1215,6 +1231,9 @@ def compile_to_cobol(expr: ExprNode, prefix: str = "RECORD") -> str:
         if expr.op == 'NOT':
             operand = compile_to_cobol(expr.operand, prefix)
             # NOT in COBOL context - handled in IF statement
+            # If operand is already a comparison, don't add = "true"
+            if isinstance(operand, str) and (' = ' in operand or ' < ' in operand or ' > ' in operand or ' NOT ' in operand):
+                return f'NOT {operand}'
             return f'NOT ({operand} = "true")'
         raise ValueError(f"Unknown unary operator: {expr.op}")
 
@@ -1260,6 +1279,9 @@ def compile_to_cobol(expr: ExprNode, prefix: str = "RECORD") -> str:
             if len(expr.args) != 1:
                 raise ValueError("NOT requires 1 argument")
             operand = compile_to_cobol(expr.args[0], prefix)
+            # If operand is already a comparison, don't add = "true"
+            if isinstance(operand, str) and (' = ' in operand or ' < ' in operand or ' > ' in operand or ' NOT ' in operand):
+                return f'NOT {operand}'
             return f'NOT ({operand} = "true")'
 
         if expr.name == 'IF':
@@ -1341,15 +1363,16 @@ def cobol_expr_to_statements(expr_result, result_var: str, temp_vars: list) -> l
         """Check if string contains a COBOL comparison operator."""
         # Look for comparison operators that indicate a boolean expression
         # These cannot be used in MOVE statements
-        comparison_ops = [' > ', ' < ', ' >= ', ' <= ', ' NOT = ']
+        comparison_ops = [' > ', ' < ', ' >= ', ' <= ', ' NOT = ', ' AND ', ' OR ']
         for op in comparison_ops:
             if op in s:
                 return True
         # Check for parenthesized equality comparison: (X = Y)
         # BinaryOp comparisons are always wrapped in parens
-        # Avoid matching string literals like = "true"
+        # Match patterns like (WS-REC-HAS-SYNTAX = "true") or (X = Y)
         import re
-        if re.match(r'^\([^"]+\s+=\s+[^"]+\)$', s):
+        # Match: starts with (, has = comparison, ends with )
+        if re.match(r'^\(.+\s+=\s+.+\)$', s):
             return True
         return False
 
@@ -1362,38 +1385,52 @@ def cobol_expr_to_statements(expr_result, result_var: str, temp_vars: list) -> l
             if is_comparison_expr(expr):
                 # Comparisons must use IF/ELSE in COBOL, not MOVE
                 stmts.append(f'IF {expr}')
-                stmts.append(f'    MOVE "True" TO {target_var}')
+                stmts.append(f'    MOVE "true" TO {target_var}')
                 stmts.append('ELSE')
-                stmts.append(f'    MOVE "False" TO {target_var}')
+                stmts.append(f'    MOVE "false" TO {target_var}')
                 stmts.append('END-IF')
             else:
                 # Simple value - just MOVE it
-                stmts.append(f'MOVE {expr} TO {target_var}')
+                # Handle empty string literals - COBOL doesn't like ""
+                if expr == '""':
+                    stmts.append(f'MOVE SPACES TO {target_var}')
+                else:
+                    stmts.append(f'MOVE {expr} TO {target_var}')
 
         elif isinstance(expr, tuple):
             op = expr[0]
 
             if op == 'CONCAT':
                 # STRING concatenation - use FUNCTION TRIM for field values
+                # Break across multiple lines to avoid 512-byte line limit
+                # IMPORTANT: All nested operations must be evaluated BEFORE the STRING statement
                 parts = flatten_concat(expr)
                 stmts.append(f'MOVE SPACES TO {target_var}')
-                string_stmt = f'STRING '
-                delimited_parts = []
+
+                # First pass: evaluate all nested operations to temps
+                string_parts = []  # (is_literal, value) tuples
                 for p in parts:
                     if isinstance(p, tuple):
                         # Nested operation - evaluate to temp first
                         tmp = get_temp()
                         stmts.extend(process(p, tmp))
-                        delimited_parts.append(f'FUNCTION TRIM({tmp}) DELIMITED SIZE')
+                        string_parts.append((False, tmp))
                     elif p.startswith('"'):
-                        # String literal - use as-is
-                        delimited_parts.append(f'{p} DELIMITED SIZE')
+                        # String literal
+                        string_parts.append((True, p))
                     else:
-                        # Field reference - use TRIM to remove padding
-                        delimited_parts.append(f'FUNCTION TRIM({p}) DELIMITED SIZE')
-                string_stmt += ' '.join(delimited_parts)
-                string_stmt += f' INTO {target_var}'
-                stmts.append(string_stmt)
+                        # Field reference
+                        string_parts.append((False, p))
+
+                # Second pass: build STRING statement
+                # Use TRAILING trim to preserve leading spaces in concatenated values
+                stmts.append('STRING')
+                for is_literal, val in string_parts:
+                    if is_literal:
+                        stmts.append(f'    {val} DELIMITED SIZE')
+                    else:
+                        stmts.append(f'    FUNCTION TRIM({val} TRAILING) DELIMITED SIZE')
+                stmts.append(f'    INTO {target_var}')
 
             elif op == 'IF':
                 _, cond, then_val, else_val = expr

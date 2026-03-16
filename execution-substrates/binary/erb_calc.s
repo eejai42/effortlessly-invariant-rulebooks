@@ -321,16 +321,34 @@ str_1_len:
     .quad 1
     .globl str_2
 str_2:
-    .asciz "Step-"
+    .asciz "HumanAgent"
     .globl str_2_len
 str_2_len:
+    .quad 10
+    .globl str_3
+str_3:
+    .asciz "AIAgent"
+    .globl str_3_len
+str_3_len:
+    .quad 7
+    .globl str_4
+str_4:
+    .asciz "AutomatedPipeline"
+    .globl str_4_len
+str_4_len:
+    .quad 17
+    .globl str_5
+str_5:
+    .asciz "Step-"
+    .globl str_5_len
+str_5_len:
     .quad 5
 
     // Static result buffers for string concatenation
     .bss
-    .globl _result_buf_eval_approval_gates_name
+    .globl _result_buf_eval_approvals_name
     .p2align 3
-_result_buf_eval_approval_gates_name:
+_result_buf_eval_approvals_name:
     .space 1024
     .globl _result_buf_eval_departments_name
     .p2align 3
@@ -405,7 +423,7 @@ _eval_workflows_name:
     ldp x29, x30, [sp], #16
     ret
 
-// Formula: ={{CountOfNonProposedSteps}} > 1
+// Formula: ={{CountOfSteps}} > 1
     .globl _eval_workflows_has_more_than1_step
     .p2align 2
 _eval_workflows_has_more_than1_step:
@@ -416,7 +434,7 @@ _eval_workflows_has_more_than1_step:
     stp x23, x24, [sp, #-16]!
     sub sp, sp, #256
     mov x19, x0
-    ldr x0, [x19, #144]
+    ldr x0, [x19, #128]
     mov x20, x0
     mov x0, #1
     cmp x20, x0
@@ -478,9 +496,9 @@ _eval_workflow_steps_name:
     ret
 
 // Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
-    .globl _eval_approval_gates_name
+    .globl _eval_approvals_name
     .p2align 2
-_eval_approval_gates_name:
+_eval_approvals_name:
     stp x29, x30, [sp, #-16]!
     mov x29, sp
     stp x19, x20, [sp, #-16]!
@@ -490,8 +508,8 @@ _eval_approval_gates_name:
     mov x19, x0
     ldr x0, [x19, #32]
     ldr x1, [x19, #40]
-    adrp x2, _result_buf_eval_approval_gates_name@PAGE
-    add x2, x2, _result_buf_eval_approval_gates_name@PAGEOFF
+    adrp x2, _result_buf_eval_approvals_name@PAGE
+    add x2, x2, _result_buf_eval_approvals_name@PAGEOFF
     mov x3, x1
     mov x1, x0
     mov x0, x2
@@ -509,8 +527,8 @@ _eval_approval_gates_name:
     mov x1, #1
     str x0, [sp, #48]
     str x1, [sp, #56]
-    adrp x20, _result_buf_eval_approval_gates_name@PAGE
-    add x20, x20, _result_buf_eval_approval_gates_name@PAGEOFF
+    adrp x20, _result_buf_eval_approvals_name@PAGE
+    add x20, x20, _result_buf_eval_approvals_name@PAGEOFF
     ldr x1, [sp, #16]
     ldr x2, [sp, #24]
     ldr x3, [sp, #32]
@@ -537,12 +555,12 @@ _eval_precedes_steps_display_name:
     stp x23, x24, [sp, #-16]!
     sub sp, sp, #256
     mov x19, x0
-    adrp x0, str_2@PAGE
-    add x0, x0, str_2@PAGEOFF
+    adrp x0, str_5@PAGE
+    add x0, x0, str_5@PAGEOFF
     mov x1, #5
     str x0, [sp, #16]
     str x1, [sp, #24]
-    ldr x0, [x19, #64]
+    ldr x0, [x19, #48]
     mov x1, x0
     sub x0, x29, #200
     bl _int_to_string

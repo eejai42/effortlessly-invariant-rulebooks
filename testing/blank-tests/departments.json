@@ -1,107 +1,22 @@
 [
   {
-    "department_id": "administration",
+    "department_id": "engineering",
     "name": null,
-    "roles": "hr",
-    "display_name": "Administration",
-    "title": "Administration Department"
-  },
-  {
-    "department_id": "customer-service",
-    "name": null,
-    "roles": "manager",
-    "display_name": "Customer Service",
-    "title": "Customer Service Department"
-  },
-  {
-    "department_id": "facilities-management",
-    "name": null,
-    "roles": "trainer",
-    "display_name": "Facilities Management",
-    "title": "Facilities Department"
-  },
-  {
-    "department_id": "finance",
-    "name": null,
-    "roles": "editor",
-    "display_name": "Finance",
-    "title": "Finance Department"
-  },
-  {
-    "department_id": "human-resources",
-    "name": null,
-    "roles": "administrator",
-    "display_name": "Human Resources",
-    "title": "HR Department"
-  },
-  {
-    "department_id": "information-technology",
-    "name": null,
-    "roles": "viewer",
-    "display_name": "Information Technology",
-    "title": "IT Department"
+    "roles": "release-manager, vp-engineering, cto, risk-analysis-agent, deployment-engineer",
+    "display_name": "Engineering",
+    "title": "Engineering department responsible for software development and deployment.",
+    "all_owned_roles": "Release Manager, VP Engineering, CTO, Risk Analysis Agent, Deployment Engineer",
+    "all_related_workflow_steps": "release-approval-gate, post-deployment-review, risk-analysis, deployment-execution",
+    "all_distinct_workflows_for_owned_roles": "production-deployment, production-deployment, production-deployment, production-deployment"
   },
   {
     "department_id": "legal",
     "name": null,
-    "roles": "analyst",
+    "roles": "legal-compliance-reviewer",
     "display_name": "Legal",
-    "title": "Legal Department"
-  },
-  {
-    "department_id": "marketing",
-    "name": null,
-    "roles": "moderator",
-    "display_name": "Marketing",
-    "title": "Marketing Department"
-  },
-  {
-    "department_id": "operations",
-    "name": null,
-    "roles": "tester",
-    "display_name": "Operations",
-    "title": "Operations Department"
-  },
-  {
-    "department_id": "procurement",
-    "name": null,
-    "roles": "developer",
-    "display_name": "Procurement",
-    "title": "Procurement Department"
-  },
-  {
-    "department_id": "public-relations",
-    "name": null,
-    "roles": "finance",
-    "display_name": "Public Relations",
-    "title": "PR Department"
-  },
-  {
-    "department_id": "quality-assurance",
-    "name": null,
-    "roles": "guest",
-    "display_name": "Quality Assurance",
-    "title": "QA Department"
-  },
-  {
-    "department_id": "research-and-development",
-    "name": null,
-    "roles": "support",
-    "display_name": "Research and Development",
-    "title": "R&D Department"
-  },
-  {
-    "department_id": "sales",
-    "name": null,
-    "roles": "contributor",
-    "display_name": "Sales",
-    "title": "Sales Department"
-  },
-  {
-    "department_id": "training-and-development",
-    "name": null,
-    "roles": "owner",
-    "display_name": "Training and Development",
-    "title": "Training Department"
+    "title": "Legal department responsible for compliance review.",
+    "all_owned_roles": "Legal Compliance Reviewer",
+    "all_related_workflow_steps": "legal-clearance",
+    "all_distinct_workflows_for_owned_roles": "production-deployment"
   }
 ]

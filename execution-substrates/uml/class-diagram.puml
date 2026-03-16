@@ -12,18 +12,23 @@ class AIAgents {
   +DisplayName: String
   +ModelVersion: String -- Version string of the AI model. Maps to ntwf:modelVersion. Makes AI-produced artifacts auditable at the version level. The domain declaration means this property applies only to AIAgent individuals.
   +Roles: String -- Back-reference to roles currently filled by this AI agent. Inverse of Roles.FilledBy_AIAgent.
+  +WorkflowArtifacts: String
   --
 }
 
-note top of ApprovalGates
-  Table: ApprovalGates
+note top of Approvals
+  Table: Approvals
 end note
 
-class ApprovalGates {
-  +ApprovalGateId: String
+class Approvals {
+  +ApprovalId: String
   +DisplayName: String
   +WorkflowSteps: String -- Back-reference to workflow steps that use this approval gate. Enables finding all steps requiring this specific gate.
   +EscalationThresholdHours: Integer -- Integer number of hours that may elapse on a pending gate before the ntwf:delegatesTo chain activates. Maps to ntwf:escalationThresholdHours. Domain applies only to ApprovalGate individuals.
+  +Workflow_from_WorkflowSteps: String
+  +Assigned_Role_from_WorkflowSteps: String
+  +Sequence_Position_from_WorkflowSteps: Integer
+  +Requires_Human_Approval_from_WorkflowSteps: Boolean
   --
   /Name: String  {derived}
 }
@@ -38,6 +43,7 @@ class AutomatedPipelines {
   +Description: String
   +DisplayName: String
   +Roles: String -- Back-reference to roles currently filled by this pipeline. Inverse of Roles.FilledBy_AutomatedPipeline.
+  +WorkflowArtifacts: String
   --
 }
 
@@ -50,8 +56,40 @@ class Departments {
   +Title: String -- Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
   +DisplayName: String -- Machine-friendly name for programmatic reference.
   +Roles: String -- Back-reference to roles owned by this department. Inverse of Roles.OwnedBy.
+  +All_Owned_Roles: String
+  +All_Related_Workflow_Steps: String
+  +All_Distinct_Workflows_for_Owned_Roles: String
   --
   /Name: String  {derived} -- Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
+}
+
+note top of ERBCustomizations
+  Table: ERBCustomizations
+end note
+
+class ERBCustomizations {
+  +ERBCustomizationId: String
+  +Name: String
+  +Title: String
+  +SQLCode: String
+  +SQLTarget: String
+  +CustomizationType: String
+  --
+}
+
+note top of ERBVersions
+  Table: ERBVersions
+end note
+
+class ERBVersions {
+  +ERBVersionId: String
+  +BaseId: String
+  +Name: String
+  +Message: String
+  +Notes: String
+  +CommitDate: String
+  +IsPublished: Boolean
+  --
 }
 
 note top of HumanAgents
@@ -64,6 +102,10 @@ class HumanAgents {
   +DisplayName: String
   +Mbox: String -- Email address of the person. Maps to foaf:mbox. Used for notifications and organizational directory integration.
   +Roles: String -- Back-reference to roles currently filled by this agent. Inverse of Roles.FilledBy_HumanAgent.
+  +All_Linked_Roles: String
+  +All_Related_Workflow_Steps: String
+  +All_Distinct_Workflows_for_Linked_Roles: String
+  +WorkflowArtifacts: String
   --
 }
 
@@ -74,8 +116,8 @@ end note
 class PrecedesSteps {
   +PrecedesStepId: String
   +Name: String -- Ordinal sequence number for the relationship. Used for sorting and display.
-  +WorkflowStep: String -- Foreign key to the step that comes BEFORE. The source of the 'precedes' relationship.
   +StepNumber: Integer
+  +WorkflowStep: String -- Foreign key to the step that comes BEFORE. The source of the 'precedes' relationship.
   --
   /DisplayName: String  {derived}
 }
@@ -96,8 +138,44 @@ class Roles {
   +DelegatesTo: String -- Foreign key to the fallback Role in an escalation chain. Maps to ntwf:delegatesTo. Enables answering CQ6: 'What happens when the VP of Engineering is unavailable?'
   +WorkflowSteps: String -- Back-reference to workflow steps assigned to this role. Inverse of WorkflowSteps.AssignedRole.
   +FromDelegatesTo: String
+  +All_Linked_Workflow_Steps: String
+  +Distinct_Workflows_for_Linked_Steps: String
+  +WorkflowArtifacts: String
   --
   /Name: String  {derived}
+}
+
+note top of StepTransitions
+  Table: StepTransitions
+end note
+
+class StepTransitions {
+  +StepTransitionId: String
+  +Name: String
+  +From_Step: String
+  +To_Step: String
+  +Workflow_from_From_Step: String
+  --
+}
+
+note top of WorkflowArtifacts
+  Table: WorkflowArtifacts
+end note
+
+class WorkflowArtifacts {
+  +WorkflowArtifactId: String
+  +Artifact_Name: String
+  +Produced_By_Step: String
+  +Workflow_from_Produced_By_Step: String
+  +Attributed_Role: String
+  +Attributed_Human_Agent: String
+  +Attributed_AI_Agent: String
+  +Attributed_Pipeline: String
+  +Derived_From_Artifact: String
+  +Artifact_Description: String
+  +Artifact_File: String
+  +From_field_Derived_From_Artifact: String
+  --
 }
 
 note top of WorkflowSteps
@@ -113,8 +191,14 @@ class WorkflowSteps {
   +RequiresHumanApproval: Boolean -- Boolean flag indicating whether a human agent must fill the assigned role. Maps to ntwf:requiresHumanApproval. Enables answering CQ3: 'Which steps require human decisions vs. AI execution?'
   +ApprovalGate: String -- Foreign key to ApprovalGate if this step is a decision checkpoint. When populated, indicates this step blocks workflow execution until explicit authorization is given.
   +PrecededBySteps: String -- Reference to steps that must complete before this step can execute. Part of the ntwf:precedesStep transitive ordering relationship.
+  +AssignedRoleDepartment: String
+  +ApprovalGateEscalationThresholdHours: Integer
+  +StepTransitions_From_Step: String
+  +StepTransitions_To_Step: String
+  +WorkflowArtifacts: String
   --
   /Name: String  {derived}
+  /ExecutionActorType: String  {derived}
 }
 
 note top of Workflows
@@ -125,12 +209,11 @@ class Workflows {
   +WorkflowId: String
   +DisplayName: String
   +Title: String -- Human-readable title of the workflow. Maps to dct:title from Dublin Core. Example: 'Production Deployment Workflow', 'Employee Onboarding'.
-  +Color: String
   +Description: String -- Detailed description of the workflow's purpose and scope. Maps to dct:description from Dublin Core. Should explain what business goal the workflow achieves.
   +Identifier: String -- External system identifier for cross-referencing. Maps to dct:identifier from Dublin Core. This is the join key back to document management systems, ticket systems, or other operational systems.
   +Modified: String -- Last modification timestamp. Maps to dct:modified from Dublin Core. Critical for answering CQ5: 'Which workflows haven't been reviewed or updated in twelve months?'
   +WorkflowSteps: String -- Reference to workflow steps. Represents the ntwf:hasStep relationship linking workflows to their constituent steps.
-  +CountOfNonProposedSteps: Integer -- Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting.
+  +CountOfSteps: Integer -- Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting.
   --
   /Name: String  {derived} -- Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.
   /HasMoreThan1Step: Boolean  {derived}

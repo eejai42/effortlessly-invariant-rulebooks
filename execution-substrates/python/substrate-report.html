@@ -209,7 +209,7 @@ pre {
                 <span class="stat-value score-perfect">100.0%</span>
             </div>
             <div class="stat">
-                <span>122/122 passed</span>
+                <span>27/27 passed</span>
             </div>
         </div>
         <button id="theme-toggle" title="Toggle theme">
@@ -286,13 +286,13 @@ pre {
                 <h2>Execution Log</h2>
                 <pre>=== Python Substrate Test Run ===
 
-  -&gt; approval_gates: 11 records
-  -&gt; departments: 15 records
-  -&gt; precedes_steps: 16 records
-  -&gt; roles: 15 records
-  -&gt; workflow_steps: 20 records
-  -&gt; workflows: 15 records
-Python substrate: Processed 6 entities, 92 total records
+  -&gt; approvals: 1 records
+  -&gt; departments: 2 records
+  -&gt; precedes_steps: 5 records
+  -&gt; roles: 6 records
+  -&gt; workflow_steps: 5 records
+  -&gt; workflows: 1 records
+Python substrate: Processed 6 entities, 20 total records
 
 </pre>
             </div>
@@ -307,7 +307,7 @@ Python substrate: Processed 6 entities, 92 total records
                         <div class="result-label">Score</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value score-perfect">122</div>
+                        <div class="result-value score-perfect">27</div>
                         <div class="result-label">Passed</div>
                     </div>
                     <div class="result-item">
@@ -315,7 +315,7 @@ Python substrate: Processed 6 entities, 92 total records
                         <div class="result-label">Failed</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value">122</div>
+                        <div class="result-value">27</div>
                         <div class="result-label">Total</div>
                     </div>
                 </div>
@@ -325,7 +325,7 @@ Python substrate: Processed 6 entities, 92 total records
                 <div class="markdown-content">
                     <h3>language_candidates</h3>
                     <ul>
-                        <li>Fields: 122/122 (100.0%)</li>
+                        <li>Fields: 27/27 (100.0%)</li>
                         <li>Computed columns: has_grammar, question, predicted_answer, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept</li>
                     </ul>
                 </div>
@@ -337,7 +337,7 @@ Python substrate: Processed 6 entities, 92 total records
                 <div class="code-header">
                     <h2>erb_calc.py</h2>
                     <div>
-                        <span class="code-info">250 lines</span>
+                        <span class="code-info">259 lines</span>
                         <button class="copy-btn" onclick="copyCode('calc-code')">Copy</button>
                     </div>
                 </div>
@@ -370,9 +370,9 @@ def calc_workflows_name(display_name):
 
 # Level 2
 
-def calc_workflows_has_more_than1_step(count_of_non_proposed_steps):
-    &quot;&quot;&quot;Formula: ={{CountOfNonProposedSteps}} &gt; 1&quot;&quot;&quot;
-    return (count_of_non_proposed_steps &gt; 1)
+def calc_workflows_has_more_than1_step(count_of_steps):
+    &quot;&quot;&quot;Formula: ={{CountOfSteps}} &gt; 1&quot;&quot;&quot;
+    return (count_of_steps &gt; 1)
 
 
 def compute_workflows_fields(record: dict) -&gt; dict:
@@ -387,7 +387,7 @@ def compute_workflows_fields(record: dict) -&gt; dict:
     result[&#x27;name&#x27;] = calc_workflows_name(result.get(&#x27;display_name&#x27;))
 
     # Level 2 calculations
-    result[&#x27;has_more_than1_step&#x27;] = calc_workflows_has_more_than1_step(result.get(&#x27;count_of_non_proposed_steps&#x27;))
+    result[&#x27;has_more_than1_step&#x27;] = calc_workflows_has_more_than1_step(result.get(&#x27;count_of_steps&#x27;))
 
     # Convert empty strings to None for string fields
     for key in [&#x27;name&#x27;]:
@@ -407,6 +407,12 @@ def calc_workflow_steps_name(display_name):
     &quot;&quot;&quot;Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)&quot;&quot;&quot;
     return ((((display_name or &quot;&quot;).lower()) or &quot;&quot;).replace(&#x27; &#x27;, &#x27;-&#x27;))
 
+# Level 2
+
+def calc_workflow_steps_execution_actor_type(assigned_role_department):
+    &quot;&quot;&quot;Formula: =IF({{AssignedRoleDepartment}} = &quot;HumanAgent&quot;, &quot;HumanAgent&quot;, IF({{AssignedRoleDepartment}} = &quot;AIAgent&quot;, &quot;AIAgent&quot;, IF({{AssignedRoleDepartment}} = &quot;AutomatedPipeline&quot;, &quot;AutomatedPipeline&quot;, BLANK())))&quot;&quot;&quot;
+    return (&#x27;HumanAgent&#x27; if (assigned_role_department == &#x27;HumanAgent&#x27;) else (&#x27;AIAgent&#x27; if (assigned_role_department == &#x27;AIAgent&#x27;) else (&#x27;AutomatedPipeline&#x27; if (assigned_role_department == &#x27;AutomatedPipeline&#x27;) else None)))
+
 
 def compute_workflow_steps_fields(record: dict) -&gt; dict:
     &quot;&quot;&quot;
@@ -419,35 +425,38 @@ def compute_workflow_steps_fields(record: dict) -&gt; dict:
     # Level 1 calculations
     result[&#x27;name&#x27;] = calc_workflow_steps_name(result.get(&#x27;display_name&#x27;))
 
+    # Level 2 calculations
+    result[&#x27;execution_actor_type&#x27;] = calc_workflow_steps_execution_actor_type(result.get(&#x27;assigned_role_department&#x27;))
+
     # Convert empty strings to None for string fields
-    for key in [&#x27;name&#x27;]:
+    for key in [&#x27;name&#x27;, &#x27;execution_actor_type&#x27;]:
         if result.get(key) == &#x27;&#x27;:
             result[key] = None
 
     return result
 
 # =============================================================================
-# APPROVALGATES CALCULATIONS
-# Table: ApprovalGates
+# APPROVALS CALCULATIONS
+# Table: Approvals
 # =============================================================================
 
 # Level 1
 
-def calc_approval_gates_name(display_name):
+def calc_approvals_name(display_name):
     &quot;&quot;&quot;Formula: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)&quot;&quot;&quot;
     return ((((display_name or &quot;&quot;).lower()) or &quot;&quot;).replace(&#x27; &#x27;, &#x27;-&#x27;))
 
 
-def compute_approval_gates_fields(record: dict) -&gt; dict:
+def compute_approvals_fields(record: dict) -&gt; dict:
     &quot;&quot;&quot;
-    Compute all calculated fields for ApprovalGates.
+    Compute all calculated fields for Approvals.
     
-    Table: ApprovalGates
+    Table: Approvals
     &quot;&quot;&quot;
     result = dict(record)
 
     # Level 1 calculations
-    result[&#x27;name&#x27;] = calc_approval_gates_name(result.get(&#x27;display_name&#x27;))
+    result[&#x27;name&#x27;] = calc_approvals_name(result.get(&#x27;display_name&#x27;))
 
     # Convert empty strings to None for string fields
     for key in [&#x27;name&#x27;]:
@@ -580,8 +589,8 @@ def compute_all_calculated_fields(record: dict, entity_name: str = None) -&gt; d
         return compute_workflows_fields(record)
     elif entity_lower == &#x27;workflow_steps&#x27;:
         return compute_workflow_steps_fields(record)
-    elif entity_lower == &#x27;approval_gates&#x27;:
-        return compute_approval_gates_fields(record)
+    elif entity_lower == &#x27;approvals&#x27;:
+        return compute_approvals_fields(record)
     elif entity_lower == &#x27;precedes_steps&#x27;:
         return compute_precedes_steps_fields(record)
     elif entity_lower == &#x27;roles&#x27;:

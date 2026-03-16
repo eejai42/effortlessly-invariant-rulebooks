@@ -3,44 +3,45 @@
     "primary_key": "workflow_id",
     "computed_columns": [
       "name",
-      "count_of_non_proposed_steps",
+      "count_of_steps",
       "has_more_than1_step"
     ],
-    "record_count": 15
+    "record_count": 1
   },
   "workflow_steps": {
     "primary_key": "workflow_step_id",
     "computed_columns": [
-      "name"
+      "name",
+      "execution_actor_type"
     ],
-    "record_count": 20
+    "record_count": 5
   },
-  "approval_gates": {
-    "primary_key": "approval_gate_id",
+  "approvals": {
+    "primary_key": "approval_id",
     "computed_columns": [
       "name"
     ],
-    "record_count": 11
+    "record_count": 1
   },
   "precedes_steps": {
     "primary_key": "precedes_step_id",
     "computed_columns": [
       "display_name"
     ],
-    "record_count": 16
+    "record_count": 5
   },
   "roles": {
     "primary_key": "role_id",
     "computed_columns": [
       "name"
     ],
-    "record_count": 15
+    "record_count": 6
   },
   "departments": {
     "primary_key": "department_id",
     "computed_columns": [
       "name"
     ],
-    "record_count": 15
+    "record_count": 2
   }
 }

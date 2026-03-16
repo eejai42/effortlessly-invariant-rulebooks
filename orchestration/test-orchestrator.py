@@ -357,6 +357,55 @@ def convert_record_to_snake_case(record: dict) -> dict:
     return {to_snake_case(k): v for k, v in record.items()}
 
 
+def coerce_record_types(record: dict, schema: list) -> dict:
+    """Coerce record values to match their schema datatypes.
+
+    This ensures that values like "24" are converted to 24 for integer fields,
+    and "True"/"False" strings are converted to booleans.
+    """
+    # Build a mapping of field_name (snake_case) -> datatype
+    type_map = {}
+    for field in schema:
+        field_name = to_snake_case(field.get('name', ''))
+        datatype = field.get('datatype', 'string')
+        type_map[field_name] = datatype
+
+    coerced = {}
+    for key, value in record.items():
+        datatype = type_map.get(key, 'string')
+
+        if value is None or value == '':
+            coerced[key] = value
+        elif datatype == 'integer':
+            # Convert string integers to int
+            if isinstance(value, str):
+                try:
+                    coerced[key] = int(value)
+                except ValueError:
+                    coerced[key] = 0 if value == '' else value
+            else:
+                coerced[key] = value
+        elif datatype == 'boolean':
+            # Convert string booleans to bool
+            if isinstance(value, str):
+                coerced[key] = value.lower() in ('true', '1', 'yes')
+            else:
+                coerced[key] = value
+        elif datatype == 'number':
+            # Convert string numbers to float
+            if isinstance(value, str):
+                try:
+                    coerced[key] = float(value)
+                except ValueError:
+                    coerced[key] = 0.0 if value == '' else value
+            else:
+                coerced[key] = value
+        else:
+            coerced[key] = value
+
+    return coerced
+
+
 def generate_all_answer_keys(rulebook: dict) -> dict:
     """
     Generate answer keys directly from the rulebook's seed data.
@@ -397,6 +446,10 @@ def generate_all_answer_keys(rulebook: dict) -> dict:
 
         # Convert field names to snake_case
         records = [convert_record_to_snake_case(r) for r in raw_records]
+
+        # Coerce values to match schema datatypes (e.g., "24" -> 24 for integers)
+        schema = get_entity_schema(rulebook, entity_pascal)
+        records = [coerce_record_types(r, schema) for r in records]
 
         # Sort by primary key if available
         if pk and records and pk in records[0]:

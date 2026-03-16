@@ -83,8 +83,20 @@ def json_to_tsv(records: list, field_order: list, raw_count: int) -> str:
         for field in raw_fields:
             # Try camelCase, snake_case, and lowercase
             snake = to_snake_case(field)
-            val = record.get(field) or record.get(snake) or record.get(field.lower()) or ""
-            values.append(str(val) if val else "")
+            # Use explicit None checks to handle boolean False correctly
+            val = record.get(field)
+            if val is None:
+                val = record.get(snake)
+            if val is None:
+                val = record.get(field.lower())
+            # Convert booleans to "true"/"false" strings for COBOL
+            if isinstance(val, bool):
+                val = "true" if val else "false"
+            elif val is None:
+                val = ""
+            else:
+                val = str(val)
+            values.append(val)
         lines.append("\t".join(values))
     return "\n".join(lines) + "\n" if lines else ""
 
@@ -101,7 +113,16 @@ def tsv_to_json(tsv_content: str, field_order: list) -> list:
             # Use snake_case for output to match expected format
             snake = to_snake_case(field)
             if i < len(values):
-                record[snake] = values[i].strip()
+                val = values[i].rstrip()  # Preserve leading spaces, strip trailing padding
+                # Convert string booleans back to Python booleans
+                if val.lower() == "true":
+                    record[snake] = True
+                elif val.lower() == "false":
+                    record[snake] = False
+                elif val.isdigit():
+                    record[snake] = int(val)
+                else:
+                    record[snake] = val
             else:
                 record[snake] = ""
         records.append(record)

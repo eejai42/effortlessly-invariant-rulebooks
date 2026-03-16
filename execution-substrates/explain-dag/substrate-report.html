@@ -69,7 +69,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>122/122 passed</span></div>
+            <div class="stat"><span>27/27 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -124,13 +124,13 @@ HasGrammar = true
                 <h2>Execution Log</h2>
                 <pre>=== ExplainDAG Substrate Test Run ===
 
-  -&gt; approval_gates: 11 records with explanations
-  -&gt; departments: 15 records with explanations
-  -&gt; precedes_steps: 16 records with explanations
-  -&gt; roles: 15 records with explanations
-  -&gt; workflow_steps: 20 records with explanations
-  -&gt; workflows: 15 records with explanations
-ExplainDAG substrate: Processed 6 entities, 92 total records
+  -&gt; approvals: 1 records with explanations
+  -&gt; departments: 2 records with explanations
+  -&gt; precedes_steps: 5 records with explanations
+  -&gt; roles: 6 records with explanations
+  -&gt; workflow_steps: 5 records with explanations
+  -&gt; workflows: 1 records with explanations
+ExplainDAG substrate: Processed 6 entities, 20 total records
 Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/explain-dag/test-explanations
 
 </pre>
@@ -141,9 +141,9 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">122</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">27</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">122</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">27</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -151,13 +151,13 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             <div class="card">
                 <div class="code-header">
                     <h2>explain_spec.json</h2>
-                    <div><span class="code-info">794 lines</span><button class="copy-btn" onclick="copyCode('spec-code')">Copy</button></div>
+                    <div><span class="code-info">1056 lines</span><button class="copy-btn" onclick="copyCode('spec-code')">Copy</button></div>
                 </div>
                 <pre id="spec-code">{
   &quot;schema_version&quot;: &quot;erb.explain_spec.v1&quot;,
   &quot;rulebook&quot;: {
-    &quot;name&quot;: &quot;Jessica Talisman - BASIC Ontology Parts 1-3&quot;,
-    &quot;rulebook_hash&quot;: &quot;sha256:1fd918ec93c6ba2f6d6a0671453393a9&quot;
+    &quot;name&quot;: &quot;Jessica Talisman - ADVANCED Ontology Parts 1-3&quot;,
+    &quot;rulebook_hash&quot;: &quot;sha256:7541a29d0b939ee1757483b68fc06db8&quot;
   },
   &quot;semantics&quot;: {
     &quot;profile&quot;: &quot;excel&quot;,
@@ -192,11 +192,6 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;type&quot;: &quot;raw&quot;,
           &quot;description&quot;: &quot;Human-readable title of the workflow. Maps to dct:title from Dublin Core. Example: &#x27;Production Deployment Workflow&#x27;, &#x27;Employee Onboarding&#x27;.&quot;
         },
-        &quot;Color&quot;: {
-          &quot;datatype&quot;: &quot;string&quot;,
-          &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;raw&quot;
-        },
         &quot;Description&quot;: {
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: true,
@@ -221,7 +216,7 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;type&quot;: &quot;relationship&quot;,
           &quot;description&quot;: &quot;Reference to workflow steps. Represents the ntwf:hasStep relationship linking workflows to their constituent steps.&quot;
         },
-        &quot;CountOfNonProposedSteps&quot;: {
+        &quot;CountOfSteps&quot;: {
           &quot;datatype&quot;: &quot;integer&quot;,
           &quot;nullable&quot;: true,
           &quot;type&quot;: &quot;aggregation&quot;,
@@ -239,7 +234,7 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
       ],
       &quot;dep_edges&quot;: [
         [
-          &quot;CountOfNonProposedSteps&quot;,
+          &quot;CountOfSteps&quot;,
           &quot;HasMoreThan1Step&quot;
         ],
         [
@@ -318,14 +313,14 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;description&quot;: &quot;Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation.&quot;
         },
         &quot;HasMoreThan1Step&quot;: {
-          &quot;formula_source&quot;: &quot;={{CountOfNonProposedSteps}} &gt; 1&quot;,
-          &quot;template_hash&quot;: &quot;sha256:52f3eecda8778602&quot;,
+          &quot;formula_source&quot;: &quot;={{CountOfSteps}} &gt; 1&quot;,
+          &quot;template_hash&quot;: &quot;sha256:51903b4d48fff752&quot;,
           &quot;root_node&quot;: &quot;n_result_HasMoreThan1Step&quot;,
           &quot;nodes&quot;: {
             &quot;n_ref_1&quot;: {
               &quot;kind&quot;: &quot;field_ref&quot;,
-              &quot;field&quot;: &quot;CountOfNonProposedSteps&quot;,
-              &quot;field_snake&quot;: &quot;count_of_non_proposed_steps&quot;
+              &quot;field&quot;: &quot;CountOfSteps&quot;,
+              &quot;field_snake&quot;: &quot;count_of_steps&quot;
             },
             &quot;n_const_2&quot;: {
               &quot;kind&quot;: &quot;const&quot;,
@@ -421,12 +416,47 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;nullable&quot;: true,
           &quot;type&quot;: &quot;relationship&quot;,
           &quot;description&quot;: &quot;Reference to steps that must complete before this step can execute. Part of the ntwf:precedesStep transitive ordering relationship.&quot;
+        },
+        &quot;ExecutionActorType&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;AssignedRoleDepartment&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;ApprovalGateEscalationThresholdHours&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;StepTransitions_From_Step&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;
+        },
+        &quot;StepTransitions_To_Step&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;
+        },
+        &quot;WorkflowArtifacts&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;
         }
       },
       &quot;calc_order&quot;: [
-        &quot;Name&quot;
+        &quot;Name&quot;,
+        &quot;ExecutionActorType&quot;
       ],
       &quot;dep_edges&quot;: [
+        [
+          &quot;AssignedRoleDepartment&quot;,
+          &quot;ExecutionActorType&quot;
+        ],
         [
           &quot;DisplayName&quot;,
           &quot;Name&quot;
@@ -500,15 +530,197 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
               &quot;n_result_Name&quot;
             ]
           ]
+        },
+        &quot;ExecutionActorType&quot;: {
+          &quot;formula_source&quot;: &quot;=IF({{AssignedRoleDepartment}} = \&quot;HumanAgent\&quot;, \&quot;HumanAgent\&quot;, IF({{AssignedRoleDepartment}} = \&quot;AIAgent\&quot;, \&quot;AIAgent\&quot;, IF({{AssignedRoleDepartment}} = \&quot;AutomatedPipeline\&quot;, \&quot;AutomatedPipeline\&quot;, BLANK())))&quot;,
+          &quot;template_hash&quot;: &quot;sha256:df1af41af866b6a9&quot;,
+          &quot;root_node&quot;: &quot;n_result_ExecutionActorType&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;AssignedRoleDepartment&quot;,
+              &quot;field_snake&quot;: &quot;assigned_role_department&quot;
+            },
+            &quot;n_const_2&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;HumanAgent&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_op_3&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_const_2&quot;
+              ]
+            },
+            &quot;n_const_4&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;HumanAgent&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_ref_5&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;AssignedRoleDepartment&quot;,
+              &quot;field_snake&quot;: &quot;assigned_role_department&quot;
+            },
+            &quot;n_const_6&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;AIAgent&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_op_7&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_5&quot;,
+                &quot;n_const_6&quot;
+              ]
+            },
+            &quot;n_const_8&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;AIAgent&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_ref_9&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;AssignedRoleDepartment&quot;,
+              &quot;field_snake&quot;: &quot;assigned_role_department&quot;
+            },
+            &quot;n_const_10&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;AutomatedPipeline&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_op_11&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_9&quot;,
+                &quot;n_const_10&quot;
+              ]
+            },
+            &quot;n_const_12&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;AutomatedPipeline&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_fn_13&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;BLANK&quot;,
+              &quot;args&quot;: []
+            },
+            &quot;n_fn_14&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_op_11&quot;,
+                &quot;n_const_12&quot;,
+                &quot;n_fn_13&quot;
+              ]
+            },
+            &quot;n_fn_15&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_op_7&quot;,
+                &quot;n_const_8&quot;,
+                &quot;n_fn_14&quot;
+              ]
+            },
+            &quot;n_fn_16&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_op_3&quot;,
+                &quot;n_const_4&quot;,
+                &quot;n_fn_15&quot;
+              ]
+            },
+            &quot;n_result_ExecutionActorType&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;ExecutionActorType&quot;,
+              &quot;field_snake&quot;: &quot;execution_actor_type&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_16&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_op_3&quot;
+            ],
+            [
+              &quot;n_const_2&quot;,
+              &quot;n_op_3&quot;
+            ],
+            [
+              &quot;n_ref_5&quot;,
+              &quot;n_op_7&quot;
+            ],
+            [
+              &quot;n_const_6&quot;,
+              &quot;n_op_7&quot;
+            ],
+            [
+              &quot;n_ref_9&quot;,
+              &quot;n_op_11&quot;
+            ],
+            [
+              &quot;n_const_10&quot;,
+              &quot;n_op_11&quot;
+            ],
+            [
+              &quot;n_op_11&quot;,
+              &quot;n_fn_14&quot;
+            ],
+            [
+              &quot;n_const_12&quot;,
+              &quot;n_fn_14&quot;
+            ],
+            [
+              &quot;n_fn_13&quot;,
+              &quot;n_fn_14&quot;
+            ],
+            [
+              &quot;n_op_7&quot;,
+              &quot;n_fn_15&quot;
+            ],
+            [
+              &quot;n_const_8&quot;,
+              &quot;n_fn_15&quot;
+            ],
+            [
+              &quot;n_fn_14&quot;,
+              &quot;n_fn_15&quot;
+            ],
+            [
+              &quot;n_op_3&quot;,
+              &quot;n_fn_16&quot;
+            ],
+            [
+              &quot;n_const_4&quot;,
+              &quot;n_fn_16&quot;
+            ],
+            [
+              &quot;n_fn_15&quot;,
+              &quot;n_fn_16&quot;
+            ],
+            [
+              &quot;n_fn_16&quot;,
+              &quot;n_result_ExecutionActorType&quot;
+            ]
+          ]
         }
       },
       &quot;description&quot;: &quot;Table: WorkflowSteps&quot;
     },
-    &quot;ApprovalGates&quot;: {
-      &quot;id_field&quot;: &quot;ApprovalGateId&quot;,
-      &quot;id_field_snake&quot;: &quot;approval_gate_id&quot;,
+    &quot;Approvals&quot;: {
+      &quot;id_field&quot;: &quot;ApprovalId&quot;,
+      &quot;id_field_snake&quot;: &quot;approval_id&quot;,
       &quot;fields&quot;: {
-        &quot;ApprovalGateId&quot;: {
+        &quot;ApprovalId&quot;: {
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: false,
           &quot;type&quot;: &quot;raw&quot;
@@ -534,6 +746,26 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;nullable&quot;: true,
           &quot;type&quot;: &quot;raw&quot;,
           &quot;description&quot;: &quot;Integer number of hours that may elapse on a pending gate before the ntwf:delegatesTo chain activates. Maps to ntwf:escalationThresholdHours. Domain applies only to ApprovalGate individuals.&quot;
+        },
+        &quot;Workflow_from_WorkflowSteps&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;Assigned_Role_from_WorkflowSteps&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;Sequence_Position_from_WorkflowSteps&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;Requires_Human_Approval_from_WorkflowSteps&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
         }
       },
       &quot;calc_order&quot;: [
@@ -615,7 +847,7 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           ]
         }
       },
-      &quot;description&quot;: &quot;Table: ApprovalGates&quot;
+      &quot;description&quot;: &quot;Table: Approvals&quot;
     },
     &quot;PrecedesSteps&quot;: {
       &quot;id_field&quot;: &quot;PrecedesStepId&quot;,
@@ -632,12 +864,6 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;type&quot;: &quot;raw&quot;,
           &quot;description&quot;: &quot;Ordinal sequence number for the relationship. Used for sorting and display.&quot;
         },
-        &quot;WorkflowStep&quot;: {
-          &quot;datatype&quot;: &quot;string&quot;,
-          &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;description&quot;: &quot;Foreign key to the step that comes BEFORE. The source of the &#x27;precedes&#x27; relationship.&quot;
-        },
         &quot;DisplayName&quot;: {
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: true,
@@ -647,6 +873,12 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;datatype&quot;: &quot;integer&quot;,
           &quot;nullable&quot;: true,
           &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;WorkflowStep&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;description&quot;: &quot;Foreign key to the step that comes BEFORE. The source of the &#x27;precedes&#x27; relationship.&quot;
         }
       },
       &quot;calc_order&quot;: [
@@ -777,6 +1009,21 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: true,
           &quot;type&quot;: &quot;relationship&quot;
+        },
+        &quot;All_Linked_Workflow_Steps&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;Distinct_Workflows_for_Linked_Steps&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;WorkflowArtifacts&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;
         }
       },
       &quot;calc_order&quot;: [
@@ -861,6 +1108,21 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
           &quot;nullable&quot;: true,
           &quot;type&quot;: &quot;relationship&quot;,
           &quot;description&quot;: &quot;Back-reference to roles owned by this department. Inverse of Roles.OwnedBy.&quot;
+        },
+        &quot;All_Owned_Roles&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;All_Related_Workflow_Steps&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;All_Distinct_Workflows_for_Owned_Roles&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
         }
       },
       &quot;calc_order&quot;: [
@@ -953,11 +1215,7 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             <div class="card">
                 <h2>Sample Explanations (JSONL)</h2>
                 <div class="code-info">First few records from test-explanations/</div>
-                <pre>{&quot;schema_version&quot;: &quot;erb.explain_instance.v1&quot;, &quot;rulebook_hash&quot;: &quot;sha256:1fd918ec93c6ba2f6d6a0671453393a9&quot;, &quot;entity&quot;: &quot;approval_gates&quot;, &quot;record_id&quot;: &quot;compliance-check&quot;, &quot;values&quot;: {&quot;name&quot;: &quot;compliance-check&quot;}, &quot;explanations&quot;: {&quot;Name&quot;: {&quot;template_hash&quot;: &quot;sha256:89d15a4a6be3f751&quot;, &quot;root&quot;: &quot;i_result_Name&quot;, &quot;nodes&quot;: {&quot;i_ref_1&quot;: {&quot;kind&quot;: &quot;field_ref&quot;, &quot;value&quot;: &quot;Compliance Check&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;DisplayName&quot;, &quot;field_snake&quot;: &quot;display_name&quot;}, &quot;i_const_3&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot; &quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_const_4&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot;-&quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_fn_2&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;compliance check&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;LOWER&quot;, &quot;args&quot;: [&quot;n_ref_1&quot;]}, &quot;i_fn_5&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;compliance-check&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;SUBSTITUTE&quot;, &quot;args&quot;: [&quot;n_fn_2&quot;, &quot;n_const_3&quot;, &quot;n_const_4&quot;]}, &quot;i_result_Name&quot;: {&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: &quot;compliance-check&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;Name&quot;}}, &quot;edges&quot;: [[&quot;i_ref_1&quot;, &quot;i_fn_2&quot;], [&quot;i_fn_2&quot;, &quot;i_fn_5&quot;], [&quot;i_const_3&quot;, &quot;i_fn_5&quot;], [&quot;i_const_4&quot;, &quot;i_fn_5&quot;], [&quot;i_fn_5&quot;, &quot;i_result_Name&quot;]], &quot;evidence&quot;: {&quot;short_circuit&quot;: [], &quot;branches&quot;: []}}}}
-{&quot;schema_version&quot;: &quot;erb.explain_instance.v1&quot;, &quot;rulebook_hash&quot;: &quot;sha256:1fd918ec93c6ba2f6d6a0671453393a9&quot;, &quot;entity&quot;: &quot;approval_gates&quot;, &quot;record_id&quot;: &quot;customer-confirmation&quot;, &quot;values&quot;: {&quot;name&quot;: &quot;customer-confirmation&quot;}, &quot;explanations&quot;: {&quot;Name&quot;: {&quot;template_hash&quot;: &quot;sha256:89d15a4a6be3f751&quot;, &quot;root&quot;: &quot;i_result_Name&quot;, &quot;nodes&quot;: {&quot;i_ref_1&quot;: {&quot;kind&quot;: &quot;field_ref&quot;, &quot;value&quot;: &quot;Customer Confirmation&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;DisplayName&quot;, &quot;field_snake&quot;: &quot;display_name&quot;}, &quot;i_const_3&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot; &quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_const_4&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot;-&quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_fn_2&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;customer confirmation&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;LOWER&quot;, &quot;args&quot;: [&quot;n_ref_1&quot;]}, &quot;i_fn_5&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;customer-confirmation&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;SUBSTITUTE&quot;, &quot;args&quot;: [&quot;n_fn_2&quot;, &quot;n_const_3&quot;, &quot;n_const_4&quot;]}, &quot;i_result_Name&quot;: {&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: &quot;customer-confirmation&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;Name&quot;}}, &quot;edges&quot;: [[&quot;i_ref_1&quot;, &quot;i_fn_2&quot;], [&quot;i_fn_2&quot;, &quot;i_fn_5&quot;], [&quot;i_const_3&quot;, &quot;i_fn_5&quot;], [&quot;i_const_4&quot;, &quot;i_fn_5&quot;], [&quot;i_fn_5&quot;, &quot;i_result_Name&quot;]], &quot;evidence&quot;: {&quot;short_circuit&quot;: [], &quot;branches&quot;: []}}}}
-{&quot;schema_version&quot;: &quot;erb.explain_instance.v1&quot;, &quot;rulebook_hash&quot;: &quot;sha256:1fd918ec93c6ba2f6d6a0671453393a9&quot;, &quot;entity&quot;: &quot;approval_gates&quot;, &quot;record_id&quot;: &quot;executive-sign-off&quot;, &quot;values&quot;: {&quot;name&quot;: &quot;executive-sign-off&quot;}, &quot;explanations&quot;: {&quot;Name&quot;: {&quot;template_hash&quot;: &quot;sha256:89d15a4a6be3f751&quot;, &quot;root&quot;: &quot;i_result_Name&quot;, &quot;nodes&quot;: {&quot;i_ref_1&quot;: {&quot;kind&quot;: &quot;field_ref&quot;, &quot;value&quot;: &quot;Executive Sign-off&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;DisplayName&quot;, &quot;field_snake&quot;: &quot;display_name&quot;}, &quot;i_const_3&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot; &quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_const_4&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot;-&quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_fn_2&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;executive sign-off&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;LOWER&quot;, &quot;args&quot;: [&quot;n_ref_1&quot;]}, &quot;i_fn_5&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;executive-sign-off&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;SUBSTITUTE&quot;, &quot;args&quot;: [&quot;n_fn_2&quot;, &quot;n_const_3&quot;, &quot;n_const_4&quot;]}, &quot;i_result_Name&quot;: {&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: &quot;executive-sign-off&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;Name&quot;}}, &quot;edges&quot;: [[&quot;i_ref_1&quot;, &quot;i_fn_2&quot;], [&quot;i_fn_2&quot;, &quot;i_fn_5&quot;], [&quot;i_const_3&quot;, &quot;i_fn_5&quot;], [&quot;i_const_4&quot;, &quot;i_fn_5&quot;], [&quot;i_fn_5&quot;, &quot;i_result_Name&quot;]], &quot;evidence&quot;: {&quot;short_circuit&quot;: [], &quot;branches&quot;: []}}}}
-{&quot;schema_version&quot;: &quot;erb.explain_instance.v1&quot;, &quot;rulebook_hash&quot;: &quot;sha256:1fd918ec93c6ba2f6d6a0671453393a9&quot;, &quot;entity&quot;: &quot;approval_gates&quot;, &quot;record_id&quot;: &quot;final-authorization&quot;, &quot;values&quot;: {&quot;name&quot;: &quot;final-authorization&quot;}, &quot;explanations&quot;: {&quot;Name&quot;: {&quot;template_hash&quot;: &quot;sha256:89d15a4a6be3f751&quot;, &quot;root&quot;: &quot;i_result_Name&quot;, &quot;nodes&quot;: {&quot;i_ref_1&quot;: {&quot;kind&quot;: &quot;field_ref&quot;, &quot;value&quot;: &quot;Final Authorization&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;DisplayName&quot;, &quot;field_snake&quot;: &quot;display_name&quot;}, &quot;i_const_3&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot; &quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_const_4&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot;-&quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_fn_2&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;final authorization&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;LOWER&quot;, &quot;args&quot;: [&quot;n_ref_1&quot;]}, &quot;i_fn_5&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;final-authorization&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;SUBSTITUTE&quot;, &quot;args&quot;: [&quot;n_fn_2&quot;, &quot;n_const_3&quot;, &quot;n_const_4&quot;]}, &quot;i_result_Name&quot;: {&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: &quot;final-authorization&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;Name&quot;}}, &quot;edges&quot;: [[&quot;i_ref_1&quot;, &quot;i_fn_2&quot;], [&quot;i_fn_2&quot;, &quot;i_fn_5&quot;], [&quot;i_const_3&quot;, &quot;i_fn_5&quot;], [&quot;i_const_4&quot;, &quot;i_fn_5&quot;], [&quot;i_fn_5&quot;, &quot;i_result_Name&quot;]], &quot;evidence&quot;: {&quot;short_circuit&quot;: [], &quot;branches&quot;: []}}}}
-{&quot;schema_version&quot;: &quot;erb.explain_instance.v1&quot;, &quot;rulebook_hash&quot;: &quot;sha256:1fd918ec93c6ba2f6d6a0671453393a9&quot;, &quot;entity&quot;: &quot;approval_gates&quot;, &quot;record_id&quot;: &quot;finance-approval&quot;, &quot;values&quot;: {&quot;name&quot;: &quot;finance-approval&quot;}, &quot;explanations&quot;: {&quot;Name&quot;: {&quot;template_hash&quot;: &quot;sha256:89d15a4a6be3f751&quot;, &quot;root&quot;: &quot;i_result_Name&quot;, &quot;nodes&quot;: {&quot;i_ref_1&quot;: {&quot;kind&quot;: &quot;field_ref&quot;, &quot;value&quot;: &quot;Finance Approval&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;DisplayName&quot;, &quot;field_snake&quot;: &quot;display_name&quot;}, &quot;i_const_3&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot; &quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_const_4&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot;-&quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_fn_2&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;finance approval&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;LOWER&quot;, &quot;args&quot;: [&quot;n_ref_1&quot;]}, &quot;i_fn_5&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;finance-approval&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;SUBSTITUTE&quot;, &quot;args&quot;: [&quot;n_fn_2&quot;, &quot;n_const_3&quot;, &quot;n_const_4&quot;]}, &quot;i_result_Name&quot;: {&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: &quot;finance-approval&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;Name&quot;}}, &quot;edges&quot;: [[&quot;i_ref_1&quot;, &quot;i_fn_2&quot;], [&quot;i_fn_2&quot;, &quot;i_fn_5&quot;], [&quot;i_const_3&quot;, &quot;i_fn_5&quot;], [&quot;i_const_4&quot;, &quot;i_fn_5&quot;], [&quot;i_fn_5&quot;, &quot;i_result_Name&quot;]], &quot;evidence&quot;: {&quot;short_circuit&quot;: [], &quot;branches&quot;: []}}}}
+                <pre>{&quot;schema_version&quot;: &quot;erb.explain_instance.v1&quot;, &quot;rulebook_hash&quot;: &quot;sha256:7541a29d0b939ee1757483b68fc06db8&quot;, &quot;entity&quot;: &quot;approvals&quot;, &quot;record_id&quot;: &quot;release-approval-gate&quot;, &quot;values&quot;: {&quot;name&quot;: &quot;release-approval-gate&quot;}, &quot;explanations&quot;: {&quot;Name&quot;: {&quot;template_hash&quot;: &quot;sha256:89d15a4a6be3f751&quot;, &quot;root&quot;: &quot;i_result_Name&quot;, &quot;nodes&quot;: {&quot;i_ref_1&quot;: {&quot;kind&quot;: &quot;field_ref&quot;, &quot;value&quot;: &quot;Release Approval Gate&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;DisplayName&quot;, &quot;field_snake&quot;: &quot;display_name&quot;}, &quot;i_const_3&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot; &quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_const_4&quot;: {&quot;kind&quot;: &quot;const&quot;, &quot;value&quot;: &quot;-&quot;, &quot;type&quot;: &quot;string&quot;}, &quot;i_fn_2&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;release approval gate&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;LOWER&quot;, &quot;args&quot;: [&quot;n_ref_1&quot;]}, &quot;i_fn_5&quot;: {&quot;kind&quot;: &quot;fn&quot;, &quot;value&quot;: &quot;release-approval-gate&quot;, &quot;type&quot;: &quot;string&quot;, &quot;name&quot;: &quot;SUBSTITUTE&quot;, &quot;args&quot;: [&quot;n_fn_2&quot;, &quot;n_const_3&quot;, &quot;n_const_4&quot;]}, &quot;i_result_Name&quot;: {&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: &quot;release-approval-gate&quot;, &quot;type&quot;: &quot;string&quot;, &quot;field&quot;: &quot;Name&quot;}}, &quot;edges&quot;: [[&quot;i_ref_1&quot;, &quot;i_fn_2&quot;], [&quot;i_fn_2&quot;, &quot;i_fn_5&quot;], [&quot;i_const_3&quot;, &quot;i_fn_5&quot;], [&quot;i_const_4&quot;, &quot;i_fn_5&quot;], [&quot;i_fn_5&quot;, &quot;i_result_Name&quot;]], &quot;evidence&quot;: {&quot;short_circuit&quot;: [], &quot;branches&quot;: []}}}}
 </pre>
             </div>
         </div>

@@ -1,7 +1,7 @@
 # Specification Document for Jessica Talisman - BASIC Ontology Parts 1-3
 
 ## Overview
-This document outlines the specifications for calculating fields within the "Jessica Talisman - BASIC Ontology Parts 1-3" rulebook. The rulebook is structured around workflows and their associated steps, providing a framework for managing and analyzing organizational processes. The calculated fields derive values based on raw input fields, enabling insights into workflow complexity and characteristics.
+This document outlines the specifications for the rulebook "Jessica Talisman - BASIC Ontology Parts 1-3". It describes how to compute calculated fields based on the input fields defined in the rulebook's schema. The rulebook is structured around workflows and their associated steps, providing a comprehensive view of how to manage and analyze various business processes.
 
 ## Workflows
 
@@ -14,23 +14,48 @@ This document outlines the specifications for calculating fields within the "Jes
    - **Type:** String
    - **Description:** Human-readable name for the workflow.
 
-3. **CountOfNonProposedSteps**
-   - **Type:** Integer
-   - **Description:** Count of workflow steps in this workflow.
+3. **Title**
+   - **Type:** String
+   - **Description:** Human-readable title of the workflow.
+
+4. **Description**
+   - **Type:** String
+   - **Description:** Detailed description of the workflow's purpose and scope.
+
+5. **Identifier**
+   - **Type:** String
+   - **Description:** External system identifier for cross-referencing.
+
+6. **Modified**
+   - **Type:** Datetime
+   - **Description:** Last modification timestamp.
+
+7. **WorkflowSteps**
+   - **Type:** String
+   - **Description:** Reference to workflow steps.
 
 ### Calculated Fields
 
-#### 1. Name
-- **Description:** A machine-friendly name for the workflow, used for programmatic reference and URL slug generation.
-- **Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.
+#### 1. **Name**
+- **Description:** This field generates a short, machine-friendly name for the workflow, which is used for programmatic reference and URL slug generation.
+- **Computation:** Convert the `DisplayName` to lowercase and replace spaces with hyphens.
 - **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
-- **Example:** For a workflow with `DisplayName` "Performance Review", the `Name` would be "performance-review".
+- **Example:** 
+  - If `DisplayName` is "Performance Review", the computed `Name` would be "performance-review".
 
-#### 2. HasMoreThan1Step
-- **Description:** Indicates whether the workflow contains more than one step.
-- **Calculation:** This field is computed by checking if `CountOfNonProposedSteps` is greater than 1.
+#### 2. **CountOfNonProposedSteps**
+- **Description:** This field calculates the total number of steps associated with the workflow.
+- **Computation:** Count the number of entries in `WorkflowSteps` that match the current `WorkflowId`.
+- **Formula:** `=COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})`
+- **Example:**
+  - If `WorkflowSteps` contains "system-notification-sent, step-2, recwwXHLqxKPhj6Mt" for `WorkflowId` "performance-review", the computed `CountOfNonProposedSteps` would be 3.
+
+#### 3. **HasMoreThan1Step**
+- **Description:** This boolean field indicates whether the workflow contains more than one step.
+- **Computation:** Check if `CountOfNonProposedSteps` is greater than 1.
 - **Formula:** `={{CountOfNonProposedSteps}} > 1`
-- **Example:** If `CountOfNonProposedSteps` is 3, then `HasMoreThan1Step` would be `true`. If it is 1, then `HasMoreThan1Step` would be `false`.
+- **Example:**
+  - For the workflow with `CountOfNonProposedSteps` equal to 3, `HasMoreThan1Step` would be `true`. For a workflow with `CountOfNonProposedSteps` equal to 1, it would be `false`.
 
 ## Workflow Steps
 
@@ -43,13 +68,38 @@ This document outlines the specifications for calculating fields within the "Jes
    - **Type:** String
    - **Description:** Human-readable name for the workflow step.
 
+3. **Workflow**
+   - **Type:** String
+   - **Description:** Reference to the parent workflow.
+
+4. **SequencePosition**
+   - **Type:** Integer
+   - **Description:** Ordinal position of the step within its workflow.
+
+5. **AssignedRole**
+   - **Type:** String
+   - **Description:** Role responsible for executing this step.
+
+6. **RequiresHumanApproval**
+   - **Type:** Boolean
+   - **Description:** Indicates if the step requires human approval.
+
+7. **ApprovalGate**
+   - **Type:** String
+   - **Description:** Reference to the approval gate if this step is a decision checkpoint.
+
+8. **PrecededBySteps**
+   - **Type:** String
+   - **Description:** Reference to steps that must complete before this step can execute.
+
 ### Calculated Fields
 
-#### 1. Name
-- **Description:** A machine-friendly name for the workflow step, used for programmatic reference.
-- **Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.
+#### 1. **Name**
+- **Description:** This field generates a machine-friendly name for the workflow step.
+- **Computation:** Convert the `DisplayName` to lowercase and replace spaces with hyphens.
 - **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
-- **Example:** For a step with `DisplayName` "Manager Review", the `Name` would be "manager-review".
+- **Example:**
+  - If `DisplayName` is "Submit Request", the computed `Name` would be "submit-request".
 
 ## Approval Gates
 
@@ -62,51 +112,22 @@ This document outlines the specifications for calculating fields within the "Jes
    - **Type:** String
    - **Description:** Human-readable name for the approval gate.
 
-### Calculated Fields
-
-#### 1. Name
-- **Description:** A machine-friendly name for the approval gate, used for programmatic reference.
-- **Calculation:** The `Name` is computed by taking the `DisplayName`, converting it to lowercase, and replacing spaces with hyphens.
-- **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
-- **Example:** For an approval gate with `DisplayName` "Manager Approval", the `Name` would be "manager-approval".
-
-## Precedes Steps
-
-### Input Fields
-1. **PrecedesStepId**
+3. **WorkflowSteps**
    - **Type:** String
-   - **Description:** Unique identifier for the precedes step.
+   - **Description:** Reference to workflow steps that use this approval gate.
 
-2. **StepNumber**
+4. **EscalationThresholdHours**
    - **Type:** Integer
-   - **Description:** Ordinal sequence number for the relationship.
+   - **Description:** Number of hours that may elapse on a pending gate before escalation activates.
 
 ### Calculated Fields
 
-#### 1. DisplayName
-- **Description:** A formatted display name for the step based on its sequence number.
-- **Calculation:** The `DisplayName` is computed by concatenating the string "Step-" with the `StepNumber`.
-- **Formula:** `="Step-" & {{StepNumber}}`
-- **Example:** If `StepNumber` is 3, then `DisplayName` would be "Step-3".
-
-## Roles
-
-### Input Fields
-1. **RoleId**
-   - **Type:** String
-   - **Description:** Unique identifier for the role.
-
-2. **DisplayName**
-   - **Type:** String
-   - **Description:** Human-readable name for the role.
-
-### Calculated Fields
-
-#### 1. Name
-- **Description:** A machine-friendly name for the role, used for programmatic reference.
-- **Calculation:** The `Name` is computed by converting the `DisplayName` to lowercase.
-- **Formula:** `=LOWER({{DisplayName}})`
-- **Example:** For a role with `DisplayName` "Administrator", the `Name` would be "administrator".
+#### 1. **Name**
+- **Description:** This field generates a machine-friendly name for the approval gate.
+- **Computation:** Convert the `DisplayName` to lowercase and replace spaces with hyphens.
+- **Formula:** `=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")`
+- **Example:**
+  - If `DisplayName` is "Manager Approval", the computed `Name` would be "manager-approval".
 
 ## Conclusion
-This specification document provides a detailed guide on how to compute calculated fields within the "Jessica Talisman - BASIC Ontology Parts 1-3" rulebook. By following the outlined calculations and examples, users can derive the necessary values for effective workflow management and analysis.
+This specification document provides a detailed guide on how to compute calculated fields based on the input fields defined in the rulebook. By following the outlined steps and examples, users can accurately derive the values needed for effective workflow and step management.

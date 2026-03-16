@@ -112,7 +112,7 @@ def run_shacl_reasoning(data_graph: Graph, shacl_graph: Graph, max_passes: int =
         pyshacl.validate(
             data_graph,
             shacl_graph=shacl_graph,
-            inference='rdfs',
+            inference='none',  # Don't use rdfs inference - it can cause incorrect property bindings
             inplace=True,
             advanced=True,
             debug=False

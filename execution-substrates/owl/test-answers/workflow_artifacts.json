@@ -1,0 +1,16 @@
+[
+  {
+    "workflow_artifact_id": "reciCzrsZeMEg90oc",
+    "artifact_name": null,
+    "produced_by_step": null,
+    "workflow_from_produced_by_step": null,
+    "attributed_role": null,
+    "attributed_human_agent": null,
+    "attributed_ai_agent": null,
+    "attributed_pipeline": null,
+    "derived_from_artifact": null,
+    "artifact_description": null,
+    "artifact_file": null,
+    "from_field_derived_from_artifact": null
+  }
+]

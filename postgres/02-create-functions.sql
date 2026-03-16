@@ -39,7 +39,7 @@ END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
 
-CREATE OR REPLACE FUNCTION calc_workflows_count_of_non_proposed_steps(p_workflow_id TEXT)
+CREATE OR REPLACE FUNCTION calc_workflows_count_of_steps(p_workflow_id TEXT)
 RETURNS INTEGER AS $$
 BEGIN
   RETURN ((SELECT COUNT(*) FROM workflow_steps WHERE workflow = (SELECT NULLIF(workflow_id, '') FROM workflows WHERE workflow_id = p_workflow_id)));
@@ -50,7 +50,23 @@ $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION calc_workflows_has_more_than1_step(p_workflow_id TEXT)
 RETURNS BOOLEAN AS $$
 BEGIN
-  RETURN (calc_workflows_count_of_non_proposed_steps(p_workflow_id) > 1)::boolean;
+  RETURN (calc_workflows_count_of_steps(p_workflow_id) > 1)::boolean;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_assigned_role_department(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT owned_by::text FROM roles WHERE role_id = (SELECT assigned_role FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_approval_gate_escalation_threshold_hours(p_workflow_step_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT escalation_threshold_hours::integer FROM approvals WHERE approval_id = (SELECT approval_gate FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -65,13 +81,6 @@ CREATE OR REPLACE FUNCTION get_workflows_title(p_workflow_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
   RETURN (SELECT title FROM workflows WHERE workflow_id = p_workflow_id);
-END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
-
-CREATE OR REPLACE FUNCTION get_workflows_color(p_workflow_id TEXT)
-RETURNS TEXT AS $$
-BEGIN
-  RETURN (SELECT color FROM workflows WHERE workflow_id = p_workflow_id);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -117,17 +126,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION get_approval_gates_display_name(p_approval_gate_id TEXT)
+CREATE OR REPLACE FUNCTION get_approvals_display_name(p_approval_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (SELECT display_name FROM approval_gates WHERE approval_gate_id = p_approval_gate_id);
+  RETURN (SELECT display_name FROM approvals WHERE approval_id = p_approval_id);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION get_approval_gates_escalation_threshold_hours(p_approval_gate_id TEXT)
+CREATE OR REPLACE FUNCTION get_approvals_escalation_threshold_hours(p_approval_id TEXT)
 RETURNS INTEGER AS $$
 BEGIN
-  RETURN (SELECT escalation_threshold_hours FROM approval_gates WHERE approval_gate_id = p_approval_gate_id);
+  RETURN (SELECT escalation_threshold_hours FROM approvals WHERE approval_id = p_approval_id);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -145,6 +154,34 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
+CREATE OR REPLACE FUNCTION get_step_transitions_name(p_step_transition_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM step_transitions WHERE step_transition_id = p_step_transition_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_workflow_artifacts_artifact_name(p_workflow_artifact_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT artifact_name FROM workflow_artifacts WHERE workflow_artifact_id = p_workflow_artifact_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_workflow_artifacts_artifact_description(p_workflow_artifact_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT artifact_description FROM workflow_artifacts WHERE workflow_artifact_id = p_workflow_artifact_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_workflow_artifacts_artifact_file(p_workflow_artifact_id TEXT)
+RETURNS BYTEA AS $$
+BEGIN
+  RETURN (SELECT artifact_file FROM workflow_artifacts WHERE workflow_artifact_id = p_workflow_artifact_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
 
 CREATE OR REPLACE FUNCTION calc_workflow_steps_name(p_workflow_step_id TEXT)
 RETURNS TEXT AS $$
@@ -154,10 +191,50 @@ END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
 
-CREATE OR REPLACE FUNCTION calc_approval_gates_name(p_approval_gate_id TEXT)
+CREATE OR REPLACE FUNCTION calc_workflow_steps_execution_actor_type(p_workflow_step_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (REPLACE(LOWER((SELECT NULLIF(display_name, '') FROM approval_gates WHERE approval_gate_id = p_approval_gate_id)), ' ', '-'))::text;
+  RETURN (CASE WHEN calc_workflow_steps_assigned_role_department(p_workflow_step_id) = 'HumanAgent' THEN 'HumanAgent' ELSE CASE WHEN calc_workflow_steps_assigned_role_department(p_workflow_step_id) = 'AIAgent' THEN 'AIAgent' ELSE CASE WHEN calc_workflow_steps_assigned_role_department(p_workflow_step_id) = 'AutomatedPipeline' THEN 'AutomatedPipeline' ELSE NULL END END END)::text;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_approvals_workflow_from_workflow_steps(p_approval_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT workflow::text FROM workflow_steps WHERE workflow_step_id = (SELECT workflow_steps FROM approvals WHERE approval_id = p_approval_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_approvals_assigned_role_from_workflow_steps(p_approval_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT assigned_role::text FROM workflow_steps WHERE workflow_step_id = (SELECT workflow_steps FROM approvals WHERE approval_id = p_approval_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_approvals_sequence_position_from_workflow_steps(p_approval_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT sequence_position::integer FROM workflow_steps WHERE workflow_step_id = (SELECT workflow_steps FROM approvals WHERE approval_id = p_approval_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_approvals_requires_human_approval_from_workflow_steps(p_approval_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (SELECT requires_human_approval::boolean FROM workflow_steps WHERE workflow_step_id = (SELECT workflow_steps FROM approvals WHERE approval_id = p_approval_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_approvals_name(p_approval_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (REPLACE(LOWER((SELECT NULLIF(display_name, '') FROM approvals WHERE approval_id = p_approval_id)), ' ', '-'))::text;
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -166,6 +243,22 @@ CREATE OR REPLACE FUNCTION calc_precedes_steps_display_name(p_precedes_step_id T
 RETURNS TEXT AS $$
 BEGIN
   RETURN (CONCAT('Step-', (SELECT step_number FROM precedes_steps WHERE precedes_step_id = p_precedes_step_id)))::text;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_roles_all_linked_workflow_steps(p_role_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT string_agg(DISTINCT name::text, ', ') FROM workflow_steps WHERE assigned_role = p_role_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_roles_distinct_workflows_for_linked_steps(p_role_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT string_agg(DISTINCT workflow::text, ', ') FROM workflow_steps WHERE assigned_role = p_role_id);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -262,10 +355,74 @@ END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
 
+CREATE OR REPLACE FUNCTION calc_departments_all_owned_roles(p_department_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT string_agg(DISTINCT display_name::text, ', ') FROM roles WHERE owned_by = p_department_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_departments_all_related_workflow_steps(p_department_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT string_agg(DISTINCT all_linked_workflow_steps::text, ', ') FROM roles WHERE owned_by = p_department_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_departments_all_distinct_workflows_for_owned_roles(p_department_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT string_agg(DISTINCT distinct_workflows_for_linked_steps::text, ', ') FROM roles WHERE owned_by = p_department_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
 CREATE OR REPLACE FUNCTION calc_departments_name(p_department_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
   RETURN (REPLACE(LOWER((SELECT NULLIF(display_name, '') FROM departments WHERE department_id = p_department_id)), ' ', '-'))::text;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_human_agents_all_linked_roles(p_human_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN calc_roles_name((SELECT roles FROM human_agents WHERE human_agent_id = p_human_agent_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_human_agents_all_related_workflow_steps(p_human_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN calc_roles_all_linked_workflow_steps((SELECT roles FROM human_agents WHERE human_agent_id = p_human_agent_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_human_agents_all_distinct_workflows_for_linked_roles(p_human_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN calc_roles_distinct_workflows_for_linked_steps((SELECT roles FROM human_agents WHERE human_agent_id = p_human_agent_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_step_transitions_workflow_from_from_step(p_step_transition_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT workflow::text FROM workflow_steps WHERE workflow_step_id = (SELECT from_step FROM step_transitions WHERE step_transition_id = p_step_transition_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_artifacts_workflow_from_produced_by_step(p_workflow_artifact_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT workflow::text FROM workflow_steps WHERE workflow_step_id = (SELECT produced_by_step FROM workflow_artifacts WHERE workflow_artifact_id = p_workflow_artifact_id));
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -285,17 +442,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION calc_approval_gates_workflow_steps(p_approval_gate_id TEXT)
-RETURNS TEXT AS $$
-BEGIN
-  RETURN (
-    SELECT STRING_AGG(workflow_step_id::TEXT, ', ' ORDER BY workflow_step_id)
-    FROM workflow_steps
-    WHERE approval_gate = p_approval_gate_id
-  );
-END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
-
 CREATE OR REPLACE FUNCTION calc_roles_workflow_steps(p_role_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
@@ -303,6 +449,17 @@ BEGIN
     SELECT STRING_AGG(workflow_step_id::TEXT, ', ' ORDER BY workflow_step_id)
     FROM workflow_steps
     WHERE assigned_role = p_role_id
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION calc_departments_roles(p_department_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (
+    SELECT STRING_AGG(role_id::TEXT, ', ' ORDER BY role_id)
+    FROM roles
+    WHERE owned_by = p_department_id
   );
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;

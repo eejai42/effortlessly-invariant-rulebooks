@@ -27,9 +27,9 @@ def calc_workflows_name(display_name):
 
 # Level 2
 
-def calc_workflows_has_more_than1_step(count_of_non_proposed_steps):
-    """Formula: ={{CountOfNonProposedSteps}} > 1"""
-    return (count_of_non_proposed_steps > 1)
+def calc_workflows_has_more_than1_step(count_of_steps):
+    """Formula: ={{CountOfSteps}} > 1"""
+    return (count_of_steps > 1)
 
 
 def compute_workflows_fields(record: dict) -> dict:
@@ -44,7 +44,7 @@ def compute_workflows_fields(record: dict) -> dict:
     result['name'] = calc_workflows_name(result.get('display_name'))
 
     # Level 2 calculations
-    result['has_more_than1_step'] = calc_workflows_has_more_than1_step(result.get('count_of_non_proposed_steps'))
+    result['has_more_than1_step'] = calc_workflows_has_more_than1_step(result.get('count_of_steps'))
 
     # Convert empty strings to None for string fields
     for key in ['name']:
@@ -64,6 +64,12 @@ def calc_workflow_steps_name(display_name):
     """Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")"""
     return ((((display_name or "").lower()) or "").replace(' ', '-'))
 
+# Level 2
+
+def calc_workflow_steps_execution_actor_type(assigned_role_department):
+    """Formula: =IF({{AssignedRoleDepartment}} = "HumanAgent", "HumanAgent", IF({{AssignedRoleDepartment}} = "AIAgent", "AIAgent", IF({{AssignedRoleDepartment}} = "AutomatedPipeline", "AutomatedPipeline", BLANK())))"""
+    return ('HumanAgent' if (assigned_role_department == 'HumanAgent') else ('AIAgent' if (assigned_role_department == 'AIAgent') else ('AutomatedPipeline' if (assigned_role_department == 'AutomatedPipeline') else None)))
+
 
 def compute_workflow_steps_fields(record: dict) -> dict:
     """
@@ -76,35 +82,38 @@ def compute_workflow_steps_fields(record: dict) -> dict:
     # Level 1 calculations
     result['name'] = calc_workflow_steps_name(result.get('display_name'))
 
+    # Level 2 calculations
+    result['execution_actor_type'] = calc_workflow_steps_execution_actor_type(result.get('assigned_role_department'))
+
     # Convert empty strings to None for string fields
-    for key in ['name']:
+    for key in ['name', 'execution_actor_type']:
         if result.get(key) == '':
             result[key] = None
 
     return result
 
 # =============================================================================
-# APPROVALGATES CALCULATIONS
-# Table: ApprovalGates
+# APPROVALS CALCULATIONS
+# Table: Approvals
 # =============================================================================
 
 # Level 1
 
-def calc_approval_gates_name(display_name):
+def calc_approvals_name(display_name):
     """Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")"""
     return ((((display_name or "").lower()) or "").replace(' ', '-'))
 
 
-def compute_approval_gates_fields(record: dict) -> dict:
+def compute_approvals_fields(record: dict) -> dict:
     """
-    Compute all calculated fields for ApprovalGates.
+    Compute all calculated fields for Approvals.
     
-    Table: ApprovalGates
+    Table: Approvals
     """
     result = dict(record)
 
     # Level 1 calculations
-    result['name'] = calc_approval_gates_name(result.get('display_name'))
+    result['name'] = calc_approvals_name(result.get('display_name'))
 
     # Convert empty strings to None for string fields
     for key in ['name']:
@@ -237,8 +246,8 @@ def compute_all_calculated_fields(record: dict, entity_name: str = None) -> dict
         return compute_workflows_fields(record)
     elif entity_lower == 'workflow_steps':
         return compute_workflow_steps_fields(record)
-    elif entity_lower == 'approval_gates':
-        return compute_approval_gates_fields(record)
+    elif entity_lower == 'approvals':
+        return compute_approvals_fields(record)
     elif entity_lower == 'precedes_steps':
         return compute_precedes_steps_fields(record)
     elif entity_lower == 'roles':

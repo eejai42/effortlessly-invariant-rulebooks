@@ -1,0 +1,42 @@
+[
+  {
+    "erb_customization_id": "03a-customize-schema-sql",
+    "name": "03a-customize-schema.sql",
+    "title": "Customize Schema",
+    "sql_code": "-- ============================================================================\n-- CUSTOMIZE SCHEMA - User-defined tables and schema modifications\n-- ============================================================================\n-- This file is for YOUR custom schema changes that should persist across\n-- regeneration of the base ERB files.\n--\n-- USE THIS FILE FOR:\n--   - Additional tables not defined in the rulebook\n--   - Extra columns on existing tables (ALTER TABLE)\n--   - Custom indexes for performance tuning\n--   - Custom constraints or triggers\n--\n-- IMPORTANT:\n--   - This file runs AFTER 01-drop-and-create-tables.sql\n--   - The base tables already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom schema changes go here:\n",
+    "sql_target": "Postgres",
+    "customization_type": "Schema"
+  },
+  {
+    "erb_customization_id": "03b-customize-functions-sql",
+    "name": "03b-customize-functions.sql",
+    "title": "Customize Functions",
+    "sql_code": "-- ============================================================================\n-- CUSTOMIZE FUNCTIONS - User-defined calculation functions\n-- ============================================================================\n-- This file is for YOUR custom PostgreSQL functions that should persist\n-- across regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 02-create-functions.sql\n--   - Base ERB calc functions already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom functions go here:\nCREATE OR REPLACE FUNCTION public.calc_roles_all_linked_workflow_steps(p_role_id text)\n RETURNS text\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN (SELECT string_agg(DISTINCT calc_workflow_steps_name(workflow_step_id)::text, ', ') FROM workflow_steps WHERE assigned_role = p_role_id);\nEND;\n$function$;\n\nCREATE OR REPLACE FUNCTION public.calc_departments_all_related_workflow_steps(p_department_id text)\n RETURNS text\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN (SELECT string_agg(DISTINCT calc_roles_all_linked_workflow_steps(role_id)::text, ', ') FROM roles WHERE owned_by = p_department_id);\nEND;\n$function$;\n\nCREATE OR REPLACE FUNCTION public.calc_departments_all_distinct_workflows_for_owned_roles(p_department_id text)\n RETURNS text\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN (SELECT string_agg(DISTINCT calc_roles_distinct_workflows_for_linked_steps(role_id)::text, ', ') FROM roles WHERE owned_by = p_department_id);\nEND;\n$function$;\n\n",
+    "sql_target": "Postgres",
+    "customization_type": "Functions"
+  },
+  {
+    "erb_customization_id": "03c-customize-views-sql",
+    "name": "03c-customize-views.sql",
+    "title": "Customize Views",
+    "sql_code": "-- ============================================================================\n-- CUSTOMIZE VIEWS - User-defined views and view extensions\n-- ============================================================================\n-- This file is for YOUR custom views that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 03-create-views.sql\n--   - All base vw_* views already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom views go here:\n",
+    "sql_target": "Postgres",
+    "customization_type": "Views"
+  },
+  {
+    "erb_customization_id": "03d-customize-rls-sql",
+    "name": "03d-customize-rls.sql",
+    "title": "Customize Policies (RLS)",
+    "sql_code": "-- ============================================================================\n-- CUSTOMIZE POLICIES - User-defined Row Level Security policies\n-- ============================================================================\n-- This file is for YOUR custom RLS policies that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 04-create-policies.sql\n--   - Base RLS policies already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom policies go here:\n",
+    "sql_target": "Postgres",
+    "customization_type": "RLS"
+  },
+  {
+    "erb_customization_id": "03e-customize-data-sql",
+    "name": "03e-customize-data.sql",
+    "title": "Customize Data (Seeds / Migrations)",
+    "sql_code": "-- ============================================================================\n-- CUSTOMIZE DATA - User-defined seed data and data migrations\n-- ============================================================================\n-- This file is for YOUR custom seed data that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 05-insert-data.sql\n--   - Base seed data already exists when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom data inserts go here:\n",
+    "sql_target": "Postgres",
+    "customization_type": "Data"
+  }
+]

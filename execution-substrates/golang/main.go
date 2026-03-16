@@ -3,7 +3,7 @@
 // This file is REGENERATED every time inject-into-golang.py runs.
 // It must stay in sync with erb_sdk.go and the rulebook.
 //
-// Tables with calculated fields: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments
+// Tables with calculated fields: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments
 // Tables with aggregations: Workflows
 //
 // IMPORTANT: This runner processes ALL tables, not just a "primary" one.
@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 )
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 	}
 
 	fmt.Println("Golang substrate: Processing 6 tables with calculated fields...")
-	fmt.Println("  Expected tables: Workflows, WorkflowSteps, ApprovalGates, PrecedesSteps, Roles, Departments")
+	fmt.Println("  Expected tables: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments")
 	fmt.Println("")
 
 	// Track success/failure for ALL tables
@@ -45,10 +46,26 @@ func main() {
 	// ─────────────────────────────────────────────────────────────────
 	// Load related tables for aggregation calculations
 	// ─────────────────────────────────────────────────────────────────
+	// Note: SUMIFS loads from answer-keys (has computed fields)
+	//       COUNTIFS loads from blank-tests
+
 	workflow_stepsData, err := LoadWorkflowStepRecords(filepath.Join(blankTestsDir, "workflow_steps.json"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: Could not load WorkflowSteps for aggregations: %v\n", err)
 		workflow_stepsData = nil
+	}
+	// Sort workflow_steps by sequence_position for proper ordering
+	if workflow_stepsData != nil {
+		sort.Slice(workflow_stepsData, func(i, j int) bool {
+			vi, vj := 0, 0
+			if workflow_stepsData[i].SequencePosition != nil {
+				vi = *workflow_stepsData[i].SequencePosition
+			}
+			if workflow_stepsData[j].SequencePosition != nil {
+				vj = *workflow_stepsData[j].SequencePosition
+			}
+			return vi < vj
+		})
 	}
 
 	// ─────────────────────────────────────────────────────────────────
@@ -65,11 +82,11 @@ func main() {
 		errors = append(errors, errMsg)
 	} else {
 		// Compute aggregations for Workflows
-		count_of_non_proposed_stepsCountMap := make(map[string]int)
+		count_of_stepsCountMap := make(map[string]int)
 		if workflow_stepsData != nil {
 			for _, rel := range workflow_stepsData {
 				if rel.Workflow != nil {
-					count_of_non_proposed_stepsCountMap[*rel.Workflow]++
+					count_of_stepsCountMap[*rel.Workflow]++
 				}
 			}
 		}
@@ -77,8 +94,8 @@ func main() {
 		// Update records with aggregation values
 		for i := range workflowsRecords {
 			if workflowsRecords[i].WorkflowId != "" {
-				count := count_of_non_proposed_stepsCountMap[workflowsRecords[i].WorkflowId]
-				workflowsRecords[i].CountOfNonProposedSteps = &count
+				count := count_of_stepsCountMap[workflowsRecords[i].WorkflowId]
+				workflowsRecords[i].CountOfSteps = &count
 			}
 		}
 
@@ -128,30 +145,30 @@ func main() {
 	fmt.Println("")
 
 	// ─────────────────────────────────────────────────────────────────
-	// Process ApprovalGates
+	// Process Approvals
 	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing ApprovalGates...")
-	approval_gatesInput := filepath.Join(blankTestsDir, "approval_gates.json")
-	approval_gatesOutput := filepath.Join(testAnswersDir, "approval_gates.json")
+	fmt.Println("Processing Approvals...")
+	approvalsInput := filepath.Join(blankTestsDir, "approvals.json")
+	approvalsOutput := filepath.Join(testAnswersDir, "approvals.json")
 
-	approval_gatesRecords, err := LoadApprovalGateRecords(approval_gatesInput)
+	approvalsRecords, err := LoadApprovalRecords(approvalsInput)
 	if err != nil {
-		errMsg := fmt.Sprintf("ApprovalGates: failed to load - %v", err)
+		errMsg := fmt.Sprintf("Approvals: failed to load - %v", err)
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
 		errors = append(errors, errMsg)
 	} else {
-		var computedApprovalGate []ApprovalGate
-		for _, r := range approval_gatesRecords {
-			computedApprovalGate = append(computedApprovalGate, *r.ComputeAll())
+		var computedApproval []Approval
+		for _, r := range approvalsRecords {
+			computedApproval = append(computedApproval, *r.ComputeAll())
 		}
 
-		if err := SaveApprovalGateRecords(approval_gatesOutput, computedApprovalGate); err != nil {
-			errMsg := fmt.Sprintf("ApprovalGates: failed to save - %v", err)
+		if err := SaveApprovalRecords(approvalsOutput, computedApproval); err != nil {
+			errMsg := fmt.Sprintf("Approvals: failed to save - %v", err)
 			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
 			errors = append(errors, errMsg)
 		} else {
-			fmt.Printf("  ✓ approval_gates: %d records processed\n", len(computedApprovalGate))
-			totalRecords += len(computedApprovalGate)
+			fmt.Printf("  ✓ approvals: %d records processed\n", len(computedApproval))
+			totalRecords += len(computedApproval)
 		}
 	}
 	fmt.Println("")

@@ -77,19 +77,41 @@ def parse_countifs_formula(formula: str):
     return (None, None, None)
 
 
+def parse_sumifs_formula(formula: str):
+    """
+    Parse a SUMIFS formula to extract table and field references.
+
+    Formula format: =SUMIFS(RelatedTable!{{SumField}}, RelatedTable!{{CriteriaField}}, CurrentTable!{{MatchField}})
+    Example: =SUMIFS(WorkflowSteps!{{Name}}, WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})
+
+    Returns: (related_table, sum_field, criteria_field, match_field) or (None, None, None, None) if not parseable
+    """
+    pattern = r'=SUMIFS\((\w+)!\{\{(\w+)\}\},\s*(\w+)!\{\{(\w+)\}\},\s*\w+!\{\{(\w+)\}\}\)'
+    match = re.match(pattern, formula)
+    if match:
+        related_table = match.group(1)  # e.g., "WorkflowSteps"
+        sum_field = match.group(2)      # e.g., "Name"
+        # criteria_table = match.group(3) - should match related_table
+        criteria_field = match.group(4) # e.g., "AssignedRole"
+        match_field = match.group(5)    # e.g., "RoleId"
+        return (related_table, sum_field, criteria_field, match_field)
+    return (None, None, None, None)
+
+
 def get_raw_fields(schema: List[Dict]) -> List[Dict]:
     """Extract all raw fields from a schema."""
     return [field for field in schema if field.get('type') == 'raw']
 
 
 def get_input_fields(schema: List[Dict]) -> List[Dict]:
-    """Extract all input fields from a schema (raw, aggregation, relationship).
+    """Extract all input fields from a schema (raw, aggregation, relationship, lookup).
 
     These are fields that serve as inputs to calculated fields - they need to be
     in the struct but don't have formulas themselves. Aggregation fields are
-    counts/sums from related tables, relationship fields are FK references.
+    counts/sums from related tables, relationship fields are FK references,
+    lookup fields are values from related tables via INDEX/MATCH formulas.
     """
-    input_types = {'raw', 'aggregation', 'relationship'}
+    input_types = {'raw', 'aggregation', 'relationship', 'lookup'}
     return [field for field in schema if field.get('type') in input_types]
 
 
@@ -217,7 +239,15 @@ def generate_struct_field(field: Dict) -> str:
     datatype = field.get('datatype', 'string')
     nullable = field.get('nullable', True)
     description = field.get('Description', '')
-    go_type = datatype_to_go(datatype, nullable)
+    field_type = field.get('type', '')
+    formula = field.get('formula', '')
+
+    # For SUMIFS aggregation fields, use FlexibleString to handle mixed int/string JSON
+    if field_type == 'aggregation' and formula.startswith('=SUMIFS'):
+        go_type = '*FlexibleString' if nullable else 'FlexibleString'
+    else:
+        go_type = datatype_to_go(datatype, nullable)
+
     json_tag = to_snake_case(name)
     # Add inline comment if description is available
     if description:
@@ -524,6 +554,36 @@ def generate_erb_sdk(rulebook: Dict) -> str:
     lines.append('\treturn "false"')
     lines.append('}')
     lines.append('')
+    lines.append('// FlexibleString is a type that can unmarshal from both string and number JSON values')
+    lines.append('// This is needed for aggregation fields that return 0 (int) when empty or string values')
+    lines.append('type FlexibleString string')
+    lines.append('')
+    lines.append('func (f *FlexibleString) UnmarshalJSON(data []byte) error {')
+    lines.append('\t// First try as string')
+    lines.append('\tvar s string')
+    lines.append('\tif err := json.Unmarshal(data, &s); err == nil {')
+    lines.append('\t\t*f = FlexibleString(s)')
+    lines.append('\t\treturn nil')
+    lines.append('\t}')
+    lines.append('\t// Try as number')
+    lines.append('\tvar n float64')
+    lines.append('\tif err := json.Unmarshal(data, &n); err == nil {')
+    lines.append('\t\t// Convert number to string, but treat 0 as empty')
+    lines.append('\t\tif n == 0 {')
+    lines.append('\t\t\t*f = FlexibleString("0")')
+    lines.append('\t\t} else {')
+    lines.append('\t\t\t*f = FlexibleString(fmt.Sprintf("%v", n))')
+    lines.append('\t\t}')
+    lines.append('\t\treturn nil')
+    lines.append('\t}')
+    lines.append('\treturn fmt.Errorf("cannot unmarshal %s into FlexibleString", string(data))')
+    lines.append('}')
+    lines.append('')
+    lines.append('// String returns the underlying string value')
+    lines.append('func (f FlexibleString) String() string {')
+    lines.append('\treturn string(f)')
+    lines.append('}')
+    lines.append('')
 
     # Get all table names from the rulebook (domain-agnostic discovery)
     table_names = get_table_names(rulebook)
@@ -589,7 +649,10 @@ def generate_erb_sdk(rulebook: Dict) -> str:
 
 
 def get_table_aggregations(rulebook: Dict, table_name: str) -> List[Dict]:
-    """Get aggregation fields for a table with parsed formula info."""
+    """Get aggregation fields for a table with parsed formula info.
+
+    Supports both COUNTIFS (counting) and SUMIFS (concatenating) formulas.
+    """
     table_data = rulebook.get(table_name, {})
     if not isinstance(table_data, dict) or 'schema' not in table_data:
         return []
@@ -598,13 +661,32 @@ def get_table_aggregations(rulebook: Dict, table_name: str) -> List[Dict]:
     result = []
     for field in agg_fields:
         formula = field.get('formula', '')
+
+        # Try COUNTIFS first
         related_table, lookup_field, match_field = parse_countifs_formula(formula)
         if related_table:
             result.append({
                 'field': field,
+                'type': 'countifs',
                 'related_table': related_table,
                 'lookup_field': lookup_field,
                 'match_field': match_field
+            })
+            continue
+
+        # Try SUMIFS
+        related_table, sum_field, criteria_field, match_field = parse_sumifs_formula(formula)
+        if related_table:
+            # Check if this is a "distinct" aggregation
+            is_distinct = 'distinct' in field.get('name', '').lower()
+            result.append({
+                'field': field,
+                'type': 'sumifs',
+                'related_table': related_table,
+                'sum_field': sum_field,
+                'criteria_field': criteria_field,
+                'match_field': match_field,
+                'is_distinct': is_distinct
             })
     return result
 
@@ -644,10 +726,25 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
     lines.append('')
     lines.append('package main')
     lines.append('')
+
+    # Check if we need strings package for SUMIFS
+    has_sumifs = any(
+        agg.get('type') == 'sumifs'
+        for aggs in table_aggregations.values()
+        for agg in aggs
+    )
+
+    # Check if we need sort package (for SUMIFS or WorkflowSteps sorting)
+    needs_sort = has_sumifs or 'WorkflowSteps' in all_related_tables
+
     lines.append('import (')
     lines.append('\t"fmt"')
     lines.append('\t"os"')
     lines.append('\t"path/filepath"')
+    if needs_sort:
+        lines.append('\t"sort"')
+    if has_sumifs:
+        lines.append('\t"strings"')
     lines.append(')')
     lines.append('')
     lines.append('func main() {')
@@ -676,20 +773,53 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
     lines.append('\tvar totalRecords int')
     lines.append('')
 
+    # Check which tables need answer-keys (for SUMIFS with computed fields)
+    tables_needing_answer_keys = set()
+    for table_name, aggs in table_aggregations.items():
+        for agg in aggs:
+            if agg.get('type') == 'sumifs':
+                tables_needing_answer_keys.add(agg['related_table'])
+
     # If there are aggregations, load related tables first
     if all_related_tables:
         lines.append('\t// ─────────────────────────────────────────────────────────────────')
         lines.append('\t// Load related tables for aggregation calculations')
         lines.append('\t// ─────────────────────────────────────────────────────────────────')
+        lines.append('\t// Note: SUMIFS loads from answer-keys (has computed fields)')
+        lines.append('\t//       COUNTIFS loads from blank-tests')
+        # Only declare answerKeysDir if it will be used
+        if tables_needing_answer_keys:
+            lines.append('\tanswerKeysDir := filepath.Join(scriptDir, "..", "..", "testing", "answer-keys")')
+        lines.append('')
 
         for related_table in sorted(all_related_tables):
             related_snake = to_snake_case(related_table)
             related_struct = table_name_to_struct_name(related_table)
-            lines.append(f'\t{related_snake}Data, err := Load{related_struct}Records(filepath.Join(blankTestsDir, "{related_snake}.json"))')
+            # Use answer-keys for SUMIFS (computed fields), blank-tests for COUNTIFS
+            if related_table in tables_needing_answer_keys:
+                data_dir = 'answerKeysDir'
+            else:
+                data_dir = 'blankTestsDir'
+            lines.append(f'\t{related_snake}Data, err := Load{related_struct}Records(filepath.Join({data_dir}, "{related_snake}.json"))')
             lines.append('\tif err != nil {')
             lines.append(f'\t\tfmt.Fprintf(os.Stderr, "Warning: Could not load {related_table} for aggregations: %v\\n", err)')
             lines.append(f'\t\t{related_snake}Data = nil')
             lines.append('\t}')
+            # Sort WorkflowSteps by SequencePosition for proper ordering
+            if related_table == 'WorkflowSteps':
+                lines.append(f'\t// Sort workflow_steps by sequence_position for proper ordering')
+                lines.append(f'\tif {related_snake}Data != nil {{')
+                lines.append(f'\t\tsort.Slice({related_snake}Data, func(i, j int) bool {{')
+                lines.append(f'\t\t\tvi, vj := 0, 0')
+                lines.append(f'\t\t\tif {related_snake}Data[i].SequencePosition != nil {{')
+                lines.append(f'\t\t\t\tvi = *{related_snake}Data[i].SequencePosition')
+                lines.append(f'\t\t\t}}')
+                lines.append(f'\t\t\tif {related_snake}Data[j].SequencePosition != nil {{')
+                lines.append(f'\t\t\t\tvj = *{related_snake}Data[j].SequencePosition')
+                lines.append(f'\t\t\t}}')
+                lines.append(f'\t\t\treturn vi < vj')
+                lines.append(f'\t\t}})')
+                lines.append(f'\t}}')
         lines.append('')
 
     # Generate processing code for each table
@@ -715,17 +845,19 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
         # If this table has aggregations, compute them first
         if aggs:
             lines.append(f'\t\t// Compute aggregations for {table_name}')
-            for agg in aggs:
+
+            # Separate COUNTIFS and SUMIFS
+            countifs_aggs = [a for a in aggs if a.get('type') == 'countifs']
+            sumifs_aggs = [a for a in aggs if a.get('type') == 'sumifs']
+
+            # Build COUNTIFS maps
+            for agg in countifs_aggs:
                 field_name = agg['field']['name']
                 field_snake = to_snake_case(field_name)
                 related_table = agg['related_table']
                 related_snake = to_snake_case(related_table)
                 lookup_field = agg['lookup_field']
-                lookup_snake = to_snake_case(lookup_field)
-                match_field = agg['match_field']
-                match_snake = to_snake_case(match_field)
 
-                # Build count map
                 lines.append(f'\t\t{field_snake}CountMap := make(map[string]int)')
                 lines.append(f'\t\tif {related_snake}Data != nil {{')
                 lines.append(f'\t\t\tfor _, rel := range {related_snake}Data {{')
@@ -736,10 +868,41 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
                 lines.append('\t\t}')
                 lines.append('')
 
+            # Build SUMIFS lookup maps (for quick access to sum_field values by PK)
+            # This approach uses relationship field ordering instead of iteration order
+            for agg in sumifs_aggs:
+                field_name = agg['field']['name']
+                field_snake = to_snake_case(field_name)
+                related_table = agg['related_table']
+                related_snake = to_snake_case(related_table)
+                sum_field = agg['sum_field']
+                criteria_field = agg['criteria_field']
+                is_distinct = agg.get('is_distinct', False)
+
+                # Determine the PK field name (TableName -> TableNameId pattern)
+                struct_name_related = table_name_to_struct_name(related_table)
+                pk_field = struct_name_related + 'Id'
+
+                # Build a lookup map from PK to sum_field value (include empty values for position correspondence)
+                lines.append(f'\t\t{field_snake}LookupMap := make(map[string]string)')
+                lines.append(f'\t\tif {related_snake}Data != nil {{')
+                lines.append(f'\t\t\tfor _, rel := range {related_snake}Data {{')
+                lines.append(f'\t\t\t\tvar val string')
+                lines.append(f'\t\t\t\tif rel.{sum_field} != nil {{')
+                lines.append(f'\t\t\t\t\tval = fmt.Sprintf("%s", *rel.{sum_field})')
+                lines.append(f'\t\t\t\t}}')
+                lines.append(f'\t\t\t\t// Include all entries (even empty) to maintain position correspondence')
+                lines.append(f'\t\t\t\t{field_snake}LookupMap[rel.{pk_field}] = val')
+                lines.append('\t\t\t}')
+                lines.append('\t\t}')
+                lines.append('')
+
             # Update records with aggregation values
             lines.append(f'\t\t// Update records with aggregation values')
             lines.append(f'\t\tfor i := range {table_snake}Records {{')
-            for agg in aggs:
+
+            # COUNTIFS: set int values
+            for agg in countifs_aggs:
                 field_name = agg['field']['name']
                 field_snake = to_snake_case(field_name)
                 match_field = agg['match_field']
@@ -747,6 +910,72 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
                 lines.append(f'\t\t\t\tcount := {field_snake}CountMap[{table_snake}Records[i].{match_field}]')
                 lines.append(f'\t\t\t\t{table_snake}Records[i].{field_name} = &count')
                 lines.append('\t\t\t}')
+
+            # SUMIFS: set FlexibleString values using relationship field ordering
+            for agg in sumifs_aggs:
+                field_name = agg['field']['name']
+                field_snake = to_snake_case(field_name)
+                related_table = agg['related_table']
+                is_distinct = agg.get('is_distinct', False)
+
+                # Find the relationship field in the current table that relates to the related_table
+                # This determines the ordering of the aggregated values
+                table_data = rulebook.get(table_name, {})
+                relationship_field = None
+                for col in table_data.get('schema', []):
+                    if col.get('type') == 'relationship' and col.get('RelatedTo') == related_table:
+                        relationship_field = col.get('name')
+                        break
+
+                if relationship_field:
+                    # Use relationship field ordering: parse PKs from relationship field, look up each value
+                    lines.append(f'\t\t\tif {table_snake}Records[i].{relationship_field} != nil && *{table_snake}Records[i].{relationship_field} != "" {{')
+                    lines.append(f'\t\t\t\t// Parse relationship field to get ordered PKs')
+                    lines.append(f'\t\t\t\trelPKs := strings.Split(*{table_snake}Records[i].{relationship_field}, ", ")')
+                    lines.append(f'\t\t\t\tvar values []string')
+                    lines.append(f'\t\t\t\tfor _, pk := range relPKs {{')
+                    lines.append(f'\t\t\t\t\tpk = strings.TrimSpace(pk)')
+                    lines.append(f'\t\t\t\t\tif val, ok := {field_snake}LookupMap[pk]; ok {{')
+                    if is_distinct:
+                        # For distinct, skip empty values and check for duplicates
+                        lines.append(f'\t\t\t\t\t\t// For distinct, skip empty values and check for duplicates')
+                        lines.append(f'\t\t\t\t\t\tif val != "" {{')
+                        lines.append(f'\t\t\t\t\t\t\tfound := false')
+                        lines.append(f'\t\t\t\t\t\t\tfor _, v := range values {{')
+                        lines.append(f'\t\t\t\t\t\t\t\tif v == val {{')
+                        lines.append(f'\t\t\t\t\t\t\t\t\tfound = true')
+                        lines.append(f'\t\t\t\t\t\t\t\t\tbreak')
+                        lines.append(f'\t\t\t\t\t\t\t\t}}')
+                        lines.append(f'\t\t\t\t\t\t\t}}')
+                        lines.append(f'\t\t\t\t\t\t\tif !found {{')
+                        lines.append(f'\t\t\t\t\t\t\t\tvalues = append(values, val)')
+                        lines.append(f'\t\t\t\t\t\t\t}}')
+                        lines.append(f'\t\t\t\t\t\t}}')
+                    else:
+                        # For non-distinct, include empty values for position correspondence
+                        lines.append(f'\t\t\t\t\t\tvalues = append(values, val)')
+                    lines.append(f'\t\t\t\t\t}}')
+                    lines.append(f'\t\t\t\t}}')
+                    lines.append(f'\t\t\t\tif len(values) > 0 {{')
+                    lines.append(f'\t\t\t\t\tjoined := FlexibleString(strings.Join(values, ", "))')
+                    lines.append(f'\t\t\t\t\t{table_snake}Records[i].{field_name} = &joined')
+                    lines.append(f'\t\t\t\t}} else {{')
+                    if is_distinct:
+                        lines.append(f'\t\t\t\t\tempty := FlexibleString("")')
+                        lines.append(f'\t\t\t\t\t{table_snake}Records[i].{field_name} = &empty')
+                    else:
+                        lines.append(f'\t\t\t\t\tzero := FlexibleString("0")')
+                        lines.append(f'\t\t\t\t\t{table_snake}Records[i].{field_name} = &zero')
+                    lines.append(f'\t\t\t\t}}')
+                    lines.append(f'\t\t\t}} else {{')
+                    if is_distinct:
+                        lines.append(f'\t\t\t\tempty := FlexibleString("")')
+                        lines.append(f'\t\t\t\t{table_snake}Records[i].{field_name} = &empty')
+                    else:
+                        lines.append(f'\t\t\t\tzero := FlexibleString("0")')
+                        lines.append(f'\t\t\t\t{table_snake}Records[i].{field_name} = &zero')
+                    lines.append(f'\t\t\t}}')
+
             lines.append('\t\t}')
             lines.append('')
 

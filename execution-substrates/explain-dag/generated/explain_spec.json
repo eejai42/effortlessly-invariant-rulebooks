@@ -1,8 +1,8 @@
 {
   "schema_version": "erb.explain_spec.v1",
   "rulebook": {
-    "name": "Jessica Talisman - BASIC Ontology Parts 1-3",
-    "rulebook_hash": "sha256:1fd918ec93c6ba2f6d6a0671453393a9"
+    "name": "Jessica Talisman - ADVANCED Ontology Parts 1-3",
+    "rulebook_hash": "sha256:7541a29d0b939ee1757483b68fc06db8"
   },
   "semantics": {
     "profile": "excel",
@@ -37,11 +37,6 @@
           "type": "raw",
           "description": "Human-readable title of the workflow. Maps to dct:title from Dublin Core. Example: 'Production Deployment Workflow', 'Employee Onboarding'."
         },
-        "Color": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
-        },
         "Description": {
           "datatype": "string",
           "nullable": true,
@@ -66,7 +61,7 @@
           "type": "relationship",
           "description": "Reference to workflow steps. Represents the ntwf:hasStep relationship linking workflows to their constituent steps."
         },
-        "CountOfNonProposedSteps": {
+        "CountOfSteps": {
           "datatype": "integer",
           "nullable": true,
           "type": "aggregation",
@@ -84,7 +79,7 @@
       ],
       "dep_edges": [
         [
-          "CountOfNonProposedSteps",
+          "CountOfSteps",
           "HasMoreThan1Step"
         ],
         [
@@ -163,14 +158,14 @@
           "description": "Short machine-friendly name for the workflow. Used for programmatic reference and URL slug generation."
         },
         "HasMoreThan1Step": {
-          "formula_source": "={{CountOfNonProposedSteps}} > 1",
-          "template_hash": "sha256:52f3eecda8778602",
+          "formula_source": "={{CountOfSteps}} > 1",
+          "template_hash": "sha256:51903b4d48fff752",
           "root_node": "n_result_HasMoreThan1Step",
           "nodes": {
             "n_ref_1": {
               "kind": "field_ref",
-              "field": "CountOfNonProposedSteps",
-              "field_snake": "count_of_non_proposed_steps"
+              "field": "CountOfSteps",
+              "field_snake": "count_of_steps"
             },
             "n_const_2": {
               "kind": "const",
@@ -266,12 +261,47 @@
           "nullable": true,
           "type": "relationship",
           "description": "Reference to steps that must complete before this step can execute. Part of the ntwf:precedesStep transitive ordering relationship."
+        },
+        "ExecutionActorType": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "AssignedRoleDepartment": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "ApprovalGateEscalationThresholdHours": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "StepTransitions_From_Step": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship"
+        },
+        "StepTransitions_To_Step": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship"
+        },
+        "WorkflowArtifacts": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship"
         }
       },
       "calc_order": [
-        "Name"
+        "Name",
+        "ExecutionActorType"
       ],
       "dep_edges": [
+        [
+          "AssignedRoleDepartment",
+          "ExecutionActorType"
+        ],
         [
           "DisplayName",
           "Name"
@@ -345,15 +375,197 @@
               "n_result_Name"
             ]
           ]
+        },
+        "ExecutionActorType": {
+          "formula_source": "=IF({{AssignedRoleDepartment}} = \"HumanAgent\", \"HumanAgent\", IF({{AssignedRoleDepartment}} = \"AIAgent\", \"AIAgent\", IF({{AssignedRoleDepartment}} = \"AutomatedPipeline\", \"AutomatedPipeline\", BLANK())))",
+          "template_hash": "sha256:df1af41af866b6a9",
+          "root_node": "n_result_ExecutionActorType",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "AssignedRoleDepartment",
+              "field_snake": "assigned_role_department"
+            },
+            "n_const_2": {
+              "kind": "const",
+              "value": "HumanAgent",
+              "type": "string"
+            },
+            "n_op_3": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_1",
+                "n_const_2"
+              ]
+            },
+            "n_const_4": {
+              "kind": "const",
+              "value": "HumanAgent",
+              "type": "string"
+            },
+            "n_ref_5": {
+              "kind": "field_ref",
+              "field": "AssignedRoleDepartment",
+              "field_snake": "assigned_role_department"
+            },
+            "n_const_6": {
+              "kind": "const",
+              "value": "AIAgent",
+              "type": "string"
+            },
+            "n_op_7": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_5",
+                "n_const_6"
+              ]
+            },
+            "n_const_8": {
+              "kind": "const",
+              "value": "AIAgent",
+              "type": "string"
+            },
+            "n_ref_9": {
+              "kind": "field_ref",
+              "field": "AssignedRoleDepartment",
+              "field_snake": "assigned_role_department"
+            },
+            "n_const_10": {
+              "kind": "const",
+              "value": "AutomatedPipeline",
+              "type": "string"
+            },
+            "n_op_11": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_9",
+                "n_const_10"
+              ]
+            },
+            "n_const_12": {
+              "kind": "const",
+              "value": "AutomatedPipeline",
+              "type": "string"
+            },
+            "n_fn_13": {
+              "kind": "fn",
+              "name": "BLANK",
+              "args": []
+            },
+            "n_fn_14": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_op_11",
+                "n_const_12",
+                "n_fn_13"
+              ]
+            },
+            "n_fn_15": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_op_7",
+                "n_const_8",
+                "n_fn_14"
+              ]
+            },
+            "n_fn_16": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_op_3",
+                "n_const_4",
+                "n_fn_15"
+              ]
+            },
+            "n_result_ExecutionActorType": {
+              "kind": "result",
+              "field": "ExecutionActorType",
+              "field_snake": "execution_actor_type",
+              "in": [
+                "n_fn_16"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_1",
+              "n_op_3"
+            ],
+            [
+              "n_const_2",
+              "n_op_3"
+            ],
+            [
+              "n_ref_5",
+              "n_op_7"
+            ],
+            [
+              "n_const_6",
+              "n_op_7"
+            ],
+            [
+              "n_ref_9",
+              "n_op_11"
+            ],
+            [
+              "n_const_10",
+              "n_op_11"
+            ],
+            [
+              "n_op_11",
+              "n_fn_14"
+            ],
+            [
+              "n_const_12",
+              "n_fn_14"
+            ],
+            [
+              "n_fn_13",
+              "n_fn_14"
+            ],
+            [
+              "n_op_7",
+              "n_fn_15"
+            ],
+            [
+              "n_const_8",
+              "n_fn_15"
+            ],
+            [
+              "n_fn_14",
+              "n_fn_15"
+            ],
+            [
+              "n_op_3",
+              "n_fn_16"
+            ],
+            [
+              "n_const_4",
+              "n_fn_16"
+            ],
+            [
+              "n_fn_15",
+              "n_fn_16"
+            ],
+            [
+              "n_fn_16",
+              "n_result_ExecutionActorType"
+            ]
+          ]
         }
       },
       "description": "Table: WorkflowSteps"
     },
-    "ApprovalGates": {
-      "id_field": "ApprovalGateId",
-      "id_field_snake": "approval_gate_id",
+    "Approvals": {
+      "id_field": "ApprovalId",
+      "id_field_snake": "approval_id",
       "fields": {
-        "ApprovalGateId": {
+        "ApprovalId": {
           "datatype": "string",
           "nullable": false,
           "type": "raw"
@@ -379,6 +591,26 @@
           "nullable": true,
           "type": "raw",
           "description": "Integer number of hours that may elapse on a pending gate before the ntwf:delegatesTo chain activates. Maps to ntwf:escalationThresholdHours. Domain applies only to ApprovalGate individuals."
+        },
+        "Workflow_from_WorkflowSteps": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "Assigned_Role_from_WorkflowSteps": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "Sequence_Position_from_WorkflowSteps": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "Requires_Human_Approval_from_WorkflowSteps": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "lookup"
         }
       },
       "calc_order": [
@@ -460,7 +692,7 @@
           ]
         }
       },
-      "description": "Table: ApprovalGates"
+      "description": "Table: Approvals"
     },
     "PrecedesSteps": {
       "id_field": "PrecedesStepId",
@@ -477,12 +709,6 @@
           "type": "raw",
           "description": "Ordinal sequence number for the relationship. Used for sorting and display."
         },
-        "WorkflowStep": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "relationship",
-          "description": "Foreign key to the step that comes BEFORE. The source of the 'precedes' relationship."
-        },
         "DisplayName": {
           "datatype": "string",
           "nullable": true,
@@ -492,6 +718,12 @@
           "datatype": "integer",
           "nullable": true,
           "type": "raw"
+        },
+        "WorkflowStep": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship",
+          "description": "Foreign key to the step that comes BEFORE. The source of the 'precedes' relationship."
         }
       },
       "calc_order": [
@@ -622,6 +854,21 @@
           "datatype": "string",
           "nullable": true,
           "type": "relationship"
+        },
+        "All_Linked_Workflow_Steps": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "Distinct_Workflows_for_Linked_Steps": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "WorkflowArtifacts": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship"
         }
       },
       "calc_order": [
@@ -706,6 +953,21 @@
           "nullable": true,
           "type": "relationship",
           "description": "Back-reference to roles owned by this department. Inverse of Roles.OwnedBy."
+        },
+        "All_Owned_Roles": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "All_Related_Workflow_Steps": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "All_Distinct_Workflows_for_Owned_Roles": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
         }
       },
       "calc_order": [

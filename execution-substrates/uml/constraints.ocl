@@ -1,11 +1,23 @@
 -- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
 
--- Table: ApprovalGates
-context ApprovalGates
+-- Table: Approvals
+context Approvals
 
 -- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
 derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Formula for Workflow_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{Workflow}}, MATCH(Approvals!{{WorkflowSteps}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
+-- Formula for Assigned_Role_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{AssignedRole}}, MATCH(Approvals!{{WorkflowSteps}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
+-- Formula for Sequence_Position_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{SequencePosition}}, MATCH(Approvals!{{WorkflowSteps}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
+-- Formula for Requires_Human_Approval_from_WorkflowSteps - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{RequiresHumanApproval}}, MATCH(Approvals!{{WorkflowSteps}}, WorkflowSteps!{{WorkflowStepId}}, 0))
 
 -- Table: Departments
 context Departments
@@ -13,6 +25,27 @@ context Departments
 -- Human-readable display name of the department. Should match organizational terminology for stakeholder communication.
 -- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
 derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Formula for All_Owned_Roles - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{DisplayName}}, MATCH(Departments!{{Roles}}, Roles!{{RoleId}}, 0))
+
+-- Formula for All_Related_Workflow_Steps - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{All_Linked_Workflow_Steps}}, MATCH(Departments!{{Roles}}, Roles!{{RoleId}}, 0))
+
+-- Formula for All_Distinct_Workflows_for_Owned_Roles - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{Distinct_Workflows_for_Linked_Steps}}, MATCH(Departments!{{Roles}}, Roles!{{RoleId}}, 0))
+
+-- Table: HumanAgents
+context HumanAgents
+
+-- Formula for All_Linked_Roles - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{Name}}, MATCH(HumanAgents!{{Roles}}, Roles!{{RoleId}}, 0))
+
+-- Formula for All_Related_Workflow_Steps - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{All_Linked_Workflow_Steps}}, MATCH(HumanAgents!{{Roles}}, Roles!{{RoleId}}, 0))
+
+-- Formula for All_Distinct_Workflows_for_Linked_Roles - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{Distinct_Workflows_for_Linked_Steps}}, MATCH(HumanAgents!{{Roles}}, Roles!{{RoleId}}, 0))
 
 -- Table: PrecedesSteps
 context PrecedesSteps
@@ -26,11 +59,38 @@ context Roles
 -- Formula: =LOWER({{DisplayName}})
 derive Name: self.displayName.toLower()
 
+-- Formula for All_Linked_Workflow_Steps - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{Name}}, MATCH(Roles!{{WorkflowSteps}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
+-- Formula for Distinct_Workflows_for_Linked_Steps - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{Workflow}}, MATCH(Roles!{{WorkflowSteps}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
+-- Table: StepTransitions
+context StepTransitions
+
+-- Formula for Workflow_from_From_Step - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{Workflow}}, MATCH(StepTransitions!{{From_Step}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
+-- Table: WorkflowArtifacts
+context WorkflowArtifacts
+
+-- Formula for Workflow_from_Produced_By_Step - parse error: Unexpected character '!' at position 19
+-- Original: =INDEX(WorkflowSteps!{{Workflow}}, MATCH(WorkflowArtifacts!{{Produced_By_Step}}, WorkflowSteps!{{WorkflowStepId}}, 0))
+
 -- Table: WorkflowSteps
 context WorkflowSteps
 
 -- Formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
 derive Name: self.displayName.toLower().replace(' ', '-')
+
+-- Formula for ExecutionActorType - parse error: Unknown function: BLANK
+-- Original: =IF({{AssignedRoleDepartment}} = "HumanAgent", "HumanAgent", IF({{AssignedRoleDepartment}} = "AIAgent", "AIAgent", IF({{AssignedRoleDepartment}} = "AutomatedPipeline", "AutomatedPipeline", BLANK())))
+
+-- Formula for AssignedRoleDepartment - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Roles!{{OwnedBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
+
+-- Formula for ApprovalGateEscalationThresholdHours - parse error: Unexpected character '!' at position 15
+-- Original: =INDEX(Approvals!{{EscalationThresholdHours}}, MATCH(WorkflowSteps!{{ApprovalGate}}, Approvals!{{ApprovalId}}, 0))
 
 -- Table: Workflows
 context Workflows
@@ -40,8 +100,8 @@ context Workflows
 derive Name: self.displayName.toLower().replace(' ', '-')
 
 -- Calculated count of workflow steps in this workflow. Useful for workflow complexity analysis and reporting.
--- Formula for CountOfNonProposedSteps - parse error: Unexpected character '!' at position 22
+-- Formula for CountOfSteps - parse error: Unexpected character '!' at position 22
 -- Original: =COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})
 
--- Formula: ={{CountOfNonProposedSteps}} > 1
-derive HasMoreThan1Step: (self.countOfNonProposedSteps > 1)
+-- Formula: ={{CountOfSteps}} > 1
+derive HasMoreThan1Step: (self.countOfSteps > 1)

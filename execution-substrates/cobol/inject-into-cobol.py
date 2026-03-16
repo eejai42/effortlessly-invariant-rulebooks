@@ -406,10 +406,17 @@ def generate_main_program(rulebook: Dict) -> str:
     if not schema:
         return ""
 
-    # Get field order (raw fields first, then calculated)
+    # Get field order (raw fields first, then calculated in DAG order)
     calculated_names = {f["name"] for f in calculated_fields}
     raw_fields = [f for f in schema if f["name"] not in calculated_names]
-    all_fields = raw_fields + calculated_fields
+    raw_field_names = {f["name"] for f in raw_fields}
+    dag_levels = build_dag_levels(calculated_fields, raw_field_names)
+
+    # Build all_fields with calculated fields in DAG order
+    dag_ordered_calculated = []
+    for level_fields in dag_levels:
+        dag_ordered_calculated.extend(level_fields)
+    all_fields = raw_fields + dag_ordered_calculated
 
     # Build UNSTRING statements to parse tab-delimited input
     field_count = len(raw_fields)
@@ -540,9 +547,9 @@ def generate_main_program(rulebook: Dict) -> str:
         cobol_name = to_cobol_name(field["name"])
         if i > 0:
             lines.append(f"               WS-TAB DELIMITED SIZE")
-        lines.append(f"               FUNCTION TRIM(WS-REC-{cobol_name}) DELIMITED SIZE")
+        lines.append(f"               FUNCTION TRIM(WS-REC-{cobol_name} TRAILING) DELIMITED SIZE")
     lines.append("               INTO OUTPUT-LINE")
-    lines.append("           DISPLAY FUNCTION TRIM(OUTPUT-LINE)")
+    lines.append("           DISPLAY FUNCTION TRIM(OUTPUT-LINE TRAILING)")
     lines.append("           .")
     lines.append("")
 
