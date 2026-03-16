@@ -13,7 +13,8 @@ SELECT
   t.created,
   t.modified,
   t.identifier,
-  t.workflow_steps
+  calc_workflows_workflow_steps(t.workflow_id) AS workflow_steps,
+  calc_workflows_count_of_workflow_steps(t.workflow_id) AS count_of_workflow_steps
 FROM workflows t;
 
 CREATE OR REPLACE VIEW vw_workflow_steps WITH (security_invoker = ON) AS
@@ -23,7 +24,13 @@ SELECT
   t.sequence_position,
   t.requires_human_approval,
   t.is_step_of,
-  t.assigned_role
+  t.assigned_role,
+  calc_workflow_steps_is_step_of_title(t.workflow_step_id) AS is_step_of_title,
+  calc_workflow_steps_is_step_of_description(t.workflow_step_id) AS is_step_of_description,
+  calc_workflow_steps_is_step_of_identifier(t.workflow_step_id) AS is_step_of_identifier,
+  calc_workflow_steps_assigned_role_label(t.workflow_step_id) AS assigned_role_label,
+  calc_workflow_steps_assigned_role_comment(t.workflow_step_id) AS assigned_role_comment,
+  calc_workflow_steps_assigned_role_filled_by(t.workflow_step_id) AS assigned_role_filled_by
 FROM workflow_steps t;
 
 CREATE OR REPLACE VIEW vw_roles WITH (security_invoker = ON) AS
@@ -32,7 +39,10 @@ SELECT
   t.label,
   t.comment,
   t.filled_by,
-  t.workflow_steps
+  t.workflow_steps,
+  calc_roles_count_of_workflow_steps(t.role_id) AS count_of_workflow_steps,
+  calc_roles_filled_by_name(t.role_id) AS filled_by_name,
+  calc_roles_filled_by_m_box(t.role_id) AS filled_by_m_box
 FROM roles t;
 
 CREATE OR REPLACE VIEW vw_human_agents WITH (security_invoker = ON) AS
@@ -40,6 +50,7 @@ SELECT
   t.human_agent_id,
   t.name,
   t.mbox,
-  t.roles
+  t.roles,
+  calc_human_agents_count_of_rles(t.human_agent_id) AS count_of_rles
 FROM human_agents t;
 

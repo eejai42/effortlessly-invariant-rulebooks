@@ -9,9 +9,3 @@
 | Failed | 0 |
 | Score | 0.0% |
 | Duration | < 1s |
-
-## Error
-
-```
-No test-answers found
-```

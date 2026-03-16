@@ -67,8 +67,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>UML Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
-            <div class="stat"><span>0/0 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>6/6 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -117,8 +117,14 @@ UML Execution Substrate - Multi-Entity Test Execution (OCL)
 
 Loaded 0 OCL constraints from constraints.ocl
 
+   Warning: No OCL constraints found for class &#x27;HumanAgents&#x27;
+  -&gt; human_agents: 2 records (via OCL)
+   Warning: No OCL constraints found for class &#x27;Roles&#x27;
+  -&gt; roles: 3 records (via OCL)
+   Warning: No OCL constraints found for class &#x27;Workflows&#x27;
+  -&gt; workflows: 1 records (via OCL)
 
-UML substrate: Processed 0 entities, 0 total records
+UML substrate: Processed 3 entities, 6 total records
 ======================================================================
 
 </pre>
@@ -128,10 +134,10 @@ UML substrate: Processed 0 entities, 0 total records
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">6</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">6</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -139,7 +145,7 @@ UML substrate: Processed 0 entities, 0 total records
             <div class="card">
                 <div class="code-header">
                     <h2>class-diagram.puml</h2>
-                    <div><span class="code-info">58 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
+                    <div><span class="code-info">69 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
                 </div>
                 <pre id="class-code">@startuml
 skinparam classAttributeIconSize 0
@@ -153,6 +159,7 @@ class HumanAgents {
   +Name: String
   +Mbox: String
   +Roles: String
+  +CountOfRles: Integer
   --
 }
 
@@ -166,6 +173,9 @@ class Roles {
   +Comment: String
   +FilledBy: String
   +WorkflowSteps: String
+  +CountOfWorkflowSteps: Integer
+  +FilledByName: String
+  +FilledByMBox: String
   --
 }
 
@@ -180,6 +190,12 @@ class WorkflowSteps {
   +RequiresHumanApproval: Boolean
   +IsStepOf: String
   +AssignedRole: String
+  +IsStepOfTitle: String
+  +IsStepOfDescription: String
+  +IsStepOfIdentifier: String
+  +AssignedRoleLabel: String
+  +AssignedRoleComment: String
+  +AssignedRoleFilledBy: String
   --
 }
 
@@ -195,6 +211,7 @@ class Workflows {
   +Modified: String
   +Identifier: String
   +WorkflowSteps: String
+  +CountOfWorkflowSteps: Integer
   --
 }
 
@@ -205,518 +222,113 @@ class Workflows {
             <div class="card">
                 <div class="code-header">
                     <h2>objects.puml</h2>
-                    <div><span class="code-info">513 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
+                    <div><span class="code-info">108 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
                 </div>
                 <pre id="objects-code">@startuml
 
-object &quot;Alice Johnson&quot; as HumanAgents_0 {
-  HumanAgentId = &quot;alice-johnson&quot;
-  Name = &quot;Alice Johnson&quot;
-  Mbox = &quot;alice.johnson@example.com&quot;
-  Roles = &quot;project-manager&quot;
+object &quot;Maria Gonzalez&quot; as HumanAgents_0 {
+  HumanAgentId = &quot;maria-gonzalez&quot;
+  Name = &quot;Maria Gonzalez&quot;
+  Mbox = &quot;maria.gonzalez@specialsolut...&quot;
+  Roles = &quot;release-manager&quot;
+  CountOfRles = 1
 }
 
-object &quot;Brian Lee&quot; as HumanAgents_1 {
-  HumanAgentId = &quot;brian-lee&quot;
-  Name = &quot;Brian Lee&quot;
-  Mbox = &quot;brian.lee@example.com&quot;
-  Roles = &quot;software-engineer&quot;
-}
-
-object &quot;Carmen Diaz&quot; as HumanAgents_2 {
-  HumanAgentId = &quot;carmen-diaz&quot;
-  Name = &quot;Carmen Diaz&quot;
-  Mbox = &quot;carmen.diaz@example.com&quot;
-  Roles = &quot;quality-assurance-analyst&quot;
-}
-
-object &quot;David Kim&quot; as HumanAgents_3 {
-  HumanAgentId = &quot;david-kim&quot;
-  Name = &quot;David Kim&quot;
-  Mbox = &quot;david.kim@example.com&quot;
-  Roles = &quot;ui-ux-designer&quot;
-}
-
-object &quot;Emily Chen&quot; as HumanAgents_4 {
-  HumanAgentId = &quot;emily-chen&quot;
-  Name = &quot;Emily Chen&quot;
-  Mbox = &quot;emily.chen@example.com&quot;
-  Roles = &quot;business-analyst&quot;
-}
-
-object &quot;Frank Miller&quot; as HumanAgents_5 {
-  HumanAgentId = &quot;frank-miller&quot;
-  Name = &quot;Frank Miller&quot;
-  Mbox = &quot;frank.miller@example.com&quot;
-  Roles = &quot;devops-engineer&quot;
-}
-
-object &quot;Grace Patel&quot; as HumanAgents_6 {
-  HumanAgentId = &quot;grace-patel&quot;
-  Name = &quot;Grace Patel&quot;
-  Mbox = &quot;grace.patel@example.com&quot;
-  Roles = &quot;product-owner&quot;
-}
-
-object &quot;Hannah Smith&quot; as HumanAgents_7 {
-  HumanAgentId = &quot;hannah-smith&quot;
-  Name = &quot;Hannah Smith&quot;
-  Mbox = &quot;hannah.smith@example.com&quot;
-  Roles = &quot;technical-writer&quot;
-}
-
-object &quot;Isaac Brown&quot; as HumanAgents_8 {
-  HumanAgentId = &quot;isaac-brown&quot;
-  Name = &quot;Isaac Brown&quot;
-  Mbox = &quot;isaac.brown@example.com&quot;
-  Roles = &quot;customer-support-specialist&quot;
-}
-
-object &quot;Julia Nguyen&quot; as HumanAgents_9 {
-  HumanAgentId = &quot;julia-nguyen&quot;
-  Name = &quot;Julia Nguyen&quot;
-  Mbox = &quot;julia.nguyen@example.com&quot;
-  Roles = &quot;hr-manager&quot;
-}
-
-object &quot;Kevin O&#x27;Brien&quot; as HumanAgents_10 {
-  HumanAgentId = &quot;kevin-o-brien&quot;
-  Name = &quot;Kevin O&#x27;Brien&quot;
-  Mbox = &quot;kevin.obrien@example.com&quot;
-  Roles = &quot;marketing-specialist&quot;
-}
-
-object &quot;Linda Park&quot; as HumanAgents_11 {
-  HumanAgentId = &quot;linda-park&quot;
-  Name = &quot;Linda Park&quot;
-  Mbox = &quot;linda.park@example.com&quot;
-  Roles = &quot;data-scientist&quot;
-}
-
-object &quot;Michael Evans&quot; as HumanAgents_12 {
-  HumanAgentId = &quot;michael-evans&quot;
-  Name = &quot;Michael Evans&quot;
-  Mbox = &quot;michael.evans@example.com&quot;
-  Roles = &quot;system-administrator&quot;
-}
-
-object &quot;Nina Rossi&quot; as HumanAgents_13 {
-  HumanAgentId = &quot;nina-rossi&quot;
-  Name = &quot;Nina Rossi&quot;
-  Mbox = &quot;nina.rossi@example.com&quot;
-  Roles = &quot;finance-officer&quot;
-}
-
-object &quot;Oscar Gomez&quot; as HumanAgents_14 {
-  HumanAgentId = &quot;oscar-gomez&quot;
-  Name = &quot;Oscar Gomez&quot;
-  Mbox = &quot;oscar.gomez@example.com&quot;
-  Roles = &quot;scrum-master&quot;
+object &quot;James Okafor&quot; as HumanAgents_1 {
+  HumanAgentId = &quot;james-okafor&quot;
+  Name = &quot;James Okafor&quot;
+  Mbox = &quot;james.okafor@specialsolutio...&quot;
+  Roles = &quot;&quot;
+  CountOfRles = 0
 }
 
 object &quot;Roles_0&quot; as Roles_0 {
-  RoleId = &quot;project-manager&quot;
-  Label = &quot;Project Manager&quot;
-  Comment = &quot;Oversees project timelines,...&quot;
-  FilledBy = &quot;alice-johnson&quot;
-  WorkflowSteps = &quot;submit-request&quot;
+  RoleId = &quot;release-manager&quot;
+  Label = &quot;Release Manager&quot;
+  Comment = &quot;Primary role responsible fo...&quot;
+  FilledBy = &quot;maria-gonzalez&quot;
+  WorkflowSteps = &quot;release-approval&quot;
+  CountOfWorkflowSteps = 1
+  FilledByName = &quot;Maria Gonzalez&quot;
+  FilledByMBox = &quot;maria.gonzalez@specialsolut...&quot;
 }
 
 object &quot;Roles_1&quot; as Roles_1 {
-  RoleId = &quot;software-engineer&quot;
-  Label = &quot;Software Engineer&quot;
-  Comment = &quot;Develops and maintains soft...&quot;
-  FilledBy = &quot;brian-lee&quot;
-  WorkflowSteps = &quot;initial-review&quot;
+  RoleId = &quot;legal-compliance-reviewer&quot;
+  Label = &quot;Legal Compliance Reviewer&quot;
+  Comment = &quot;Role responsible for legal ...&quot;
+  FilledBy = &quot;&quot;
+  WorkflowSteps = &quot;legal-review&quot;
+  CountOfWorkflowSteps = 1
+  FilledByName = &quot;&quot;
+  FilledByMBox = &quot;&quot;
 }
 
 object &quot;Roles_2&quot; as Roles_2 {
-  RoleId = &quot;quality-assurance-analyst&quot;
-  Label = &quot;Quality Assurance Analyst&quot;
-  Comment = &quot;Tests software to ensure qu...&quot;
-  FilledBy = &quot;carmen-diaz&quot;
-  WorkflowSteps = &quot;assign-reviewer&quot;
-}
-
-object &quot;Roles_3&quot; as Roles_3 {
-  RoleId = &quot;ui-ux-designer&quot;
-  Label = &quot;UI/UX Designer&quot;
-  Comment = &quot;Designs user interfaces and...&quot;
-  FilledBy = &quot;david-kim&quot;
-  WorkflowSteps = &quot;reviewer-feedback&quot;
-}
-
-object &quot;Roles_4&quot; as Roles_4 {
-  RoleId = &quot;business-analyst&quot;
-  Label = &quot;Business Analyst&quot;
-  Comment = &quot;Gathers requirements and tr...&quot;
-  FilledBy = &quot;emily-chen&quot;
-  WorkflowSteps = &quot;revise-submission&quot;
-}
-
-object &quot;Roles_5&quot; as Roles_5 {
-  RoleId = &quot;devops-engineer&quot;
-  Label = &quot;DevOps Engineer&quot;
-  Comment = &quot;Manages deployment pipeline...&quot;
-  FilledBy = &quot;frank-miller&quot;
-  WorkflowSteps = &quot;final-approval&quot;
-}
-
-object &quot;Roles_6&quot; as Roles_6 {
-  RoleId = &quot;product-owner&quot;
-  Label = &quot;Product Owner&quot;
-  Comment = &quot;Defines product vision and ...&quot;
-  FilledBy = &quot;grace-patel&quot;
-  WorkflowSteps = &quot;notify-stakeholders&quot;
-}
-
-object &quot;Roles_7&quot; as Roles_7 {
-  RoleId = &quot;technical-writer&quot;
-  Label = &quot;Technical Writer&quot;
-  Comment = &quot;Creates and maintains techn...&quot;
-  FilledBy = &quot;hannah-smith&quot;
-  WorkflowSteps = &quot;archive-documents&quot;
-}
-
-object &quot;Roles_8&quot; as Roles_8 {
-  RoleId = &quot;customer-support-specialist&quot;
-  Label = &quot;Customer Support Specialist&quot;
-  Comment = &quot;Assists users with issues a...&quot;
-  FilledBy = &quot;isaac-brown&quot;
-  WorkflowSteps = &quot;generate-report&quot;
-}
-
-object &quot;Roles_9&quot; as Roles_9 {
-  RoleId = &quot;hr-manager&quot;
-  Label = &quot;HR Manager&quot;
-  Comment = &quot;Handles recruitment, onboar...&quot;
-  FilledBy = &quot;julia-nguyen&quot;
-  WorkflowSteps = &quot;quality-assurance-check&quot;
-}
-
-object &quot;Roles_10&quot; as Roles_10 {
-  RoleId = &quot;marketing-specialist&quot;
-  Label = &quot;Marketing Specialist&quot;
-  Comment = &quot;Develops marketing strategi...&quot;
-  FilledBy = &quot;kevin-o-brien&quot;
-  WorkflowSteps = &quot;send-confirmation-email&quot;
-}
-
-object &quot;Roles_11&quot; as Roles_11 {
-  RoleId = &quot;data-scientist&quot;
-  Label = &quot;Data Scientist&quot;
-  Comment = &quot;Analyzes data to extract in...&quot;
-  FilledBy = &quot;linda-park&quot;
-  WorkflowSteps = &quot;schedule-follow-up&quot;
-}
-
-object &quot;Roles_12&quot; as Roles_12 {
-  RoleId = &quot;system-administrator&quot;
-  Label = &quot;System Administrator&quot;
-  Comment = &quot;Maintains servers, networks...&quot;
-  FilledBy = &quot;michael-evans&quot;
-  WorkflowSteps = &quot;close-workflow&quot;
-}
-
-object &quot;Roles_13&quot; as Roles_13 {
-  RoleId = &quot;finance-officer&quot;
-  Label = &quot;Finance Officer&quot;
-  Comment = &quot;Manages budgets, expenses, ...&quot;
-  FilledBy = &quot;nina-rossi&quot;
-  WorkflowSteps = &quot;escalate-issue&quot;
-}
-
-object &quot;Roles_14&quot; as Roles_14 {
-  RoleId = &quot;scrum-master&quot;
-  Label = &quot;Scrum Master&quot;
-  Comment = &quot;Facilitates agile ceremonie...&quot;
-  FilledBy = &quot;oscar-gomez&quot;
-  WorkflowSteps = &quot;audit-trail-review&quot;
+  RoleId = &quot;risk-analyst&quot;
+  Label = &quot;Risk Analyst&quot;
+  Comment = &quot;Role responsible for risk a...&quot;
+  FilledBy = &quot;&quot;
+  WorkflowSteps = &quot;risk-assessment&quot;
+  CountOfWorkflowSteps = 1
+  FilledByName = &quot;&quot;
+  FilledByMBox = &quot;&quot;
 }
 
 object &quot;WorkflowSteps_0&quot; as WorkflowSteps_0 {
-  WorkflowStepId = &quot;submit-request&quot;
-  Label = &quot;Submit Request&quot;
+  WorkflowStepId = &quot;risk-assessment&quot;
+  Label = &quot;Risk Assessment&quot;
   SequencePosition = 1
-  RequiresHumanApproval = true
-  IsStepOf = &quot;onboarding-new-employees&quot;
-  AssignedRole = &quot;project-manager&quot;
+  RequiresHumanApproval = false
+  IsStepOf = &quot;production-deployment-workflow&quot;
+  AssignedRole = &quot;risk-analyst&quot;
+  IsStepOfTitle = &quot;Production Deployment Workflow&quot;
+  IsStepOfDescription = &quot;End-to-end workflow for dep...&quot;
+  IsStepOfIdentifier = &quot;WF-PROD-001&quot;
+  AssignedRoleLabel = &quot;Risk Analyst&quot;
+  AssignedRoleComment = &quot;Role responsible for risk a...&quot;
+  AssignedRoleFilledBy = &quot;&quot;
 }
 
 object &quot;WorkflowSteps_1&quot; as WorkflowSteps_1 {
-  WorkflowStepId = &quot;initial-review&quot;
-  Label = &quot;Initial Review&quot;
+  WorkflowStepId = &quot;legal-review&quot;
+  Label = &quot;Legal Review&quot;
   SequencePosition = 2
   RequiresHumanApproval = true
-  IsStepOf = &quot;weekly-sales-report&quot;
-  AssignedRole = &quot;software-engineer&quot;
+  IsStepOf = &quot;production-deployment-workflow&quot;
+  AssignedRole = &quot;legal-compliance-reviewer&quot;
+  IsStepOfTitle = &quot;Production Deployment Workflow&quot;
+  IsStepOfDescription = &quot;End-to-end workflow for dep...&quot;
+  IsStepOfIdentifier = &quot;WF-PROD-001&quot;
+  AssignedRoleLabel = &quot;Legal Compliance Reviewer&quot;
+  AssignedRoleComment = &quot;Role responsible for legal ...&quot;
+  AssignedRoleFilledBy = &quot;&quot;
 }
 
 object &quot;WorkflowSteps_2&quot; as WorkflowSteps_2 {
-  WorkflowStepId = &quot;assign-reviewer&quot;
-  Label = &quot;Assign Reviewer&quot;
+  WorkflowStepId = &quot;release-approval&quot;
+  Label = &quot;Release Approval&quot;
   SequencePosition = 3
-  RequiresHumanApproval = false
-  IsStepOf = &quot;customer-feedback-collection&quot;
-  AssignedRole = &quot;quality-assurance-analyst&quot;
-}
-
-object &quot;WorkflowSteps_3&quot; as WorkflowSteps_3 {
-  WorkflowStepId = &quot;reviewer-feedback&quot;
-  Label = &quot;Reviewer Feedback&quot;
-  SequencePosition = 4
   RequiresHumanApproval = true
-  IsStepOf = &quot;invoice-approval&quot;
-  AssignedRole = &quot;ui-ux-designer&quot;
-}
-
-object &quot;WorkflowSteps_4&quot; as WorkflowSteps_4 {
-  WorkflowStepId = &quot;revise-submission&quot;
-  Label = &quot;Revise Submission&quot;
-  SequencePosition = 5
-  RequiresHumanApproval = false
-  IsStepOf = &quot;it-support-ticketing&quot;
-  AssignedRole = &quot;business-analyst&quot;
-}
-
-object &quot;WorkflowSteps_5&quot; as WorkflowSteps_5 {
-  WorkflowStepId = &quot;final-approval&quot;
-  Label = &quot;Final Approval&quot;
-  SequencePosition = 6
-  RequiresHumanApproval = true
-  IsStepOf = &quot;content-publishing&quot;
-  AssignedRole = &quot;devops-engineer&quot;
-}
-
-object &quot;WorkflowSteps_6&quot; as WorkflowSteps_6 {
-  WorkflowStepId = &quot;notify-stakeholders&quot;
-  Label = &quot;Notify Stakeholders&quot;
-  SequencePosition = 7
-  RequiresHumanApproval = false
-  IsStepOf = &quot;expense-reimbursement&quot;
-  AssignedRole = &quot;product-owner&quot;
-}
-
-object &quot;WorkflowSteps_7&quot; as WorkflowSteps_7 {
-  WorkflowStepId = &quot;archive-documents&quot;
-  Label = &quot;Archive Documents&quot;
-  SequencePosition = 8
-  RequiresHumanApproval = false
-  IsStepOf = &quot;quarterly-performance-review&quot;
-  AssignedRole = &quot;technical-writer&quot;
-}
-
-object &quot;WorkflowSteps_8&quot; as WorkflowSteps_8 {
-  WorkflowStepId = &quot;generate-report&quot;
-  Label = &quot;Generate Report&quot;
-  SequencePosition = 9
-  RequiresHumanApproval = false
-  IsStepOf = &quot;vendor-onboarding&quot;
-  AssignedRole = &quot;customer-support-specialist&quot;
-}
-
-object &quot;WorkflowSteps_9&quot; as WorkflowSteps_9 {
-  WorkflowStepId = &quot;quality-assurance-check&quot;
-  Label = &quot;Quality Assurance Check&quot;
-  SequencePosition = 10
-  RequiresHumanApproval = true
-  IsStepOf = &quot;project-kickoff&quot;
-  AssignedRole = &quot;hr-manager&quot;
-}
-
-object &quot;WorkflowSteps_10&quot; as WorkflowSteps_10 {
-  WorkflowStepId = &quot;send-confirmation-email&quot;
-  Label = &quot;Send Confirmation Email&quot;
-  SequencePosition = 11
-  RequiresHumanApproval = false
-  IsStepOf = &quot;marketing-campaign-launch&quot;
-  AssignedRole = &quot;marketing-specialist&quot;
-}
-
-object &quot;WorkflowSteps_11&quot; as WorkflowSteps_11 {
-  WorkflowStepId = &quot;schedule-follow-up&quot;
-  Label = &quot;Schedule Follow-up&quot;
-  SequencePosition = 12
-  RequiresHumanApproval = false
-  IsStepOf = &quot;annual-compliance-training&quot;
-  AssignedRole = &quot;data-scientist&quot;
-}
-
-object &quot;WorkflowSteps_12&quot; as WorkflowSteps_12 {
-  WorkflowStepId = &quot;close-workflow&quot;
-  Label = &quot;Close Workflow&quot;
-  SequencePosition = 13
-  RequiresHumanApproval = false
-  IsStepOf = &quot;remote-access-request&quot;
-  AssignedRole = &quot;system-administrator&quot;
-}
-
-object &quot;WorkflowSteps_13&quot; as WorkflowSteps_13 {
-  WorkflowStepId = &quot;escalate-issue&quot;
-  Label = &quot;Escalate Issue&quot;
-  SequencePosition = 14
-  RequiresHumanApproval = true
-  IsStepOf = &quot;customer-escalation-handling&quot;
-  AssignedRole = &quot;finance-officer&quot;
-}
-
-object &quot;WorkflowSteps_14&quot; as WorkflowSteps_14 {
-  WorkflowStepId = &quot;audit-trail-review&quot;
-  Label = &quot;Audit Trail Review&quot;
-  SequencePosition = 15
-  RequiresHumanApproval = true
-  IsStepOf = &quot;procurement-request&quot;
-  AssignedRole = &quot;scrum-master&quot;
+  IsStepOf = &quot;production-deployment-workflow&quot;
+  AssignedRole = &quot;release-manager&quot;
+  IsStepOfTitle = &quot;Production Deployment Workflow&quot;
+  IsStepOfDescription = &quot;End-to-end workflow for dep...&quot;
+  IsStepOfIdentifier = &quot;WF-PROD-001&quot;
+  AssignedRoleLabel = &quot;Release Manager&quot;
+  AssignedRoleComment = &quot;Primary role responsible fo...&quot;
+  AssignedRoleFilledBy = &quot;maria-gonzalez&quot;
 }
 
 object &quot;Workflows_0&quot; as Workflows_0 {
-  WorkflowId = &quot;onboarding-new-employees&quot;
-  Title = &quot;Onboarding New Employees&quot;
-  Description = &quot;Automates the process of on...&quot;
-  Created = &quot;2024-05-01&quot;
-  Modified = &quot;2024-06-01&quot;
-  Identifier = &quot;WF-ONB-001&quot;
-  WorkflowSteps = &quot;submit-request&quot;
-}
-
-object &quot;Workflows_1&quot; as Workflows_1 {
-  WorkflowId = &quot;weekly-sales-report&quot;
-  Title = &quot;Weekly Sales Report&quot;
-  Description = &quot;Generates and distributes w...&quot;
-  Created = &quot;2024-04-15&quot;
-  Modified = &quot;2024-06-02&quot;
-  Identifier = &quot;WF-SAL-002&quot;
-  WorkflowSteps = &quot;initial-review&quot;
-}
-
-object &quot;Workflows_2&quot; as Workflows_2 {
-  WorkflowId = &quot;customer-feedback-collection&quot;
-  Title = &quot;Customer Feedback Collection&quot;
-  Description = &quot;Collects and organizes cust...&quot;
-  Created = &quot;2024-03-20&quot;
-  Modified = &quot;2024-05-30&quot;
-  Identifier = &quot;WF-CFB-003&quot;
-  WorkflowSteps = &quot;assign-reviewer&quot;
-}
-
-object &quot;Workflows_3&quot; as Workflows_3 {
-  WorkflowId = &quot;invoice-approval&quot;
-  Title = &quot;Invoice Approval&quot;
-  Description = &quot;Routes invoices to the appr...&quot;
-  Created = &quot;2024-05-10&quot;
-  Modified = &quot;2024-06-01&quot;
-  Identifier = &quot;WF-INV-004&quot;
-  WorkflowSteps = &quot;reviewer-feedback&quot;
-}
-
-object &quot;Workflows_4&quot; as Workflows_4 {
-  WorkflowId = &quot;it-support-ticketing&quot;
-  Title = &quot;IT Support Ticketing&quot;
-  Description = &quot;Manages IT support requests...&quot;
-  Created = &quot;2024-04-01&quot;
-  Modified = &quot;2024-05-28&quot;
-  Identifier = &quot;WF-ITS-005&quot;
-  WorkflowSteps = &quot;revise-submission&quot;
-}
-
-object &quot;Workflows_5&quot; as Workflows_5 {
-  WorkflowId = &quot;content-publishing&quot;
-  Title = &quot;Content Publishing&quot;
-  Description = &quot;Coordinates the review, app...&quot;
-  Created = &quot;2024-03-25&quot;
-  Modified = &quot;2024-05-29&quot;
-  Identifier = &quot;WF-CNT-006&quot;
-  WorkflowSteps = &quot;final-approval&quot;
-}
-
-object &quot;Workflows_6&quot; as Workflows_6 {
-  WorkflowId = &quot;expense-reimbursement&quot;
-  Title = &quot;Expense Reimbursement&quot;
-  Description = &quot;Automates employee expense ...&quot;
-  Created = &quot;2024-05-05&quot;
-  Modified = &quot;2024-06-01&quot;
-  Identifier = &quot;WF-EXP-007&quot;
-  WorkflowSteps = &quot;notify-stakeholders&quot;
-}
-
-object &quot;Workflows_7&quot; as Workflows_7 {
-  WorkflowId = &quot;quarterly-performance-review&quot;
-  Title = &quot;Quarterly Performance Review&quot;
-  Description = &quot;Schedules and tracks quarte...&quot;
-  Created = &quot;2024-03-30&quot;
-  Modified = &quot;2024-05-31&quot;
-  Identifier = &quot;WF-PRF-008&quot;
-  WorkflowSteps = &quot;archive-documents&quot;
-}
-
-object &quot;Workflows_8&quot; as Workflows_8 {
-  WorkflowId = &quot;vendor-onboarding&quot;
-  Title = &quot;Vendor Onboarding&quot;
-  Description = &quot;Guides new vendors through ...&quot;
-  Created = &quot;2024-04-20&quot;
-  Modified = &quot;2024-06-02&quot;
-  Identifier = &quot;WF-VND-009&quot;
-  WorkflowSteps = &quot;generate-report&quot;
-}
-
-object &quot;Workflows_9&quot; as Workflows_9 {
-  WorkflowId = &quot;project-kickoff&quot;
-  Title = &quot;Project Kickoff&quot;
-  Description = &quot;Outlines steps for initiati...&quot;
-  Created = &quot;2024-05-12&quot;
-  Modified = &quot;2024-06-01&quot;
-  Identifier = &quot;WF-PRJ-010&quot;
-  WorkflowSteps = &quot;quality-assurance-check&quot;
-}
-
-object &quot;Workflows_10&quot; as Workflows_10 {
-  WorkflowId = &quot;marketing-campaign-launch&quot;
-  Title = &quot;Marketing Campaign Launch&quot;
-  Description = &quot;Manages the planning, appro...&quot;
-  Created = &quot;2024-04-05&quot;
-  Modified = &quot;2024-05-30&quot;
-  Identifier = &quot;WF-MKT-011&quot;
-  WorkflowSteps = &quot;send-confirmation-email&quot;
-}
-
-object &quot;Workflows_11&quot; as Workflows_11 {
-  WorkflowId = &quot;annual-compliance-training&quot;
-  Title = &quot;Annual Compliance Training&quot;
-  Description = &quot;Tracks employee completion ...&quot;
-  Created = &quot;2024-03-15&quot;
-  Modified = &quot;2024-05-29&quot;
-  Identifier = &quot;WF-COM-012&quot;
-  WorkflowSteps = &quot;schedule-follow-up&quot;
-}
-
-object &quot;Workflows_12&quot; as Workflows_12 {
-  WorkflowId = &quot;remote-access-request&quot;
-  Title = &quot;Remote Access Request&quot;
-  Description = &quot;Automates approval and prov...&quot;
-  Created = &quot;2024-05-08&quot;
-  Modified = &quot;2024-06-01&quot;
-  Identifier = &quot;WF-REM-013&quot;
-  WorkflowSteps = &quot;close-workflow&quot;
-}
-
-object &quot;Workflows_13&quot; as Workflows_13 {
-  WorkflowId = &quot;customer-escalation-handling&quot;
-  Title = &quot;Customer Escalation Handling&quot;
-  Description = &quot;Defines steps for handling ...&quot;
-  Created = &quot;2024-04-18&quot;
-  Modified = &quot;2024-06-02&quot;
-  Identifier = &quot;WF-CES-014&quot;
-  WorkflowSteps = &quot;escalate-issue&quot;
-}
-
-object &quot;Workflows_14&quot; as Workflows_14 {
-  WorkflowId = &quot;procurement-request&quot;
-  Title = &quot;Procurement Request&quot;
-  Description = &quot;Manages the submission, app...&quot;
-  Created = &quot;2024-05-03&quot;
-  Modified = &quot;2024-06-01&quot;
-  Identifier = &quot;WF-PRC-015&quot;
-  WorkflowSteps = &quot;audit-trail-review&quot;
+  WorkflowId = &quot;production-deployment-workflow&quot;
+  Title = &quot;Production Deployment Workflow&quot;
+  Description = &quot;End-to-end workflow for dep...&quot;
+  Created = &quot;2026-01-15&quot;
+  Modified = &quot;2026-01-15&quot;
+  Identifier = &quot;WF-PROD-001&quot;
+  WorkflowSteps = &quot;legal-review, risk-assessme...&quot;
+  CountOfWorkflowSteps = 3
 }
 
 @enduml</pre>
@@ -726,10 +338,55 @@ object &quot;Workflows_14&quot; as Workflows_14 {
             <div class="card">
                 <div class="code-header">
                     <h2>constraints.ocl</h2>
-                    <div><span class="code-info">3 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
+                    <div><span class="code-info">48 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
                 </div>
                 <pre id="ocl-code">-- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
+
+-- Table: HumanAgents
+context HumanAgents
+
+-- Formula for CountOfRles - parse error: Unexpected character &#x27;!&#x27; at position 14
+-- Original: =COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})
+
+-- Table: Roles
+context Roles
+
+-- Formula for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
+-- Original: =COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})
+
+-- Formula for FilledByName - parse error: Unexpected character &#x27;!&#x27; at position 17
+-- Original: =INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))
+
+-- Formula for FilledByMBox - parse error: Unexpected character &#x27;!&#x27; at position 17
+-- Original: =INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))
+
+-- Table: WorkflowSteps
+context WorkflowSteps
+
+-- Formula for IsStepOfTitle - parse error: Unexpected character &#x27;!&#x27; at position 15
+-- Original: =INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
+
+-- Formula for IsStepOfDescription - parse error: Unexpected character &#x27;!&#x27; at position 15
+-- Original: =INDEX(Workflows!{{Description}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
+
+-- Formula for IsStepOfIdentifier - parse error: Unexpected character &#x27;!&#x27; at position 15
+-- Original: =INDEX(Workflows!{{Identifier}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
+
+-- Formula for AssignedRoleLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Roles!{{Label}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
+
+-- Formula for AssignedRoleComment - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Roles!{{Comment}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
+
+-- Formula for AssignedRoleFilledBy - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
+
+-- Table: Workflows
+context Workflows
+
+-- Formula for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
+-- Original: =COUNTIFS(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}})
 </pre>
             </div>
         </div>

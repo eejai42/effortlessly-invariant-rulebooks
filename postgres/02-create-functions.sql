@@ -30,6 +30,62 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
+
+CREATE OR REPLACE FUNCTION calc_workflows_count_of_workflow_steps(p_workflow_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN ((SELECT COUNT(*) FROM workflow_steps WHERE is_step_of = (SELECT NULLIF(workflow_id, '') FROM workflows WHERE workflow_id = p_workflow_id)));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_is_step_of_title(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT title::text FROM workflows WHERE workflow_id = (SELECT is_step_of FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_is_step_of_description(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT description::text FROM workflows WHERE workflow_id = (SELECT is_step_of FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_is_step_of_identifier(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT identifier::text FROM workflows WHERE workflow_id = (SELECT is_step_of FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_assigned_role_label(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT label::text FROM roles WHERE role_id = (SELECT assigned_role FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_assigned_role_comment(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT comment::text FROM roles WHERE role_id = (SELECT assigned_role FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_workflow_steps_assigned_role_filled_by(p_workflow_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT filled_by::text FROM roles WHERE role_id = (SELECT assigned_role FROM workflow_steps WHERE workflow_step_id = p_workflow_step_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
 CREATE OR REPLACE FUNCTION get_workflows_title(p_workflow_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
@@ -79,6 +135,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
+
+CREATE OR REPLACE FUNCTION calc_roles_filled_by_name(p_role_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name::text FROM human_agents WHERE human_agent_id = (SELECT filled_by FROM roles WHERE role_id = p_role_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_roles_filled_by_m_box(p_role_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT mbox::text FROM human_agents WHERE human_agent_id = (SELECT filled_by FROM roles WHERE role_id = p_role_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
 CREATE OR REPLACE FUNCTION get_human_agents_name(p_human_agent_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
@@ -93,8 +165,35 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
+
+CREATE OR REPLACE FUNCTION calc_roles_count_of_workflow_steps(p_role_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN ((SELECT COUNT(*) FROM workflow_steps WHERE assigned_role = (SELECT NULLIF(role_id, '') FROM roles WHERE role_id = p_role_id)));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_human_agents_count_of_rles(p_human_agent_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN ((SELECT COUNT(*) FROM roles WHERE filled_by = (SELECT NULLIF(human_agent_id, '') FROM human_agents WHERE human_agent_id = p_human_agent_id)));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
 -- ============================================================================
 -- MANY-SIDE RELATIONSHIP FUNCTIONS
 -- These functions aggregate child records for many-side relationships
 -- ============================================================================
+
+CREATE OR REPLACE FUNCTION calc_workflows_workflow_steps(p_workflow_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (
+    SELECT STRING_AGG(workflow_step_id::TEXT, ', ' ORDER BY workflow_step_id)
+    FROM workflow_steps
+    WHERE is_step_of = p_workflow_id
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 

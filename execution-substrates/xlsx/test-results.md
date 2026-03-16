@@ -4,14 +4,25 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Fields Tested | 0 |
-| Passed | 0 |
+| Total Fields Tested | 6 |
+| Passed | 6 |
 | Failed | 0 |
-| Score | 0.0% |
+| Score | 100.0% |
 | Duration | < 1s |
 
-## Error
+## Results by Entity
 
-```
-No test-answers found
-```
+### roles
+
+- Fields: 3/3 (100.0%)
+- Computed columns: count_of_workflow_steps
+
+### workflows
+
+- Fields: 1/1 (100.0%)
+- Computed columns: count_of_workflow_steps
+
+### human_agents
+
+- Fields: 2/2 (100.0%)
+- Computed columns: count_of_rles

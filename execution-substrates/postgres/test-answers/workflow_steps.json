@@ -1,122 +1,44 @@
 [
   {
-    "workflow_step_id": "archive-documents",
-    "label": "Archive Documents",
-    "sequence_position": 8,
-    "requires_human_approval": false,
-    "is_step_of": "quarterly-performance-review",
-    "assigned_role": "technical-writer"
-  },
-  {
-    "workflow_step_id": "assign-reviewer",
-    "label": "Assign Reviewer",
-    "sequence_position": 3,
-    "requires_human_approval": false,
-    "is_step_of": "customer-feedback-collection",
-    "assigned_role": "quality-assurance-analyst"
-  },
-  {
-    "workflow_step_id": "audit-trail-review",
-    "label": "Audit Trail Review",
-    "sequence_position": 15,
-    "requires_human_approval": true,
-    "is_step_of": "procurement-request",
-    "assigned_role": "scrum-master"
-  },
-  {
-    "workflow_step_id": "close-workflow",
-    "label": "Close Workflow",
-    "sequence_position": 13,
-    "requires_human_approval": false,
-    "is_step_of": "remote-access-request",
-    "assigned_role": "system-administrator"
-  },
-  {
-    "workflow_step_id": "escalate-issue",
-    "label": "Escalate Issue",
-    "sequence_position": 14,
-    "requires_human_approval": true,
-    "is_step_of": "customer-escalation-handling",
-    "assigned_role": "finance-officer"
-  },
-  {
-    "workflow_step_id": "final-approval",
-    "label": "Final Approval",
-    "sequence_position": 6,
-    "requires_human_approval": true,
-    "is_step_of": "content-publishing",
-    "assigned_role": "devops-engineer"
-  },
-  {
-    "workflow_step_id": "generate-report",
-    "label": "Generate Report",
-    "sequence_position": 9,
-    "requires_human_approval": false,
-    "is_step_of": "vendor-onboarding",
-    "assigned_role": "customer-support-specialist"
-  },
-  {
-    "workflow_step_id": "initial-review",
-    "label": "Initial Review",
+    "workflow_step_id": "legal-review",
+    "label": "Legal Review",
     "sequence_position": 2,
     "requires_human_approval": true,
-    "is_step_of": "weekly-sales-report",
-    "assigned_role": "software-engineer"
+    "is_step_of": "production-deployment-workflow",
+    "assigned_role": "legal-compliance-reviewer",
+    "is_step_of_title": "Production Deployment Workflow",
+    "is_step_of_description": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
+    "is_step_of_identifier": "WF-PROD-001",
+    "assigned_role_label": "Legal Compliance Reviewer",
+    "assigned_role_comment": "Role responsible for legal and compliance review of releases.",
+    "assigned_role_filled_by": ""
   },
   {
-    "workflow_step_id": "notify-stakeholders",
-    "label": "Notify Stakeholders",
-    "sequence_position": 7,
-    "requires_human_approval": false,
-    "is_step_of": "expense-reimbursement",
-    "assigned_role": "product-owner"
-  },
-  {
-    "workflow_step_id": "quality-assurance-check",
-    "label": "Quality Assurance Check",
-    "sequence_position": 10,
+    "workflow_step_id": "release-approval",
+    "label": "Release Approval",
+    "sequence_position": 3,
     "requires_human_approval": true,
-    "is_step_of": "project-kickoff",
-    "assigned_role": "hr-manager"
+    "is_step_of": "production-deployment-workflow",
+    "assigned_role": "release-manager",
+    "is_step_of_title": "Production Deployment Workflow",
+    "is_step_of_description": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
+    "is_step_of_identifier": "WF-PROD-001",
+    "assigned_role_label": "Release Manager",
+    "assigned_role_comment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
+    "assigned_role_filled_by": "maria-gonzalez"
   },
   {
-    "workflow_step_id": "reviewer-feedback",
-    "label": "Reviewer Feedback",
-    "sequence_position": 4,
-    "requires_human_approval": true,
-    "is_step_of": "invoice-approval",
-    "assigned_role": "ui-ux-designer"
-  },
-  {
-    "workflow_step_id": "revise-submission",
-    "label": "Revise Submission",
-    "sequence_position": 5,
-    "requires_human_approval": false,
-    "is_step_of": "it-support-ticketing",
-    "assigned_role": "business-analyst"
-  },
-  {
-    "workflow_step_id": "schedule-follow-up",
-    "label": "Schedule Follow-up",
-    "sequence_position": 12,
-    "requires_human_approval": false,
-    "is_step_of": "annual-compliance-training",
-    "assigned_role": "data-scientist"
-  },
-  {
-    "workflow_step_id": "send-confirmation-email",
-    "label": "Send Confirmation Email",
-    "sequence_position": 11,
-    "requires_human_approval": false,
-    "is_step_of": "marketing-campaign-launch",
-    "assigned_role": "marketing-specialist"
-  },
-  {
-    "workflow_step_id": "submit-request",
-    "label": "Submit Request",
+    "workflow_step_id": "risk-assessment",
+    "label": "Risk Assessment",
     "sequence_position": 1,
-    "requires_human_approval": true,
-    "is_step_of": "onboarding-new-employees",
-    "assigned_role": "project-manager"
+    "requires_human_approval": false,
+    "is_step_of": "production-deployment-workflow",
+    "assigned_role": "risk-analyst",
+    "is_step_of_title": "Production Deployment Workflow",
+    "is_step_of_description": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
+    "is_step_of_identifier": "WF-PROD-001",
+    "assigned_role_label": "Risk Analyst",
+    "assigned_role_comment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
+    "assigned_role_filled_by": ""
   }
 ]

@@ -103,6 +103,7 @@ type Workflow struct {
 	Modified *string `json:"modified"`
 	Identifier *string `json:"identifier"`
 	WorkflowSteps *string `json:"workflow_steps"`
+	CountOfWorkflowSteps *int `json:"count_of_workflow_steps"`
 }
 
 // =============================================================================
@@ -119,6 +120,12 @@ type WorkflowStep struct {
 	RequiresHumanApproval *bool `json:"requires_human_approval"`
 	IsStepOf *string `json:"is_step_of"`
 	AssignedRole *string `json:"assigned_role"`
+	IsStepOfTitle *string `json:"is_step_of_title"`
+	IsStepOfDescription *string `json:"is_step_of_description"`
+	IsStepOfIdentifier *string `json:"is_step_of_identifier"`
+	AssignedRoleLabel *string `json:"assigned_role_label"`
+	AssignedRoleComment *string `json:"assigned_role_comment"`
+	AssignedRoleFilledBy *string `json:"assigned_role_filled_by"`
 }
 
 // =============================================================================
@@ -134,6 +141,9 @@ type Role struct {
 	Comment *string `json:"comment"`
 	FilledBy *string `json:"filled_by"`
 	WorkflowSteps *string `json:"workflow_steps"`
+	CountOfWorkflowSteps *int `json:"count_of_workflow_steps"`
+	FilledByName *string `json:"filled_by_name"`
+	FilledByMBox *string `json:"filled_by_m_box"`
 }
 
 // =============================================================================
@@ -148,4 +158,5 @@ type HumanAgent struct {
 	Name *string `json:"name"`
 	Mbox *string `json:"mbox"`
 	Roles *string `json:"roles"`
+	CountOfRles *int `json:"count_of_rles"`
 }

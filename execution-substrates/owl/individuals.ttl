@@ -6,457 +6,103 @@
 # === Individuals: HumanAgents ===
 
 erb:HumanAgents_0 a erb:HumanAgents ;
-    erb:humanAgentId "alice-johnson" ;
-    erb:name "Alice Johnson" ;
-    erb:mbox "alice.johnson@example.com" ;
-    erb:roles "project-manager" .
+    erb:humanAgentId "maria-gonzalez" ;
+    erb:name "Maria Gonzalez" ;
+    erb:mbox "maria.gonzalez@specialsolutions.example" ;
+    erb:roles "release-manager" ;
+    erb:countOfRles 1 .
 
 erb:HumanAgents_1 a erb:HumanAgents ;
-    erb:humanAgentId "brian-lee" ;
-    erb:name "Brian Lee" ;
-    erb:mbox "brian.lee@example.com" ;
-    erb:roles "software-engineer" .
-
-erb:HumanAgents_2 a erb:HumanAgents ;
-    erb:humanAgentId "carmen-diaz" ;
-    erb:name "Carmen Diaz" ;
-    erb:mbox "carmen.diaz@example.com" ;
-    erb:roles "quality-assurance-analyst" .
-
-erb:HumanAgents_3 a erb:HumanAgents ;
-    erb:humanAgentId "david-kim" ;
-    erb:name "David Kim" ;
-    erb:mbox "david.kim@example.com" ;
-    erb:roles "ui-ux-designer" .
-
-erb:HumanAgents_4 a erb:HumanAgents ;
-    erb:humanAgentId "emily-chen" ;
-    erb:name "Emily Chen" ;
-    erb:mbox "emily.chen@example.com" ;
-    erb:roles "business-analyst" .
-
-erb:HumanAgents_5 a erb:HumanAgents ;
-    erb:humanAgentId "frank-miller" ;
-    erb:name "Frank Miller" ;
-    erb:mbox "frank.miller@example.com" ;
-    erb:roles "devops-engineer" .
-
-erb:HumanAgents_6 a erb:HumanAgents ;
-    erb:humanAgentId "grace-patel" ;
-    erb:name "Grace Patel" ;
-    erb:mbox "grace.patel@example.com" ;
-    erb:roles "product-owner" .
-
-erb:HumanAgents_7 a erb:HumanAgents ;
-    erb:humanAgentId "hannah-smith" ;
-    erb:name "Hannah Smith" ;
-    erb:mbox "hannah.smith@example.com" ;
-    erb:roles "technical-writer" .
-
-erb:HumanAgents_8 a erb:HumanAgents ;
-    erb:humanAgentId "isaac-brown" ;
-    erb:name "Isaac Brown" ;
-    erb:mbox "isaac.brown@example.com" ;
-    erb:roles "customer-support-specialist" .
-
-erb:HumanAgents_9 a erb:HumanAgents ;
-    erb:humanAgentId "julia-nguyen" ;
-    erb:name "Julia Nguyen" ;
-    erb:mbox "julia.nguyen@example.com" ;
-    erb:roles "hr-manager" .
-
-erb:HumanAgents_10 a erb:HumanAgents ;
-    erb:humanAgentId "kevin-o-brien" ;
-    erb:name "Kevin O'Brien" ;
-    erb:mbox "kevin.obrien@example.com" ;
-    erb:roles "marketing-specialist" .
-
-erb:HumanAgents_11 a erb:HumanAgents ;
-    erb:humanAgentId "linda-park" ;
-    erb:name "Linda Park" ;
-    erb:mbox "linda.park@example.com" ;
-    erb:roles "data-scientist" .
-
-erb:HumanAgents_12 a erb:HumanAgents ;
-    erb:humanAgentId "michael-evans" ;
-    erb:name "Michael Evans" ;
-    erb:mbox "michael.evans@example.com" ;
-    erb:roles "system-administrator" .
-
-erb:HumanAgents_13 a erb:HumanAgents ;
-    erb:humanAgentId "nina-rossi" ;
-    erb:name "Nina Rossi" ;
-    erb:mbox "nina.rossi@example.com" ;
-    erb:roles "finance-officer" .
-
-erb:HumanAgents_14 a erb:HumanAgents ;
-    erb:humanAgentId "oscar-gomez" ;
-    erb:name "Oscar Gomez" ;
-    erb:mbox "oscar.gomez@example.com" ;
-    erb:roles "scrum-master" .
+    erb:humanAgentId "james-okafor" ;
+    erb:name "James Okafor" ;
+    erb:mbox "james.okafor@specialsolutions.example" ;
+    erb:roles "" ;
+    erb:countOfRles 0 .
 
 # === Individuals: Roles ===
 
 erb:Roles_0 a erb:Roles ;
-    erb:roleId "project-manager" ;
-    erb:label "Project Manager" ;
-    erb:comment "Oversees project timelines, deliverables, and team coordination." ;
-    erb:filledBy "alice-johnson" ;
-    erb:workflowSteps "submit-request" .
+    erb:roleId "release-manager" ;
+    erb:label "Release Manager" ;
+    erb:comment "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'" ;
+    erb:filledBy "maria-gonzalez" ;
+    erb:workflowSteps "release-approval" ;
+    erb:countOfWorkflowSteps 1 ;
+    erb:filledByName "Maria Gonzalez" ;
+    erb:filledByMBox "maria.gonzalez@specialsolutions.example" .
 
 erb:Roles_1 a erb:Roles ;
-    erb:roleId "software-engineer" ;
-    erb:label "Software Engineer" ;
-    erb:comment "Develops and maintains software applications and systems." ;
-    erb:filledBy "brian-lee" ;
-    erb:workflowSteps "initial-review" .
+    erb:roleId "legal-compliance-reviewer" ;
+    erb:label "Legal Compliance Reviewer" ;
+    erb:comment "Role responsible for legal and compliance review of releases." ;
+    erb:filledBy "" ;
+    erb:workflowSteps "legal-review" ;
+    erb:countOfWorkflowSteps 1 ;
+    erb:filledByName "" ;
+    erb:filledByMBox "" .
 
 erb:Roles_2 a erb:Roles ;
-    erb:roleId "quality-assurance-analyst" ;
-    erb:label "Quality Assurance Analyst" ;
-    erb:comment "Tests software to ensure quality and identify bugs." ;
-    erb:filledBy "carmen-diaz" ;
-    erb:workflowSteps "assign-reviewer" .
-
-erb:Roles_3 a erb:Roles ;
-    erb:roleId "ui-ux-designer" ;
-    erb:label "UI/UX Designer" ;
-    erb:comment "Designs user interfaces and ensures a positive user experience." ;
-    erb:filledBy "david-kim" ;
-    erb:workflowSteps "reviewer-feedback" .
-
-erb:Roles_4 a erb:Roles ;
-    erb:roleId "business-analyst" ;
-    erb:label "Business Analyst" ;
-    erb:comment "Gathers requirements and translates business needs into technical solutions." ;
-    erb:filledBy "emily-chen" ;
-    erb:workflowSteps "revise-submission" .
-
-erb:Roles_5 a erb:Roles ;
-    erb:roleId "devops-engineer" ;
-    erb:label "DevOps Engineer" ;
-    erb:comment "Manages deployment pipelines and infrastructure automation." ;
-    erb:filledBy "frank-miller" ;
-    erb:workflowSteps "final-approval" .
-
-erb:Roles_6 a erb:Roles ;
-    erb:roleId "product-owner" ;
-    erb:label "Product Owner" ;
-    erb:comment "Defines product vision and prioritizes features for development." ;
-    erb:filledBy "grace-patel" ;
-    erb:workflowSteps "notify-stakeholders" .
-
-erb:Roles_7 a erb:Roles ;
-    erb:roleId "technical-writer" ;
-    erb:label "Technical Writer" ;
-    erb:comment "Creates and maintains technical documentation and user guides." ;
-    erb:filledBy "hannah-smith" ;
-    erb:workflowSteps "archive-documents" .
-
-erb:Roles_8 a erb:Roles ;
-    erb:roleId "customer-support-specialist" ;
-    erb:label "Customer Support Specialist" ;
-    erb:comment "Assists users with issues and provides product support." ;
-    erb:filledBy "isaac-brown" ;
-    erb:workflowSteps "generate-report" .
-
-erb:Roles_9 a erb:Roles ;
-    erb:roleId "hr-manager" ;
-    erb:label "HR Manager" ;
-    erb:comment "Handles recruitment, onboarding, and employee relations." ;
-    erb:filledBy "julia-nguyen" ;
-    erb:workflowSteps "quality-assurance-check" .
-
-erb:Roles_10 a erb:Roles ;
-    erb:roleId "marketing-specialist" ;
-    erb:label "Marketing Specialist" ;
-    erb:comment "Develops marketing strategies and manages campaigns." ;
-    erb:filledBy "kevin-o-brien" ;
-    erb:workflowSteps "send-confirmation-email" .
-
-erb:Roles_11 a erb:Roles ;
-    erb:roleId "data-scientist" ;
-    erb:label "Data Scientist" ;
-    erb:comment "Analyzes data to extract insights and support decision-making." ;
-    erb:filledBy "linda-park" ;
-    erb:workflowSteps "schedule-follow-up" .
-
-erb:Roles_12 a erb:Roles ;
-    erb:roleId "system-administrator" ;
-    erb:label "System Administrator" ;
-    erb:comment "Maintains servers, networks, and IT infrastructure." ;
-    erb:filledBy "michael-evans" ;
-    erb:workflowSteps "close-workflow" .
-
-erb:Roles_13 a erb:Roles ;
-    erb:roleId "finance-officer" ;
-    erb:label "Finance Officer" ;
-    erb:comment "Manages budgets, expenses, and financial reporting." ;
-    erb:filledBy "nina-rossi" ;
-    erb:workflowSteps "escalate-issue" .
-
-erb:Roles_14 a erb:Roles ;
-    erb:roleId "scrum-master" ;
-    erb:label "Scrum Master" ;
-    erb:comment "Facilitates agile ceremonies and removes team impediments." ;
-    erb:filledBy "oscar-gomez" ;
-    erb:workflowSteps "audit-trail-review" .
+    erb:roleId "risk-analyst" ;
+    erb:label "Risk Analyst" ;
+    erb:comment "Role responsible for risk assessment. In full ontology, filled by AI agent." ;
+    erb:filledBy "" ;
+    erb:workflowSteps "risk-assessment" ;
+    erb:countOfWorkflowSteps 1 ;
+    erb:filledByName "" ;
+    erb:filledByMBox "" .
 
 # === Individuals: WorkflowSteps ===
 
 erb:WorkflowSteps_0 a erb:WorkflowSteps ;
-    erb:workflowStepId "submit-request" ;
-    erb:label "Submit Request" ;
+    erb:workflowStepId "risk-assessment" ;
+    erb:label "Risk Assessment" ;
     erb:sequencePosition 1 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "onboarding-new-employees" ;
-    erb:assignedRole "project-manager" .
+    erb:requiresHumanApproval false ;
+    erb:isStepOf "production-deployment-workflow" ;
+    erb:assignedRole "risk-analyst" ;
+    erb:isStepOfTitle "Production Deployment Workflow" ;
+    erb:isStepOfDescription "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
+    erb:isStepOfIdentifier "WF-PROD-001" ;
+    erb:assignedRoleLabel "Risk Analyst" ;
+    erb:assignedRoleComment "Role responsible for risk assessment. In full ontology, filled by AI agent." ;
+    erb:assignedRoleFilledBy "" .
 
 erb:WorkflowSteps_1 a erb:WorkflowSteps ;
-    erb:workflowStepId "initial-review" ;
-    erb:label "Initial Review" ;
+    erb:workflowStepId "legal-review" ;
+    erb:label "Legal Review" ;
     erb:sequencePosition 2 ;
     erb:requiresHumanApproval true ;
-    erb:isStepOf "weekly-sales-report" ;
-    erb:assignedRole "software-engineer" .
+    erb:isStepOf "production-deployment-workflow" ;
+    erb:assignedRole "legal-compliance-reviewer" ;
+    erb:isStepOfTitle "Production Deployment Workflow" ;
+    erb:isStepOfDescription "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
+    erb:isStepOfIdentifier "WF-PROD-001" ;
+    erb:assignedRoleLabel "Legal Compliance Reviewer" ;
+    erb:assignedRoleComment "Role responsible for legal and compliance review of releases." ;
+    erb:assignedRoleFilledBy "" .
 
 erb:WorkflowSteps_2 a erb:WorkflowSteps ;
-    erb:workflowStepId "assign-reviewer" ;
-    erb:label "Assign Reviewer" ;
+    erb:workflowStepId "release-approval" ;
+    erb:label "Release Approval" ;
     erb:sequencePosition 3 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "customer-feedback-collection" ;
-    erb:assignedRole "quality-assurance-analyst" .
-
-erb:WorkflowSteps_3 a erb:WorkflowSteps ;
-    erb:workflowStepId "reviewer-feedback" ;
-    erb:label "Reviewer Feedback" ;
-    erb:sequencePosition 4 ;
     erb:requiresHumanApproval true ;
-    erb:isStepOf "invoice-approval" ;
-    erb:assignedRole "ui-ux-designer" .
-
-erb:WorkflowSteps_4 a erb:WorkflowSteps ;
-    erb:workflowStepId "revise-submission" ;
-    erb:label "Revise Submission" ;
-    erb:sequencePosition 5 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "it-support-ticketing" ;
-    erb:assignedRole "business-analyst" .
-
-erb:WorkflowSteps_5 a erb:WorkflowSteps ;
-    erb:workflowStepId "final-approval" ;
-    erb:label "Final Approval" ;
-    erb:sequencePosition 6 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "content-publishing" ;
-    erb:assignedRole "devops-engineer" .
-
-erb:WorkflowSteps_6 a erb:WorkflowSteps ;
-    erb:workflowStepId "notify-stakeholders" ;
-    erb:label "Notify Stakeholders" ;
-    erb:sequencePosition 7 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "expense-reimbursement" ;
-    erb:assignedRole "product-owner" .
-
-erb:WorkflowSteps_7 a erb:WorkflowSteps ;
-    erb:workflowStepId "archive-documents" ;
-    erb:label "Archive Documents" ;
-    erb:sequencePosition 8 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "quarterly-performance-review" ;
-    erb:assignedRole "technical-writer" .
-
-erb:WorkflowSteps_8 a erb:WorkflowSteps ;
-    erb:workflowStepId "generate-report" ;
-    erb:label "Generate Report" ;
-    erb:sequencePosition 9 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "vendor-onboarding" ;
-    erb:assignedRole "customer-support-specialist" .
-
-erb:WorkflowSteps_9 a erb:WorkflowSteps ;
-    erb:workflowStepId "quality-assurance-check" ;
-    erb:label "Quality Assurance Check" ;
-    erb:sequencePosition 10 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "project-kickoff" ;
-    erb:assignedRole "hr-manager" .
-
-erb:WorkflowSteps_10 a erb:WorkflowSteps ;
-    erb:workflowStepId "send-confirmation-email" ;
-    erb:label "Send Confirmation Email" ;
-    erb:sequencePosition 11 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "marketing-campaign-launch" ;
-    erb:assignedRole "marketing-specialist" .
-
-erb:WorkflowSteps_11 a erb:WorkflowSteps ;
-    erb:workflowStepId "schedule-follow-up" ;
-    erb:label "Schedule Follow-up" ;
-    erb:sequencePosition 12 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "annual-compliance-training" ;
-    erb:assignedRole "data-scientist" .
-
-erb:WorkflowSteps_12 a erb:WorkflowSteps ;
-    erb:workflowStepId "close-workflow" ;
-    erb:label "Close Workflow" ;
-    erb:sequencePosition 13 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "remote-access-request" ;
-    erb:assignedRole "system-administrator" .
-
-erb:WorkflowSteps_13 a erb:WorkflowSteps ;
-    erb:workflowStepId "escalate-issue" ;
-    erb:label "Escalate Issue" ;
-    erb:sequencePosition 14 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "customer-escalation-handling" ;
-    erb:assignedRole "finance-officer" .
-
-erb:WorkflowSteps_14 a erb:WorkflowSteps ;
-    erb:workflowStepId "audit-trail-review" ;
-    erb:label "Audit Trail Review" ;
-    erb:sequencePosition 15 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "procurement-request" ;
-    erb:assignedRole "scrum-master" .
+    erb:isStepOf "production-deployment-workflow" ;
+    erb:assignedRole "release-manager" ;
+    erb:isStepOfTitle "Production Deployment Workflow" ;
+    erb:isStepOfDescription "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
+    erb:isStepOfIdentifier "WF-PROD-001" ;
+    erb:assignedRoleLabel "Release Manager" ;
+    erb:assignedRoleComment "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'" ;
+    erb:assignedRoleFilledBy "maria-gonzalez" .
 
 # === Individuals: Workflows ===
 
 erb:Workflows_0 a erb:Workflows ;
-    erb:workflowId "onboarding-new-employees" ;
-    erb:title "Onboarding New Employees" ;
-    erb:description "Automates the process of onboarding new hires, including document collection, account setup, and training assignments." ;
-    erb:created "2024-05-01" ;
-    erb:modified "2024-06-01" ;
-    erb:identifier "WF-ONB-001" ;
-    erb:workflowSteps "submit-request" .
-
-erb:Workflows_1 a erb:Workflows ;
-    erb:workflowId "weekly-sales-report" ;
-    erb:title "Weekly Sales Report" ;
-    erb:description "Generates and distributes weekly sales performance reports to the management team." ;
-    erb:created "2024-04-15" ;
-    erb:modified "2024-06-02" ;
-    erb:identifier "WF-SAL-002" ;
-    erb:workflowSteps "initial-review" .
-
-erb:Workflows_2 a erb:Workflows ;
-    erb:workflowId "customer-feedback-collection" ;
-    erb:title "Customer Feedback Collection" ;
-    erb:description "Collects and organizes customer feedback from multiple channels for analysis." ;
-    erb:created "2024-03-20" ;
-    erb:modified "2024-05-30" ;
-    erb:identifier "WF-CFB-003" ;
-    erb:workflowSteps "assign-reviewer" .
-
-erb:Workflows_3 a erb:Workflows ;
-    erb:workflowId "invoice-approval" ;
-    erb:title "Invoice Approval" ;
-    erb:description "Routes invoices to the appropriate managers for review and approval before payment." ;
-    erb:created "2024-05-10" ;
-    erb:modified "2024-06-01" ;
-    erb:identifier "WF-INV-004" ;
-    erb:workflowSteps "reviewer-feedback" .
-
-erb:Workflows_4 a erb:Workflows ;
-    erb:workflowId "it-support-ticketing" ;
-    erb:title "IT Support Ticketing" ;
-    erb:description "Manages IT support requests from submission to resolution, including escalation steps." ;
-    erb:created "2024-04-01" ;
-    erb:modified "2024-05-28" ;
-    erb:identifier "WF-ITS-005" ;
-    erb:workflowSteps "revise-submission" .
-
-erb:Workflows_5 a erb:Workflows ;
-    erb:workflowId "content-publishing" ;
-    erb:title "Content Publishing" ;
-    erb:description "Coordinates the review, approval, and publishing of new website content." ;
-    erb:created "2024-03-25" ;
-    erb:modified "2024-05-29" ;
-    erb:identifier "WF-CNT-006" ;
-    erb:workflowSteps "final-approval" .
-
-erb:Workflows_6 a erb:Workflows ;
-    erb:workflowId "expense-reimbursement" ;
-    erb:title "Expense Reimbursement" ;
-    erb:description "Automates employee expense submission, approval, and reimbursement processes." ;
-    erb:created "2024-05-05" ;
-    erb:modified "2024-06-01" ;
-    erb:identifier "WF-EXP-007" ;
-    erb:workflowSteps "notify-stakeholders" .
-
-erb:Workflows_7 a erb:Workflows ;
-    erb:workflowId "quarterly-performance-review" ;
-    erb:title "Quarterly Performance Review" ;
-    erb:description "Schedules and tracks quarterly employee performance reviews and feedback sessions." ;
-    erb:created "2024-03-30" ;
-    erb:modified "2024-05-31" ;
-    erb:identifier "WF-PRF-008" ;
-    erb:workflowSteps "archive-documents" .
-
-erb:Workflows_8 a erb:Workflows ;
-    erb:workflowId "vendor-onboarding" ;
-    erb:title "Vendor Onboarding" ;
-    erb:description "Guides new vendors through compliance checks, contract signing, and system setup." ;
-    erb:created "2024-04-20" ;
-    erb:modified "2024-06-02" ;
-    erb:identifier "WF-VND-009" ;
-    erb:workflowSteps "generate-report" .
-
-erb:Workflows_9 a erb:Workflows ;
-    erb:workflowId "project-kickoff" ;
-    erb:title "Project Kickoff" ;
-    erb:description "Outlines steps for initiating new projects, including team assignments and resource allocation." ;
-    erb:created "2024-05-12" ;
-    erb:modified "2024-06-01" ;
-    erb:identifier "WF-PRJ-010" ;
-    erb:workflowSteps "quality-assurance-check" .
-
-erb:Workflows_10 a erb:Workflows ;
-    erb:workflowId "marketing-campaign-launch" ;
-    erb:title "Marketing Campaign Launch" ;
-    erb:description "Manages the planning, approval, and launch of marketing campaigns across channels." ;
-    erb:created "2024-04-05" ;
-    erb:modified "2024-05-30" ;
-    erb:identifier "WF-MKT-011" ;
-    erb:workflowSteps "send-confirmation-email" .
-
-erb:Workflows_11 a erb:Workflows ;
-    erb:workflowId "annual-compliance-training" ;
-    erb:title "Annual Compliance Training" ;
-    erb:description "Tracks employee completion of mandatory annual compliance training modules." ;
-    erb:created "2024-03-15" ;
-    erb:modified "2024-05-29" ;
-    erb:identifier "WF-COM-012" ;
-    erb:workflowSteps "schedule-follow-up" .
-
-erb:Workflows_12 a erb:Workflows ;
-    erb:workflowId "remote-access-request" ;
-    erb:title "Remote Access Request" ;
-    erb:description "Automates approval and provisioning of remote access for employees and contractors." ;
-    erb:created "2024-05-08" ;
-    erb:modified "2024-06-01" ;
-    erb:identifier "WF-REM-013" ;
-    erb:workflowSteps "close-workflow" .
-
-erb:Workflows_13 a erb:Workflows ;
-    erb:workflowId "customer-escalation-handling" ;
-    erb:title "Customer Escalation Handling" ;
-    erb:description "Defines steps for handling and resolving escalated customer issues." ;
-    erb:created "2024-04-18" ;
-    erb:modified "2024-06-02" ;
-    erb:identifier "WF-CES-014" ;
-    erb:workflowSteps "escalate-issue" .
-
-erb:Workflows_14 a erb:Workflows ;
-    erb:workflowId "procurement-request" ;
-    erb:title "Procurement Request" ;
-    erb:description "Manages the submission, approval, and tracking of procurement requests." ;
-    erb:created "2024-05-03" ;
-    erb:modified "2024-06-01" ;
-    erb:identifier "WF-PRC-015" ;
-    erb:workflowSteps "audit-trail-review" .
+    erb:workflowId "production-deployment-workflow" ;
+    erb:title "Production Deployment Workflow" ;
+    erb:description "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
+    erb:created "2026-01-15" ;
+    erb:modified "2026-01-15" ;
+    erb:identifier "WF-PROD-001" ;
+    erb:workflowSteps "legal-review, risk-assessment, release-approval" ;
+    erb:countOfWorkflowSteps 3 .

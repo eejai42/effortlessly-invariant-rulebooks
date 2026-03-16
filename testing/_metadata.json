@@ -1,1 +1,23 @@
-{}
+{
+  "workflows": {
+    "primary_key": "workflow_id",
+    "computed_columns": [
+      "count_of_workflow_steps"
+    ],
+    "record_count": 1
+  },
+  "roles": {
+    "primary_key": "role_id",
+    "computed_columns": [
+      "count_of_workflow_steps"
+    ],
+    "record_count": 3
+  },
+  "human_agents": {
+    "primary_key": "human_agent_id",
+    "computed_columns": [
+      "count_of_rles"
+    ],
+    "record_count": 2
+  }
+}

@@ -154,7 +154,7 @@ Golang substrate: ALL 6 tables processed successfully (20 total records)
             <div class="card">
                 <div class="code-header">
                     <h2>erb_sdk.go</h2>
-                    <div><span class="code-info">152 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
+                    <div><span class="code-info">163 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
                 </div>
                 <pre id="sdk-code">// ERB SDK - Go Implementation (GENERATED - DO NOT EDIT)
 // ======================================================
@@ -261,6 +261,7 @@ type Workflow struct {
 	Modified *string `json:&quot;modified&quot;`
 	Identifier *string `json:&quot;identifier&quot;`
 	WorkflowSteps *string `json:&quot;workflow_steps&quot;`
+	CountOfWorkflowSteps *int `json:&quot;count_of_workflow_steps&quot;`
 }
 
 // =============================================================================
@@ -277,6 +278,12 @@ type WorkflowStep struct {
 	RequiresHumanApproval *bool `json:&quot;requires_human_approval&quot;`
 	IsStepOf *string `json:&quot;is_step_of&quot;`
 	AssignedRole *string `json:&quot;assigned_role&quot;`
+	IsStepOfTitle *string `json:&quot;is_step_of_title&quot;`
+	IsStepOfDescription *string `json:&quot;is_step_of_description&quot;`
+	IsStepOfIdentifier *string `json:&quot;is_step_of_identifier&quot;`
+	AssignedRoleLabel *string `json:&quot;assigned_role_label&quot;`
+	AssignedRoleComment *string `json:&quot;assigned_role_comment&quot;`
+	AssignedRoleFilledBy *string `json:&quot;assigned_role_filled_by&quot;`
 }
 
 // =============================================================================
@@ -292,6 +299,9 @@ type Role struct {
 	Comment *string `json:&quot;comment&quot;`
 	FilledBy *string `json:&quot;filled_by&quot;`
 	WorkflowSteps *string `json:&quot;workflow_steps&quot;`
+	CountOfWorkflowSteps *int `json:&quot;count_of_workflow_steps&quot;`
+	FilledByName *string `json:&quot;filled_by_name&quot;`
+	FilledByMBox *string `json:&quot;filled_by_m_box&quot;`
 }
 
 // =============================================================================
@@ -306,6 +316,7 @@ type HumanAgent struct {
 	Name *string `json:&quot;name&quot;`
 	Mbox *string `json:&quot;mbox&quot;`
 	Roles *string `json:&quot;roles&quot;`
+	CountOfRles *int `json:&quot;count_of_rles&quot;`
 }
 </pre>
             </div>

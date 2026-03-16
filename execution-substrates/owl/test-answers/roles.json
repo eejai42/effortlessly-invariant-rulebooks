@@ -1,31 +1,31 @@
 [
   {
-    "role_id": "legal-compliance-reviewer",
-    "label": "Legal Compliance Reviewer",
-    "comment": "Role responsible for legal and compliance review of releases.",
-    "filled_by": "",
-    "workflow_steps": "legal-review",
-    "count_of_workflow_steps": 1,
-    "filled_by_name": null,
-    "filled_by_m_box": null
-  },
-  {
     "role_id": "release-manager",
     "label": "Release Manager",
     "comment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
     "filled_by": "maria-gonzalez",
     "workflow_steps": "release-approval",
-    "count_of_workflow_steps": 1,
     "filled_by_name": "Maria Gonzalez",
-    "filled_by_m_box": "maria.gonzalez@specialsolutions.example"
+    "filled_by_m_box": "maria.gonzalez@specialsolutions.example",
+    "count_of_workflow_steps": 1
+  },
+  {
+    "role_id": "legal-compliance-reviewer",
+    "label": "Legal Compliance Reviewer",
+    "comment": "Role responsible for legal and compliance review of releases.",
+    "workflow_steps": "legal-review",
+    "count_of_workflow_steps": 1,
+    "filled_by": null,
+    "filled_by_name": null,
+    "filled_by_m_box": null
   },
   {
     "role_id": "risk-analyst",
     "label": "Risk Analyst",
     "comment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
-    "filled_by": "",
     "workflow_steps": "risk-assessment",
     "count_of_workflow_steps": 1,
+    "filled_by": null,
     "filled_by_name": null,
     "filled_by_m_box": null
   }

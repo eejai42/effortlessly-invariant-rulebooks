@@ -67,8 +67,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>OWL/SHACL Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
-            <div class="stat"><span>0/0 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>6/6 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -117,26 +117,30 @@ OWL Execution Substrate - SHACL Reasoning Test
 ======================================================================
 
 Loading rulebook...
-Tables with computed columns: 
+Tables with computed columns: Workflows, WorkflowSteps, Roles, HumanAgents
 
 Loading ontology and data...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/ontology.owl
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/individuals.ttl
-   Total triples: 487
+   Total triples: 225
 
 Loading SHACL rules...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/rules.shacl.ttl
-   Rule triples: 0
+   Rule triples: 8
 
 Running SHACL-SPARQL reasoning...
    (Multiple passes to resolve dependencies between computed fields)
-   Pass 1: 487 -&gt; 487 triples (0 added)
+   Pass 1: 225 -&gt; 225 triples (0 added)
    Completed in 1 passes
-   Final triple count: 487
+   Final triple count: 225
 
 Extracting computed values...
+   Workflows: 1 records (1 computed fields)
+   WorkflowSteps: 3 records (6 computed fields)
+   Roles: 3 records (3 computed fields)
+   HumanAgents: 2 records (1 computed fields)
 
-Total: 0 records extracted
+Total: 9 records extracted
 Output: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/test-answers/
 
 ======================================================================
@@ -150,10 +154,10 @@ SHACL reasoning complete!
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">6</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">6</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -161,7 +165,7 @@ SHACL reasoning complete!
             <div class="card">
                 <div class="code-header">
                     <h2>ontology.owl</h2>
-                    <div><span class="code-info">140 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
+                    <div><span class="code-info">206 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
                 </div>
                 <pre id="ontology-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
@@ -198,6 +202,12 @@ erb:roles a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:label &quot;Roles&quot; .
 
+erb:countOfRles a owl:DatatypeProperty ;
+    rdfs:domain erb:HumanAgents ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;CountOfRles&quot; .
+    # calculated: aggregation
+
 # === Class: Roles ===
 erb:Roles a owl:Class ;
     rdfs:label &quot;Roles&quot; ;
@@ -227,6 +237,24 @@ erb:workflowSteps a owl:DatatypeProperty ;
     rdfs:domain erb:Roles ;
     rdfs:range xsd:string ;
     rdfs:label &quot;WorkflowSteps&quot; .
+
+erb:countOfWorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;CountOfWorkflowSteps&quot; .
+    # calculated: aggregation
+
+erb:filledByName a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;FilledByName&quot; .
+    # calculated: lookup
+
+erb:filledByMBox a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;FilledByMBox&quot; .
+    # calculated: lookup
 
 # === Class: WorkflowSteps ===
 erb:WorkflowSteps a owl:Class ;
@@ -262,6 +290,42 @@ erb:assignedRole a owl:DatatypeProperty ;
     rdfs:domain erb:WorkflowSteps ;
     rdfs:range xsd:string ;
     rdfs:label &quot;AssignedRole&quot; .
+
+erb:isStepOfTitle a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;IsStepOfTitle&quot; .
+    # calculated: lookup
+
+erb:isStepOfDescription a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;IsStepOfDescription&quot; .
+    # calculated: lookup
+
+erb:isStepOfIdentifier a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;IsStepOfIdentifier&quot; .
+    # calculated: lookup
+
+erb:assignedRoleLabel a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;AssignedRoleLabel&quot; .
+    # calculated: lookup
+
+erb:assignedRoleComment a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;AssignedRoleComment&quot; .
+    # calculated: lookup
+
+erb:assignedRoleFilledBy a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;AssignedRoleFilledBy&quot; .
+    # calculated: lookup
 
 # === Class: Workflows ===
 erb:Workflows a owl:Class ;
@@ -302,6 +366,12 @@ erb:workflowSteps a owl:DatatypeProperty ;
     rdfs:domain erb:Workflows ;
     rdfs:range xsd:string ;
     rdfs:label &quot;WorkflowSteps&quot; .
+
+erb:countOfWorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Workflows ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;CountOfWorkflowSteps&quot; .
+    # calculated: aggregation
 </pre>
             </div>
         </div>
@@ -309,7 +379,7 @@ erb:workflowSteps a owl:DatatypeProperty ;
             <div class="card">
                 <div class="code-header">
                     <h2>individuals.ttl</h2>
-                    <div><span class="code-info">463 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
+                    <div><span class="code-info">109 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
                 </div>
                 <pre id="individuals-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
@@ -319,460 +389,106 @@ erb:workflowSteps a owl:DatatypeProperty ;
 # === Individuals: HumanAgents ===
 
 erb:HumanAgents_0 a erb:HumanAgents ;
-    erb:humanAgentId &quot;alice-johnson&quot; ;
-    erb:name &quot;Alice Johnson&quot; ;
-    erb:mbox &quot;alice.johnson@example.com&quot; ;
-    erb:roles &quot;project-manager&quot; .
+    erb:humanAgentId &quot;maria-gonzalez&quot; ;
+    erb:name &quot;Maria Gonzalez&quot; ;
+    erb:mbox &quot;maria.gonzalez@specialsolutions.example&quot; ;
+    erb:roles &quot;release-manager&quot; ;
+    erb:countOfRles 1 .
 
 erb:HumanAgents_1 a erb:HumanAgents ;
-    erb:humanAgentId &quot;brian-lee&quot; ;
-    erb:name &quot;Brian Lee&quot; ;
-    erb:mbox &quot;brian.lee@example.com&quot; ;
-    erb:roles &quot;software-engineer&quot; .
-
-erb:HumanAgents_2 a erb:HumanAgents ;
-    erb:humanAgentId &quot;carmen-diaz&quot; ;
-    erb:name &quot;Carmen Diaz&quot; ;
-    erb:mbox &quot;carmen.diaz@example.com&quot; ;
-    erb:roles &quot;quality-assurance-analyst&quot; .
-
-erb:HumanAgents_3 a erb:HumanAgents ;
-    erb:humanAgentId &quot;david-kim&quot; ;
-    erb:name &quot;David Kim&quot; ;
-    erb:mbox &quot;david.kim@example.com&quot; ;
-    erb:roles &quot;ui-ux-designer&quot; .
-
-erb:HumanAgents_4 a erb:HumanAgents ;
-    erb:humanAgentId &quot;emily-chen&quot; ;
-    erb:name &quot;Emily Chen&quot; ;
-    erb:mbox &quot;emily.chen@example.com&quot; ;
-    erb:roles &quot;business-analyst&quot; .
-
-erb:HumanAgents_5 a erb:HumanAgents ;
-    erb:humanAgentId &quot;frank-miller&quot; ;
-    erb:name &quot;Frank Miller&quot; ;
-    erb:mbox &quot;frank.miller@example.com&quot; ;
-    erb:roles &quot;devops-engineer&quot; .
-
-erb:HumanAgents_6 a erb:HumanAgents ;
-    erb:humanAgentId &quot;grace-patel&quot; ;
-    erb:name &quot;Grace Patel&quot; ;
-    erb:mbox &quot;grace.patel@example.com&quot; ;
-    erb:roles &quot;product-owner&quot; .
-
-erb:HumanAgents_7 a erb:HumanAgents ;
-    erb:humanAgentId &quot;hannah-smith&quot; ;
-    erb:name &quot;Hannah Smith&quot; ;
-    erb:mbox &quot;hannah.smith@example.com&quot; ;
-    erb:roles &quot;technical-writer&quot; .
-
-erb:HumanAgents_8 a erb:HumanAgents ;
-    erb:humanAgentId &quot;isaac-brown&quot; ;
-    erb:name &quot;Isaac Brown&quot; ;
-    erb:mbox &quot;isaac.brown@example.com&quot; ;
-    erb:roles &quot;customer-support-specialist&quot; .
-
-erb:HumanAgents_9 a erb:HumanAgents ;
-    erb:humanAgentId &quot;julia-nguyen&quot; ;
-    erb:name &quot;Julia Nguyen&quot; ;
-    erb:mbox &quot;julia.nguyen@example.com&quot; ;
-    erb:roles &quot;hr-manager&quot; .
-
-erb:HumanAgents_10 a erb:HumanAgents ;
-    erb:humanAgentId &quot;kevin-o-brien&quot; ;
-    erb:name &quot;Kevin O&#x27;Brien&quot; ;
-    erb:mbox &quot;kevin.obrien@example.com&quot; ;
-    erb:roles &quot;marketing-specialist&quot; .
-
-erb:HumanAgents_11 a erb:HumanAgents ;
-    erb:humanAgentId &quot;linda-park&quot; ;
-    erb:name &quot;Linda Park&quot; ;
-    erb:mbox &quot;linda.park@example.com&quot; ;
-    erb:roles &quot;data-scientist&quot; .
-
-erb:HumanAgents_12 a erb:HumanAgents ;
-    erb:humanAgentId &quot;michael-evans&quot; ;
-    erb:name &quot;Michael Evans&quot; ;
-    erb:mbox &quot;michael.evans@example.com&quot; ;
-    erb:roles &quot;system-administrator&quot; .
-
-erb:HumanAgents_13 a erb:HumanAgents ;
-    erb:humanAgentId &quot;nina-rossi&quot; ;
-    erb:name &quot;Nina Rossi&quot; ;
-    erb:mbox &quot;nina.rossi@example.com&quot; ;
-    erb:roles &quot;finance-officer&quot; .
-
-erb:HumanAgents_14 a erb:HumanAgents ;
-    erb:humanAgentId &quot;oscar-gomez&quot; ;
-    erb:name &quot;Oscar Gomez&quot; ;
-    erb:mbox &quot;oscar.gomez@example.com&quot; ;
-    erb:roles &quot;scrum-master&quot; .
+    erb:humanAgentId &quot;james-okafor&quot; ;
+    erb:name &quot;James Okafor&quot; ;
+    erb:mbox &quot;james.okafor@specialsolutions.example&quot; ;
+    erb:roles &quot;&quot; ;
+    erb:countOfRles 0 .
 
 # === Individuals: Roles ===
 
 erb:Roles_0 a erb:Roles ;
-    erb:roleId &quot;project-manager&quot; ;
-    erb:label &quot;Project Manager&quot; ;
-    erb:comment &quot;Oversees project timelines, deliverables, and team coordination.&quot; ;
-    erb:filledBy &quot;alice-johnson&quot; ;
-    erb:workflowSteps &quot;submit-request&quot; .
+    erb:roleId &quot;release-manager&quot; ;
+    erb:label &quot;Release Manager&quot; ;
+    erb:comment &quot;Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: &#x27;filled by Maria Gonzalez&#x27;&quot; ;
+    erb:filledBy &quot;maria-gonzalez&quot; ;
+    erb:workflowSteps &quot;release-approval&quot; ;
+    erb:countOfWorkflowSteps 1 ;
+    erb:filledByName &quot;Maria Gonzalez&quot; ;
+    erb:filledByMBox &quot;maria.gonzalez@specialsolutions.example&quot; .
 
 erb:Roles_1 a erb:Roles ;
-    erb:roleId &quot;software-engineer&quot; ;
-    erb:label &quot;Software Engineer&quot; ;
-    erb:comment &quot;Develops and maintains software applications and systems.&quot; ;
-    erb:filledBy &quot;brian-lee&quot; ;
-    erb:workflowSteps &quot;initial-review&quot; .
+    erb:roleId &quot;legal-compliance-reviewer&quot; ;
+    erb:label &quot;Legal Compliance Reviewer&quot; ;
+    erb:comment &quot;Role responsible for legal and compliance review of releases.&quot; ;
+    erb:filledBy &quot;&quot; ;
+    erb:workflowSteps &quot;legal-review&quot; ;
+    erb:countOfWorkflowSteps 1 ;
+    erb:filledByName &quot;&quot; ;
+    erb:filledByMBox &quot;&quot; .
 
 erb:Roles_2 a erb:Roles ;
-    erb:roleId &quot;quality-assurance-analyst&quot; ;
-    erb:label &quot;Quality Assurance Analyst&quot; ;
-    erb:comment &quot;Tests software to ensure quality and identify bugs.&quot; ;
-    erb:filledBy &quot;carmen-diaz&quot; ;
-    erb:workflowSteps &quot;assign-reviewer&quot; .
-
-erb:Roles_3 a erb:Roles ;
-    erb:roleId &quot;ui-ux-designer&quot; ;
-    erb:label &quot;UI/UX Designer&quot; ;
-    erb:comment &quot;Designs user interfaces and ensures a positive user experience.&quot; ;
-    erb:filledBy &quot;david-kim&quot; ;
-    erb:workflowSteps &quot;reviewer-feedback&quot; .
-
-erb:Roles_4 a erb:Roles ;
-    erb:roleId &quot;business-analyst&quot; ;
-    erb:label &quot;Business Analyst&quot; ;
-    erb:comment &quot;Gathers requirements and translates business needs into technical solutions.&quot; ;
-    erb:filledBy &quot;emily-chen&quot; ;
-    erb:workflowSteps &quot;revise-submission&quot; .
-
-erb:Roles_5 a erb:Roles ;
-    erb:roleId &quot;devops-engineer&quot; ;
-    erb:label &quot;DevOps Engineer&quot; ;
-    erb:comment &quot;Manages deployment pipelines and infrastructure automation.&quot; ;
-    erb:filledBy &quot;frank-miller&quot; ;
-    erb:workflowSteps &quot;final-approval&quot; .
-
-erb:Roles_6 a erb:Roles ;
-    erb:roleId &quot;product-owner&quot; ;
-    erb:label &quot;Product Owner&quot; ;
-    erb:comment &quot;Defines product vision and prioritizes features for development.&quot; ;
-    erb:filledBy &quot;grace-patel&quot; ;
-    erb:workflowSteps &quot;notify-stakeholders&quot; .
-
-erb:Roles_7 a erb:Roles ;
-    erb:roleId &quot;technical-writer&quot; ;
-    erb:label &quot;Technical Writer&quot; ;
-    erb:comment &quot;Creates and maintains technical documentation and user guides.&quot; ;
-    erb:filledBy &quot;hannah-smith&quot; ;
-    erb:workflowSteps &quot;archive-documents&quot; .
-
-erb:Roles_8 a erb:Roles ;
-    erb:roleId &quot;customer-support-specialist&quot; ;
-    erb:label &quot;Customer Support Specialist&quot; ;
-    erb:comment &quot;Assists users with issues and provides product support.&quot; ;
-    erb:filledBy &quot;isaac-brown&quot; ;
-    erb:workflowSteps &quot;generate-report&quot; .
-
-erb:Roles_9 a erb:Roles ;
-    erb:roleId &quot;hr-manager&quot; ;
-    erb:label &quot;HR Manager&quot; ;
-    erb:comment &quot;Handles recruitment, onboarding, and employee relations.&quot; ;
-    erb:filledBy &quot;julia-nguyen&quot; ;
-    erb:workflowSteps &quot;quality-assurance-check&quot; .
-
-erb:Roles_10 a erb:Roles ;
-    erb:roleId &quot;marketing-specialist&quot; ;
-    erb:label &quot;Marketing Specialist&quot; ;
-    erb:comment &quot;Develops marketing strategies and manages campaigns.&quot; ;
-    erb:filledBy &quot;kevin-o-brien&quot; ;
-    erb:workflowSteps &quot;send-confirmation-email&quot; .
-
-erb:Roles_11 a erb:Roles ;
-    erb:roleId &quot;data-scientist&quot; ;
-    erb:label &quot;Data Scientist&quot; ;
-    erb:comment &quot;Analyzes data to extract insights and support decision-making.&quot; ;
-    erb:filledBy &quot;linda-park&quot; ;
-    erb:workflowSteps &quot;schedule-follow-up&quot; .
-
-erb:Roles_12 a erb:Roles ;
-    erb:roleId &quot;system-administrator&quot; ;
-    erb:label &quot;System Administrator&quot; ;
-    erb:comment &quot;Maintains servers, networks, and IT infrastructure.&quot; ;
-    erb:filledBy &quot;michael-evans&quot; ;
-    erb:workflowSteps &quot;close-workflow&quot; .
-
-erb:Roles_13 a erb:Roles ;
-    erb:roleId &quot;finance-officer&quot; ;
-    erb:label &quot;Finance Officer&quot; ;
-    erb:comment &quot;Manages budgets, expenses, and financial reporting.&quot; ;
-    erb:filledBy &quot;nina-rossi&quot; ;
-    erb:workflowSteps &quot;escalate-issue&quot; .
-
-erb:Roles_14 a erb:Roles ;
-    erb:roleId &quot;scrum-master&quot; ;
-    erb:label &quot;Scrum Master&quot; ;
-    erb:comment &quot;Facilitates agile ceremonies and removes team impediments.&quot; ;
-    erb:filledBy &quot;oscar-gomez&quot; ;
-    erb:workflowSteps &quot;audit-trail-review&quot; .
+    erb:roleId &quot;risk-analyst&quot; ;
+    erb:label &quot;Risk Analyst&quot; ;
+    erb:comment &quot;Role responsible for risk assessment. In full ontology, filled by AI agent.&quot; ;
+    erb:filledBy &quot;&quot; ;
+    erb:workflowSteps &quot;risk-assessment&quot; ;
+    erb:countOfWorkflowSteps 1 ;
+    erb:filledByName &quot;&quot; ;
+    erb:filledByMBox &quot;&quot; .
 
 # === Individuals: WorkflowSteps ===
 
 erb:WorkflowSteps_0 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;submit-request&quot; ;
-    erb:label &quot;Submit Request&quot; ;
+    erb:workflowStepId &quot;risk-assessment&quot; ;
+    erb:label &quot;Risk Assessment&quot; ;
     erb:sequencePosition 1 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;onboarding-new-employees&quot; ;
-    erb:assignedRole &quot;project-manager&quot; .
+    erb:requiresHumanApproval false ;
+    erb:isStepOf &quot;production-deployment-workflow&quot; ;
+    erb:assignedRole &quot;risk-analyst&quot; ;
+    erb:isStepOfTitle &quot;Production Deployment Workflow&quot; ;
+    erb:isStepOfDescription &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
+    erb:isStepOfIdentifier &quot;WF-PROD-001&quot; ;
+    erb:assignedRoleLabel &quot;Risk Analyst&quot; ;
+    erb:assignedRoleComment &quot;Role responsible for risk assessment. In full ontology, filled by AI agent.&quot; ;
+    erb:assignedRoleFilledBy &quot;&quot; .
 
 erb:WorkflowSteps_1 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;initial-review&quot; ;
-    erb:label &quot;Initial Review&quot; ;
+    erb:workflowStepId &quot;legal-review&quot; ;
+    erb:label &quot;Legal Review&quot; ;
     erb:sequencePosition 2 ;
     erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;weekly-sales-report&quot; ;
-    erb:assignedRole &quot;software-engineer&quot; .
+    erb:isStepOf &quot;production-deployment-workflow&quot; ;
+    erb:assignedRole &quot;legal-compliance-reviewer&quot; ;
+    erb:isStepOfTitle &quot;Production Deployment Workflow&quot; ;
+    erb:isStepOfDescription &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
+    erb:isStepOfIdentifier &quot;WF-PROD-001&quot; ;
+    erb:assignedRoleLabel &quot;Legal Compliance Reviewer&quot; ;
+    erb:assignedRoleComment &quot;Role responsible for legal and compliance review of releases.&quot; ;
+    erb:assignedRoleFilledBy &quot;&quot; .
 
 erb:WorkflowSteps_2 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;assign-reviewer&quot; ;
-    erb:label &quot;Assign Reviewer&quot; ;
+    erb:workflowStepId &quot;release-approval&quot; ;
+    erb:label &quot;Release Approval&quot; ;
     erb:sequencePosition 3 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;customer-feedback-collection&quot; ;
-    erb:assignedRole &quot;quality-assurance-analyst&quot; .
-
-erb:WorkflowSteps_3 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;reviewer-feedback&quot; ;
-    erb:label &quot;Reviewer Feedback&quot; ;
-    erb:sequencePosition 4 ;
     erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;invoice-approval&quot; ;
-    erb:assignedRole &quot;ui-ux-designer&quot; .
-
-erb:WorkflowSteps_4 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;revise-submission&quot; ;
-    erb:label &quot;Revise Submission&quot; ;
-    erb:sequencePosition 5 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;it-support-ticketing&quot; ;
-    erb:assignedRole &quot;business-analyst&quot; .
-
-erb:WorkflowSteps_5 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;final-approval&quot; ;
-    erb:label &quot;Final Approval&quot; ;
-    erb:sequencePosition 6 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;content-publishing&quot; ;
-    erb:assignedRole &quot;devops-engineer&quot; .
-
-erb:WorkflowSteps_6 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;notify-stakeholders&quot; ;
-    erb:label &quot;Notify Stakeholders&quot; ;
-    erb:sequencePosition 7 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;expense-reimbursement&quot; ;
-    erb:assignedRole &quot;product-owner&quot; .
-
-erb:WorkflowSteps_7 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;archive-documents&quot; ;
-    erb:label &quot;Archive Documents&quot; ;
-    erb:sequencePosition 8 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;quarterly-performance-review&quot; ;
-    erb:assignedRole &quot;technical-writer&quot; .
-
-erb:WorkflowSteps_8 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;generate-report&quot; ;
-    erb:label &quot;Generate Report&quot; ;
-    erb:sequencePosition 9 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;vendor-onboarding&quot; ;
-    erb:assignedRole &quot;customer-support-specialist&quot; .
-
-erb:WorkflowSteps_9 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;quality-assurance-check&quot; ;
-    erb:label &quot;Quality Assurance Check&quot; ;
-    erb:sequencePosition 10 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;project-kickoff&quot; ;
-    erb:assignedRole &quot;hr-manager&quot; .
-
-erb:WorkflowSteps_10 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;send-confirmation-email&quot; ;
-    erb:label &quot;Send Confirmation Email&quot; ;
-    erb:sequencePosition 11 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;marketing-campaign-launch&quot; ;
-    erb:assignedRole &quot;marketing-specialist&quot; .
-
-erb:WorkflowSteps_11 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;schedule-follow-up&quot; ;
-    erb:label &quot;Schedule Follow-up&quot; ;
-    erb:sequencePosition 12 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;annual-compliance-training&quot; ;
-    erb:assignedRole &quot;data-scientist&quot; .
-
-erb:WorkflowSteps_12 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;close-workflow&quot; ;
-    erb:label &quot;Close Workflow&quot; ;
-    erb:sequencePosition 13 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;remote-access-request&quot; ;
-    erb:assignedRole &quot;system-administrator&quot; .
-
-erb:WorkflowSteps_13 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;escalate-issue&quot; ;
-    erb:label &quot;Escalate Issue&quot; ;
-    erb:sequencePosition 14 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;customer-escalation-handling&quot; ;
-    erb:assignedRole &quot;finance-officer&quot; .
-
-erb:WorkflowSteps_14 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;audit-trail-review&quot; ;
-    erb:label &quot;Audit Trail Review&quot; ;
-    erb:sequencePosition 15 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;procurement-request&quot; ;
-    erb:assignedRole &quot;scrum-master&quot; .
+    erb:isStepOf &quot;production-deployment-workflow&quot; ;
+    erb:assignedRole &quot;release-manager&quot; ;
+    erb:isStepOfTitle &quot;Production Deployment Workflow&quot; ;
+    erb:isStepOfDescription &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
+    erb:isStepOfIdentifier &quot;WF-PROD-001&quot; ;
+    erb:assignedRoleLabel &quot;Release Manager&quot; ;
+    erb:assignedRoleComment &quot;Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: &#x27;filled by Maria Gonzalez&#x27;&quot; ;
+    erb:assignedRoleFilledBy &quot;maria-gonzalez&quot; .
 
 # === Individuals: Workflows ===
 
 erb:Workflows_0 a erb:Workflows ;
-    erb:workflowId &quot;onboarding-new-employees&quot; ;
-    erb:title &quot;Onboarding New Employees&quot; ;
-    erb:description &quot;Automates the process of onboarding new hires, including document collection, account setup, and training assignments.&quot; ;
-    erb:created &quot;2024-05-01&quot; ;
-    erb:modified &quot;2024-06-01&quot; ;
-    erb:identifier &quot;WF-ONB-001&quot; ;
-    erb:workflowSteps &quot;submit-request&quot; .
-
-erb:Workflows_1 a erb:Workflows ;
-    erb:workflowId &quot;weekly-sales-report&quot; ;
-    erb:title &quot;Weekly Sales Report&quot; ;
-    erb:description &quot;Generates and distributes weekly sales performance reports to the management team.&quot; ;
-    erb:created &quot;2024-04-15&quot; ;
-    erb:modified &quot;2024-06-02&quot; ;
-    erb:identifier &quot;WF-SAL-002&quot; ;
-    erb:workflowSteps &quot;initial-review&quot; .
-
-erb:Workflows_2 a erb:Workflows ;
-    erb:workflowId &quot;customer-feedback-collection&quot; ;
-    erb:title &quot;Customer Feedback Collection&quot; ;
-    erb:description &quot;Collects and organizes customer feedback from multiple channels for analysis.&quot; ;
-    erb:created &quot;2024-03-20&quot; ;
-    erb:modified &quot;2024-05-30&quot; ;
-    erb:identifier &quot;WF-CFB-003&quot; ;
-    erb:workflowSteps &quot;assign-reviewer&quot; .
-
-erb:Workflows_3 a erb:Workflows ;
-    erb:workflowId &quot;invoice-approval&quot; ;
-    erb:title &quot;Invoice Approval&quot; ;
-    erb:description &quot;Routes invoices to the appropriate managers for review and approval before payment.&quot; ;
-    erb:created &quot;2024-05-10&quot; ;
-    erb:modified &quot;2024-06-01&quot; ;
-    erb:identifier &quot;WF-INV-004&quot; ;
-    erb:workflowSteps &quot;reviewer-feedback&quot; .
-
-erb:Workflows_4 a erb:Workflows ;
-    erb:workflowId &quot;it-support-ticketing&quot; ;
-    erb:title &quot;IT Support Ticketing&quot; ;
-    erb:description &quot;Manages IT support requests from submission to resolution, including escalation steps.&quot; ;
-    erb:created &quot;2024-04-01&quot; ;
-    erb:modified &quot;2024-05-28&quot; ;
-    erb:identifier &quot;WF-ITS-005&quot; ;
-    erb:workflowSteps &quot;revise-submission&quot; .
-
-erb:Workflows_5 a erb:Workflows ;
-    erb:workflowId &quot;content-publishing&quot; ;
-    erb:title &quot;Content Publishing&quot; ;
-    erb:description &quot;Coordinates the review, approval, and publishing of new website content.&quot; ;
-    erb:created &quot;2024-03-25&quot; ;
-    erb:modified &quot;2024-05-29&quot; ;
-    erb:identifier &quot;WF-CNT-006&quot; ;
-    erb:workflowSteps &quot;final-approval&quot; .
-
-erb:Workflows_6 a erb:Workflows ;
-    erb:workflowId &quot;expense-reimbursement&quot; ;
-    erb:title &quot;Expense Reimbursement&quot; ;
-    erb:description &quot;Automates employee expense submission, approval, and reimbursement processes.&quot; ;
-    erb:created &quot;2024-05-05&quot; ;
-    erb:modified &quot;2024-06-01&quot; ;
-    erb:identifier &quot;WF-EXP-007&quot; ;
-    erb:workflowSteps &quot;notify-stakeholders&quot; .
-
-erb:Workflows_7 a erb:Workflows ;
-    erb:workflowId &quot;quarterly-performance-review&quot; ;
-    erb:title &quot;Quarterly Performance Review&quot; ;
-    erb:description &quot;Schedules and tracks quarterly employee performance reviews and feedback sessions.&quot; ;
-    erb:created &quot;2024-03-30&quot; ;
-    erb:modified &quot;2024-05-31&quot; ;
-    erb:identifier &quot;WF-PRF-008&quot; ;
-    erb:workflowSteps &quot;archive-documents&quot; .
-
-erb:Workflows_8 a erb:Workflows ;
-    erb:workflowId &quot;vendor-onboarding&quot; ;
-    erb:title &quot;Vendor Onboarding&quot; ;
-    erb:description &quot;Guides new vendors through compliance checks, contract signing, and system setup.&quot; ;
-    erb:created &quot;2024-04-20&quot; ;
-    erb:modified &quot;2024-06-02&quot; ;
-    erb:identifier &quot;WF-VND-009&quot; ;
-    erb:workflowSteps &quot;generate-report&quot; .
-
-erb:Workflows_9 a erb:Workflows ;
-    erb:workflowId &quot;project-kickoff&quot; ;
-    erb:title &quot;Project Kickoff&quot; ;
-    erb:description &quot;Outlines steps for initiating new projects, including team assignments and resource allocation.&quot; ;
-    erb:created &quot;2024-05-12&quot; ;
-    erb:modified &quot;2024-06-01&quot; ;
-    erb:identifier &quot;WF-PRJ-010&quot; ;
-    erb:workflowSteps &quot;quality-assurance-check&quot; .
-
-erb:Workflows_10 a erb:Workflows ;
-    erb:workflowId &quot;marketing-campaign-launch&quot; ;
-    erb:title &quot;Marketing Campaign Launch&quot; ;
-    erb:description &quot;Manages the planning, approval, and launch of marketing campaigns across channels.&quot; ;
-    erb:created &quot;2024-04-05&quot; ;
-    erb:modified &quot;2024-05-30&quot; ;
-    erb:identifier &quot;WF-MKT-011&quot; ;
-    erb:workflowSteps &quot;send-confirmation-email&quot; .
-
-erb:Workflows_11 a erb:Workflows ;
-    erb:workflowId &quot;annual-compliance-training&quot; ;
-    erb:title &quot;Annual Compliance Training&quot; ;
-    erb:description &quot;Tracks employee completion of mandatory annual compliance training modules.&quot; ;
-    erb:created &quot;2024-03-15&quot; ;
-    erb:modified &quot;2024-05-29&quot; ;
-    erb:identifier &quot;WF-COM-012&quot; ;
-    erb:workflowSteps &quot;schedule-follow-up&quot; .
-
-erb:Workflows_12 a erb:Workflows ;
-    erb:workflowId &quot;remote-access-request&quot; ;
-    erb:title &quot;Remote Access Request&quot; ;
-    erb:description &quot;Automates approval and provisioning of remote access for employees and contractors.&quot; ;
-    erb:created &quot;2024-05-08&quot; ;
-    erb:modified &quot;2024-06-01&quot; ;
-    erb:identifier &quot;WF-REM-013&quot; ;
-    erb:workflowSteps &quot;close-workflow&quot; .
-
-erb:Workflows_13 a erb:Workflows ;
-    erb:workflowId &quot;customer-escalation-handling&quot; ;
-    erb:title &quot;Customer Escalation Handling&quot; ;
-    erb:description &quot;Defines steps for handling and resolving escalated customer issues.&quot; ;
-    erb:created &quot;2024-04-18&quot; ;
-    erb:modified &quot;2024-06-02&quot; ;
-    erb:identifier &quot;WF-CES-014&quot; ;
-    erb:workflowSteps &quot;escalate-issue&quot; .
-
-erb:Workflows_14 a erb:Workflows ;
-    erb:workflowId &quot;procurement-request&quot; ;
-    erb:title &quot;Procurement Request&quot; ;
-    erb:description &quot;Manages the submission, approval, and tracking of procurement requests.&quot; ;
-    erb:created &quot;2024-05-03&quot; ;
-    erb:modified &quot;2024-06-01&quot; ;
-    erb:identifier &quot;WF-PRC-015&quot; ;
-    erb:workflowSteps &quot;audit-trail-review&quot; .
+    erb:workflowId &quot;production-deployment-workflow&quot; ;
+    erb:title &quot;Production Deployment Workflow&quot; ;
+    erb:description &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
+    erb:created &quot;2026-01-15&quot; ;
+    erb:modified &quot;2026-01-15&quot; ;
+    erb:identifier &quot;WF-PROD-001&quot; ;
+    erb:workflowSteps &quot;legal-review, risk-assessment, release-approval&quot; ;
+    erb:countOfWorkflowSteps 3 .
 </pre>
             </div>
         </div>
@@ -780,13 +496,40 @@ erb:Workflows_14 a erb:Workflows ;
             <div class="card">
                 <div class="code-header">
                     <h2>rules.shacl.ttl</h2>
-                    <div><span class="code-info">7 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
+                    <div><span class="code-info">34 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
                 </div>
                 <pre id="rules-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
 @prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix erb: &lt;http://example.org/erb#&gt; .
+
+# === Shape with rules for HumanAgents ===
+erb:HumanAgentsShape a sh:NodeShape ;
+    sh:targetClass erb:HumanAgents .
+# Rule for CountOfRles - parse error: Unexpected character &#x27;!&#x27; at position 14
+
+# === Shape with rules for Roles ===
+erb:RolesShape a sh:NodeShape ;
+    sh:targetClass erb:Roles .
+# Rule for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
+# Rule for FilledByName - parse error: Unexpected character &#x27;!&#x27; at position 17
+# Rule for FilledByMBox - parse error: Unexpected character &#x27;!&#x27; at position 17
+
+# === Shape with rules for WorkflowSteps ===
+erb:WorkflowStepsShape a sh:NodeShape ;
+    sh:targetClass erb:WorkflowSteps .
+# Rule for IsStepOfTitle - parse error: Unexpected character &#x27;!&#x27; at position 15
+# Rule for IsStepOfDescription - parse error: Unexpected character &#x27;!&#x27; at position 15
+# Rule for IsStepOfIdentifier - parse error: Unexpected character &#x27;!&#x27; at position 15
+# Rule for AssignedRoleLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for AssignedRoleComment - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for AssignedRoleFilledBy - parse error: Unexpected character &#x27;!&#x27; at position 11
+
+# === Shape with rules for Workflows ===
+erb:WorkflowsShape a sh:NodeShape ;
+    sh:targetClass erb:Workflows .
+# Rule for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
 
 # Generated 0 SHACL rules</pre>
             </div>

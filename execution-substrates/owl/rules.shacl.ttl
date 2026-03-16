@@ -4,4 +4,31 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
+# === Shape with rules for HumanAgents ===
+erb:HumanAgentsShape a sh:NodeShape ;
+    sh:targetClass erb:HumanAgents .
+# Rule for CountOfRles - parse error: Unexpected character '!' at position 14
+
+# === Shape with rules for Roles ===
+erb:RolesShape a sh:NodeShape ;
+    sh:targetClass erb:Roles .
+# Rule for CountOfWorkflowSteps - parse error: Unexpected character '!' at position 22
+# Rule for FilledByName - parse error: Unexpected character '!' at position 17
+# Rule for FilledByMBox - parse error: Unexpected character '!' at position 17
+
+# === Shape with rules for WorkflowSteps ===
+erb:WorkflowStepsShape a sh:NodeShape ;
+    sh:targetClass erb:WorkflowSteps .
+# Rule for IsStepOfTitle - parse error: Unexpected character '!' at position 15
+# Rule for IsStepOfDescription - parse error: Unexpected character '!' at position 15
+# Rule for IsStepOfIdentifier - parse error: Unexpected character '!' at position 15
+# Rule for AssignedRoleLabel - parse error: Unexpected character '!' at position 11
+# Rule for AssignedRoleComment - parse error: Unexpected character '!' at position 11
+# Rule for AssignedRoleFilledBy - parse error: Unexpected character '!' at position 11
+
+# === Shape with rules for Workflows ===
+erb:WorkflowsShape a sh:NodeShape ;
+    sh:targetClass erb:Workflows .
+# Rule for CountOfWorkflowSteps - parse error: Unexpected character '!' at position 22
+
 # Generated 0 SHACL rules

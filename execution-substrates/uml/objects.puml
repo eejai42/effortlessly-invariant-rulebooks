@@ -1,513 +1,108 @@
 @startuml
 
-object "Alice Johnson" as HumanAgents_0 {
-  HumanAgentId = "alice-johnson"
-  Name = "Alice Johnson"
-  Mbox = "alice.johnson@example.com"
-  Roles = "project-manager"
+object "Maria Gonzalez" as HumanAgents_0 {
+  HumanAgentId = "maria-gonzalez"
+  Name = "Maria Gonzalez"
+  Mbox = "maria.gonzalez@specialsolut..."
+  Roles = "release-manager"
+  CountOfRles = 1
 }
 
-object "Brian Lee" as HumanAgents_1 {
-  HumanAgentId = "brian-lee"
-  Name = "Brian Lee"
-  Mbox = "brian.lee@example.com"
-  Roles = "software-engineer"
-}
-
-object "Carmen Diaz" as HumanAgents_2 {
-  HumanAgentId = "carmen-diaz"
-  Name = "Carmen Diaz"
-  Mbox = "carmen.diaz@example.com"
-  Roles = "quality-assurance-analyst"
-}
-
-object "David Kim" as HumanAgents_3 {
-  HumanAgentId = "david-kim"
-  Name = "David Kim"
-  Mbox = "david.kim@example.com"
-  Roles = "ui-ux-designer"
-}
-
-object "Emily Chen" as HumanAgents_4 {
-  HumanAgentId = "emily-chen"
-  Name = "Emily Chen"
-  Mbox = "emily.chen@example.com"
-  Roles = "business-analyst"
-}
-
-object "Frank Miller" as HumanAgents_5 {
-  HumanAgentId = "frank-miller"
-  Name = "Frank Miller"
-  Mbox = "frank.miller@example.com"
-  Roles = "devops-engineer"
-}
-
-object "Grace Patel" as HumanAgents_6 {
-  HumanAgentId = "grace-patel"
-  Name = "Grace Patel"
-  Mbox = "grace.patel@example.com"
-  Roles = "product-owner"
-}
-
-object "Hannah Smith" as HumanAgents_7 {
-  HumanAgentId = "hannah-smith"
-  Name = "Hannah Smith"
-  Mbox = "hannah.smith@example.com"
-  Roles = "technical-writer"
-}
-
-object "Isaac Brown" as HumanAgents_8 {
-  HumanAgentId = "isaac-brown"
-  Name = "Isaac Brown"
-  Mbox = "isaac.brown@example.com"
-  Roles = "customer-support-specialist"
-}
-
-object "Julia Nguyen" as HumanAgents_9 {
-  HumanAgentId = "julia-nguyen"
-  Name = "Julia Nguyen"
-  Mbox = "julia.nguyen@example.com"
-  Roles = "hr-manager"
-}
-
-object "Kevin O'Brien" as HumanAgents_10 {
-  HumanAgentId = "kevin-o-brien"
-  Name = "Kevin O'Brien"
-  Mbox = "kevin.obrien@example.com"
-  Roles = "marketing-specialist"
-}
-
-object "Linda Park" as HumanAgents_11 {
-  HumanAgentId = "linda-park"
-  Name = "Linda Park"
-  Mbox = "linda.park@example.com"
-  Roles = "data-scientist"
-}
-
-object "Michael Evans" as HumanAgents_12 {
-  HumanAgentId = "michael-evans"
-  Name = "Michael Evans"
-  Mbox = "michael.evans@example.com"
-  Roles = "system-administrator"
-}
-
-object "Nina Rossi" as HumanAgents_13 {
-  HumanAgentId = "nina-rossi"
-  Name = "Nina Rossi"
-  Mbox = "nina.rossi@example.com"
-  Roles = "finance-officer"
-}
-
-object "Oscar Gomez" as HumanAgents_14 {
-  HumanAgentId = "oscar-gomez"
-  Name = "Oscar Gomez"
-  Mbox = "oscar.gomez@example.com"
-  Roles = "scrum-master"
+object "James Okafor" as HumanAgents_1 {
+  HumanAgentId = "james-okafor"
+  Name = "James Okafor"
+  Mbox = "james.okafor@specialsolutio..."
+  Roles = ""
+  CountOfRles = 0
 }
 
 object "Roles_0" as Roles_0 {
-  RoleId = "project-manager"
-  Label = "Project Manager"
-  Comment = "Oversees project timelines,..."
-  FilledBy = "alice-johnson"
-  WorkflowSteps = "submit-request"
+  RoleId = "release-manager"
+  Label = "Release Manager"
+  Comment = "Primary role responsible fo..."
+  FilledBy = "maria-gonzalez"
+  WorkflowSteps = "release-approval"
+  CountOfWorkflowSteps = 1
+  FilledByName = "Maria Gonzalez"
+  FilledByMBox = "maria.gonzalez@specialsolut..."
 }
 
 object "Roles_1" as Roles_1 {
-  RoleId = "software-engineer"
-  Label = "Software Engineer"
-  Comment = "Develops and maintains soft..."
-  FilledBy = "brian-lee"
-  WorkflowSteps = "initial-review"
+  RoleId = "legal-compliance-reviewer"
+  Label = "Legal Compliance Reviewer"
+  Comment = "Role responsible for legal ..."
+  FilledBy = ""
+  WorkflowSteps = "legal-review"
+  CountOfWorkflowSteps = 1
+  FilledByName = ""
+  FilledByMBox = ""
 }
 
 object "Roles_2" as Roles_2 {
-  RoleId = "quality-assurance-analyst"
-  Label = "Quality Assurance Analyst"
-  Comment = "Tests software to ensure qu..."
-  FilledBy = "carmen-diaz"
-  WorkflowSteps = "assign-reviewer"
-}
-
-object "Roles_3" as Roles_3 {
-  RoleId = "ui-ux-designer"
-  Label = "UI/UX Designer"
-  Comment = "Designs user interfaces and..."
-  FilledBy = "david-kim"
-  WorkflowSteps = "reviewer-feedback"
-}
-
-object "Roles_4" as Roles_4 {
-  RoleId = "business-analyst"
-  Label = "Business Analyst"
-  Comment = "Gathers requirements and tr..."
-  FilledBy = "emily-chen"
-  WorkflowSteps = "revise-submission"
-}
-
-object "Roles_5" as Roles_5 {
-  RoleId = "devops-engineer"
-  Label = "DevOps Engineer"
-  Comment = "Manages deployment pipeline..."
-  FilledBy = "frank-miller"
-  WorkflowSteps = "final-approval"
-}
-
-object "Roles_6" as Roles_6 {
-  RoleId = "product-owner"
-  Label = "Product Owner"
-  Comment = "Defines product vision and ..."
-  FilledBy = "grace-patel"
-  WorkflowSteps = "notify-stakeholders"
-}
-
-object "Roles_7" as Roles_7 {
-  RoleId = "technical-writer"
-  Label = "Technical Writer"
-  Comment = "Creates and maintains techn..."
-  FilledBy = "hannah-smith"
-  WorkflowSteps = "archive-documents"
-}
-
-object "Roles_8" as Roles_8 {
-  RoleId = "customer-support-specialist"
-  Label = "Customer Support Specialist"
-  Comment = "Assists users with issues a..."
-  FilledBy = "isaac-brown"
-  WorkflowSteps = "generate-report"
-}
-
-object "Roles_9" as Roles_9 {
-  RoleId = "hr-manager"
-  Label = "HR Manager"
-  Comment = "Handles recruitment, onboar..."
-  FilledBy = "julia-nguyen"
-  WorkflowSteps = "quality-assurance-check"
-}
-
-object "Roles_10" as Roles_10 {
-  RoleId = "marketing-specialist"
-  Label = "Marketing Specialist"
-  Comment = "Develops marketing strategi..."
-  FilledBy = "kevin-o-brien"
-  WorkflowSteps = "send-confirmation-email"
-}
-
-object "Roles_11" as Roles_11 {
-  RoleId = "data-scientist"
-  Label = "Data Scientist"
-  Comment = "Analyzes data to extract in..."
-  FilledBy = "linda-park"
-  WorkflowSteps = "schedule-follow-up"
-}
-
-object "Roles_12" as Roles_12 {
-  RoleId = "system-administrator"
-  Label = "System Administrator"
-  Comment = "Maintains servers, networks..."
-  FilledBy = "michael-evans"
-  WorkflowSteps = "close-workflow"
-}
-
-object "Roles_13" as Roles_13 {
-  RoleId = "finance-officer"
-  Label = "Finance Officer"
-  Comment = "Manages budgets, expenses, ..."
-  FilledBy = "nina-rossi"
-  WorkflowSteps = "escalate-issue"
-}
-
-object "Roles_14" as Roles_14 {
-  RoleId = "scrum-master"
-  Label = "Scrum Master"
-  Comment = "Facilitates agile ceremonie..."
-  FilledBy = "oscar-gomez"
-  WorkflowSteps = "audit-trail-review"
+  RoleId = "risk-analyst"
+  Label = "Risk Analyst"
+  Comment = "Role responsible for risk a..."
+  FilledBy = ""
+  WorkflowSteps = "risk-assessment"
+  CountOfWorkflowSteps = 1
+  FilledByName = ""
+  FilledByMBox = ""
 }
 
 object "WorkflowSteps_0" as WorkflowSteps_0 {
-  WorkflowStepId = "submit-request"
-  Label = "Submit Request"
+  WorkflowStepId = "risk-assessment"
+  Label = "Risk Assessment"
   SequencePosition = 1
-  RequiresHumanApproval = true
-  IsStepOf = "onboarding-new-employees"
-  AssignedRole = "project-manager"
+  RequiresHumanApproval = false
+  IsStepOf = "production-deployment-workflow"
+  AssignedRole = "risk-analyst"
+  IsStepOfTitle = "Production Deployment Workflow"
+  IsStepOfDescription = "End-to-end workflow for dep..."
+  IsStepOfIdentifier = "WF-PROD-001"
+  AssignedRoleLabel = "Risk Analyst"
+  AssignedRoleComment = "Role responsible for risk a..."
+  AssignedRoleFilledBy = ""
 }
 
 object "WorkflowSteps_1" as WorkflowSteps_1 {
-  WorkflowStepId = "initial-review"
-  Label = "Initial Review"
+  WorkflowStepId = "legal-review"
+  Label = "Legal Review"
   SequencePosition = 2
   RequiresHumanApproval = true
-  IsStepOf = "weekly-sales-report"
-  AssignedRole = "software-engineer"
+  IsStepOf = "production-deployment-workflow"
+  AssignedRole = "legal-compliance-reviewer"
+  IsStepOfTitle = "Production Deployment Workflow"
+  IsStepOfDescription = "End-to-end workflow for dep..."
+  IsStepOfIdentifier = "WF-PROD-001"
+  AssignedRoleLabel = "Legal Compliance Reviewer"
+  AssignedRoleComment = "Role responsible for legal ..."
+  AssignedRoleFilledBy = ""
 }
 
 object "WorkflowSteps_2" as WorkflowSteps_2 {
-  WorkflowStepId = "assign-reviewer"
-  Label = "Assign Reviewer"
+  WorkflowStepId = "release-approval"
+  Label = "Release Approval"
   SequencePosition = 3
-  RequiresHumanApproval = false
-  IsStepOf = "customer-feedback-collection"
-  AssignedRole = "quality-assurance-analyst"
-}
-
-object "WorkflowSteps_3" as WorkflowSteps_3 {
-  WorkflowStepId = "reviewer-feedback"
-  Label = "Reviewer Feedback"
-  SequencePosition = 4
   RequiresHumanApproval = true
-  IsStepOf = "invoice-approval"
-  AssignedRole = "ui-ux-designer"
-}
-
-object "WorkflowSteps_4" as WorkflowSteps_4 {
-  WorkflowStepId = "revise-submission"
-  Label = "Revise Submission"
-  SequencePosition = 5
-  RequiresHumanApproval = false
-  IsStepOf = "it-support-ticketing"
-  AssignedRole = "business-analyst"
-}
-
-object "WorkflowSteps_5" as WorkflowSteps_5 {
-  WorkflowStepId = "final-approval"
-  Label = "Final Approval"
-  SequencePosition = 6
-  RequiresHumanApproval = true
-  IsStepOf = "content-publishing"
-  AssignedRole = "devops-engineer"
-}
-
-object "WorkflowSteps_6" as WorkflowSteps_6 {
-  WorkflowStepId = "notify-stakeholders"
-  Label = "Notify Stakeholders"
-  SequencePosition = 7
-  RequiresHumanApproval = false
-  IsStepOf = "expense-reimbursement"
-  AssignedRole = "product-owner"
-}
-
-object "WorkflowSteps_7" as WorkflowSteps_7 {
-  WorkflowStepId = "archive-documents"
-  Label = "Archive Documents"
-  SequencePosition = 8
-  RequiresHumanApproval = false
-  IsStepOf = "quarterly-performance-review"
-  AssignedRole = "technical-writer"
-}
-
-object "WorkflowSteps_8" as WorkflowSteps_8 {
-  WorkflowStepId = "generate-report"
-  Label = "Generate Report"
-  SequencePosition = 9
-  RequiresHumanApproval = false
-  IsStepOf = "vendor-onboarding"
-  AssignedRole = "customer-support-specialist"
-}
-
-object "WorkflowSteps_9" as WorkflowSteps_9 {
-  WorkflowStepId = "quality-assurance-check"
-  Label = "Quality Assurance Check"
-  SequencePosition = 10
-  RequiresHumanApproval = true
-  IsStepOf = "project-kickoff"
-  AssignedRole = "hr-manager"
-}
-
-object "WorkflowSteps_10" as WorkflowSteps_10 {
-  WorkflowStepId = "send-confirmation-email"
-  Label = "Send Confirmation Email"
-  SequencePosition = 11
-  RequiresHumanApproval = false
-  IsStepOf = "marketing-campaign-launch"
-  AssignedRole = "marketing-specialist"
-}
-
-object "WorkflowSteps_11" as WorkflowSteps_11 {
-  WorkflowStepId = "schedule-follow-up"
-  Label = "Schedule Follow-up"
-  SequencePosition = 12
-  RequiresHumanApproval = false
-  IsStepOf = "annual-compliance-training"
-  AssignedRole = "data-scientist"
-}
-
-object "WorkflowSteps_12" as WorkflowSteps_12 {
-  WorkflowStepId = "close-workflow"
-  Label = "Close Workflow"
-  SequencePosition = 13
-  RequiresHumanApproval = false
-  IsStepOf = "remote-access-request"
-  AssignedRole = "system-administrator"
-}
-
-object "WorkflowSteps_13" as WorkflowSteps_13 {
-  WorkflowStepId = "escalate-issue"
-  Label = "Escalate Issue"
-  SequencePosition = 14
-  RequiresHumanApproval = true
-  IsStepOf = "customer-escalation-handling"
-  AssignedRole = "finance-officer"
-}
-
-object "WorkflowSteps_14" as WorkflowSteps_14 {
-  WorkflowStepId = "audit-trail-review"
-  Label = "Audit Trail Review"
-  SequencePosition = 15
-  RequiresHumanApproval = true
-  IsStepOf = "procurement-request"
-  AssignedRole = "scrum-master"
+  IsStepOf = "production-deployment-workflow"
+  AssignedRole = "release-manager"
+  IsStepOfTitle = "Production Deployment Workflow"
+  IsStepOfDescription = "End-to-end workflow for dep..."
+  IsStepOfIdentifier = "WF-PROD-001"
+  AssignedRoleLabel = "Release Manager"
+  AssignedRoleComment = "Primary role responsible fo..."
+  AssignedRoleFilledBy = "maria-gonzalez"
 }
 
 object "Workflows_0" as Workflows_0 {
-  WorkflowId = "onboarding-new-employees"
-  Title = "Onboarding New Employees"
-  Description = "Automates the process of on..."
-  Created = "2024-05-01"
-  Modified = "2024-06-01"
-  Identifier = "WF-ONB-001"
-  WorkflowSteps = "submit-request"
-}
-
-object "Workflows_1" as Workflows_1 {
-  WorkflowId = "weekly-sales-report"
-  Title = "Weekly Sales Report"
-  Description = "Generates and distributes w..."
-  Created = "2024-04-15"
-  Modified = "2024-06-02"
-  Identifier = "WF-SAL-002"
-  WorkflowSteps = "initial-review"
-}
-
-object "Workflows_2" as Workflows_2 {
-  WorkflowId = "customer-feedback-collection"
-  Title = "Customer Feedback Collection"
-  Description = "Collects and organizes cust..."
-  Created = "2024-03-20"
-  Modified = "2024-05-30"
-  Identifier = "WF-CFB-003"
-  WorkflowSteps = "assign-reviewer"
-}
-
-object "Workflows_3" as Workflows_3 {
-  WorkflowId = "invoice-approval"
-  Title = "Invoice Approval"
-  Description = "Routes invoices to the appr..."
-  Created = "2024-05-10"
-  Modified = "2024-06-01"
-  Identifier = "WF-INV-004"
-  WorkflowSteps = "reviewer-feedback"
-}
-
-object "Workflows_4" as Workflows_4 {
-  WorkflowId = "it-support-ticketing"
-  Title = "IT Support Ticketing"
-  Description = "Manages IT support requests..."
-  Created = "2024-04-01"
-  Modified = "2024-05-28"
-  Identifier = "WF-ITS-005"
-  WorkflowSteps = "revise-submission"
-}
-
-object "Workflows_5" as Workflows_5 {
-  WorkflowId = "content-publishing"
-  Title = "Content Publishing"
-  Description = "Coordinates the review, app..."
-  Created = "2024-03-25"
-  Modified = "2024-05-29"
-  Identifier = "WF-CNT-006"
-  WorkflowSteps = "final-approval"
-}
-
-object "Workflows_6" as Workflows_6 {
-  WorkflowId = "expense-reimbursement"
-  Title = "Expense Reimbursement"
-  Description = "Automates employee expense ..."
-  Created = "2024-05-05"
-  Modified = "2024-06-01"
-  Identifier = "WF-EXP-007"
-  WorkflowSteps = "notify-stakeholders"
-}
-
-object "Workflows_7" as Workflows_7 {
-  WorkflowId = "quarterly-performance-review"
-  Title = "Quarterly Performance Review"
-  Description = "Schedules and tracks quarte..."
-  Created = "2024-03-30"
-  Modified = "2024-05-31"
-  Identifier = "WF-PRF-008"
-  WorkflowSteps = "archive-documents"
-}
-
-object "Workflows_8" as Workflows_8 {
-  WorkflowId = "vendor-onboarding"
-  Title = "Vendor Onboarding"
-  Description = "Guides new vendors through ..."
-  Created = "2024-04-20"
-  Modified = "2024-06-02"
-  Identifier = "WF-VND-009"
-  WorkflowSteps = "generate-report"
-}
-
-object "Workflows_9" as Workflows_9 {
-  WorkflowId = "project-kickoff"
-  Title = "Project Kickoff"
-  Description = "Outlines steps for initiati..."
-  Created = "2024-05-12"
-  Modified = "2024-06-01"
-  Identifier = "WF-PRJ-010"
-  WorkflowSteps = "quality-assurance-check"
-}
-
-object "Workflows_10" as Workflows_10 {
-  WorkflowId = "marketing-campaign-launch"
-  Title = "Marketing Campaign Launch"
-  Description = "Manages the planning, appro..."
-  Created = "2024-04-05"
-  Modified = "2024-05-30"
-  Identifier = "WF-MKT-011"
-  WorkflowSteps = "send-confirmation-email"
-}
-
-object "Workflows_11" as Workflows_11 {
-  WorkflowId = "annual-compliance-training"
-  Title = "Annual Compliance Training"
-  Description = "Tracks employee completion ..."
-  Created = "2024-03-15"
-  Modified = "2024-05-29"
-  Identifier = "WF-COM-012"
-  WorkflowSteps = "schedule-follow-up"
-}
-
-object "Workflows_12" as Workflows_12 {
-  WorkflowId = "remote-access-request"
-  Title = "Remote Access Request"
-  Description = "Automates approval and prov..."
-  Created = "2024-05-08"
-  Modified = "2024-06-01"
-  Identifier = "WF-REM-013"
-  WorkflowSteps = "close-workflow"
-}
-
-object "Workflows_13" as Workflows_13 {
-  WorkflowId = "customer-escalation-handling"
-  Title = "Customer Escalation Handling"
-  Description = "Defines steps for handling ..."
-  Created = "2024-04-18"
-  Modified = "2024-06-02"
-  Identifier = "WF-CES-014"
-  WorkflowSteps = "escalate-issue"
-}
-
-object "Workflows_14" as Workflows_14 {
-  WorkflowId = "procurement-request"
-  Title = "Procurement Request"
-  Description = "Manages the submission, app..."
-  Created = "2024-05-03"
-  Modified = "2024-06-01"
-  Identifier = "WF-PRC-015"
-  WorkflowSteps = "audit-trail-review"
+  WorkflowId = "production-deployment-workflow"
+  Title = "Production Deployment Workflow"
+  Description = "End-to-end workflow for dep..."
+  Created = "2026-01-15"
+  Modified = "2026-01-15"
+  Identifier = "WF-PROD-001"
+  WorkflowSteps = "legal-review, risk-assessme..."
+  CountOfWorkflowSteps = 3
 }
 
 @enduml

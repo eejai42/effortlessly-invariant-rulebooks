@@ -33,6 +33,12 @@ erb:roles a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:label "Roles" .
 
+erb:countOfRles a owl:DatatypeProperty ;
+    rdfs:domain erb:HumanAgents ;
+    rdfs:range xsd:integer ;
+    rdfs:label "CountOfRles" .
+    # calculated: aggregation
+
 # === Class: Roles ===
 erb:Roles a owl:Class ;
     rdfs:label "Roles" ;
@@ -62,6 +68,24 @@ erb:workflowSteps a owl:DatatypeProperty ;
     rdfs:domain erb:Roles ;
     rdfs:range xsd:string ;
     rdfs:label "WorkflowSteps" .
+
+erb:countOfWorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:integer ;
+    rdfs:label "CountOfWorkflowSteps" .
+    # calculated: aggregation
+
+erb:filledByName a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label "FilledByName" .
+    # calculated: lookup
+
+erb:filledByMBox a owl:DatatypeProperty ;
+    rdfs:domain erb:Roles ;
+    rdfs:range xsd:string ;
+    rdfs:label "FilledByMBox" .
+    # calculated: lookup
 
 # === Class: WorkflowSteps ===
 erb:WorkflowSteps a owl:Class ;
@@ -97,6 +121,42 @@ erb:assignedRole a owl:DatatypeProperty ;
     rdfs:domain erb:WorkflowSteps ;
     rdfs:range xsd:string ;
     rdfs:label "AssignedRole" .
+
+erb:isStepOfTitle a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "IsStepOfTitle" .
+    # calculated: lookup
+
+erb:isStepOfDescription a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "IsStepOfDescription" .
+    # calculated: lookup
+
+erb:isStepOfIdentifier a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "IsStepOfIdentifier" .
+    # calculated: lookup
+
+erb:assignedRoleLabel a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "AssignedRoleLabel" .
+    # calculated: lookup
+
+erb:assignedRoleComment a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "AssignedRoleComment" .
+    # calculated: lookup
+
+erb:assignedRoleFilledBy a owl:DatatypeProperty ;
+    rdfs:domain erb:WorkflowSteps ;
+    rdfs:range xsd:string ;
+    rdfs:label "AssignedRoleFilledBy" .
+    # calculated: lookup
 
 # === Class: Workflows ===
 erb:Workflows a owl:Class ;
@@ -137,3 +197,9 @@ erb:workflowSteps a owl:DatatypeProperty ;
     rdfs:domain erb:Workflows ;
     rdfs:range xsd:string ;
     rdfs:label "WorkflowSteps" .
+
+erb:countOfWorkflowSteps a owl:DatatypeProperty ;
+    rdfs:domain erb:Workflows ;
+    rdfs:range xsd:integer ;
+    rdfs:label "CountOfWorkflowSteps" .
+    # calculated: aggregation

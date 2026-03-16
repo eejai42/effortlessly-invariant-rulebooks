@@ -47,143 +47,25 @@
         "type": "relationship",
         "nullable": true,
         "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "CountOfWorkflowSteps",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=COUNTIFS(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}})"
       }
     ],
     "data": [
       {
-        "WorkflowId": "onboarding-new-employees",
-        "Title": "Onboarding New Employees",
-        "Description": "Automates the process of onboarding new hires, including document collection, account setup, and training assignments.",
-        "Created": "2024-05-01",
-        "Modified": "2024-06-01",
-        "Identifier": "WF-ONB-001",
-        "WorkflowSteps": "submit-request"
-      },
-      {
-        "WorkflowId": "weekly-sales-report",
-        "Title": "Weekly Sales Report",
-        "Description": "Generates and distributes weekly sales performance reports to the management team.",
-        "Created": "2024-04-15",
-        "Modified": "2024-06-02",
-        "Identifier": "WF-SAL-002",
-        "WorkflowSteps": "initial-review"
-      },
-      {
-        "WorkflowId": "customer-feedback-collection",
-        "Title": "Customer Feedback Collection",
-        "Description": "Collects and organizes customer feedback from multiple channels for analysis.",
-        "Created": "2024-03-20",
-        "Modified": "2024-05-30",
-        "Identifier": "WF-CFB-003",
-        "WorkflowSteps": "assign-reviewer"
-      },
-      {
-        "WorkflowId": "invoice-approval",
-        "Title": "Invoice Approval",
-        "Description": "Routes invoices to the appropriate managers for review and approval before payment.",
-        "Created": "2024-05-10",
-        "Modified": "2024-06-01",
-        "Identifier": "WF-INV-004",
-        "WorkflowSteps": "reviewer-feedback"
-      },
-      {
-        "WorkflowId": "it-support-ticketing",
-        "Title": "IT Support Ticketing",
-        "Description": "Manages IT support requests from submission to resolution, including escalation steps.",
-        "Created": "2024-04-01",
-        "Modified": "2024-05-28",
-        "Identifier": "WF-ITS-005",
-        "WorkflowSteps": "revise-submission"
-      },
-      {
-        "WorkflowId": "content-publishing",
-        "Title": "Content Publishing",
-        "Description": "Coordinates the review, approval, and publishing of new website content.",
-        "Created": "2024-03-25",
-        "Modified": "2024-05-29",
-        "Identifier": "WF-CNT-006",
-        "WorkflowSteps": "final-approval"
-      },
-      {
-        "WorkflowId": "expense-reimbursement",
-        "Title": "Expense Reimbursement",
-        "Description": "Automates employee expense submission, approval, and reimbursement processes.",
-        "Created": "2024-05-05",
-        "Modified": "2024-06-01",
-        "Identifier": "WF-EXP-007",
-        "WorkflowSteps": "notify-stakeholders"
-      },
-      {
-        "WorkflowId": "quarterly-performance-review",
-        "Title": "Quarterly Performance Review",
-        "Description": "Schedules and tracks quarterly employee performance reviews and feedback sessions.",
-        "Created": "2024-03-30",
-        "Modified": "2024-05-31",
-        "Identifier": "WF-PRF-008",
-        "WorkflowSteps": "archive-documents"
-      },
-      {
-        "WorkflowId": "vendor-onboarding",
-        "Title": "Vendor Onboarding",
-        "Description": "Guides new vendors through compliance checks, contract signing, and system setup.",
-        "Created": "2024-04-20",
-        "Modified": "2024-06-02",
-        "Identifier": "WF-VND-009",
-        "WorkflowSteps": "generate-report"
-      },
-      {
-        "WorkflowId": "project-kickoff",
-        "Title": "Project Kickoff",
-        "Description": "Outlines steps for initiating new projects, including team assignments and resource allocation.",
-        "Created": "2024-05-12",
-        "Modified": "2024-06-01",
-        "Identifier": "WF-PRJ-010",
-        "WorkflowSteps": "quality-assurance-check"
-      },
-      {
-        "WorkflowId": "marketing-campaign-launch",
-        "Title": "Marketing Campaign Launch",
-        "Description": "Manages the planning, approval, and launch of marketing campaigns across channels.",
-        "Created": "2024-04-05",
-        "Modified": "2024-05-30",
-        "Identifier": "WF-MKT-011",
-        "WorkflowSteps": "send-confirmation-email"
-      },
-      {
-        "WorkflowId": "annual-compliance-training",
-        "Title": "Annual Compliance Training",
-        "Description": "Tracks employee completion of mandatory annual compliance training modules.",
-        "Created": "2024-03-15",
-        "Modified": "2024-05-29",
-        "Identifier": "WF-COM-012",
-        "WorkflowSteps": "schedule-follow-up"
-      },
-      {
-        "WorkflowId": "remote-access-request",
-        "Title": "Remote Access Request",
-        "Description": "Automates approval and provisioning of remote access for employees and contractors.",
-        "Created": "2024-05-08",
-        "Modified": "2024-06-01",
-        "Identifier": "WF-REM-013",
-        "WorkflowSteps": "close-workflow"
-      },
-      {
-        "WorkflowId": "customer-escalation-handling",
-        "Title": "Customer Escalation Handling",
-        "Description": "Defines steps for handling and resolving escalated customer issues.",
-        "Created": "2024-04-18",
-        "Modified": "2024-06-02",
-        "Identifier": "WF-CES-014",
-        "WorkflowSteps": "escalate-issue"
-      },
-      {
-        "WorkflowId": "procurement-request",
-        "Title": "Procurement Request",
-        "Description": "Manages the submission, approval, and tracking of procurement requests.",
-        "Created": "2024-05-03",
-        "Modified": "2024-06-01",
-        "Identifier": "WF-PRC-015",
-        "WorkflowSteps": "audit-trail-review"
+        "WorkflowId": "production-deployment-workflow",
+        "Title": "Production Deployment Workflow",
+        "Description": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman\u0027s NTWF ontology article.",
+        "Created": "2026-01-15",
+        "Modified": "2026-01-15",
+        "Identifier": "WF-PROD-001",
+        "WorkflowSteps": "legal-review, risk-assessment, release-approval",
+        "CountOfWorkflowSteps": 3
       }
     ]
   },
@@ -227,128 +109,92 @@
         "type": "relationship",
         "nullable": true,
         "RelatedTo": "Roles"
+      },
+      {
+        "name": "IsStepOfTitle",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))"
+      },
+      {
+        "name": "IsStepOfDescription",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Workflows!{{Description}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))"
+      },
+      {
+        "name": "IsStepOfIdentifier",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Workflows!{{Identifier}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))"
+      },
+      {
+        "name": "AssignedRoleLabel",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Roles!{{Label}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
+      },
+      {
+        "name": "AssignedRoleComment",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Roles!{{Comment}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
+      },
+      {
+        "name": "AssignedRoleFilledBy",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
       }
     ],
     "data": [
       {
-        "WorkflowStepId": "submit-request",
-        "Label": "Submit Request",
+        "WorkflowStepId": "risk-assessment",
+        "Label": "Risk Assessment",
         "SequencePosition": 1,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "onboarding-new-employees",
-        "AssignedRole": "project-manager"
+        "IsStepOf": "production-deployment-workflow",
+        "AssignedRole": "risk-analyst",
+        "IsStepOfTitle": "Production Deployment Workflow",
+        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman\u0027s NTWF ontology article.",
+        "IsStepOfIdentifier": "WF-PROD-001",
+        "AssignedRoleLabel": "Risk Analyst",
+        "AssignedRoleComment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
+        "RequiresHumanApproval": false,
+        "AssignedRoleFilledBy": ""
       },
       {
-        "WorkflowStepId": "initial-review",
-        "Label": "Initial Review",
+        "WorkflowStepId": "legal-review",
+        "Label": "Legal Review",
         "SequencePosition": 2,
         "RequiresHumanApproval": true,
-        "IsStepOf": "weekly-sales-report",
-        "AssignedRole": "software-engineer"
+        "IsStepOf": "production-deployment-workflow",
+        "AssignedRole": "legal-compliance-reviewer",
+        "IsStepOfTitle": "Production Deployment Workflow",
+        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman\u0027s NTWF ontology article.",
+        "IsStepOfIdentifier": "WF-PROD-001",
+        "AssignedRoleLabel": "Legal Compliance Reviewer",
+        "AssignedRoleComment": "Role responsible for legal and compliance review of releases.",
+        "AssignedRoleFilledBy": ""
       },
       {
-        "WorkflowStepId": "assign-reviewer",
-        "Label": "Assign Reviewer",
+        "WorkflowStepId": "release-approval",
+        "Label": "Release Approval",
         "SequencePosition": 3,
-        "IsStepOf": "customer-feedback-collection",
-        "AssignedRole": "quality-assurance-analyst",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "reviewer-feedback",
-        "Label": "Reviewer Feedback",
-        "SequencePosition": 4,
         "RequiresHumanApproval": true,
-        "IsStepOf": "invoice-approval",
-        "AssignedRole": "ui-ux-designer"
-      },
-      {
-        "WorkflowStepId": "revise-submission",
-        "Label": "Revise Submission",
-        "SequencePosition": 5,
-        "IsStepOf": "it-support-ticketing",
-        "AssignedRole": "business-analyst",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "final-approval",
-        "Label": "Final Approval",
-        "SequencePosition": 6,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "content-publishing",
-        "AssignedRole": "devops-engineer"
-      },
-      {
-        "WorkflowStepId": "notify-stakeholders",
-        "Label": "Notify Stakeholders",
-        "SequencePosition": 7,
-        "IsStepOf": "expense-reimbursement",
-        "AssignedRole": "product-owner",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "archive-documents",
-        "Label": "Archive Documents",
-        "SequencePosition": 8,
-        "IsStepOf": "quarterly-performance-review",
-        "AssignedRole": "technical-writer",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "generate-report",
-        "Label": "Generate Report",
-        "SequencePosition": 9,
-        "IsStepOf": "vendor-onboarding",
-        "AssignedRole": "customer-support-specialist",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "quality-assurance-check",
-        "Label": "Quality Assurance Check",
-        "SequencePosition": 10,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "project-kickoff",
-        "AssignedRole": "hr-manager"
-      },
-      {
-        "WorkflowStepId": "send-confirmation-email",
-        "Label": "Send Confirmation Email",
-        "SequencePosition": 11,
-        "IsStepOf": "marketing-campaign-launch",
-        "AssignedRole": "marketing-specialist",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "schedule-follow-up",
-        "Label": "Schedule Follow-up",
-        "SequencePosition": 12,
-        "IsStepOf": "annual-compliance-training",
-        "AssignedRole": "data-scientist",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "close-workflow",
-        "Label": "Close Workflow",
-        "SequencePosition": 13,
-        "IsStepOf": "remote-access-request",
-        "AssignedRole": "system-administrator",
-        "RequiresHumanApproval": false
-      },
-      {
-        "WorkflowStepId": "escalate-issue",
-        "Label": "Escalate Issue",
-        "SequencePosition": 14,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "customer-escalation-handling",
-        "AssignedRole": "finance-officer"
-      },
-      {
-        "WorkflowStepId": "audit-trail-review",
-        "Label": "Audit Trail Review",
-        "SequencePosition": 15,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "procurement-request",
-        "AssignedRole": "scrum-master"
+        "IsStepOf": "production-deployment-workflow",
+        "AssignedRole": "release-manager",
+        "IsStepOfTitle": "Production Deployment Workflow",
+        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman\u0027s NTWF ontology article.",
+        "IsStepOfIdentifier": "WF-PROD-001",
+        "AssignedRoleLabel": "Release Manager",
+        "AssignedRoleComment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: \u0027filled by Maria Gonzalez\u0027",
+        "AssignedRoleFilledBy": "maria-gonzalez"
       }
     ]
   },
@@ -386,113 +232,59 @@
         "type": "relationship",
         "nullable": true,
         "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "CountOfWorkflowSteps",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})"
+      },
+      {
+        "name": "FilledByName",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))"
+      },
+      {
+        "name": "FilledByMBox",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))"
       }
     ],
     "data": [
       {
-        "RoleId": "project-manager",
-        "Label": "Project Manager",
-        "Comment": "Oversees project timelines, deliverables, and team coordination.",
-        "FilledBy": "alice-johnson",
-        "WorkflowSteps": "submit-request"
+        "RoleId": "release-manager",
+        "Label": "Release Manager",
+        "Comment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: \u0027filled by Maria Gonzalez\u0027",
+        "FilledBy": "maria-gonzalez",
+        "WorkflowSteps": "release-approval",
+        "FilledByName": "Maria Gonzalez",
+        "FilledByMBox": "maria.gonzalez@specialsolutions.example",
+        "CountOfWorkflowSteps": 1
       },
       {
-        "RoleId": "software-engineer",
-        "Label": "Software Engineer",
-        "Comment": "Develops and maintains software applications and systems.",
-        "FilledBy": "brian-lee",
-        "WorkflowSteps": "initial-review"
+        "RoleId": "legal-compliance-reviewer",
+        "Label": "Legal Compliance Reviewer",
+        "Comment": "Role responsible for legal and compliance review of releases.",
+        "WorkflowSteps": "legal-review",
+        "CountOfWorkflowSteps": 1,
+        "FilledBy": "",
+        "FilledByName": "",
+        "FilledByMBox": ""
       },
       {
-        "RoleId": "quality-assurance-analyst",
-        "Label": "Quality Assurance Analyst",
-        "Comment": "Tests software to ensure quality and identify bugs.",
-        "FilledBy": "carmen-diaz",
-        "WorkflowSteps": "assign-reviewer"
-      },
-      {
-        "RoleId": "ui-ux-designer",
-        "Label": "UI/UX Designer",
-        "Comment": "Designs user interfaces and ensures a positive user experience.",
-        "FilledBy": "david-kim",
-        "WorkflowSteps": "reviewer-feedback"
-      },
-      {
-        "RoleId": "business-analyst",
-        "Label": "Business Analyst",
-        "Comment": "Gathers requirements and translates business needs into technical solutions.",
-        "FilledBy": "emily-chen",
-        "WorkflowSteps": "revise-submission"
-      },
-      {
-        "RoleId": "devops-engineer",
-        "Label": "DevOps Engineer",
-        "Comment": "Manages deployment pipelines and infrastructure automation.",
-        "FilledBy": "frank-miller",
-        "WorkflowSteps": "final-approval"
-      },
-      {
-        "RoleId": "product-owner",
-        "Label": "Product Owner",
-        "Comment": "Defines product vision and prioritizes features for development.",
-        "FilledBy": "grace-patel",
-        "WorkflowSteps": "notify-stakeholders"
-      },
-      {
-        "RoleId": "technical-writer",
-        "Label": "Technical Writer",
-        "Comment": "Creates and maintains technical documentation and user guides.",
-        "FilledBy": "hannah-smith",
-        "WorkflowSteps": "archive-documents"
-      },
-      {
-        "RoleId": "customer-support-specialist",
-        "Label": "Customer Support Specialist",
-        "Comment": "Assists users with issues and provides product support.",
-        "FilledBy": "isaac-brown",
-        "WorkflowSteps": "generate-report"
-      },
-      {
-        "RoleId": "hr-manager",
-        "Label": "HR Manager",
-        "Comment": "Handles recruitment, onboarding, and employee relations.",
-        "FilledBy": "julia-nguyen",
-        "WorkflowSteps": "quality-assurance-check"
-      },
-      {
-        "RoleId": "marketing-specialist",
-        "Label": "Marketing Specialist",
-        "Comment": "Develops marketing strategies and manages campaigns.",
-        "FilledBy": "kevin-o-brien",
-        "WorkflowSteps": "send-confirmation-email"
-      },
-      {
-        "RoleId": "data-scientist",
-        "Label": "Data Scientist",
-        "Comment": "Analyzes data to extract insights and support decision-making.",
-        "FilledBy": "linda-park",
-        "WorkflowSteps": "schedule-follow-up"
-      },
-      {
-        "RoleId": "system-administrator",
-        "Label": "System Administrator",
-        "Comment": "Maintains servers, networks, and IT infrastructure.",
-        "FilledBy": "michael-evans",
-        "WorkflowSteps": "close-workflow"
-      },
-      {
-        "RoleId": "finance-officer",
-        "Label": "Finance Officer",
-        "Comment": "Manages budgets, expenses, and financial reporting.",
-        "FilledBy": "nina-rossi",
-        "WorkflowSteps": "escalate-issue"
-      },
-      {
-        "RoleId": "scrum-master",
-        "Label": "Scrum Master",
-        "Comment": "Facilitates agile ceremonies and removes team impediments.",
-        "FilledBy": "oscar-gomez",
-        "WorkflowSteps": "audit-trail-review"
+        "RoleId": "risk-analyst",
+        "Label": "Risk Analyst",
+        "Comment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
+        "WorkflowSteps": "risk-assessment",
+        "CountOfWorkflowSteps": 1,
+        "FilledBy": "",
+        "FilledByName": "",
+        "FilledByMBox": ""
       }
     ]
   },
@@ -523,98 +315,29 @@
         "type": "relationship",
         "nullable": true,
         "RelatedTo": "Roles"
+      },
+      {
+        "name": "CountOfRles",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})"
       }
     ],
     "data": [
       {
-        "HumanAgentId": "alice-johnson",
-        "Name": "Alice Johnson",
-        "Mbox": "alice.johnson@example.com",
-        "Roles": "project-manager"
+        "HumanAgentId": "maria-gonzalez",
+        "Name": "Maria Gonzalez",
+        "Mbox": "maria.gonzalez@specialsolutions.example",
+        "Roles": "release-manager",
+        "CountOfRles": 1
       },
       {
-        "HumanAgentId": "brian-lee",
-        "Name": "Brian Lee",
-        "Mbox": "brian.lee@example.com",
-        "Roles": "software-engineer"
-      },
-      {
-        "HumanAgentId": "carmen-diaz",
-        "Name": "Carmen Diaz",
-        "Mbox": "carmen.diaz@example.com",
-        "Roles": "quality-assurance-analyst"
-      },
-      {
-        "HumanAgentId": "david-kim",
-        "Name": "David Kim",
-        "Mbox": "david.kim@example.com",
-        "Roles": "ui-ux-designer"
-      },
-      {
-        "HumanAgentId": "emily-chen",
-        "Name": "Emily Chen",
-        "Mbox": "emily.chen@example.com",
-        "Roles": "business-analyst"
-      },
-      {
-        "HumanAgentId": "frank-miller",
-        "Name": "Frank Miller",
-        "Mbox": "frank.miller@example.com",
-        "Roles": "devops-engineer"
-      },
-      {
-        "HumanAgentId": "grace-patel",
-        "Name": "Grace Patel",
-        "Mbox": "grace.patel@example.com",
-        "Roles": "product-owner"
-      },
-      {
-        "HumanAgentId": "hannah-smith",
-        "Name": "Hannah Smith",
-        "Mbox": "hannah.smith@example.com",
-        "Roles": "technical-writer"
-      },
-      {
-        "HumanAgentId": "isaac-brown",
-        "Name": "Isaac Brown",
-        "Mbox": "isaac.brown@example.com",
-        "Roles": "customer-support-specialist"
-      },
-      {
-        "HumanAgentId": "julia-nguyen",
-        "Name": "Julia Nguyen",
-        "Mbox": "julia.nguyen@example.com",
-        "Roles": "hr-manager"
-      },
-      {
-        "HumanAgentId": "kevin-o-brien",
-        "Name": "Kevin O\u0027Brien",
-        "Mbox": "kevin.obrien@example.com",
-        "Roles": "marketing-specialist"
-      },
-      {
-        "HumanAgentId": "linda-park",
-        "Name": "Linda Park",
-        "Mbox": "linda.park@example.com",
-        "Roles": "data-scientist"
-      },
-      {
-        "HumanAgentId": "michael-evans",
-        "Name": "Michael Evans",
-        "Mbox": "michael.evans@example.com",
-        "Roles": "system-administrator"
-      },
-      {
-        "HumanAgentId": "nina-rossi",
-        "Name": "Nina Rossi",
-        "Mbox": "nina.rossi@example.com",
-        "Roles": "finance-officer"
-      },
-      {
-        "HumanAgentId": "oscar-gomez",
-        "Name": "Oscar Gomez",
-        "Mbox": "oscar.gomez@example.com",
-        "Roles": "scrum-master"
+        "HumanAgentId": "james-okafor",
+        "Name": "James Okafor",
+        "Mbox": "james.okafor@specialsolutions.example",
+        "CountOfRles": 0,
+        "Roles": ""
       }
     ]
   },

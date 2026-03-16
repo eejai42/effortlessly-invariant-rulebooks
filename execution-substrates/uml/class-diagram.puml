@@ -10,6 +10,7 @@ class HumanAgents {
   +Name: String
   +Mbox: String
   +Roles: String
+  +CountOfRles: Integer
   --
 }
 
@@ -23,6 +24,9 @@ class Roles {
   +Comment: String
   +FilledBy: String
   +WorkflowSteps: String
+  +CountOfWorkflowSteps: Integer
+  +FilledByName: String
+  +FilledByMBox: String
   --
 }
 
@@ -37,6 +41,12 @@ class WorkflowSteps {
   +RequiresHumanApproval: Boolean
   +IsStepOf: String
   +AssignedRole: String
+  +IsStepOfTitle: String
+  +IsStepOfDescription: String
+  +IsStepOfIdentifier: String
+  +AssignedRoleLabel: String
+  +AssignedRoleComment: String
+  +AssignedRoleFilledBy: String
   --
 }
 
@@ -52,6 +62,7 @@ class Workflows {
   +Modified: String
   +Identifier: String
   +WorkflowSteps: String
+  +CountOfWorkflowSteps: Integer
   --
 }
 

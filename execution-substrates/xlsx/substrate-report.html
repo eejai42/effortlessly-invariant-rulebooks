@@ -69,8 +69,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>XLSX Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
-            <div class="stat"><span>0/0 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>6/6 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -111,7 +111,34 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <pre>=== XLSX (Excel) Substrate Test Run ===
 
 
-xlsx: Processed 0 entities from rulebook.xlsx
+  Processing human_agents...
+Found 5 fields in test answers
+Primary key field: human_agent_id
+Reading from worksheet: HumanAgents
+Found 5 columns, matched 5 to JSON fields
+Loaded 2 rows from xlsx
+Filled 2 null fields across 2 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/human_agents.json
+
+  Processing roles...
+Found 8 fields in test answers
+Primary key field: role_id
+Reading from worksheet: Roles
+Found 8 columns, matched 8 to JSON fields
+Loaded 3 rows from xlsx
+Filled 3 null fields across 3 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/roles.json
+
+  Processing workflows...
+Found 8 fields in test answers
+Primary key field: workflow_id
+Reading from worksheet: Workflows
+Found 8 columns, matched 8 to JSON fields
+Loaded 1 rows from xlsx
+Filled 1 null fields across 1 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/workflows.json
+
+xlsx: Processed 3 entities from rulebook.xlsx
 
 </pre>
             </div>
@@ -120,10 +147,10 @@ xlsx: Processed 0 entities from rulebook.xlsx
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">6</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">6</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -134,7 +161,7 @@ xlsx: Processed 0 entities from rulebook.xlsx
                     <span class="file-icon">📗</span>
                     <div class="file-info">
                         <h3>rulebook.xlsx</h3>
-                        <div class="file-meta">Size: 11.4 KB</div>
+                        <div class="file-meta">Size: 8.3 KB</div>
                     </div>
                 </div>
                 <div class="markdown-content" style="margin-top: 1rem;">

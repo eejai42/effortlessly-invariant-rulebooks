@@ -11,6 +11,17 @@
 -- ============================================================================
 
 -- Drop functions (order: first, because views depend on them)
+DROP FUNCTION IF EXISTS calc_human_agents_count_of_rles(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_roles_count_of_workflow_steps(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_roles_filled_by_m_box(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_roles_filled_by_name(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflow_steps_assigned_role_comment(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflow_steps_assigned_role_filled_by(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflow_steps_assigned_role_label(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflow_steps_is_step_of_description(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflow_steps_is_step_of_identifier(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflow_steps_is_step_of_title(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS calc_workflows_count_of_workflow_steps(TEXT) CASCADE;
 DROP FUNCTION IF EXISTS get_human_agents_mbox(TEXT) CASCADE;
 DROP FUNCTION IF EXISTS get_human_agents_name(TEXT) CASCADE;
 DROP FUNCTION IF EXISTS get_roles_comment(TEXT) CASCADE;
@@ -51,8 +62,7 @@ CREATE TABLE workflows (
   description                         TEXT                ,
   created                             TIMESTAMPTZ         ,
   modified                            TIMESTAMPTZ         ,
-  identifier                          TEXT                ,
-  workflow_steps                      TEXT                
+  identifier                          TEXT                
 );
 COMMENT ON TABLE workflows IS 'Table: Workflows';
 
