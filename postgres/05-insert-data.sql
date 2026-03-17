@@ -7,33 +7,84 @@
 INSERT INTO workflows (workflow_id, title, description, created, modified, identifier)
 VALUES ('production-deployment-workflow', 'Production Deployment Workflow', 'End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman''s NTWF ontology article.', '2026-01-15', '2026-01-15', 'WF-PROD-001');
 
-INSERT INTO workflow_steps (workflow_step_id, label, sequence_position, requires_human_approval, is_step_of, assigned_role)
-VALUES ('risk-assessment', 'Risk Assessment', 1, FALSE, 'production-deployment-workflow', 'risk-analyst');
+INSERT INTO workflow_steps (workflow_step_id, label, sequence_position, requires_human_approval, is_step_of, assigned_role, precedes_steps, precedes_steps_2, approval_gates)
+VALUES ('risk-assessment', 'Risk Assessment', 1, FALSE, 'production-deployment-workflow', 'risk-analyst', 'step-1-to-2', '', '');
 
-INSERT INTO workflow_steps (workflow_step_id, label, sequence_position, requires_human_approval, is_step_of, assigned_role)
-VALUES ('legal-review', 'Legal Review', 2, TRUE, 'production-deployment-workflow', 'legal-compliance-reviewer');
+INSERT INTO workflow_steps (workflow_step_id, label, sequence_position, requires_human_approval, is_step_of, assigned_role, precedes_steps, precedes_steps_2, approval_gates)
+VALUES ('legal-review', 'Legal Review', 2, TRUE, 'production-deployment-workflow', 'legal-compliance-reviewer', 'step-2-to-3', 'step-1-to-2', '');
 
-INSERT INTO workflow_steps (workflow_step_id, label, sequence_position, requires_human_approval, is_step_of, assigned_role)
-VALUES ('release-approval', 'Release Approval', 3, TRUE, 'production-deployment-workflow', 'release-manager');
+INSERT INTO workflow_steps (workflow_step_id, label, sequence_position, requires_human_approval, is_step_of, assigned_role, precedes_steps, precedes_steps_2, approval_gates)
+VALUES ('release-approval', 'Release Approval', 3, TRUE, 'production-deployment-workflow', 'release-manager', 'step-3-to-4', 'step-2-to-3', '');
 
-INSERT INTO roles (role_id, label, comment, filled_by, workflow_steps, delegates_to, delegated_to_by)
-VALUES ('release-manager', 'Release Manager', 'Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: ''filled by Maria Gonzalez''', 'maria-gonzalez', 'release-approval', 'vp-engineering', '');
+INSERT INTO approval_gates (approval_gate_id, name, description, workflow_step, escalation_threshold_hours)
+VALUES ('release-approval-gate', 'Release Approval Gate', 'Final approval gate before production deployment. Requires Release Manager sign-off. Step 3 in the Production Deployment Workflow. When approval is pending beyond threshold, escalates via delegation chain.', '', 24);
 
-INSERT INTO roles (role_id, label, comment, filled_by, workflow_steps, delegates_to, delegated_to_by)
-VALUES ('legal-compliance-reviewer', 'Legal Compliance Reviewer', 'Role responsible for legal and compliance review of releases.', '', 'legal-review', '', '');
+INSERT INTO roles (role_id, label, comment, department, filled_by, workflow_steps, delegates_to, delegated_to_by)
+VALUES ('release-manager', 'Release Manager', 'Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: ''filled by Maria Gonzalez''', '', 'maria-gonzalez', 'release-approval', 'vp-engineering', '');
 
-INSERT INTO roles (role_id, label, comment, filled_by, workflow_steps, delegates_to, delegated_to_by)
-VALUES ('risk-analyst', 'Risk Analyst', 'Role responsible for risk assessment. In full ontology, filled by AI agent.', '', 'risk-assessment', '', '');
+INSERT INTO roles (role_id, label, comment, department, filled_by, workflow_steps, delegates_to, delegated_to_by)
+VALUES ('legal-compliance-reviewer', 'Legal Compliance Reviewer', 'Role responsible for legal and compliance review of releases.', '', '', 'legal-review', '', '');
 
-INSERT INTO roles (role_id, label, comment, filled_by, workflow_steps, delegates_to, delegated_to_by)
-VALUES ('vp-engineering', 'VP Engineering', 'Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6.', '', '', 'cto', 'release-manager');
+INSERT INTO roles (role_id, label, comment, department, filled_by, workflow_steps, delegates_to, delegated_to_by)
+VALUES ('risk-analyst', 'Risk Analyst', 'Role responsible for risk assessment. In full ontology, filled by AI agent.', '', '', 'risk-assessment', '', '');
 
-INSERT INTO roles (role_id, label, comment, filled_by, workflow_steps, delegates_to, delegated_to_by)
-VALUES ('cto', 'CTO', 'Final role in delegation chain. Ultimate authority for release decisions. Article CQ6.', '', '', '', 'vp-engineering');
+INSERT INTO roles (role_id, label, comment, department, filled_by, workflow_steps, delegates_to, delegated_to_by)
+VALUES ('vp-engineering', 'VP Engineering', 'Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6.', '', '', '', 'cto', 'release-manager');
 
-INSERT INTO human_agents (human_agent_id, name, mbox, roles)
-VALUES ('maria-gonzalez', 'Maria Gonzalez', 'maria.gonzalez@specialsolutions.example', 'release-manager');
+INSERT INTO roles (role_id, label, comment, department, filled_by, workflow_steps, delegates_to, delegated_to_by)
+VALUES ('cto', 'CTO', 'Final role in delegation chain. Ultimate authority for release decisions. Article CQ6.', '', '', '', '', 'vp-engineering');
 
-INSERT INTO human_agents (human_agent_id, name, mbox, roles)
-VALUES ('james-okafor', 'James Okafor', 'james.okafor@specialsolutions.example', '');
+INSERT INTO agents (agent_id, name, type_of_agent, roles, description, model_version, mbox, artifacts, datasets)
+VALUES ('maria-gonzalez', 'Maria Gonzalez', 'human', 'release-manager', 'Human Release Manager', '', 'maria.gonzalez@specialsolutions.example', '', '');
+
+INSERT INTO agents (agent_id, name, type_of_agent, roles, description, model_version, mbox, artifacts, datasets)
+VALUES ('james-okafor', 'James Okafor', 'human', '', '', '', 'james.okafor@specialsolutions.example', '', '');
+
+INSERT INTO agents (agent_id, name, type_of_agent, roles, description, model_version, mbox, artifacts, datasets)
+VALUES ('riskanalysis-ai', 'RiskAnalysis-AI', 'ai', '', 'AI agent responsible for automated risk assessment. Processes Q1 2026 Risk Metrics dataset and produces Risk Report artifact. Article CQ8 demonstrates this agent''s dataset processing.', 'risk-classifier-v2.4.1', '', '', '');
+
+INSERT INTO agents (agent_id, name, type_of_agent, roles, description, model_version, mbox, artifacts, datasets)
+VALUES ('ci-pipeline', 'CI Pipeline', 'automatedpipeline', '', 'Continuous Integration pipeline responsible for automated build, test, and deployment execution. Fills the Deployment Engineer role for automated deployment steps.', '', '', '', '');
+
+INSERT INTO artifacts (artifact_id, name, description, produced_by, sequence_position)
+VALUES ('risk-report', 'Risk Report', 'Automated risk assessment output produced by the RiskAnalysis-AI agent. First artifact in the provenance chain.', '', 1);
+
+INSERT INTO artifacts (artifact_id, name, description, produced_by, sequence_position)
+VALUES ('legal-clearance', 'Legal Clearance', 'Legal compliance sign-off document produced after legal review. Certifies release meets regulatory requirements.', '', 2);
+
+INSERT INTO artifacts (artifact_id, name, description, produced_by, sequence_position)
+VALUES ('release-authorization', 'Release Authorization', 'Formal authorization to proceed with production deployment. Produced by Release Manager at the approval gate.', '', 3);
+
+INSERT INTO artifacts (artifact_id, name, description, produced_by, sequence_position)
+VALUES ('deployment-log', 'Deployment Log', 'Technical log of deployment execution including timestamps, systems affected, and any errors encountered.', '', 4);
+
+INSERT INTO artifacts (artifact_id, name, description, produced_by, sequence_position)
+VALUES ('post-deployment-report', 'Post-Deployment Report', 'Final report summarizing deployment outcome, metrics, and any follow-up items. Closes the workflow.', '', 5);
+
+INSERT INTO precedes_steps (precedes_step_id, name, from_step, to_step)
+VALUES ('step-1-to-2', 'step-1-to-2', 'risk-assessment', 'legal-review');
+
+INSERT INTO precedes_steps (precedes_step_id, name, from_step, to_step)
+VALUES ('step-2-to-3', 'step-2-to-3', 'legal-review', 'release-approval');
+
+INSERT INTO precedes_steps (precedes_step_id, name, from_step, to_step)
+VALUES ('step-3-to-4', 'step-3-to-4', 'release-approval', '');
+
+INSERT INTO datasets (dataset_id, name, description, processed_by, time_period)
+VALUES ('q1-2026-risk-metrics', 'Q1 2026 Risk Metrics', 'Quarterly risk metrics dataset containing historical deployment data, incident reports, and risk indicators. Processed by RiskAnalysis-AI to produce Risk Report. Article CQ8 answer.', '', 'Q1 2026');
+
+INSERT INTO departments (department_id, name, description, roles, count_of_roles, roles_2)
+VALUES ('engineering', 'Engineering', 'Software engineering department responsible for development, deployment, and technical operations. Owns Release Manager, VP Engineering, CTO, and Risk Analyst roles.', '', 0, '');
+
+INSERT INTO departments (department_id, name, description, roles, count_of_roles, roles_2)
+VALUES ('legal', 'Legal', 'Legal and compliance department responsible for regulatory review and legal clearance. Owns Legal Compliance Reviewer role.', '', 0, '');
+
+INSERT INTO types_of_agents (types_of_agent_id, name, description)
+VALUES ('human', 'Human', 'AI agent responsible for automated risk assessment. Processes Q1 2026 Risk Metrics dataset and produces Risk Report artifact. Article CQ8 demonstrates this agent''s dataset processing.');
+
+INSERT INTO types_of_agents (types_of_agent_id, name, description)
+VALUES ('ai', 'AI', 'AIAgents - Autonomous AI systems that can fill roles. Subclass of ntwf:Agent. Distinguished from HumanAgents by having ModelVersion instead of foaf:mbox.');
+
+INSERT INTO types_of_agents (types_of_agent_id, name, description)
+VALUES ('automatedpipeline', 'AutomatedPipeline', '');
 

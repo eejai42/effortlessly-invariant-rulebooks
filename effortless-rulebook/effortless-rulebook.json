@@ -71,8 +71,8 @@
         "Created": "2026-01-15",
         "Modified": "2026-01-15",
         "Identifier": "WF-PROD-001",
-        "WorkflowSteps": "risk-assessment, legal-review, release-approval, deployment-execution, post-deployment-review",
-        "CountOfWorkflowSteps": 5
+        "WorkflowSteps": "legal-review, risk-assessment, release-approval",
+        "CountOfWorkflowSteps": 3
       }
     ]
   },
@@ -169,6 +169,27 @@
         "nullable": true,
         "Description": "Denormalized lookup of agent currently filling the assigned role.",
         "formula": "=INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
+      },
+      {
+        "name": "PrecedesSteps",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "PrecedesSteps"
+      },
+      {
+        "name": "PrecedesSteps_2",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "PrecedesSteps"
+      },
+      {
+        "name": "ApprovalGates",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "ApprovalGates"
       }
     ],
     "data": [
@@ -183,8 +204,11 @@
         "IsStepOfIdentifier": "WF-PROD-001",
         "AssignedRoleLabel": "Risk Analyst",
         "AssignedRoleComment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
+        "PrecedesSteps": "step-1-to-2",
         "RequiresHumanApproval": false,
-        "AssignedRoleFilledBy": ""
+        "AssignedRoleFilledBy": "",
+        "PrecedesSteps_2": "",
+        "ApprovalGates": ""
       },
       {
         "WorkflowStepId": "legal-review",
@@ -198,7 +222,10 @@
         "IsStepOfIdentifier": "WF-PROD-001",
         "AssignedRoleLabel": "Legal Compliance Reviewer",
         "AssignedRoleComment": "Role responsible for legal and compliance review of releases.",
-        "AssignedRoleFilledBy": ""
+        "PrecedesSteps": "step-2-to-3",
+        "PrecedesSteps_2": "step-1-to-2",
+        "AssignedRoleFilledBy": "",
+        "ApprovalGates": ""
       },
       {
         "WorkflowStepId": "release-approval",
@@ -211,478 +238,22 @@
         "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman\u0027s NTWF ontology article.",
         "IsStepOfIdentifier": "WF-PROD-001",
         "AssignedRoleLabel": "Release Manager",
-        "AssignedRoleComment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
-        "AssignedRoleFilledBy": "maria-gonzalez"
-      },
-      {
-        "WorkflowStepId": "deployment-execution",
-        "Label": "Deployment Execution",
-        "SequencePosition": 4,
-        "RequiresHumanApproval": false,
-        "IsStepOf": "production-deployment-workflow",
-        "AssignedRole": "deployment-engineer",
-        "IsStepOfTitle": "Production Deployment Workflow",
-        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
-        "IsStepOfIdentifier": "WF-PROD-001",
-        "AssignedRoleLabel": "Deployment Engineer",
-        "AssignedRoleComment": "Role responsible for executing production deployments. Typically filled by CI Pipeline automation.",
-        "AssignedRoleFilledBy": "ci-pipeline"
-      },
-      {
-        "WorkflowStepId": "post-deployment-review",
-        "Label": "Post-Deployment Review",
-        "SequencePosition": 5,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "production-deployment-workflow",
-        "AssignedRole": "release-manager",
-        "IsStepOfTitle": "Production Deployment Workflow",
-        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
-        "IsStepOfIdentifier": "WF-PROD-001",
-        "AssignedRoleLabel": "Release Manager",
-        "AssignedRoleComment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
-        "AssignedRoleFilledBy": "maria-gonzalez"
-      }
-    ]
-  },
-  "Roles": {
-    "Description": "Table: Roles",
-    "schema": [
-      {
-        "name": "RoleId",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": false
-      },
-      {
-        "name": "Label",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Human-readable name for the role. Maps to rdfs:label."
-      },
-      {
-        "name": "Comment",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Description of the role\u0027s responsibilities. Maps to rdfs:comment."
-      },
-      {
-        "name": "FilledBy",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.",
-        "RelatedTo": "HumanAgents"
-      },
-      {
-        "name": "WorkflowSteps",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Steps assigned to this role. Inverse of AssignedRole.",
-        "RelatedTo": "WorkflowSteps"
-      },
-      {
-        "name": "CountOfWorkflowSteps",
-        "datatype": "integer",
-        "type": "aggregation",
-        "nullable": true,
-        "Description": "Count of workflow steps assigned to this role.",
-        "formula": "=COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})"
-      },
-      {
-        "name": "DelegatesTo",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Role to escalate to when this role\u0027s agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.",
-        "RelatedTo": "Roles"
-      },
-      {
-        "name": "Label_from_DelegatesTo",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "formula": "=INDEX(Roles!{{Label}}, MATCH(Roles!{{DelegatesTo}}, Roles!{{RoleId}}, 0))"
-      },
-      {
-        "name": "FilledByName",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of agent name (foaf:name) filling this role.",
-        "formula": "=INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))"
-      },
-      {
-        "name": "FilledByMBox",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of agent email (foaf:mbox) filling this role.",
-        "formula": "=INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))"
-      },
-      {
-        "name": "DelegatedToBy",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Inverse of DelegatesTo. Role that delegates to this role.",
-        "RelatedTo": "Roles"
-      },
-      {
-        "name": "Department",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Department that owns this role. Maps to org:memberOf.",
-        "RelatedTo": "Departments"
-      },
-      {
-        "name": "DepartmentName",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of owning department name.",
-        "formula": "=INDEX(Departments!{{Name}}, MATCH(Roles!{{Department}}, Departments!{{DepartmentId}}, 0))"
-      }
-    ],
-    "data": [
-      {
-        "RoleId": "release-manager",
-        "Label": "Release Manager",
-        "Comment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
-        "FilledBy": "maria-gonzalez",
-        "WorkflowSteps": "release-approval, post-deployment-review",
-        "FilledByName": "Maria Gonzalez",
-        "FilledByMBox": "maria.gonzalez@specialsolutions.example",
-        "CountOfWorkflowSteps": 2,
-        "DelegatesTo": "vp-engineering",
-        "Label_from_DelegatesTo": "VP Engineering",
-        "DelegatedToBy": "",
-        "Department": "engineering",
-        "DepartmentName": "Engineering"
-      },
-      {
-        "RoleId": "legal-compliance-reviewer",
-        "Label": "Legal Compliance Reviewer",
-        "Comment": "Role responsible for legal and compliance review of releases.",
-        "WorkflowSteps": "legal-review",
-        "CountOfWorkflowSteps": 1,
-        "FilledBy": "",
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": "",
-        "Department": "legal",
-        "DepartmentName": "Legal"
-      },
-      {
-        "RoleId": "risk-analyst",
-        "Label": "Risk Analyst",
-        "Comment": "Role responsible for risk assessment. Filled by RiskAnalysis-AI agent in the worked example.",
-        "WorkflowSteps": "risk-assessment",
-        "CountOfWorkflowSteps": 1,
-        "FilledBy": "risk-analysis-ai",
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": "",
-        "Department": "engineering",
-        "DepartmentName": "Engineering"
-      },
-      {
-        "RoleId": "vp-engineering",
-        "Label": "VP Engineering",
-        "Comment": "Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6.",
-        "CountOfWorkflowSteps": 0,
-        "DelegatesTo": "cto",
-        "DelegatedToBy": "release-manager",
-        "Label_from_DelegatesTo": "CTO",
-        "FilledBy": "",
-        "WorkflowSteps": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "Department": "engineering",
-        "DepartmentName": "Engineering"
-      },
-      {
-        "RoleId": "cto",
-        "Label": "CTO",
-        "Comment": "Final role in delegation chain. Ultimate authority for release decisions. Article CQ6.",
-        "CountOfWorkflowSteps": 0,
-        "DelegatedToBy": "vp-engineering",
-        "FilledBy": "",
-        "WorkflowSteps": "",
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "Department": "engineering",
-        "DepartmentName": "Engineering"
-      },
-      {
-        "RoleId": "deployment-engineer",
-        "Label": "Deployment Engineer",
-        "Comment": "Role responsible for executing production deployments. Typically filled by CI Pipeline automation.",
-        "WorkflowSteps": "deployment-execution",
-        "CountOfWorkflowSteps": 1,
-        "FilledBy": "ci-pipeline",
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": "",
-        "Department": "engineering",
-        "DepartmentName": "Engineering"
-      }
-    ]
-  },
-  "HumanAgents": {
-    "Description": "Table: HumanAgents",
-    "schema": [
-      {
-        "name": "HumanAgentId",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": false
-      },
-      {
-        "name": "Name",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Full name of the person. Maps to foaf:name per FOAF ontology."
-      },
-      {
-        "name": "Mbox",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution."
-      },
-      {
-        "name": "Roles",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Roles filled by this agent. Inverse of FilledBy.",
-        "RelatedTo": "Roles"
-      },
-      {
-        "name": "CountOfRoles",
-        "datatype": "integer",
-        "type": "aggregation",
-        "nullable": true,
-        "Description": "Count of roles currently filled by this agent.",
-        "formula": "=COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})"
-      }
-    ],
-    "data": [
-      {
-        "HumanAgentId": "maria-gonzalez",
-        "Name": "Maria Gonzalez",
-        "Mbox": "maria.gonzalez@specialsolutions.example",
-        "Roles": "release-manager",
-        "CountOfRoles": 1
-      },
-      {
-        "HumanAgentId": "james-okafor",
-        "Name": "James Okafor",
-        "Mbox": "james.okafor@specialsolutions.example",
-        "CountOfRoles": 0,
-        "Roles": ""
-      }
-    ]
-  },
-  "Departments": {
-    "Description": "Table: Departments - Organizational units that own roles and workflows. Maps to org:Organization from W3C Organization Ontology.",
-    "schema": [
-      {
-        "name": "DepartmentId",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for the department. Used as foreign key in Roles table."
-      },
-      {
-        "name": "Name",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Human-readable name of the department. Maps to rdfs:label."
-      },
-      {
-        "name": "Description",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Description of the department's function and responsibilities."
-      },
-      {
-        "name": "Roles",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Roles owned by this department. Inverse of Department on Roles.",
-        "RelatedTo": "Roles"
-      },
-      {
-        "name": "CountOfRoles",
-        "datatype": "integer",
-        "type": "aggregation",
-        "nullable": true,
-        "Description": "Count of roles owned by this department.",
-        "formula": "=COUNTIFS(Roles!{{Department}}, Departments!{{DepartmentId}})"
-      }
-    ],
-    "data": [
-      {
-        "DepartmentId": "engineering",
-        "Name": "Engineering",
-        "Description": "Software engineering department responsible for development, deployment, and technical operations. Owns Release Manager, VP Engineering, CTO, and Risk Analyst roles.",
-        "Roles": "release-manager, vp-engineering, cto, risk-analyst, deployment-engineer",
-        "CountOfRoles": 5
-      },
-      {
-        "DepartmentId": "legal",
-        "Name": "Legal",
-        "Description": "Legal and compliance department responsible for regulatory review and legal clearance. Owns Legal Compliance Reviewer role.",
-        "Roles": "legal-compliance-reviewer",
-        "CountOfRoles": 1
-      }
-    ]
-  },
-  "AIAgents": {
-    "Description": "Table: AIAgents - Autonomous AI systems that can fill roles. Subclass of ntwf:Agent. Distinguished from HumanAgents by having ModelVersion instead of foaf:mbox.",
-    "schema": [
-      {
-        "name": "AIAgentId",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for the AI agent. Used as foreign key in Roles.FilledBy."
-      },
-      {
-        "name": "Name",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Display name of the AI agent. Maps to schema:name."
-      },
-      {
-        "name": "Description",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Description of the AI agent's purpose and capabilities."
-      },
-      {
-        "name": "ModelVersion",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Version string of the AI model. Maps to ntwf:modelVersion. Machine-readable identifier for the specific model instance."
-      },
-      {
-        "name": "Roles",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Roles currently filled by this AI agent. Inverse of FilledBy.",
-        "RelatedTo": "Roles"
-      },
-      {
-        "name": "CountOfRoles",
-        "datatype": "integer",
-        "type": "aggregation",
-        "nullable": true,
-        "Description": "Count of roles currently filled by this AI agent.",
-        "formula": "=COUNTIFS(Roles!{{FilledBy}}, AIAgents!{{AIAgentId}})"
-      },
-      {
-        "name": "ProcessesDatasets",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Datasets processed by this AI agent. Maps to ntwf:processesDataset.",
-        "RelatedTo": "Datasets"
-      }
-    ],
-    "data": [
-      {
-        "AIAgentId": "risk-analysis-ai",
-        "Name": "RiskAnalysis-AI",
-        "Description": "AI agent responsible for automated risk assessment. Processes Q1 2026 Risk Metrics dataset and produces Risk Report artifact. Article CQ8 demonstrates this agent's dataset processing.",
-        "ModelVersion": "risk-classifier-v2.4.1",
-        "Roles": "risk-analyst",
-        "CountOfRoles": 1,
-        "ProcessesDatasets": "risk-metrics-q1-2026"
-      }
-    ]
-  },
-  "AutomatedPipelines": {
-    "Description": "Table: AutomatedPipelines - CI/CD and automation pipelines that can fill roles. Subclass of ntwf:Agent. Represents non-AI automated systems.",
-    "schema": [
-      {
-        "name": "AutomatedPipelineId",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for the pipeline. Used as foreign key in Roles.FilledBy."
-      },
-      {
-        "name": "Name",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Display name of the pipeline. Maps to schema:name."
-      },
-      {
-        "name": "Description",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Description of the pipeline's purpose and what it automates."
-      },
-      {
-        "name": "Roles",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "Roles currently filled by this pipeline. Inverse of FilledBy.",
-        "RelatedTo": "Roles"
-      },
-      {
-        "name": "CountOfRoles",
-        "datatype": "integer",
-        "type": "aggregation",
-        "nullable": true,
-        "Description": "Count of roles currently filled by this pipeline.",
-        "formula": "=COUNTIFS(Roles!{{FilledBy}}, AutomatedPipelines!{{AutomatedPipelineId}})"
-      }
-    ],
-    "data": [
-      {
-        "AutomatedPipelineId": "ci-pipeline",
-        "Name": "CI Pipeline",
-        "Description": "Continuous Integration pipeline responsible for automated build, test, and deployment execution. Fills the Deployment Engineer role for automated deployment steps.",
-        "Roles": "deployment-engineer",
-        "CountOfRoles": 1
+        "AssignedRoleComment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: \u0027filled by Maria Gonzalez\u0027",
+        "AssignedRoleFilledBy": "maria-gonzalez",
+        "PrecedesSteps": "step-3-to-4",
+        "PrecedesSteps_2": "step-2-to-3",
+        "ApprovalGates": ""
       }
     ]
   },
   "ApprovalGates": {
-    "Description": "Table: ApprovalGates - Workflow steps that require explicit approval before proceeding. Double-typed as both ApprovalGate and WorkflowStep in the ontology.",
+    "Description": "Table: ApprovalGates",
     "schema": [
       {
         "name": "ApprovalGateId",
         "datatype": "string",
         "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for the approval gate."
+        "nullable": false
       },
       {
         "name": "Name",
@@ -712,14 +283,6 @@
         "type": "raw",
         "nullable": true,
         "Description": "Hours that may elapse before delegation chain activates. Maps to ntwf:escalationThresholdHours."
-      },
-      {
-        "name": "WorkflowStepLabel",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of the associated workflow step label.",
-        "formula": "=INDEX(WorkflowSteps!{{Label}}, MATCH(ApprovalGates!{{WorkflowStep}}, WorkflowSteps!{{WorkflowStepId}}, 0))"
       }
     ],
     "data": [
@@ -727,21 +290,311 @@
         "ApprovalGateId": "release-approval-gate",
         "Name": "Release Approval Gate",
         "Description": "Final approval gate before production deployment. Requires Release Manager sign-off. Step 3 in the Production Deployment Workflow. When approval is pending beyond threshold, escalates via delegation chain.",
-        "WorkflowStep": "release-approval",
         "EscalationThresholdHours": 24,
-        "WorkflowStepLabel": "Release Approval"
+        "WorkflowStep": ""
+      }
+    ]
+  },
+  "Roles": {
+    "Description": "Table: Roles",
+    "schema": [
+      {
+        "name": "RoleId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Label",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Human-readable name for the role. Maps to rdfs:label."
+      },
+      {
+        "name": "Comment",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Description of the role\u0027s responsibilities. Maps to rdfs:comment."
+      },
+      {
+        "name": "Department",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Department that owns this role. Maps to org:memberOf.",
+        "RelatedTo": "Departments"
+      },
+      {
+        "name": "FilledBy",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.",
+        "RelatedTo": "Agents"
+      },
+      {
+        "name": "WorkflowSteps",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Steps assigned to this role. Inverse of AssignedRole.",
+        "RelatedTo": "WorkflowSteps"
+      },
+      {
+        "name": "CountOfWorkflowSteps",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "Description": "Count of workflow steps assigned to this role.",
+        "formula": "=COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})"
+      },
+      {
+        "name": "DelegatesTo",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Role to escalate to when this role\u0027s agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.",
+        "RelatedTo": "Roles"
+      },
+      {
+        "name": "DelegatesToLabel",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Roles!{{Label}}, MATCH(Roles!{{DelegatesTo}}, Roles!{{RoleId}}, 0))"
+      },
+      {
+        "name": "FilledByName",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Denormalized lookup of agent name (foaf:name) filling this role.",
+        "formula": "=INDEX(Agents!{{Name}}, MATCH(Roles!{{FilledBy}}, Agents!{{AgentId}}, 0))"
+      },
+      {
+        "name": "FilledByMBox",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Denormalized lookup of agent email (foaf:mbox) filling this role.",
+        "formula": "=INDEX(Agents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, Agents!{{AgentId}}, 0))"
+      },
+      {
+        "name": "DelegatedToBy",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Inverse of DelegatesTo. Role that delegates to this role.",
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "RoleId": "release-manager",
+        "Label": "Release Manager",
+        "Comment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: \u0027filled by Maria Gonzalez\u0027",
+        "FilledBy": "maria-gonzalez",
+        "WorkflowSteps": "release-approval",
+        "FilledByName": "Maria Gonzalez",
+        "FilledByMBox": "maria.gonzalez@specialsolutions.example",
+        "CountOfWorkflowSteps": 1,
+        "DelegatesTo": "vp-engineering",
+        "DelegatesToLabel": "VP Engineering",
+        "Department": "",
+        "DelegatedToBy": ""
+      },
+      {
+        "RoleId": "legal-compliance-reviewer",
+        "Label": "Legal Compliance Reviewer",
+        "Comment": "Role responsible for legal and compliance review of releases.",
+        "WorkflowSteps": "legal-review",
+        "CountOfWorkflowSteps": 1,
+        "Department": "",
+        "FilledBy": "",
+        "DelegatesTo": "",
+        "DelegatesToLabel": "",
+        "FilledByName": "",
+        "FilledByMBox": "",
+        "DelegatedToBy": ""
+      },
+      {
+        "RoleId": "risk-analyst",
+        "Label": "Risk Analyst",
+        "Comment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
+        "WorkflowSteps": "risk-assessment",
+        "CountOfWorkflowSteps": 1,
+        "Department": "",
+        "FilledBy": "",
+        "DelegatesTo": "",
+        "DelegatesToLabel": "",
+        "FilledByName": "",
+        "FilledByMBox": "",
+        "DelegatedToBy": ""
+      },
+      {
+        "RoleId": "vp-engineering",
+        "Label": "VP Engineering",
+        "Comment": "Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6.",
+        "CountOfWorkflowSteps": 0,
+        "DelegatesTo": "cto",
+        "DelegatedToBy": "release-manager",
+        "DelegatesToLabel": "CTO",
+        "Department": "",
+        "FilledBy": "",
+        "WorkflowSteps": "",
+        "FilledByName": "",
+        "FilledByMBox": ""
+      },
+      {
+        "RoleId": "cto",
+        "Label": "CTO",
+        "Comment": "Final role in delegation chain. Ultimate authority for release decisions. Article CQ6.",
+        "CountOfWorkflowSteps": 0,
+        "DelegatedToBy": "vp-engineering",
+        "Department": "",
+        "FilledBy": "",
+        "WorkflowSteps": "",
+        "DelegatesTo": "",
+        "DelegatesToLabel": "",
+        "FilledByName": "",
+        "FilledByMBox": ""
+      }
+    ]
+  },
+  "Agents": {
+    "Description": "Table: Agents",
+    "schema": [
+      {
+        "name": "AgentId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Full name of the person. Maps to foaf:name per FOAF ontology."
+      },
+      {
+        "name": "TypeOfAgent",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "TypesOfAgents"
+      },
+      {
+        "name": "Roles",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Roles filled by this agent. Inverse of FilledBy.",
+        "RelatedTo": "Roles"
+      },
+      {
+        "name": "Description",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "ModelVersion",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Mbox",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution."
+      },
+      {
+        "name": "CountOfRoles",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "Description": "Count of roles currently filled by this agent.",
+        "formula": "=COUNTIFS(Roles!{{FilledBy}}, Agents!{{AgentId}})"
+      },
+      {
+        "name": "Artifacts",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Artifacts"
+      },
+      {
+        "name": "Datasets",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Datasets"
+      }
+    ],
+    "data": [
+      {
+        "AgentId": "maria-gonzalez",
+        "Name": "Maria Gonzalez",
+        "Mbox": "maria.gonzalez@specialsolutions.example",
+        "Roles": "release-manager",
+        "CountOfRoles": 1,
+        "TypeOfAgent": "human",
+        "Description": "Human Release Manager",
+        "ModelVersion": "",
+        "Artifacts": "",
+        "Datasets": ""
+      },
+      {
+        "AgentId": "james-okafor",
+        "Name": "James Okafor",
+        "Mbox": "james.okafor@specialsolutions.example",
+        "CountOfRoles": 0,
+        "TypeOfAgent": "human",
+        "Roles": "",
+        "Description": "",
+        "ModelVersion": "",
+        "Artifacts": "",
+        "Datasets": ""
+      },
+      {
+        "AgentId": "riskanalysis-ai",
+        "Name": "RiskAnalysis-AI",
+        "CountOfRoles": 0,
+        "TypeOfAgent": "ai",
+        "ModelVersion": "risk-classifier-v2.4.1",
+        "Description": "AI agent responsible for automated risk assessment. Processes Q1 2026 Risk Metrics dataset and produces Risk Report artifact. Article CQ8 demonstrates this agent\u0027s dataset processing.",
+        "Roles": "",
+        "Mbox": "",
+        "Artifacts": "",
+        "Datasets": ""
+      },
+      {
+        "AgentId": "ci-pipeline",
+        "Name": "CI Pipeline",
+        "CountOfRoles": 0,
+        "TypeOfAgent": "automatedpipeline",
+        "Description": "Continuous Integration pipeline responsible for automated build, test, and deployment execution. Fills the Deployment Engineer role for automated deployment steps.",
+        "Roles": "",
+        "ModelVersion": "",
+        "Mbox": "",
+        "Artifacts": "",
+        "Datasets": ""
       }
     ]
   },
   "Artifacts": {
-    "Description": "Table: Artifacts - Tangible outputs produced by workflow steps. Maps to ntwf:Artifact. Forms a provenance chain through the workflow.",
+    "Description": "Table: Artifacts",
     "schema": [
       {
         "name": "ArtifactId",
         "datatype": "string",
         "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for the artifact."
+        "nullable": false
       },
       {
         "name": "Name",
@@ -755,7 +608,7 @@
         "datatype": "string",
         "type": "raw",
         "nullable": true,
-        "Description": "Description of the artifact's content and purpose."
+        "Description": "Description of the artifact\u0027s content and purpose."
       },
       {
         "name": "ProducedBy",
@@ -763,15 +616,7 @@
         "type": "relationship",
         "nullable": true,
         "Description": "Workflow step that produces this artifact. Maps to ntwf:producedBy.",
-        "RelatedTo": "WorkflowSteps"
-      },
-      {
-        "name": "ProducedByLabel",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of the producing step's label.",
-        "formula": "=INDEX(WorkflowSteps!{{Label}}, MATCH(Artifacts!{{ProducedBy}}, WorkflowSteps!{{WorkflowStepId}}, 0))"
+        "RelatedTo": "Agents"
       },
       {
         "name": "SequencePosition",
@@ -786,112 +631,53 @@
         "ArtifactId": "risk-report",
         "Name": "Risk Report",
         "Description": "Automated risk assessment output produced by the RiskAnalysis-AI agent. First artifact in the provenance chain.",
-        "ProducedBy": "risk-assessment",
-        "ProducedByLabel": "Risk Assessment",
-        "SequencePosition": 1
+        "SequencePosition": 1,
+        "ProducedBy": ""
       },
       {
         "ArtifactId": "legal-clearance",
         "Name": "Legal Clearance",
         "Description": "Legal compliance sign-off document produced after legal review. Certifies release meets regulatory requirements.",
-        "ProducedBy": "legal-review",
-        "ProducedByLabel": "Legal Review",
-        "SequencePosition": 2
+        "SequencePosition": 2,
+        "ProducedBy": ""
       },
       {
         "ArtifactId": "release-authorization",
         "Name": "Release Authorization",
         "Description": "Formal authorization to proceed with production deployment. Produced by Release Manager at the approval gate.",
-        "ProducedBy": "release-approval",
-        "ProducedByLabel": "Release Approval",
-        "SequencePosition": 3
+        "SequencePosition": 3,
+        "ProducedBy": ""
       },
       {
         "ArtifactId": "deployment-log",
         "Name": "Deployment Log",
         "Description": "Technical log of deployment execution including timestamps, systems affected, and any errors encountered.",
-        "ProducedBy": "deployment-execution",
-        "ProducedByLabel": "Deployment Execution",
-        "SequencePosition": 4
+        "SequencePosition": 4,
+        "ProducedBy": ""
       },
       {
         "ArtifactId": "post-deployment-report",
         "Name": "Post-Deployment Report",
         "Description": "Final report summarizing deployment outcome, metrics, and any follow-up items. Closes the workflow.",
-        "ProducedBy": "post-deployment-review",
-        "ProducedByLabel": "Post-Deployment Review",
-        "SequencePosition": 5
-      }
-    ]
-  },
-  "Datasets": {
-    "Description": "Table: Datasets - Data sources processed by AI agents. Maps to ntwf:Dataset. Article CQ8: 'What datasets are processed by the Risk Analysis AI?'",
-    "schema": [
-      {
-        "name": "DatasetId",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for the dataset."
-      },
-      {
-        "name": "Name",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Display name of the dataset. Maps to dct:title."
-      },
-      {
-        "name": "Description",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Description of the dataset's content and source."
-      },
-      {
-        "name": "ProcessedBy",
-        "datatype": "string",
-        "type": "relationship",
-        "nullable": true,
-        "Description": "AI agent that processes this dataset. Inverse of ProcessesDatasets.",
-        "RelatedTo": "AIAgents"
-      },
-      {
-        "name": "ProcessedByName",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of the processing agent's name.",
-        "formula": "=INDEX(AIAgents!{{Name}}, MATCH(Datasets!{{ProcessedBy}}, AIAgents!{{AIAgentId}}, 0))"
-      },
-      {
-        "name": "TimePeriod",
-        "datatype": "string",
-        "type": "raw",
-        "nullable": true,
-        "Description": "Time period the dataset covers (e.g., 'Q1 2026')."
-      }
-    ],
-    "data": [
-      {
-        "DatasetId": "risk-metrics-q1-2026",
-        "Name": "Q1 2026 Risk Metrics",
-        "Description": "Quarterly risk metrics dataset containing historical deployment data, incident reports, and risk indicators. Processed by RiskAnalysis-AI to produce Risk Report. Article CQ8 answer.",
-        "ProcessedBy": "risk-analysis-ai",
-        "ProcessedByName": "RiskAnalysis-AI",
-        "TimePeriod": "Q1 2026"
+        "SequencePosition": 5,
+        "ProducedBy": ""
       }
     ]
   },
   "PrecedesSteps": {
-    "Description": "Table: PrecedesSteps - Ordering relationships between workflow steps. Maps to ntwf:precedes. Enables answering 'what step comes after X?'",
+    "Description": "Table: PrecedesSteps",
     "schema": [
       {
         "name": "PrecedesStepId",
         "datatype": "string",
         "type": "raw",
-        "nullable": false,
-        "Description": "Unique identifier for this precedence relationship."
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
       },
       {
         "name": "FromStep",
@@ -908,52 +694,191 @@
         "nullable": true,
         "Description": "The step that comes AFTER (target of the precedes edge).",
         "RelatedTo": "WorkflowSteps"
-      },
-      {
-        "name": "FromStepLabel",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of the source step's label.",
-        "formula": "=INDEX(WorkflowSteps!{{Label}}, MATCH(PrecedesSteps!{{FromStep}}, WorkflowSteps!{{WorkflowStepId}}, 0))"
-      },
-      {
-        "name": "ToStepLabel",
-        "datatype": "string",
-        "type": "lookup",
-        "nullable": true,
-        "Description": "Denormalized lookup of the target step's label.",
-        "formula": "=INDEX(WorkflowSteps!{{Label}}, MATCH(PrecedesSteps!{{ToStep}}, WorkflowSteps!{{WorkflowStepId}}, 0))"
       }
     ],
     "data": [
       {
         "PrecedesStepId": "step-1-to-2",
+        "Name": "step-1-to-2",
         "FromStep": "risk-assessment",
-        "ToStep": "legal-review",
-        "FromStepLabel": "Risk Assessment",
-        "ToStepLabel": "Legal Review"
+        "ToStep": "legal-review"
       },
       {
         "PrecedesStepId": "step-2-to-3",
+        "Name": "step-2-to-3",
         "FromStep": "legal-review",
-        "ToStep": "release-approval",
-        "FromStepLabel": "Legal Review",
-        "ToStepLabel": "Release Approval"
+        "ToStep": "release-approval"
       },
       {
         "PrecedesStepId": "step-3-to-4",
+        "Name": "step-3-to-4",
         "FromStep": "release-approval",
-        "ToStep": "deployment-execution",
-        "FromStepLabel": "Release Approval",
-        "ToStepLabel": "Deployment Execution"
+        "ToStep": ""
+      }
+    ]
+  },
+  "Datasets": {
+    "Description": "Table: Datasets",
+    "schema": [
+      {
+        "name": "DatasetId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
       },
       {
-        "PrecedesStepId": "step-4-to-5",
-        "FromStep": "deployment-execution",
-        "ToStep": "post-deployment-review",
-        "FromStepLabel": "Deployment Execution",
-        "ToStepLabel": "Post-Deployment Review"
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Display name of the dataset. Maps to dct:title."
+      },
+      {
+        "name": "Description",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Description of the dataset\u0027s content and source."
+      },
+      {
+        "name": "ProcessedBy",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "AI agent that processes this dataset. Inverse of ProcessesDatasets.",
+        "RelatedTo": "Agents"
+      },
+      {
+        "name": "TimePeriod",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Time period the dataset covers (e.g., \u0027Q1 2026\u0027)."
+      }
+    ],
+    "data": [
+      {
+        "DatasetId": "q1-2026-risk-metrics",
+        "Name": "Q1 2026 Risk Metrics",
+        "Description": "Quarterly risk metrics dataset containing historical deployment data, incident reports, and risk indicators. Processed by RiskAnalysis-AI to produce Risk Report. Article CQ8 answer.",
+        "TimePeriod": "Q1 2026",
+        "ProcessedBy": ""
+      }
+    ]
+  },
+  "Departments": {
+    "Description": "Table: Departments",
+    "schema": [
+      {
+        "name": "DepartmentId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Human-readable name of the department. Maps to rdfs:label."
+      },
+      {
+        "name": "Description",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Description of the department\u0027s function and responsibilities."
+      },
+      {
+        "name": "Roles",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Roles owned by this department. Inverse of Department on Roles."
+      },
+      {
+        "name": "CountOfRoles",
+        "datatype": "integer",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Count of roles owned by this department."
+      },
+      {
+        "name": "Roles_2",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Roles"
+      }
+    ],
+    "data": [
+      {
+        "DepartmentId": "engineering",
+        "Name": "Engineering",
+        "Description": "Software engineering department responsible for development, deployment, and technical operations. Owns Release Manager, VP Engineering, CTO, and Risk Analyst roles.",
+        "Roles": "",
+        "CountOfRoles": 0,
+        "Roles_2": ""
+      },
+      {
+        "DepartmentId": "legal",
+        "Name": "Legal",
+        "Description": "Legal and compliance department responsible for regulatory review and legal clearance. Owns Legal Compliance Reviewer role.",
+        "Roles": "",
+        "CountOfRoles": 0,
+        "Roles_2": ""
+      }
+    ]
+  },
+  "TypesOfAgents": {
+    "Description": "Table: TypesOfAgents",
+    "schema": [
+      {
+        "name": "TypesOfAgentId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Display name of the AI agent. Maps to schema:name."
+      },
+      {
+        "name": "Description",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Description of the AI agent\u0027s purpose and capabilities."
+      },
+      {
+        "name": "Agents",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Agents"
+      }
+    ],
+    "data": [
+      {
+        "TypesOfAgentId": "human",
+        "Name": "Human",
+        "Description": "AI agent responsible for automated risk assessment. Processes Q1 2026 Risk Metrics dataset and produces Risk Report artifact. Article CQ8 demonstrates this agent\u0027s dataset processing.",
+        "Agents": "maria-gonzalez, james-okafor"
+      },
+      {
+        "TypesOfAgentId": "ai",
+        "Name": "AI",
+        "Description": "AIAgents - Autonomous AI systems that can fill roles. Subclass of ntwf:Agent. Distinguished from HumanAgents by having ModelVersion instead of foaf:mbox.",
+        "Agents": "riskanalysis-ai"
+      },
+      {
+        "TypesOfAgentId": "automatedpipeline",
+        "Name": "AutomatedPipeline",
+        "Agents": "ci-pipeline",
+        "Description": ""
       }
     ]
   },
@@ -961,7 +886,7 @@
     "_CMCC_Summary": "Airtable export with schema-first type mapping: Schemas, Data, Relationships (FK links), Lookups (INDEX/MATCH), Aggregations (SUMIFS/COUNTIFS/Rollups), and Calculated fields (formulas) in Excel dialect. Field types are determined from Airtable\u0027s schema metadata FIRST (no coercion), with intelligent fallback to formula/data analysis only when schema is unavailable.",
     "_conversion_metadata": {
       "source_base_id": "app6afUqa0zBTiMzM",
-      "table_count": 11,
+      "table_count": 10,
       "tool_version": "2.0.0",
       "field_type_mapping": "checkbox\u2192boolean, number\u2192number/integer, multipleRecordLinks\u2192relationship, multipleLookupValues\u2192lookup, rollup\u2192aggregation, count\u2192aggregation, formula\u2192calculated",
       "export_mode": "schema_first_type_mapping",

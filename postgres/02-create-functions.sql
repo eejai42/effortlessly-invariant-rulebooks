@@ -135,8 +135,36 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
+CREATE OR REPLACE FUNCTION get_precedes_steps_name(p_precedes_step_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM precedes_steps WHERE precedes_step_id = p_precedes_step_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION calc_roles_label_from_delegates_to(p_role_id TEXT)
+CREATE OR REPLACE FUNCTION get_approval_gates_name(p_approval_gate_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM approval_gates WHERE approval_gate_id = p_approval_gate_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_approval_gates_description(p_approval_gate_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT description FROM approval_gates WHERE approval_gate_id = p_approval_gate_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_approval_gates_escalation_threshold_hours(p_approval_gate_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT escalation_threshold_hours FROM approval_gates WHERE approval_gate_id = p_approval_gate_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_roles_delegates_to_label(p_role_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
   RETURN (SELECT label::text FROM roles WHERE role_id = (SELECT delegates_to FROM roles WHERE role_id = p_role_id));
@@ -147,7 +175,7 @@ $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION calc_roles_filled_by_name(p_role_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (SELECT name::text FROM human_agents WHERE human_agent_id = (SELECT filled_by FROM roles WHERE role_id = p_role_id));
+  RETURN (SELECT name::text FROM agents WHERE agent_id = (SELECT filled_by FROM roles WHERE role_id = p_role_id));
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -155,21 +183,63 @@ $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION calc_roles_filled_by_m_box(p_role_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (SELECT mbox::text FROM human_agents WHERE human_agent_id = (SELECT filled_by FROM roles WHERE role_id = p_role_id));
+  RETURN (SELECT mbox::text FROM agents WHERE agent_id = (SELECT filled_by FROM roles WHERE role_id = p_role_id));
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION get_human_agents_name(p_human_agent_id TEXT)
+CREATE OR REPLACE FUNCTION get_departments_name(p_department_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (SELECT name FROM human_agents WHERE human_agent_id = p_human_agent_id);
+  RETURN (SELECT name FROM departments WHERE department_id = p_department_id);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION get_human_agents_mbox(p_human_agent_id TEXT)
+CREATE OR REPLACE FUNCTION get_departments_description(p_department_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (SELECT mbox FROM human_agents WHERE human_agent_id = p_human_agent_id);
+  RETURN (SELECT description FROM departments WHERE department_id = p_department_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_departments_roles(p_department_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT roles FROM departments WHERE department_id = p_department_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_departments_count_of_roles(p_department_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT count_of_roles FROM departments WHERE department_id = p_department_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_agents_name(p_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM agents WHERE agent_id = p_agent_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_agents_description(p_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT description FROM agents WHERE agent_id = p_agent_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_agents_model_version(p_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT model_version FROM agents WHERE agent_id = p_agent_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_agents_mbox(p_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT mbox FROM agents WHERE agent_id = p_agent_id);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -181,11 +251,67 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
+CREATE OR REPLACE FUNCTION get_types_of_agents_name(p_types_of_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM types_of_agents WHERE types_of_agent_id = p_types_of_agent_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION calc_human_agents_count_of_roles(p_human_agent_id TEXT)
+CREATE OR REPLACE FUNCTION get_types_of_agents_description(p_types_of_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT description FROM types_of_agents WHERE types_of_agent_id = p_types_of_agent_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_artifacts_name(p_artifact_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM artifacts WHERE artifact_id = p_artifact_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_artifacts_description(p_artifact_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT description FROM artifacts WHERE artifact_id = p_artifact_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_artifacts_sequence_position(p_artifact_id TEXT)
 RETURNS INTEGER AS $$
 BEGIN
-  RETURN ((SELECT COUNT(*) FROM roles WHERE filled_by = (SELECT NULLIF(human_agent_id, '') FROM human_agents WHERE human_agent_id = p_human_agent_id)));
+  RETURN (SELECT sequence_position FROM artifacts WHERE artifact_id = p_artifact_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_datasets_name(p_dataset_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM datasets WHERE dataset_id = p_dataset_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_datasets_description(p_dataset_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT description FROM datasets WHERE dataset_id = p_dataset_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_datasets_time_period(p_dataset_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT time_period FROM datasets WHERE dataset_id = p_dataset_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_agents_count_of_roles(p_agent_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN ((SELECT COUNT(*) FROM roles WHERE filled_by = (SELECT NULLIF(agent_id, '') FROM agents WHERE agent_id = p_agent_id)));
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -201,6 +327,17 @@ BEGIN
     SELECT STRING_AGG(workflow_step_id::TEXT, ', ' ORDER BY workflow_step_id)
     FROM workflow_steps
     WHERE is_step_of = p_workflow_id
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION calc_types_of_agents_agents(p_types_of_agent_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (
+    SELECT STRING_AGG(agent_id::TEXT, ', ' ORDER BY agent_id)
+    FROM agents
+    WHERE type_of_agent = p_types_of_agent_id
   );
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
