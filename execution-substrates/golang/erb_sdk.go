@@ -89,77 +89,76 @@ func (f FlexibleString) String() string {
 }
 
 // =============================================================================
-// WORKFLOWS TABLE
-// Table: Workflows
+// CUSTOMERS TABLE
+// Table: Customers
 // =============================================================================
 
-// Workflow represents a row in the Workflows table
-// Table: Workflows
-type Workflow struct {
-	WorkflowId string `json:"workflow_id"`
-	Title *string `json:"title"` // Human-readable name for the workflow. Maps to dct:title per Dublin Core.
-	Description *string `json:"description"` // Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core.
-	Created *string `json:"created"` // Date the workflow was created. Maps to dct:created per Dublin Core.
-	Modified *string `json:"modified"` // Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5.
-	Identifier *string `json:"identifier"` // External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems.
-	WorkflowSteps *string `json:"workflow_steps"` // Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep.
-	CountOfWorkflowSteps *int `json:"count_of_workflow_steps"` // Count of steps in this workflow. Aggregation over IsStepOf relationship.
+// Customer represents a row in the Customers table
+// Table: Customers
+type Customer struct {
+	CustomerId string `json:"customer_id"`
+	Customer *string `json:"customer"` // Identifier for the customers.
+	EmailAddress *string `json:"email_address"` // Thec ustomers email address
+	FirstName *string `json:"first_name"` // First Name of the customer - used to make the full name
+	LastName *string `json:"last_name"` // Last Name of the customer - used to make the full name
+	FullName *string `json:"full_name"` // Full name is computed from the first and last name of the customer
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcFullName computes the FullName calculated field
+// Full name is computed from the first and last name of the customer
+// Formula: ={{FirstName}} & " " & {{LastName}}
+func (tc *Customer) CalcFullName() string {
+	return stringVal(tc.FirstName) + " " + stringVal(tc.LastName)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *Customer) ComputeAll() *Customer {
+	// Level 1 calculations
+	fullName := stringVal(tc.FirstName) + " " + stringVal(tc.LastName)
+
+	return &Customer{
+		CustomerId: tc.CustomerId,
+		Customer: tc.Customer,
+		EmailAddress: tc.EmailAddress,
+		FirstName: tc.FirstName,
+		LastName: tc.LastName,
+		FullName: nilIfEmpty(fullName),
+	}
 }
 
 // =============================================================================
-// WORKFLOWSTEPS TABLE
-// Table: WorkflowSteps
+// FILE I/O FUNCTIONS (for all tables with calculated fields)
 // =============================================================================
 
-// WorkflowStep represents a row in the WorkflowSteps table
-// Table: WorkflowSteps
-type WorkflowStep struct {
-	WorkflowStepId string `json:"workflow_step_id"`
-	Label *string `json:"label"` // Human-readable name for the step. Maps to rdfs:label.
-	SequencePosition *int `json:"sequence_position"` // Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries.
-	RequiresHumanApproval *bool `json:"requires_human_approval"` // Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3.
-	IsStepOf *string `json:"is_step_of"` // Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf.
-	AssignedRole *string `json:"assigned_role"` // Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation.
-	IsStepOfTitle *string `json:"is_step_of_title"` // Denormalized lookup of parent workflow title.
-	IsStepOfDescription *string `json:"is_step_of_description"` // Denormalized lookup of parent workflow description.
-	IsStepOfIdentifier *string `json:"is_step_of_identifier"` // Denormalized lookup of parent workflow external identifier.
-	AssignedRoleLabel *string `json:"assigned_role_label"` // Denormalized lookup of assigned role label.
-	AssignedRoleComment *string `json:"assigned_role_comment"` // Denormalized lookup of assigned role comment/description.
-	AssignedRoleFilledBy *string `json:"assigned_role_filled_by"` // Denormalized lookup of agent currently filling the assigned role.
+// LoadCustomerRecords loads Customers records from a JSON file
+func LoadCustomerRecords(path string) ([]Customer, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	}
+
+	var records []Customer
+	if err := json.Unmarshal(data, &records); err != nil {
+		return nil, fmt.Errorf("failed to parse file: %w", err)
+	}
+
+	return records, nil
 }
 
-// =============================================================================
-// ROLES TABLE
-// Table: Roles
-// =============================================================================
+// SaveCustomerRecords saves computed Customers records to a JSON file
+func SaveCustomerRecords(path string, records []Customer) error {
+	data, err := json.MarshalIndent(records, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal records: %w", err)
+	}
 
-// Role represents a row in the Roles table
-// Table: Roles
-type Role struct {
-	RoleId string `json:"role_id"`
-	Label *string `json:"label"` // Human-readable name for the role. Maps to rdfs:label.
-	Comment *string `json:"comment"` // Description of the role's responsibilities. Maps to rdfs:comment.
-	FilledBy *string `json:"filled_by"` // Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.
-	WorkflowSteps *string `json:"workflow_steps"` // Steps assigned to this role. Inverse of AssignedRole.
-	CountOfWorkflowSteps *int `json:"count_of_workflow_steps"` // Count of workflow steps assigned to this role.
-	DelegatesTo *string `json:"delegates_to"` // Role to escalate to when this role's agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.
-	Label_from_DelegatesTo *string `json:"label_from_delegates_to"`
-	FilledByName *string `json:"filled_by_name"` // Denormalized lookup of agent name (foaf:name) filling this role.
-	FilledByMBox *string `json:"filled_by_m_box"` // Denormalized lookup of agent email (foaf:mbox) filling this role.
-	DelegatedToBy *string `json:"delegated_to_by"`
-}
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf("failed to write records: %w", err)
+	}
 
-// =============================================================================
-// HUMANAGENTS TABLE
-// Table: HumanAgents
-// =============================================================================
-
-// HumanAgent represents a row in the HumanAgents table
-// Table: HumanAgents
-type HumanAgent struct {
-	HumanAgentId string `json:"human_agent_id"`
-	Name *string `json:"name"` // Full name of the person. Maps to foaf:name per FOAF ontology.
-	Mbox *string `json:"mbox"` // Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution.
-	Roles *string `json:"roles"` // Roles filled by this agent. Inverse of FilledBy.
-	CountOfRoles *int `json:"count_of_roles"` // Count of roles currently filled by this agent.
+	return nil
 }

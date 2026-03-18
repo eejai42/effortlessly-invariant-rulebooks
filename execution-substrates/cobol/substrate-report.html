@@ -319,17 +319,18 @@ Generated from: `effortless-rulebook/effortless-rulebook.json`
 
 | Metric | Value |
 |--------|-------|
-| Total Fields Tested | 0 |
-| Passed | 0 |
+| Total Fields Tested | 3 |
+| Passed | 3 |
 | Failed | 0 |
-| Score | 0.0% |
+| Score | 100.0% |
 | Duration | &lt; 1s |
 
-## Error
+## Results by Entity
 
-```
-No test-answers found
-```
+### customers
+
+- Fields: 3/3 (100.0%)
+- Computed columns: full_name
 </pre>
         </div>
     </div>
@@ -347,10 +348,16 @@ Checking for GnuCOBOL...
   Found: cobc (GnuCOBOL) 3.2.0
 
 Compiling erb_main.cbl...
-FATAL: COBOL compilation failed:
-erb_main.cbl:1: error: PROGRAM-ID header missing
-    1 &gt; &lt;EOF&gt;
+  Compiled successfully: erb_test
 
+COBOL substrate targets: customers
+
+Processing entities...
+  -&gt; customers: 3 records
+
+==================================================
+COBOL substrate: Processed 1 entities, 3 total records
+==================================================
 
 </pre>
         </div>

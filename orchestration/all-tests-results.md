@@ -4,35 +4,35 @@
 
 - **Rulebook:** `/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/effortless-rulebook/effortless-rulebook.json`
 - **Substrates Tested:** 12
-- **Computed Columns Tested:** 2
+- **Computed Columns Tested:** 1
 
 ## Summary by Substrate
 
 | Substrate | Passed | Failed | Total | Score | Duration | Status |
 |-----------|--------|--------|-------|-------|----------|--------|
-| csv | 6 | 0 | 6 | 100.0% | < 1s | PASS |
-| owl | 6 | 0 | 6 | 100.0% | < 1s | PASS |
-| uml | 6 | 0 | 6 | 100.0% | < 1s | PASS |
-| xlsx | 6 | 0 | 6 | 100.0% | < 1s | PASS |
-| postgres | 6 | 0 | 6 | 100.0% | 2s | PASS |
-| binary | 0 | 0 | 0 | 0.0% | < 1s | PASS |
-| cobol | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
-| english | 0 | 0 | 0 | 0.0% | 43s | PASS |
-| explain-dag | 0 | 0 | 0 | 0.0% | < 1s | PASS |
-| golang | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
-| python | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
-| yaml | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
+| explain-dag | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| python | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| uml | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| yaml | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| binary | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| cobol | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| csv | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| golang | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| owl | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| xlsx | 3 | 0 | 3 | 100.0% | < 1s | PASS |
+| postgres | 3 | 0 | 3 | 100.0% | 2s | PASS |
+| english | 3 | 0 | 3 | 100.0% | 18s | PASS |
 
 ## Overall Statistics
 
 | Metric | Value |
 |--------|-------|
 | Total Substrates | 12 |
-| Total Fields Tested | 30 |
-| Total Passed | 30 |
+| Total Fields Tested | 36 |
+| Total Passed | 36 |
 | Total Failed | 0 |
 | Overall Score | 100.0% |
-| Total Duration | 47s |
+| Total Duration | 23s |
 
 ---
 

@@ -1,16 +1,16 @@
 {
   "ShowHidden": false,
   "ShowAllFiles": false,
-  "Name": "JTO v3",
+  "Name": "CustomerDemo",
   "Description": "IMPORTANT!!!! ** BASIC baseId: applThn0rikpCR9C3, ADVANCED baseId: appwN9EAp8IeIxM23",
   "ProjectSettings": [
     {
       "Name": "baseId",
-      "Value": "app6afUqa0zBTiMzM"
+      "Value": "appWrXPvXbkgQGOxt"
     },
     {
       "Name": "project-name",
-      "Value": "JTO v3"
+      "Value": "CustomerDemo"
     },
     {
       "Name": "_apikey_",

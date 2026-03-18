@@ -39,7 +39,7 @@ except ImportError:
     print("Warning: PyYAML not installed. Schema details will not be logged.")
 
 from erb_calc import compute_all_calculated_fields
-from orchestration.shared import load_rulebook, compute_aggregations
+from orchestration.shared import load_rulebook, compute_aggregations, compute_lookups
 
 
 def load_schema(schema_path: str) -> dict:
@@ -101,11 +101,13 @@ def process_entity(input_path: str, output_path: str, entity_name: str,
     with open(input_path, 'r') as f:
         records = json.load(f)
 
-    # Compute aggregation fields first (e.g., COUNTIFS)
     if rulebook is not None and project_root is not None:
+        # Compute lookup fields first (INDEX/MATCH)
+        records = compute_lookups(records, entity_name, rulebook, project_root)
+        # Then compute aggregation fields (COUNTIFS, SUMIFS)
         records = compute_aggregations(records, entity_name, rulebook, project_root)
 
-    # Compute all calculated fields for each record
+    # Compute any remaining calculated fields for each record
     computed_records = []
     for record in records:
         computed = compute_all_calculated_fields(record, entity_name)

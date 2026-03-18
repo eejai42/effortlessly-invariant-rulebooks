@@ -1,72 +1,18 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-note top of HumanAgents
-  Table: HumanAgents
+note top of Customers
+  Table: Customers
 end note
 
-class HumanAgents {
-  +HumanAgentId: String
-  +Name: String -- Full name of the person. Maps to foaf:name per FOAF ontology.
-  +Mbox: String -- Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution.
-  +Roles: String -- Roles filled by this agent. Inverse of FilledBy.
-  +CountOfRoles: Integer -- Count of roles currently filled by this agent.
+class Customers {
+  +CustomerId: String
+  +Customer: String -- Identifier for the customers.
+  +EmailAddress: String -- Thec ustomers email address
+  +FirstName: String -- First Name of the customer - used to make the full name
+  +LastName: String -- Last Name of the customer - used to make the full name
   --
-}
-
-note top of Roles
-  Table: Roles
-end note
-
-class Roles {
-  +RoleId: String
-  +Label: String -- Human-readable name for the role. Maps to rdfs:label.
-  +Comment: String -- Description of the role's responsibilities. Maps to rdfs:comment.
-  +FilledBy: String -- Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.
-  +WorkflowSteps: String -- Steps assigned to this role. Inverse of AssignedRole.
-  +CountOfWorkflowSteps: Integer -- Count of workflow steps assigned to this role.
-  +DelegatesTo: String -- Role to escalate to when this role's agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.
-  +Label_from_DelegatesTo: String
-  +FilledByName: String -- Denormalized lookup of agent name (foaf:name) filling this role.
-  +FilledByMBox: String -- Denormalized lookup of agent email (foaf:mbox) filling this role.
-  +DelegatedToBy: String
-  --
-}
-
-note top of WorkflowSteps
-  Table: WorkflowSteps
-end note
-
-class WorkflowSteps {
-  +WorkflowStepId: String
-  +Label: String -- Human-readable name for the step. Maps to rdfs:label.
-  +SequencePosition: Integer -- Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries.
-  +RequiresHumanApproval: Boolean -- Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3.
-  +IsStepOf: String -- Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf.
-  +AssignedRole: String -- Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation.
-  +IsStepOfTitle: String -- Denormalized lookup of parent workflow title.
-  +IsStepOfDescription: String -- Denormalized lookup of parent workflow description.
-  +IsStepOfIdentifier: String -- Denormalized lookup of parent workflow external identifier.
-  +AssignedRoleLabel: String -- Denormalized lookup of assigned role label.
-  +AssignedRoleComment: String -- Denormalized lookup of assigned role comment/description.
-  +AssignedRoleFilledBy: String -- Denormalized lookup of agent currently filling the assigned role.
-  --
-}
-
-note top of Workflows
-  Table: Workflows
-end note
-
-class Workflows {
-  +WorkflowId: String
-  +Title: String -- Human-readable name for the workflow. Maps to dct:title per Dublin Core.
-  +Description: String -- Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core.
-  +Created: String -- Date the workflow was created. Maps to dct:created per Dublin Core.
-  +Modified: String -- Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5.
-  +Identifier: String -- External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems.
-  +WorkflowSteps: String -- Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep.
-  +CountOfWorkflowSteps: Integer -- Count of steps in this workflow. Aggregation over IsStepOf relationship.
-  --
+  /FullName: String  {derived} -- Full name is computed from the first and last name of the customer
 }
 
 @enduml

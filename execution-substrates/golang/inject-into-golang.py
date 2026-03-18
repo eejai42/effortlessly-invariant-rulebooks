@@ -57,6 +57,22 @@ def get_aggregation_fields(schema: List[Dict]) -> List[Dict]:
     ]
 
 
+def get_lookup_fields(schema: List[Dict]) -> List[Dict]:
+    """Extract all lookup fields from a schema (INDEX/MATCH formulas)."""
+    return [
+        field for field in schema
+        if field.get('type') == 'lookup' and field.get('formula')
+    ]
+
+
+def get_all_computed_fields(schema: List[Dict]) -> List[Dict]:
+    """Extract ALL fields that need computation: calculated, lookup, or aggregation."""
+    return [
+        field for field in schema
+        if field.get('type') in ('calculated', 'lookup', 'aggregation') and field.get('formula')
+    ]
+
+
 def parse_countifs_formula(formula: str):
     """
     Parse a COUNTIFS formula to extract table and field references.
@@ -75,6 +91,28 @@ def parse_countifs_formula(formula: str):
         match_field = match.group(3)    # e.g., "WorkflowId"
         return (related_table, lookup_field, match_field)
     return (None, None, None)
+
+
+def parse_index_match_formula(formula: str):
+    """
+    Parse an INDEX/MATCH formula to extract the lookup components.
+
+    Formula format: =INDEX(Table!{{FieldToReturn}}, MATCH(CurrentTable!{{KeyField}}, Table!{{PrimaryKeyField}}, 0))
+    Example: =INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
+
+    Returns: (lookup_table, return_field, key_field, pk_field) or (None, None, None, None) if not parseable
+    """
+    # Match pattern: INDEX(Table!{{Field}}, MATCH(Table!{{Field}}, Table!{{Field}}, 0))
+    pattern = r'=INDEX\((\w+)!\{\{(\w+)\}\},\s*MATCH\(\w+!\{\{(\w+)\}\},\s*(\w+)!\{\{(\w+)\}\},\s*0\)\)'
+    match = re.match(pattern, formula)
+    if match:
+        lookup_table = match.group(1)    # e.g., "Workflows"
+        return_field = match.group(2)    # e.g., "Title"
+        key_field = match.group(3)       # e.g., "IsStepOf"
+        # pk_table = match.group(4)      # Should match lookup_table
+        pk_field = match.group(5)        # e.g., "WorkflowId"
+        return (lookup_table, return_field, key_field, pk_field)
+    return (None, None, None, None)
 
 
 def parse_sumifs_formula(formula: str):
@@ -597,16 +635,20 @@ def generate_erb_sdk(rulebook: Dict) -> str:
 
         lines.extend(generate_table_sdk(table_name, table_data))
 
-    # Find ALL tables with calculated fields (not just the first one!)
+    # Find ALL tables with computed fields (calculated, lookup, or aggregation)
     tables_with_calc = []
     for table_name in table_names:
         table_data = rulebook.get(table_name, {})
         if isinstance(table_data, dict) and 'schema' in table_data:
-            calc_fields = get_calculated_fields(table_data.get('schema', []))
-            if calc_fields:
+            schema = table_data.get('schema', [])
+            # Include tables with any computed fields: calculated, lookup, or aggregation
+            has_computed = (get_calculated_fields(schema) or
+                           get_lookup_fields(schema) or
+                           get_aggregation_fields(schema))
+            if has_computed:
                 tables_with_calc.append(table_name)
 
-    # Generate File I/O functions for ALL tables with calculated fields
+    # Generate File I/O functions for ALL tables with computed fields
     if tables_with_calc:
         lines.append('// =============================================================================')
         lines.append('// FILE I/O FUNCTIONS (for all tables with calculated fields)')
@@ -691,25 +733,61 @@ def get_table_aggregations(rulebook: Dict, table_name: str) -> List[Dict]:
     return result
 
 
+def get_table_lookups(rulebook: Dict, table_name: str) -> List[Dict]:
+    """Get lookup fields for a table with parsed INDEX/MATCH formula info.
+
+    Returns list of dicts with:
+        - field: The field definition
+        - lookup_table: Table to look up from
+        - return_field: Field to return from lookup table
+        - key_field: Field in current table to match
+        - pk_field: Primary key field in lookup table
+    """
+    table_data = rulebook.get(table_name, {})
+    if not isinstance(table_data, dict) or 'schema' not in table_data:
+        return []
+
+    lookup_fields_list = get_lookup_fields(table_data.get('schema', []))
+    result = []
+    for field in lookup_fields_list:
+        formula = field.get('formula', '')
+        lookup_table, return_field, key_field, pk_field = parse_index_match_formula(formula)
+        if lookup_table:
+            result.append({
+                'field': field,
+                'lookup_table': lookup_table,
+                'return_field': return_field,
+                'key_field': key_field,
+                'pk_field': pk_field
+            })
+    return result
+
+
 def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
-    """Generate main.go content that processes ALL tables with calculated fields.
+    """Generate main.go content that processes ALL tables with computed fields.
 
     IMPORTANT: This file is ALWAYS regenerated when inject-into-golang.py runs.
     This ensures main.go stays in sync with erb_sdk.go when the rulebook changes.
 
     Args:
-        tables_with_calc: List of table names that have calculated fields
-        rulebook: The loaded rulebook for aggregation info
+        tables_with_calc: List of table names that have computed fields
+        rulebook: The loaded rulebook for aggregation/lookup info
     """
-    # Collect all related tables needed for aggregations
+    # Collect all related tables needed for aggregations and lookups
     all_related_tables = set()
     table_aggregations = {}
+    table_lookups = {}
     for table_name in tables_with_calc:
         aggs = get_table_aggregations(rulebook, table_name)
         if aggs:
             table_aggregations[table_name] = aggs
             for agg in aggs:
                 all_related_tables.add(agg['related_table'])
+        lookups = get_table_lookups(rulebook, table_name)
+        if lookups:
+            table_lookups[table_name] = lookups
+            for lookup in lookups:
+                all_related_tables.add(lookup['lookup_table'])
 
     lines = []
     lines.append('// ERB SDK - Go Test Runner (GENERATED - DO NOT EDIT)')
@@ -717,9 +795,11 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
     lines.append('// This file is REGENERATED every time inject-into-golang.py runs.')
     lines.append('// It must stay in sync with erb_sdk.go and the rulebook.')
     lines.append('//')
-    lines.append(f'// Tables with calculated fields: {", ".join(tables_with_calc)}')
+    lines.append(f'// Tables with computed fields: {", ".join(tables_with_calc)}')
     if table_aggregations:
         lines.append(f'// Tables with aggregations: {", ".join(table_aggregations.keys())}')
+    if table_lookups:
+        lines.append(f'// Tables with lookups: {", ".join(table_lookups.keys())}')
     lines.append('//')
     lines.append('// IMPORTANT: This runner processes ALL tables, not just a "primary" one.')
     lines.append('// If ANY table fails to process, the entire run fails with exit code 1.')
@@ -979,9 +1059,61 @@ def generate_main_go(tables_with_calc: list, rulebook: Dict) -> str:
             lines.append('\t\t}')
             lines.append('')
 
+        # If this table has lookups, compute them
+        lookups = table_lookups.get(table_name, [])
+        if lookups:
+            lines.append(f'\t\t// Compute lookups for {table_name}')
+            for lookup in lookups:
+                field_name = lookup['field']['name']
+                field_snake = to_snake_case(field_name)
+                lookup_table = lookup['lookup_table']
+                lookup_table_snake = to_snake_case(lookup_table)
+                return_field = lookup['return_field']
+                key_field = lookup['key_field']
+                pk_field = lookup['pk_field']
+
+                # Build lookup map
+                lines.append(f'\t\t{field_snake}LookupMap := make(map[string]string)')
+                lines.append(f'\t\tif {lookup_table_snake}Data != nil {{')
+                lines.append(f'\t\t\tfor _, rel := range {lookup_table_snake}Data {{')
+                lines.append(f'\t\t\t\tif rel.{pk_field} != "" {{')
+                lines.append(f'\t\t\t\t\tvar val string')
+                lines.append(f'\t\t\t\t\tif rel.{return_field} != nil {{')
+                lines.append(f'\t\t\t\t\t\tval = *rel.{return_field}')
+                lines.append(f'\t\t\t\t\t}}')
+                lines.append(f'\t\t\t\t\t{field_snake}LookupMap[rel.{pk_field}] = val')
+                lines.append('\t\t\t\t}')
+                lines.append('\t\t\t}')
+                lines.append('\t\t}')
+                lines.append('')
+
+            # Apply lookups to records
+            lines.append(f'\t\t// Apply lookup values to records')
+            lines.append(f'\t\tfor i := range {table_snake}Records {{')
+            for lookup in lookups:
+                field_name = lookup['field']['name']
+                field_snake = to_snake_case(field_name)
+                key_field = lookup['key_field']
+
+                lines.append(f'\t\t\tif {table_snake}Records[i].{key_field} != nil && *{table_snake}Records[i].{key_field} != "" {{')
+                lines.append(f'\t\t\t\tif val, ok := {field_snake}LookupMap[*{table_snake}Records[i].{key_field}]; ok {{')
+                lines.append(f'\t\t\t\t\t{table_snake}Records[i].{field_name} = &val')
+                lines.append('\t\t\t\t}')
+                lines.append('\t\t\t}')
+            lines.append('\t\t}')
+            lines.append('')
+
+        # Check if this table has calculated fields (ComputeAll is only generated for those)
+        table_data_for_check = rulebook.get(table_name, {})
+        has_calc_fields = bool(get_calculated_fields(table_data_for_check.get('schema', [])))
+
         lines.append(f'\t\tvar computed{struct_name} []{struct_name}')
         lines.append(f'\t\tfor _, r := range {table_snake}Records {{')
-        lines.append(f'\t\t\tcomputed{struct_name} = append(computed{struct_name}, *r.ComputeAll())')
+        if has_calc_fields:
+            lines.append(f'\t\t\tcomputed{struct_name} = append(computed{struct_name}, *r.ComputeAll())')
+        else:
+            # No calculated fields - just copy the record (lookup/aggregation already populated)
+            lines.append(f'\t\t\tcomputed{struct_name} = append(computed{struct_name}, r)')
         lines.append('\t\t}')
         lines.append('')
         lines.append(f'\t\tif err := Save{struct_name}Records({table_snake}Output, computed{struct_name}); err != nil {{')
@@ -1054,24 +1186,28 @@ def main():
     print(f"Found {len(table_names)} tables: {', '.join(table_names)}")
     print()
 
-    # Report on calculated fields per table and collect ALL tables with calc fields
-    total_calc_fields = 0
+    # Report on computed fields per table and collect ALL tables with computed fields
+    total_computed_fields = 0
     tables_with_calc = []
     for table_name in table_names:
         table_data = rulebook.get(table_name, {})
         if isinstance(table_data, dict) and 'schema' in table_data:
             schema = table_data.get('schema', [])
             calc_fields = get_calculated_fields(schema)
-            if calc_fields:
+            lookup_fields = get_lookup_fields(schema)
+            agg_fields = get_aggregation_fields(schema)
+            all_computed = calc_fields + lookup_fields + agg_fields
+            if all_computed:
                 tables_with_calc.append(table_name)
-                print(f"  {table_name}: {len(calc_fields)} calculated fields")
-                for field in calc_fields:
-                    print(f"    - {field['name']}")
-                total_calc_fields += len(calc_fields)
+                print(f"  {table_name}: {len(all_computed)} computed fields")
+                for field in all_computed:
+                    field_type = field.get('type', 'unknown')
+                    print(f"    - {field['name']} ({field_type})")
+                total_computed_fields += len(all_computed)
 
     print()
-    print(f"Total calculated fields to compile: {total_calc_fields}")
-    print(f"Tables with calculated fields ({len(tables_with_calc)}): {', '.join(tables_with_calc)}")
+    print(f"Total computed fields to compile: {total_computed_fields}")
+    print(f"Tables with computed fields ({len(tables_with_calc)}): {', '.join(tables_with_calc)}")
     print()
     print("-" * 70)
     print()

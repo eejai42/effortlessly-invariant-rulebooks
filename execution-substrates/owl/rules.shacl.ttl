@@ -4,32 +4,26 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Shape with rules for HumanAgents ===
-erb:HumanAgentsShape a sh:NodeShape ;
-    sh:targetClass erb:HumanAgents .
-# Rule for CountOfRoles - parse error: Unexpected character '!' at position 14
+# === Shape with rules for Customers ===
+erb:CustomersShape a sh:NodeShape ;
+    sh:targetClass erb:Customers ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Customers_FullName" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:fullName ?_result .
+            }
+            WHERE {
+    $this a erb:Customers .
+    OPTIONAL { $this erb:firstName ?first_name . }
+    OPTIONAL { $this erb:lastName ?last_name . }
+                BIND(CONCAT(?first_name, " ", ?last_name) AS ?_result)
+            }
+        """ ;
+    ] .
 
-# === Shape with rules for Roles ===
-erb:RolesShape a sh:NodeShape ;
-    sh:targetClass erb:Roles .
-# Rule for CountOfWorkflowSteps - parse error: Unexpected character '!' at position 22
-# Rule for Label_from_DelegatesTo - parse error: Unexpected character '!' at position 11
-# Rule for FilledByName - parse error: Unexpected character '!' at position 17
-# Rule for FilledByMBox - parse error: Unexpected character '!' at position 17
-
-# === Shape with rules for WorkflowSteps ===
-erb:WorkflowStepsShape a sh:NodeShape ;
-    sh:targetClass erb:WorkflowSteps .
-# Rule for IsStepOfTitle - parse error: Unexpected character '!' at position 15
-# Rule for IsStepOfDescription - parse error: Unexpected character '!' at position 15
-# Rule for IsStepOfIdentifier - parse error: Unexpected character '!' at position 15
-# Rule for AssignedRoleLabel - parse error: Unexpected character '!' at position 11
-# Rule for AssignedRoleComment - parse error: Unexpected character '!' at position 11
-# Rule for AssignedRoleFilledBy - parse error: Unexpected character '!' at position 11
-
-# === Shape with rules for Workflows ===
-erb:WorkflowsShape a sh:NodeShape ;
-    sh:targetClass erb:Workflows .
-# Rule for CountOfWorkflowSteps - parse error: Unexpected character '!' at position 22
-
-# Generated 0 SHACL rules
+# Generated 1 SHACL rules

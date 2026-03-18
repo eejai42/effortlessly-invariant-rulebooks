@@ -1,61 +1,9 @@
 -- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
 
--- Table: HumanAgents
-context HumanAgents
+-- Table: Customers
+context Customers
 
--- Count of roles currently filled by this agent.
--- Formula for CountOfRoles - parse error: Unexpected character '!' at position 14
--- Original: =COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})
-
--- Table: Roles
-context Roles
-
--- Count of workflow steps assigned to this role.
--- Formula for CountOfWorkflowSteps - parse error: Unexpected character '!' at position 22
--- Original: =COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})
-
--- Formula for Label_from_DelegatesTo - parse error: Unexpected character '!' at position 11
--- Original: =INDEX(Roles!{{Label}}, MATCH(Roles!{{DelegatesTo}}, Roles!{{RoleId}}, 0))
-
--- Denormalized lookup of agent name (foaf:name) filling this role.
--- Formula for FilledByName - parse error: Unexpected character '!' at position 17
--- Original: =INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))
-
--- Denormalized lookup of agent email (foaf:mbox) filling this role.
--- Formula for FilledByMBox - parse error: Unexpected character '!' at position 17
--- Original: =INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))
-
--- Table: WorkflowSteps
-context WorkflowSteps
-
--- Denormalized lookup of parent workflow title.
--- Formula for IsStepOfTitle - parse error: Unexpected character '!' at position 15
--- Original: =INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
-
--- Denormalized lookup of parent workflow description.
--- Formula for IsStepOfDescription - parse error: Unexpected character '!' at position 15
--- Original: =INDEX(Workflows!{{Description}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
-
--- Denormalized lookup of parent workflow external identifier.
--- Formula for IsStepOfIdentifier - parse error: Unexpected character '!' at position 15
--- Original: =INDEX(Workflows!{{Identifier}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
-
--- Denormalized lookup of assigned role label.
--- Formula for AssignedRoleLabel - parse error: Unexpected character '!' at position 11
--- Original: =INDEX(Roles!{{Label}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
-
--- Denormalized lookup of assigned role comment/description.
--- Formula for AssignedRoleComment - parse error: Unexpected character '!' at position 11
--- Original: =INDEX(Roles!{{Comment}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
-
--- Denormalized lookup of agent currently filling the assigned role.
--- Formula for AssignedRoleFilledBy - parse error: Unexpected character '!' at position 11
--- Original: =INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
-
--- Table: Workflows
-context Workflows
-
--- Count of steps in this workflow. Aggregation over IsStepOf relationship.
--- Formula for CountOfWorkflowSteps - parse error: Unexpected character '!' at position 22
--- Original: =COUNTIFS(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}})
+-- Full name is computed from the first and last name of the customer
+-- Formula: ={{FirstName}} & " " & {{LastName}}
+derive FullName: self.firstName + ' ' + self.lastName

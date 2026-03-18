@@ -1,46 +1,50 @@
 # Specification Document for DEMO: Customer FullName Rulebook
 
 ## Overview
-This document outlines the specifications for the "DEMO: Customer FullName" rulebook, which is designed to compute the full names of customers based on their first and last names. The rulebook is generated from an Airtable base and includes a schema for customer data, detailing how to derive calculated fields from raw input fields.
+This specification document outlines the rules and calculations for generating customer full names based on individual first and last names. The rulebook is derived from an Airtable base and provides a structured approach to computing the `FullName` field for each customer.
 
-## Customers Table
+## Entities and Calculated Fields
 
-### Input Fields
-The following input fields are used to compute the calculated fields in the Customers table:
+### Customers
+The `Customers` entity contains the following input fields that are used to compute the `FullName`:
 
+#### Input Fields
 1. **FirstName**
-   - **Type:** String (raw)
-   - **Description:** The first name of the customer, used to create the full name.
+   - **Type**: String
+   - **Description**: The first name of the customer, used to create the full name.
 
 2. **LastName**
-   - **Type:** String (raw)
-   - **Description:** The last name of the customer, used to create the full name.
+   - **Type**: String
+   - **Description**: The last name of the customer, used to create the full name.
 
-### Calculated Fields
+#### Calculated Field
+1. **FullName**
+   - **Type**: String
+   - **Description**: The full name is computed by concatenating the first name and last name of the customer with a space in between.
+   - **Calculation Explanation**: To compute the `FullName`, take the value of the `FirstName` and append a space followed by the value of the `LastName`. If either the `FirstName` or `LastName` is missing, the full name will still be generated, but it may contain leading or trailing spaces.
+   - **Formula**: `={{FirstName}} & " " & {{LastName}}`
+   - **Example**: 
+     - For a customer with:
+       - `FirstName`: "Jane"
+       - `LastName`: "Smith"
+     - The computed `FullName` would be: "Jane Smith".
 
-#### FullName
-- **Type:** String (calculated)
-- **Description:** The full name of the customer is computed by concatenating the first name and last name with a space in between.
-- **Computation Explanation:** To compute the FullName, take the value of the FirstName field and append a space followed by the value of the LastName field. If either the FirstName or LastName is missing (null), the FullName will still be computed, but it will reflect the available data.
-- **Formula:** `={{FirstName}} & " " & {{LastName}}`
-- **Example:**
-  - For a customer with:
-    - **FirstName:** "Jane"
-    - **LastName:** "Smith"
-  - The computed **FullName** would be:
-    - **FullName:** "Jane Smith"
+### Example Data
+The following examples illustrate how the `FullName` is computed for each customer in the dataset:
 
-### Additional Examples from the Data
-1. For the customer with:
-   - **FirstName:** "John"
-   - **LastName:** "Doe"
-   - The computed **FullName** would be:
-     - **FullName:** "John Doe"
+1. **Customer 1**
+   - **FirstName**: "Jane"
+   - **LastName**: "Smith"
+   - **Computed FullName**: "Jane Smith"
 
-2. For the customer with:
-   - **FirstName:** "Emily"
-   - **LastName:** "Jones"
-   - The computed **FullName** would be:
-     - **FullName:** "Emily Jones"
+2. **Customer 2**
+   - **FirstName**: "John"
+   - **LastName**: "Doe"
+   - **Computed FullName**: "John Doe"
 
-This specification provides a clear understanding of how to compute the FullName field from the FirstName and LastName fields within the Customers table of the DEMO: Customer FullName rulebook.
+3. **Customer 3**
+   - **FirstName**: "Emily"
+   - **LastName**: "Jones"
+   - **Computed FullName**: "Emily Jones"
+
+This specification provides a clear guide on how to compute the `FullName` for each customer based on their first and last names, ensuring consistency and accuracy in the data representation.

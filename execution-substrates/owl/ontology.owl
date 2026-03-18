@@ -8,244 +8,43 @@ erb: a owl:Ontology ;
     rdfs:label "ERB Ontology" ;
     rdfs:comment "Generated from effortless-rulebook.json" .
 
-# === Class: HumanAgents ===
-erb:HumanAgents a owl:Class ;
-    rdfs:label "HumanAgents" ;
-    rdfs:comment "Table: HumanAgents" .
+# === Class: Customers ===
+erb:Customers a owl:Class ;
+    rdfs:label "Customers" ;
+    rdfs:comment "Table: Customers" .
 
-erb:humanAgentId a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:customerId a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "HumanAgentId" .
+    rdfs:label "CustomerId" .
 
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:customer a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Name" ;
-    rdfs:comment "Full name of the person. Maps to foaf:name per FOAF ontology." .
+    rdfs:label "Customer" ;
+    rdfs:comment "Identifier for the customers." .
 
-erb:mbox a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:emailAddress a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Mbox" ;
-    rdfs:comment "Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution." .
+    rdfs:label "EmailAddress" ;
+    rdfs:comment "Thec ustomers email address" .
 
-erb:roles a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:firstName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Roles" ;
-    rdfs:comment "Roles filled by this agent. Inverse of FilledBy." .
+    rdfs:label "FirstName" ;
+    rdfs:comment "First Name of the customer - used to make the full name" .
 
-erb:countOfRoles a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:integer ;
-    rdfs:label "CountOfRoles" ;
-    rdfs:comment "Count of roles currently filled by this agent." .
-    # calculated: aggregation
-
-# === Class: Roles ===
-erb:Roles a owl:Class ;
-    rdfs:label "Roles" ;
-    rdfs:comment "Table: Roles" .
-
-erb:roleId a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
+erb:lastName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "RoleId" .
+    rdfs:label "LastName" ;
+    rdfs:comment "Last Name of the customer - used to make the full name" .
 
-erb:label a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
+erb:fullName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label "Label" ;
-    rdfs:comment "Human-readable name for the role. Maps to rdfs:label." .
-
-erb:comment a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "Comment" ;
-    rdfs:comment "Description of the role's responsibilities. Maps to rdfs:comment." .
-
-erb:filledBy a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FilledBy" ;
-    rdfs:comment "Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change." .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowSteps" ;
-    rdfs:comment "Steps assigned to this role. Inverse of AssignedRole." .
-
-erb:countOfWorkflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:integer ;
-    rdfs:label "CountOfWorkflowSteps" ;
-    rdfs:comment "Count of workflow steps assigned to this role." .
-    # calculated: aggregation
-
-erb:delegatesTo a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "DelegatesTo" ;
-    rdfs:comment "Role to escalate to when this role's agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries." .
-
-erb:label_from_DelegatesTo a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "Label_from_DelegatesTo" .
-    # calculated: lookup
-
-erb:filledByName a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FilledByName" ;
-    rdfs:comment "Denormalized lookup of agent name (foaf:name) filling this role." .
-    # calculated: lookup
-
-erb:filledByMBox a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "FilledByMBox" ;
-    rdfs:comment "Denormalized lookup of agent email (foaf:mbox) filling this role." .
-    # calculated: lookup
-
-erb:delegatedToBy a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label "DelegatedToBy" .
-
-# === Class: WorkflowSteps ===
-erb:WorkflowSteps a owl:Class ;
-    rdfs:label "WorkflowSteps" ;
-    rdfs:comment "Table: WorkflowSteps" .
-
-erb:workflowStepId a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowStepId" .
-
-erb:label a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "Label" ;
-    rdfs:comment "Human-readable name for the step. Maps to rdfs:label." .
-
-erb:sequencePosition a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:integer ;
-    rdfs:label "SequencePosition" ;
-    rdfs:comment "Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries." .
-
-erb:requiresHumanApproval a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "RequiresHumanApproval" ;
-    rdfs:comment "Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3." .
-
-erb:isStepOf a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "IsStepOf" ;
-    rdfs:comment "Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf." .
-
-erb:assignedRole a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "AssignedRole" ;
-    rdfs:comment "Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation." .
-
-erb:isStepOfTitle a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "IsStepOfTitle" ;
-    rdfs:comment "Denormalized lookup of parent workflow title." .
-    # calculated: lookup
-
-erb:isStepOfDescription a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "IsStepOfDescription" ;
-    rdfs:comment "Denormalized lookup of parent workflow description." .
-    # calculated: lookup
-
-erb:isStepOfIdentifier a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "IsStepOfIdentifier" ;
-    rdfs:comment "Denormalized lookup of parent workflow external identifier." .
-    # calculated: lookup
-
-erb:assignedRoleLabel a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "AssignedRoleLabel" ;
-    rdfs:comment "Denormalized lookup of assigned role label." .
-    # calculated: lookup
-
-erb:assignedRoleComment a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "AssignedRoleComment" ;
-    rdfs:comment "Denormalized lookup of assigned role comment/description." .
-    # calculated: lookup
-
-erb:assignedRoleFilledBy a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label "AssignedRoleFilledBy" ;
-    rdfs:comment "Denormalized lookup of agent currently filling the assigned role." .
-    # calculated: lookup
-
-# === Class: Workflows ===
-erb:Workflows a owl:Class ;
-    rdfs:label "Workflows" ;
-    rdfs:comment "Table: Workflows" .
-
-erb:workflowId a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowId" .
-
-erb:title a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Title" ;
-    rdfs:comment "Human-readable name for the workflow. Maps to dct:title per Dublin Core." .
-
-erb:description a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Description" ;
-    rdfs:comment "Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core." .
-
-erb:created a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Created" ;
-    rdfs:comment "Date the workflow was created. Maps to dct:created per Dublin Core." .
-
-erb:modified a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Modified" ;
-    rdfs:comment "Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5." .
-
-erb:identifier a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "Identifier" ;
-    rdfs:comment "External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems." .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label "WorkflowSteps" ;
-    rdfs:comment "Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep." .
-
-erb:countOfWorkflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:integer ;
-    rdfs:label "CountOfWorkflowSteps" ;
-    rdfs:comment "Count of steps in this workflow. Aggregation over IsStepOf relationship." .
-    # calculated: aggregation
+    rdfs:label "FullName" ;
+    rdfs:comment "Full name is computed from the first and last name of the customer" .
+    # calculated: calculated

@@ -68,8 +68,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>Explain-DAG Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
-            <div class="stat"><span>0/0 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -124,10 +124,8 @@ HasGrammar = true
                 <h2>Execution Log</h2>
                 <pre>=== ExplainDAG Substrate Test Run ===
 
-  -&gt; human_agents: 2 records (no calculated fields)
-  -&gt; roles: 5 records (no calculated fields)
-  -&gt; workflows: 1 records (no calculated fields)
-ExplainDAG substrate: Processed 0 entities, 0 total records
+  -&gt; customers: 3 records with explanations
+ExplainDAG substrate: Processed 1 entities, 3 total records
 Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/explain-dag/test-explanations
 
 </pre>
@@ -137,10 +135,10 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -148,13 +146,13 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             <div class="card">
                 <div class="code-header">
                     <h2>explain_spec.json</h2>
-                    <div><span class="code-info">14 lines</span><button class="copy-btn" onclick="copyCode('spec-code')">Copy</button></div>
+                    <div><span class="code-info">130 lines</span><button class="copy-btn" onclick="copyCode('spec-code')">Copy</button></div>
                 </div>
                 <pre id="spec-code">{
   &quot;schema_version&quot;: &quot;erb.explain_spec.v1&quot;,
   &quot;rulebook&quot;: {
-    &quot;name&quot;: &quot;Jessica&#x27;s Ontology Series-v3&quot;,
-    &quot;rulebook_hash&quot;: &quot;sha256:837c613919523be15d07de089be103af&quot;
+    &quot;name&quot;: &quot;DEMO: Customer FullName&quot;,
+    &quot;rulebook_hash&quot;: &quot;sha256:b65c756f983da023f7cfd8957e458251&quot;
   },
   &quot;semantics&quot;: {
     &quot;profile&quot;: &quot;excel&quot;,
@@ -162,7 +160,123 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
     &quot;null_handling&quot;: &quot;three_valued_logic&quot;,
     &quot;boolean_coercion&quot;: &quot;strict&quot;
   },
-  &quot;entities&quot;: {}
+  &quot;entities&quot;: {
+    &quot;Customers&quot;: {
+      &quot;id_field&quot;: &quot;CustomerId&quot;,
+      &quot;id_field_snake&quot;: &quot;customer_id&quot;,
+      &quot;fields&quot;: {
+        &quot;CustomerId&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: false,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;Customer&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;Identifier for the customers.&quot;
+        },
+        &quot;EmailAddress&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;Thec ustomers email address&quot;
+        },
+        &quot;FirstName&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;First Name of the customer - used to make the full name&quot;
+        },
+        &quot;LastName&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;Last Name of the customer - used to make the full name&quot;
+        },
+        &quot;FullName&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;,
+          &quot;description&quot;: &quot;Full name is computed from the first and last name of the customer&quot;
+        }
+      },
+      &quot;calc_order&quot;: [
+        &quot;FullName&quot;
+      ],
+      &quot;dep_edges&quot;: [
+        [
+          &quot;FirstName&quot;,
+          &quot;FullName&quot;
+        ],
+        [
+          &quot;LastName&quot;,
+          &quot;FullName&quot;
+        ]
+      ],
+      &quot;expr_templates&quot;: {
+        &quot;FullName&quot;: {
+          &quot;formula_source&quot;: &quot;={{FirstName}} &amp; \&quot; \&quot; &amp; {{LastName}}&quot;,
+          &quot;template_hash&quot;: &quot;sha256:ae6e94fd35af410b&quot;,
+          &quot;root_node&quot;: &quot;n_result_FullName&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;FirstName&quot;,
+              &quot;field_snake&quot;: &quot;first_name&quot;
+            },
+            &quot;n_const_2&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot; &quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_ref_3&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;LastName&quot;,
+              &quot;field_snake&quot;: &quot;last_name&quot;
+            },
+            &quot;n_op_4&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;CONCAT&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_const_2&quot;,
+                &quot;n_ref_3&quot;
+              ]
+            },
+            &quot;n_result_FullName&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;FullName&quot;,
+              &quot;field_snake&quot;: &quot;full_name&quot;,
+              &quot;in&quot;: [
+                &quot;n_op_4&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_const_2&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_3&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_op_4&quot;,
+              &quot;n_result_FullName&quot;
+            ]
+          ],
+          &quot;description&quot;: &quot;Full name is computed from the first and last name of the customer&quot;
+        }
+      },
+      &quot;description&quot;: &quot;Table: Customers&quot;
+    }
+  }
 }</pre>
             </div>
         </div>

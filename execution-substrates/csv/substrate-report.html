@@ -75,7 +75,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>8/8 passed</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -117,28 +117,14 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <pre>=== CSV Substrate Test Run ===
 
 
-  Processing human_agents from human_agents.csv...
-Found 5 fields in test answers
-Primary key field: human_agent_id
-Loaded 2 rows from CSV
-Filled 2 null fields across 2 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/human_agents.json
+  Processing customers from customers.csv...
+Found 6 fields in test answers
+Primary key field: customer_id
+Loaded 3 rows from CSV
+Filled 3 null fields across 3 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/customers.json
 
-  Processing roles from roles.csv...
-Found 11 fields in test answers
-Primary key field: role_id
-Loaded 5 rows from CSV
-Filled 5 null fields across 5 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/roles.json
-
-  Processing workflows from workflows.csv...
-Found 8 fields in test answers
-Primary key field: workflow_id
-Loaded 1 rows from CSV
-Filled 1 null fields across 1 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/csv/test-answers/workflows.json
-
-csv: Processed 3 entities
+csv: Processed 1 entities
 
 </pre>
             </div>
@@ -148,22 +134,22 @@ csv: Processed 3 entities
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">8</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">8</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
         <div id="candidates" class="tab-content">
             <div class="card">
                 <h2>Entity Data (workflows.csv)</h2>
-                <div class="table-scroll"><table class="csv-table"><thead><tr><th>workflow_id</th><th>title</th><th>description</th><th>created</th><th>modified</th><th>identifier</th><th>workflow_steps</th><th>count_of_workflow_steps</th></tr></thead><tbody><tr><td>production-deployment-workflow</td><td>Production Deployment Workflow</td><td>End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.</td><td>2026-01-15</td><td>2026-01-15</td><td>WF-PROD-001</td><td>legal-review, risk-assessment, release-approval</td><td>3</td></tr></tbody></table></div>
+                <div class="table-scroll"><p>Error reading CSV: [Errno 2] No such file or directory: 'test-data/workflows.csv'</p></div>
             </div>
         </div>
         <div id="formulas" class="tab-content">
             <div class="card">
                 <h2>column_formulas.csv</h2>
-                <div class="table-scroll"><table class="csv-table"><thead><tr><th>table_name</th><th>field_name</th><th>field_type</th><th>dag_level</th><th>formula</th><th>description</th></tr></thead><tbody><tr><td>Workflows</td><td>workflow_id</td><td>raw</td><td>0</td><td></td><td></td></tr><tr><td>Workflows</td><td>title</td><td>raw</td><td>0</td><td></td><td>Human-readable name for the workflow. Maps to dct:title per Dublin Core.</td></tr><tr><td>Workflows</td><td>description</td><td>raw</td><td>0</td><td></td><td>Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core.</td></tr><tr><td>Workflows</td><td>created</td><td>raw</td><td>0</td><td></td><td>Date the workflow was created. Maps to dct:created per Dublin Core.</td></tr><tr><td>Workflows</td><td>modified</td><td>raw</td><td>0</td><td></td><td>Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5.</td></tr><tr><td>Workflows</td><td>identifier</td><td>raw</td><td>0</td><td></td><td>External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems.</td></tr><tr><td>Workflows</td><td>workflow_steps</td><td>relationship</td><td></td><td></td><td>Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep.</td></tr><tr><td>Workflows</td><td>count_of_workflow_steps</td><td>aggregation</td><td></td><td>=COUNTIFS(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}})</td><td>Count of steps in this workflow. Aggregation over IsStepOf relationship.</td></tr><tr><td>WorkflowSteps</td><td>workflow_step_id</td><td>raw</td><td>0</td><td></td><td></td></tr><tr><td>WorkflowSteps</td><td>label</td><td>raw</td><td>0</td><td></td><td>Human-readable name for the step. Maps to rdfs:label.</td></tr><tr><td>WorkflowSteps</td><td>sequence_position</td><td>raw</td><td>0</td><td></td><td>Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries.</td></tr><tr><td>WorkflowSteps</td><td>requires_human_approval</td><td>raw</td><td>0</td><td></td><td>Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3.</td></tr><tr><td>WorkflowSteps</td><td>is_step_of</td><td>relationship</td><td></td><td></td><td>Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf.</td></tr><tr><td>WorkflowSteps</td><td>assigned_role</td><td>relationship</td><td></td><td></td><td>Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation.</td></tr><tr><td>WorkflowSteps</td><td>is_step_of_title</td><td>lookup</td><td></td><td>=INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))</td><td>Denormalized lookup of parent workflow title.</td></tr><tr><td>WorkflowSteps</td><td>is_step_of_description</td><td>lookup</td><td></td><td>=INDEX(Workflows!{{Description}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))</td><td>Denormalized lookup of parent workflow description.</td></tr><tr><td>WorkflowSteps</td><td>is_step_of_identifier</td><td>lookup</td><td></td><td>=INDEX(Workflows!{{Identifier}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))</td><td>Denormalized lookup of parent workflow external identifier.</td></tr><tr><td>WorkflowSteps</td><td>assigned_role_label</td><td>lookup</td><td></td><td>=INDEX(Roles!{{Label}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))</td><td>Denormalized lookup of assigned role label.</td></tr><tr><td>WorkflowSteps</td><td>assigned_role_comment</td><td>lookup</td><td></td><td>=INDEX(Roles!{{Comment}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))</td><td>Denormalized lookup of assigned role comment/description.</td></tr><tr><td>WorkflowSteps</td><td>assigned_role_filled_by</td><td>lookup</td><td></td><td>=INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))</td><td>Denormalized lookup of agent currently filling the assigned role.</td></tr><tr><td>Roles</td><td>role_id</td><td>raw</td><td>0</td><td></td><td></td></tr><tr><td>Roles</td><td>label</td><td>raw</td><td>0</td><td></td><td>Human-readable name for the role. Maps to rdfs:label.</td></tr><tr><td>Roles</td><td>comment</td><td>raw</td><td>0</td><td></td><td>Description of the role&#x27;s responsibilities. Maps to rdfs:comment.</td></tr><tr><td>Roles</td><td>filled_by</td><td>relationship</td><td></td><td></td><td>Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.</td></tr><tr><td>Roles</td><td>workflow_steps</td><td>relationship</td><td></td><td></td><td>Steps assigned to this role. Inverse of AssignedRole.</td></tr><tr><td>Roles</td><td>count_of_workflow_steps</td><td>aggregation</td><td></td><td>=COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})</td><td>Count of workflow steps assigned to this role.</td></tr><tr><td>Roles</td><td>delegates_to</td><td>relationship</td><td></td><td></td><td>Role to escalate to when this role&#x27;s agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.</td></tr><tr><td>Roles</td><td>label_from_delegates_to</td><td>lookup</td><td></td><td>=INDEX(Roles!{{Label}}, MATCH(Roles!{{DelegatesTo}}, Roles!{{RoleId}}, 0))</td><td></td></tr><tr><td>Roles</td><td>filled_by_name</td><td>lookup</td><td></td><td>=INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))</td><td>Denormalized lookup of agent name (foaf:name) filling this role.</td></tr><tr><td>Roles</td><td>filled_by_m_box</td><td>lookup</td><td></td><td>=INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))</td><td>Denormalized lookup of agent email (foaf:mbox) filling this role.</td></tr><tr><td>Roles</td><td>delegated_to_by</td><td>relationship</td><td></td><td></td><td></td></tr><tr><td>HumanAgents</td><td>human_agent_id</td><td>raw</td><td>0</td><td></td><td></td></tr><tr><td>HumanAgents</td><td>name</td><td>raw</td><td>0</td><td></td><td>Full name of the person. Maps to foaf:name per FOAF ontology.</td></tr><tr><td>HumanAgents</td><td>mbox</td><td>raw</td><td>0</td><td></td><td>Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution.</td></tr><tr><td>HumanAgents</td><td>roles</td><td>relationship</td><td></td><td></td><td>Roles filled by this agent. Inverse of FilledBy.</td></tr><tr><td>HumanAgents</td><td>count_of_roles</td><td>aggregation</td><td></td><td>=COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})</td><td>Count of roles currently filled by this agent.</td></tr></tbody></table></div>
+                <div class="table-scroll"><table class="csv-table"><thead><tr><th>table_name</th><th>field_name</th><th>field_type</th><th>dag_level</th><th>formula</th><th>description</th></tr></thead><tbody><tr><td>Customers</td><td>customer_id</td><td>raw</td><td>0</td><td></td><td></td></tr><tr><td>Customers</td><td>customer</td><td>raw</td><td>0</td><td></td><td>Identifier for the customers.</td></tr><tr><td>Customers</td><td>email_address</td><td>raw</td><td>0</td><td></td><td>Thec ustomers email address</td></tr><tr><td>Customers</td><td>first_name</td><td>raw</td><td>0</td><td></td><td>First Name of the customer - used to make the full name</td></tr><tr><td>Customers</td><td>last_name</td><td>raw</td><td>0</td><td></td><td>Last Name of the customer - used to make the full name</td></tr><tr><td>Customers</td><td>full_name</td><td>calculated</td><td></td><td>={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}</td><td>Full name is computed from the first and last name of the customer</td></tr></tbody></table></div>
             </div>
         </div>
     </main>

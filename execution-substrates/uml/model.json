@@ -1,360 +1,69 @@
 {
   "classes": {
-    "HumanAgents": {
+    "Customers": {
       "attributes": [
         {
-          "name": "HumanAgentId",
+          "name": "CustomerId",
           "type": "string"
         },
         {
-          "name": "Name",
+          "name": "Customer",
           "type": "string"
         },
         {
-          "name": "Mbox",
+          "name": "EmailAddress",
           "type": "string"
         },
         {
-          "name": "Roles",
+          "name": "FirstName",
+          "type": "string"
+        },
+        {
+          "name": "LastName",
           "type": "string"
         }
       ],
       "derived": [
         {
-          "name": "CountOfRoles",
-          "type": "integer",
-          "formula": "=COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})"
-        }
-      ]
-    },
-    "Roles": {
-      "attributes": [
-        {
-          "name": "RoleId",
-          "type": "string"
-        },
-        {
-          "name": "Label",
-          "type": "string"
-        },
-        {
-          "name": "Comment",
-          "type": "string"
-        },
-        {
-          "name": "FilledBy",
-          "type": "string"
-        },
-        {
-          "name": "WorkflowSteps",
-          "type": "string"
-        },
-        {
-          "name": "DelegatesTo",
-          "type": "string"
-        },
-        {
-          "name": "DelegatedToBy",
-          "type": "string"
-        }
-      ],
-      "derived": [
-        {
-          "name": "CountOfWorkflowSteps",
-          "type": "integer",
-          "formula": "=COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})"
-        },
-        {
-          "name": "Label_from_DelegatesTo",
+          "name": "FullName",
           "type": "string",
-          "formula": "=INDEX(Roles!{{Label}}, MATCH(Roles!{{DelegatesTo}}, Roles!{{RoleId}}, 0))"
-        },
-        {
-          "name": "FilledByName",
-          "type": "string",
-          "formula": "=INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))"
-        },
-        {
-          "name": "FilledByMBox",
-          "type": "string",
-          "formula": "=INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))"
-        }
-      ]
-    },
-    "WorkflowSteps": {
-      "attributes": [
-        {
-          "name": "WorkflowStepId",
-          "type": "string"
-        },
-        {
-          "name": "Label",
-          "type": "string"
-        },
-        {
-          "name": "SequencePosition",
-          "type": "integer"
-        },
-        {
-          "name": "RequiresHumanApproval",
-          "type": "boolean"
-        },
-        {
-          "name": "IsStepOf",
-          "type": "string"
-        },
-        {
-          "name": "AssignedRole",
-          "type": "string"
-        }
-      ],
-      "derived": [
-        {
-          "name": "IsStepOfTitle",
-          "type": "string",
-          "formula": "=INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))"
-        },
-        {
-          "name": "IsStepOfDescription",
-          "type": "string",
-          "formula": "=INDEX(Workflows!{{Description}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))"
-        },
-        {
-          "name": "IsStepOfIdentifier",
-          "type": "string",
-          "formula": "=INDEX(Workflows!{{Identifier}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))"
-        },
-        {
-          "name": "AssignedRoleLabel",
-          "type": "string",
-          "formula": "=INDEX(Roles!{{Label}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
-        },
-        {
-          "name": "AssignedRoleComment",
-          "type": "string",
-          "formula": "=INDEX(Roles!{{Comment}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
-        },
-        {
-          "name": "AssignedRoleFilledBy",
-          "type": "string",
-          "formula": "=INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))"
-        }
-      ]
-    },
-    "Workflows": {
-      "attributes": [
-        {
-          "name": "WorkflowId",
-          "type": "string"
-        },
-        {
-          "name": "Title",
-          "type": "string"
-        },
-        {
-          "name": "Description",
-          "type": "string"
-        },
-        {
-          "name": "Created",
-          "type": "datetime"
-        },
-        {
-          "name": "Modified",
-          "type": "datetime"
-        },
-        {
-          "name": "Identifier",
-          "type": "string"
-        },
-        {
-          "name": "WorkflowSteps",
-          "type": "string"
-        }
-      ],
-      "derived": [
-        {
-          "name": "CountOfWorkflowSteps",
-          "type": "integer",
-          "formula": "=COUNTIFS(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}})"
+          "formula": "={{FirstName}} & \" \" & {{LastName}}"
         }
       ]
     }
   },
   "instances": [
     {
-      "class": "HumanAgents",
-      "id": "HumanAgents_0",
+      "class": "Customers",
+      "id": "Customers_0",
       "values": {
-        "HumanAgentId": "maria-gonzalez",
-        "Name": "Maria Gonzalez",
-        "Mbox": "maria.gonzalez@specialsolutions.example",
-        "Roles": "release-manager",
-        "CountOfRoles": 1
+        "CustomerId": "cust0001",
+        "Customer": "CUST0001",
+        "EmailAddress": "jane.smith@email.com",
+        "FirstName": "Jane",
+        "LastName": "Smith"
       }
     },
     {
-      "class": "HumanAgents",
-      "id": "HumanAgents_1",
+      "class": "Customers",
+      "id": "Customers_1",
       "values": {
-        "HumanAgentId": "james-okafor",
-        "Name": "James Okafor",
-        "Mbox": "james.okafor@specialsolutions.example",
-        "Roles": "",
-        "CountOfRoles": 0
+        "CustomerId": "cust0002",
+        "Customer": "CUST0002",
+        "EmailAddress": "john.doe@email.com",
+        "FirstName": "John",
+        "LastName": "Doe"
       }
     },
     {
-      "class": "Roles",
-      "id": "Roles_0",
+      "class": "Customers",
+      "id": "Customers_2",
       "values": {
-        "RoleId": "release-manager",
-        "Label": "Release Manager",
-        "Comment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
-        "FilledBy": "maria-gonzalez",
-        "WorkflowSteps": "release-approval",
-        "CountOfWorkflowSteps": 1,
-        "DelegatesTo": "vp-engineering",
-        "Label_from_DelegatesTo": "VP Engineering",
-        "FilledByName": "Maria Gonzalez",
-        "FilledByMBox": "maria.gonzalez@specialsolutions.example",
-        "DelegatedToBy": ""
-      }
-    },
-    {
-      "class": "Roles",
-      "id": "Roles_1",
-      "values": {
-        "RoleId": "legal-compliance-reviewer",
-        "Label": "Legal Compliance Reviewer",
-        "Comment": "Role responsible for legal and compliance review of releases.",
-        "FilledBy": "",
-        "WorkflowSteps": "legal-review",
-        "CountOfWorkflowSteps": 1,
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": ""
-      }
-    },
-    {
-      "class": "Roles",
-      "id": "Roles_2",
-      "values": {
-        "RoleId": "risk-analyst",
-        "Label": "Risk Analyst",
-        "Comment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
-        "FilledBy": "",
-        "WorkflowSteps": "risk-assessment",
-        "CountOfWorkflowSteps": 1,
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": ""
-      }
-    },
-    {
-      "class": "Roles",
-      "id": "Roles_3",
-      "values": {
-        "RoleId": "vp-engineering",
-        "Label": "VP Engineering",
-        "Comment": "Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6.",
-        "FilledBy": "",
-        "WorkflowSteps": "",
-        "CountOfWorkflowSteps": 0,
-        "DelegatesTo": "cto",
-        "Label_from_DelegatesTo": "CTO",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": "release-manager"
-      }
-    },
-    {
-      "class": "Roles",
-      "id": "Roles_4",
-      "values": {
-        "RoleId": "cto",
-        "Label": "CTO",
-        "Comment": "Final role in delegation chain. Ultimate authority for release decisions. Article CQ6.",
-        "FilledBy": "",
-        "WorkflowSteps": "",
-        "CountOfWorkflowSteps": 0,
-        "DelegatesTo": "",
-        "Label_from_DelegatesTo": "",
-        "FilledByName": "",
-        "FilledByMBox": "",
-        "DelegatedToBy": "vp-engineering"
-      }
-    },
-    {
-      "class": "WorkflowSteps",
-      "id": "WorkflowSteps_0",
-      "values": {
-        "WorkflowStepId": "risk-assessment",
-        "Label": "Risk Assessment",
-        "SequencePosition": 1,
-        "RequiresHumanApproval": false,
-        "IsStepOf": "production-deployment-workflow",
-        "AssignedRole": "risk-analyst",
-        "IsStepOfTitle": "Production Deployment Workflow",
-        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
-        "IsStepOfIdentifier": "WF-PROD-001",
-        "AssignedRoleLabel": "Risk Analyst",
-        "AssignedRoleComment": "Role responsible for risk assessment. In full ontology, filled by AI agent.",
-        "AssignedRoleFilledBy": ""
-      }
-    },
-    {
-      "class": "WorkflowSteps",
-      "id": "WorkflowSteps_1",
-      "values": {
-        "WorkflowStepId": "legal-review",
-        "Label": "Legal Review",
-        "SequencePosition": 2,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "production-deployment-workflow",
-        "AssignedRole": "legal-compliance-reviewer",
-        "IsStepOfTitle": "Production Deployment Workflow",
-        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
-        "IsStepOfIdentifier": "WF-PROD-001",
-        "AssignedRoleLabel": "Legal Compliance Reviewer",
-        "AssignedRoleComment": "Role responsible for legal and compliance review of releases.",
-        "AssignedRoleFilledBy": ""
-      }
-    },
-    {
-      "class": "WorkflowSteps",
-      "id": "WorkflowSteps_2",
-      "values": {
-        "WorkflowStepId": "release-approval",
-        "Label": "Release Approval",
-        "SequencePosition": 3,
-        "RequiresHumanApproval": true,
-        "IsStepOf": "production-deployment-workflow",
-        "AssignedRole": "release-manager",
-        "IsStepOfTitle": "Production Deployment Workflow",
-        "IsStepOfDescription": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
-        "IsStepOfIdentifier": "WF-PROD-001",
-        "AssignedRoleLabel": "Release Manager",
-        "AssignedRoleComment": "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'",
-        "AssignedRoleFilledBy": "maria-gonzalez"
-      }
-    },
-    {
-      "class": "Workflows",
-      "id": "Workflows_0",
-      "values": {
-        "WorkflowId": "production-deployment-workflow",
-        "Title": "Production Deployment Workflow",
-        "Description": "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article.",
-        "Created": "2026-01-15",
-        "Modified": "2026-01-15",
-        "Identifier": "WF-PROD-001",
-        "WorkflowSteps": "legal-review, risk-assessment, release-approval",
-        "CountOfWorkflowSteps": 3
+        "CustomerId": "cust0003",
+        "Customer": "CUST0003",
+        "EmailAddress": "emily.jones@email.com",
+        "FirstName": "Emily",
+        "LastName": "Jones"
       }
     }
   ]

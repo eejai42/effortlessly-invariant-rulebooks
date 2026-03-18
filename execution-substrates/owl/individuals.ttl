@@ -3,141 +3,25 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Individuals: HumanAgents ===
+# === Individuals: Customers ===
 
-erb:HumanAgents_0 a erb:HumanAgents ;
-    erb:humanAgentId "maria-gonzalez" ;
-    erb:name "Maria Gonzalez" ;
-    erb:mbox "maria.gonzalez@specialsolutions.example" ;
-    erb:roles "release-manager" ;
-    erb:countOfRoles 1 .
+erb:Customers_0 a erb:Customers ;
+    erb:customerId "cust0001" ;
+    erb:customer "CUST0001" ;
+    erb:emailAddress "jane.smith@email.com" ;
+    erb:firstName "Jane" ;
+    erb:lastName "Smith" .
 
-erb:HumanAgents_1 a erb:HumanAgents ;
-    erb:humanAgentId "james-okafor" ;
-    erb:name "James Okafor" ;
-    erb:mbox "james.okafor@specialsolutions.example" ;
-    erb:roles "" ;
-    erb:countOfRoles 0 .
+erb:Customers_1 a erb:Customers ;
+    erb:customerId "cust0002" ;
+    erb:customer "CUST0002" ;
+    erb:emailAddress "john.doe@email.com" ;
+    erb:firstName "John" ;
+    erb:lastName "Doe" .
 
-# === Individuals: Roles ===
-
-erb:Roles_0 a erb:Roles ;
-    erb:roleId "release-manager" ;
-    erb:label "Release Manager" ;
-    erb:comment "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'" ;
-    erb:filledBy "maria-gonzalez" ;
-    erb:workflowSteps "release-approval" ;
-    erb:countOfWorkflowSteps 1 ;
-    erb:delegatesTo "vp-engineering" ;
-    erb:label_from_DelegatesTo "VP Engineering" ;
-    erb:filledByName "Maria Gonzalez" ;
-    erb:filledByMBox "maria.gonzalez@specialsolutions.example" ;
-    erb:delegatedToBy "" .
-
-erb:Roles_1 a erb:Roles ;
-    erb:roleId "legal-compliance-reviewer" ;
-    erb:label "Legal Compliance Reviewer" ;
-    erb:comment "Role responsible for legal and compliance review of releases." ;
-    erb:filledBy "" ;
-    erb:workflowSteps "legal-review" ;
-    erb:countOfWorkflowSteps 1 ;
-    erb:delegatesTo "" ;
-    erb:label_from_DelegatesTo "" ;
-    erb:filledByName "" ;
-    erb:filledByMBox "" ;
-    erb:delegatedToBy "" .
-
-erb:Roles_2 a erb:Roles ;
-    erb:roleId "risk-analyst" ;
-    erb:label "Risk Analyst" ;
-    erb:comment "Role responsible for risk assessment. In full ontology, filled by AI agent." ;
-    erb:filledBy "" ;
-    erb:workflowSteps "risk-assessment" ;
-    erb:countOfWorkflowSteps 1 ;
-    erb:delegatesTo "" ;
-    erb:label_from_DelegatesTo "" ;
-    erb:filledByName "" ;
-    erb:filledByMBox "" ;
-    erb:delegatedToBy "" .
-
-erb:Roles_3 a erb:Roles ;
-    erb:roleId "vp-engineering" ;
-    erb:label "VP Engineering" ;
-    erb:comment "Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6." ;
-    erb:filledBy "" ;
-    erb:workflowSteps "" ;
-    erb:countOfWorkflowSteps 0 ;
-    erb:delegatesTo "cto" ;
-    erb:label_from_DelegatesTo "CTO" ;
-    erb:filledByName "" ;
-    erb:filledByMBox "" ;
-    erb:delegatedToBy "release-manager" .
-
-erb:Roles_4 a erb:Roles ;
-    erb:roleId "cto" ;
-    erb:label "CTO" ;
-    erb:comment "Final role in delegation chain. Ultimate authority for release decisions. Article CQ6." ;
-    erb:filledBy "" ;
-    erb:workflowSteps "" ;
-    erb:countOfWorkflowSteps 0 ;
-    erb:delegatesTo "" ;
-    erb:label_from_DelegatesTo "" ;
-    erb:filledByName "" ;
-    erb:filledByMBox "" ;
-    erb:delegatedToBy "vp-engineering" .
-
-# === Individuals: WorkflowSteps ===
-
-erb:WorkflowSteps_0 a erb:WorkflowSteps ;
-    erb:workflowStepId "risk-assessment" ;
-    erb:label "Risk Assessment" ;
-    erb:sequencePosition 1 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf "production-deployment-workflow" ;
-    erb:assignedRole "risk-analyst" ;
-    erb:isStepOfTitle "Production Deployment Workflow" ;
-    erb:isStepOfDescription "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
-    erb:isStepOfIdentifier "WF-PROD-001" ;
-    erb:assignedRoleLabel "Risk Analyst" ;
-    erb:assignedRoleComment "Role responsible for risk assessment. In full ontology, filled by AI agent." ;
-    erb:assignedRoleFilledBy "" .
-
-erb:WorkflowSteps_1 a erb:WorkflowSteps ;
-    erb:workflowStepId "legal-review" ;
-    erb:label "Legal Review" ;
-    erb:sequencePosition 2 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "production-deployment-workflow" ;
-    erb:assignedRole "legal-compliance-reviewer" ;
-    erb:isStepOfTitle "Production Deployment Workflow" ;
-    erb:isStepOfDescription "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
-    erb:isStepOfIdentifier "WF-PROD-001" ;
-    erb:assignedRoleLabel "Legal Compliance Reviewer" ;
-    erb:assignedRoleComment "Role responsible for legal and compliance review of releases." ;
-    erb:assignedRoleFilledBy "" .
-
-erb:WorkflowSteps_2 a erb:WorkflowSteps ;
-    erb:workflowStepId "release-approval" ;
-    erb:label "Release Approval" ;
-    erb:sequencePosition 3 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf "production-deployment-workflow" ;
-    erb:assignedRole "release-manager" ;
-    erb:isStepOfTitle "Production Deployment Workflow" ;
-    erb:isStepOfDescription "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
-    erb:isStepOfIdentifier "WF-PROD-001" ;
-    erb:assignedRoleLabel "Release Manager" ;
-    erb:assignedRoleComment "Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: 'filled by Maria Gonzalez'" ;
-    erb:assignedRoleFilledBy "maria-gonzalez" .
-
-# === Individuals: Workflows ===
-
-erb:Workflows_0 a erb:Workflows ;
-    erb:workflowId "production-deployment-workflow" ;
-    erb:title "Production Deployment Workflow" ;
-    erb:description "End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman's NTWF ontology article." ;
-    erb:created "2026-01-15" ;
-    erb:modified "2026-01-15" ;
-    erb:identifier "WF-PROD-001" ;
-    erb:workflowSteps "legal-review, risk-assessment, release-approval" ;
-    erb:countOfWorkflowSteps 3 .
+erb:Customers_2 a erb:Customers ;
+    erb:customerId "cust0003" ;
+    erb:customer "CUST0003" ;
+    erb:emailAddress "emily.jones@email.com" ;
+    erb:firstName "Emily" ;
+    erb:lastName "Jones" .

@@ -67,8 +67,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>Golang Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
-            <div class="stat"><span>0/0 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -111,29 +111,14 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
 
 golang: Starting test...
 golang: Compiling and running...
-Golang substrate: Processing 6 tables with calculated fields...
-  Expected tables: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments
+Golang substrate: Processing 1 tables with calculated fields...
+  Expected tables: Customers
 
-Processing Workflows...
-  ✓ workflows: 1 records processed
-
-Processing WorkflowSteps...
-  ✓ workflow_steps: 5 records processed
-
-Processing Approvals...
-  ✓ approvals: 1 records processed
-
-Processing PrecedesSteps...
-  ✓ precedes_steps: 5 records processed
-
-Processing Roles...
-  ✓ roles: 6 records processed
-
-Processing Departments...
-  ✓ departments: 2 records processed
+Processing Customers...
+  ✓ customers: 3 records processed
 
 ════════════════════════════════════════════════════════════════
-Golang substrate: ALL 6 tables processed successfully (20 total records)
+Golang substrate: ALL 1 tables processed successfully (3 total records)
 ════════════════════════════════════════════════════════════════
 
 </pre>
@@ -143,10 +128,10 @@ Golang substrate: ALL 6 tables processed successfully (20 total records)
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -154,7 +139,7 @@ Golang substrate: ALL 6 tables processed successfully (20 total records)
             <div class="card">
                 <div class="code-header">
                     <h2>erb_sdk.go</h2>
-                    <div><span class="code-info">166 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
+                    <div><span class="code-info">165 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
                 </div>
                 <pre id="sdk-code">// ERB SDK - Go Implementation (GENERATED - DO NOT EDIT)
 // ======================================================
@@ -247,79 +232,78 @@ func (f FlexibleString) String() string {
 }
 
 // =============================================================================
-// WORKFLOWS TABLE
-// Table: Workflows
+// CUSTOMERS TABLE
+// Table: Customers
 // =============================================================================
 
-// Workflow represents a row in the Workflows table
-// Table: Workflows
-type Workflow struct {
-	WorkflowId string `json:&quot;workflow_id&quot;`
-	Title *string `json:&quot;title&quot;` // Human-readable name for the workflow. Maps to dct:title per Dublin Core.
-	Description *string `json:&quot;description&quot;` // Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core.
-	Created *string `json:&quot;created&quot;` // Date the workflow was created. Maps to dct:created per Dublin Core.
-	Modified *string `json:&quot;modified&quot;` // Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5.
-	Identifier *string `json:&quot;identifier&quot;` // External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems.
-	WorkflowSteps *string `json:&quot;workflow_steps&quot;` // Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep.
-	CountOfWorkflowSteps *int `json:&quot;count_of_workflow_steps&quot;` // Count of steps in this workflow. Aggregation over IsStepOf relationship.
+// Customer represents a row in the Customers table
+// Table: Customers
+type Customer struct {
+	CustomerId string `json:&quot;customer_id&quot;`
+	Customer *string `json:&quot;customer&quot;` // Identifier for the customers.
+	EmailAddress *string `json:&quot;email_address&quot;` // Thec ustomers email address
+	FirstName *string `json:&quot;first_name&quot;` // First Name of the customer - used to make the full name
+	LastName *string `json:&quot;last_name&quot;` // Last Name of the customer - used to make the full name
+	FullName *string `json:&quot;full_name&quot;` // Full name is computed from the first and last name of the customer
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcFullName computes the FullName calculated field
+// Full name is computed from the first and last name of the customer
+// Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
+func (tc *Customer) CalcFullName() string {
+	return stringVal(tc.FirstName) + &quot; &quot; + stringVal(tc.LastName)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *Customer) ComputeAll() *Customer {
+	// Level 1 calculations
+	fullName := stringVal(tc.FirstName) + &quot; &quot; + stringVal(tc.LastName)
+
+	return &amp;Customer{
+		CustomerId: tc.CustomerId,
+		Customer: tc.Customer,
+		EmailAddress: tc.EmailAddress,
+		FirstName: tc.FirstName,
+		LastName: tc.LastName,
+		FullName: nilIfEmpty(fullName),
+	}
 }
 
 // =============================================================================
-// WORKFLOWSTEPS TABLE
-// Table: WorkflowSteps
+// FILE I/O FUNCTIONS (for all tables with calculated fields)
 // =============================================================================
 
-// WorkflowStep represents a row in the WorkflowSteps table
-// Table: WorkflowSteps
-type WorkflowStep struct {
-	WorkflowStepId string `json:&quot;workflow_step_id&quot;`
-	Label *string `json:&quot;label&quot;` // Human-readable name for the step. Maps to rdfs:label.
-	SequencePosition *int `json:&quot;sequence_position&quot;` // Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries.
-	RequiresHumanApproval *bool `json:&quot;requires_human_approval&quot;` // Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3.
-	IsStepOf *string `json:&quot;is_step_of&quot;` // Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf.
-	AssignedRole *string `json:&quot;assigned_role&quot;` // Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation.
-	IsStepOfTitle *string `json:&quot;is_step_of_title&quot;` // Denormalized lookup of parent workflow title.
-	IsStepOfDescription *string `json:&quot;is_step_of_description&quot;` // Denormalized lookup of parent workflow description.
-	IsStepOfIdentifier *string `json:&quot;is_step_of_identifier&quot;` // Denormalized lookup of parent workflow external identifier.
-	AssignedRoleLabel *string `json:&quot;assigned_role_label&quot;` // Denormalized lookup of assigned role label.
-	AssignedRoleComment *string `json:&quot;assigned_role_comment&quot;` // Denormalized lookup of assigned role comment/description.
-	AssignedRoleFilledBy *string `json:&quot;assigned_role_filled_by&quot;` // Denormalized lookup of agent currently filling the assigned role.
+// LoadCustomerRecords loads Customers records from a JSON file
+func LoadCustomerRecords(path string) ([]Customer, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []Customer
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
 }
 
-// =============================================================================
-// ROLES TABLE
-// Table: Roles
-// =============================================================================
+// SaveCustomerRecords saves computed Customers records to a JSON file
+func SaveCustomerRecords(path string, records []Customer) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
 
-// Role represents a row in the Roles table
-// Table: Roles
-type Role struct {
-	RoleId string `json:&quot;role_id&quot;`
-	Label *string `json:&quot;label&quot;` // Human-readable name for the role. Maps to rdfs:label.
-	Comment *string `json:&quot;comment&quot;` // Description of the role&#x27;s responsibilities. Maps to rdfs:comment.
-	FilledBy *string `json:&quot;filled_by&quot;` // Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.
-	WorkflowSteps *string `json:&quot;workflow_steps&quot;` // Steps assigned to this role. Inverse of AssignedRole.
-	CountOfWorkflowSteps *int `json:&quot;count_of_workflow_steps&quot;` // Count of workflow steps assigned to this role.
-	DelegatesTo *string `json:&quot;delegates_to&quot;` // Role to escalate to when this role&#x27;s agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.
-	Label_from_DelegatesTo *string `json:&quot;label_from_delegates_to&quot;`
-	FilledByName *string `json:&quot;filled_by_name&quot;` // Denormalized lookup of agent name (foaf:name) filling this role.
-	FilledByMBox *string `json:&quot;filled_by_m_box&quot;` // Denormalized lookup of agent email (foaf:mbox) filling this role.
-	DelegatedToBy *string `json:&quot;delegated_to_by&quot;`
-}
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
 
-// =============================================================================
-// HUMANAGENTS TABLE
-// Table: HumanAgents
-// =============================================================================
-
-// HumanAgent represents a row in the HumanAgents table
-// Table: HumanAgents
-type HumanAgent struct {
-	HumanAgentId string `json:&quot;human_agent_id&quot;`
-	Name *string `json:&quot;name&quot;` // Full name of the person. Maps to foaf:name per FOAF ontology.
-	Mbox *string `json:&quot;mbox&quot;` // Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution.
-	Roles *string `json:&quot;roles&quot;` // Roles filled by this agent. Inverse of FilledBy.
-	CountOfRoles *int `json:&quot;count_of_roles&quot;` // Count of roles currently filled by this agent.
+	return nil
 }
 </pre>
             </div>
@@ -328,15 +312,14 @@ type HumanAgent struct {
             <div class="card">
                 <div class="code-header">
                     <h2>main.go</h2>
-                    <div><span class="code-info">281 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
+                    <div><span class="code-info">91 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
                 </div>
                 <pre id="main-code">// ERB SDK - Go Test Runner (GENERATED - DO NOT EDIT)
 // =======================================================
 // This file is REGENERATED every time inject-into-golang.py runs.
 // It must stay in sync with erb_sdk.go and the rulebook.
 //
-// Tables with calculated fields: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments
-// Tables with aggregations: Workflows
+// Tables with computed fields: Customers
 //
 // IMPORTANT: This runner processes ALL tables, not just a &quot;primary&quot; one.
 // If ANY table fails to process, the entire run fails with exit code 1.
@@ -347,7 +330,6 @@ import (
 	&quot;fmt&quot;
 	&quot;os&quot;
 	&quot;path/filepath&quot;
-	&quot;sort&quot;
 )
 
 func main() {
@@ -367,8 +349,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(&quot;Golang substrate: Processing 6 tables with calculated fields...&quot;)
-	fmt.Println(&quot;  Expected tables: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments&quot;)
+	fmt.Println(&quot;Golang substrate: Processing 1 tables with calculated fields...&quot;)
+	fmt.Println(&quot;  Expected tables: Customers&quot;)
 	fmt.Println(&quot;&quot;)
 
 	// Track success/failure for ALL tables
@@ -376,218 +358,30 @@ func main() {
 	var totalRecords int
 
 	// ─────────────────────────────────────────────────────────────────
-	// Load related tables for aggregation calculations
+	// Process Customers
 	// ─────────────────────────────────────────────────────────────────
-	// Note: SUMIFS loads from answer-keys (has computed fields)
-	//       COUNTIFS loads from blank-tests
+	fmt.Println(&quot;Processing Customers...&quot;)
+	customersInput := filepath.Join(blankTestsDir, &quot;customers.json&quot;)
+	customersOutput := filepath.Join(testAnswersDir, &quot;customers.json&quot;)
 
-	workflow_stepsData, err := LoadWorkflowStepRecords(filepath.Join(blankTestsDir, &quot;workflow_steps.json&quot;))
+	customersRecords, err := LoadCustomerRecords(customersInput)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, &quot;Warning: Could not load WorkflowSteps for aggregations: %v\n&quot;, err)
-		workflow_stepsData = nil
-	}
-	// Sort workflow_steps by sequence_position for proper ordering
-	if workflow_stepsData != nil {
-		sort.Slice(workflow_stepsData, func(i, j int) bool {
-			vi, vj := 0, 0
-			if workflow_stepsData[i].SequencePosition != nil {
-				vi = *workflow_stepsData[i].SequencePosition
-			}
-			if workflow_stepsData[j].SequencePosition != nil {
-				vj = *workflow_stepsData[j].SequencePosition
-			}
-			return vi &lt; vj
-		})
-	}
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Workflows
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing Workflows...&quot;)
-	workflowsInput := filepath.Join(blankTestsDir, &quot;workflows.json&quot;)
-	workflowsOutput := filepath.Join(testAnswersDir, &quot;workflows.json&quot;)
-
-	workflowsRecords, err := LoadWorkflowRecords(workflowsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf(&quot;Workflows: failed to load - %v&quot;, err)
+		errMsg := fmt.Sprintf(&quot;Customers: failed to load - %v&quot;, err)
 		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
 		errors = append(errors, errMsg)
 	} else {
-		// Compute aggregations for Workflows
-		count_of_stepsCountMap := make(map[string]int)
-		if workflow_stepsData != nil {
-			for _, rel := range workflow_stepsData {
-				if rel.Workflow != nil {
-					count_of_stepsCountMap[*rel.Workflow]++
-				}
-			}
+		var computedCustomer []Customer
+		for _, r := range customersRecords {
+			computedCustomer = append(computedCustomer, *r.ComputeAll())
 		}
 
-		// Update records with aggregation values
-		for i := range workflowsRecords {
-			if workflowsRecords[i].WorkflowId != &quot;&quot; {
-				count := count_of_stepsCountMap[workflowsRecords[i].WorkflowId]
-				workflowsRecords[i].CountOfSteps = &amp;count
-			}
-		}
-
-		var computedWorkflow []Workflow
-		for _, r := range workflowsRecords {
-			computedWorkflow = append(computedWorkflow, *r.ComputeAll())
-		}
-
-		if err := SaveWorkflowRecords(workflowsOutput, computedWorkflow); err != nil {
-			errMsg := fmt.Sprintf(&quot;Workflows: failed to save - %v&quot;, err)
+		if err := SaveCustomerRecords(customersOutput, computedCustomer); err != nil {
+			errMsg := fmt.Sprintf(&quot;Customers: failed to save - %v&quot;, err)
 			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
 			errors = append(errors, errMsg)
 		} else {
-			fmt.Printf(&quot;  ✓ workflows: %d records processed\n&quot;, len(computedWorkflow))
-			totalRecords += len(computedWorkflow)
-		}
-	}
-	fmt.Println(&quot;&quot;)
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process WorkflowSteps
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing WorkflowSteps...&quot;)
-	workflow_stepsInput := filepath.Join(blankTestsDir, &quot;workflow_steps.json&quot;)
-	workflow_stepsOutput := filepath.Join(testAnswersDir, &quot;workflow_steps.json&quot;)
-
-	workflow_stepsRecords, err := LoadWorkflowStepRecords(workflow_stepsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf(&quot;WorkflowSteps: failed to load - %v&quot;, err)
-		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedWorkflowStep []WorkflowStep
-		for _, r := range workflow_stepsRecords {
-			computedWorkflowStep = append(computedWorkflowStep, *r.ComputeAll())
-		}
-
-		if err := SaveWorkflowStepRecords(workflow_stepsOutput, computedWorkflowStep); err != nil {
-			errMsg := fmt.Sprintf(&quot;WorkflowSteps: failed to save - %v&quot;, err)
-			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf(&quot;  ✓ workflow_steps: %d records processed\n&quot;, len(computedWorkflowStep))
-			totalRecords += len(computedWorkflowStep)
-		}
-	}
-	fmt.Println(&quot;&quot;)
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Approvals
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing Approvals...&quot;)
-	approvalsInput := filepath.Join(blankTestsDir, &quot;approvals.json&quot;)
-	approvalsOutput := filepath.Join(testAnswersDir, &quot;approvals.json&quot;)
-
-	approvalsRecords, err := LoadApprovalRecords(approvalsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf(&quot;Approvals: failed to load - %v&quot;, err)
-		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedApproval []Approval
-		for _, r := range approvalsRecords {
-			computedApproval = append(computedApproval, *r.ComputeAll())
-		}
-
-		if err := SaveApprovalRecords(approvalsOutput, computedApproval); err != nil {
-			errMsg := fmt.Sprintf(&quot;Approvals: failed to save - %v&quot;, err)
-			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf(&quot;  ✓ approvals: %d records processed\n&quot;, len(computedApproval))
-			totalRecords += len(computedApproval)
-		}
-	}
-	fmt.Println(&quot;&quot;)
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process PrecedesSteps
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing PrecedesSteps...&quot;)
-	precedes_stepsInput := filepath.Join(blankTestsDir, &quot;precedes_steps.json&quot;)
-	precedes_stepsOutput := filepath.Join(testAnswersDir, &quot;precedes_steps.json&quot;)
-
-	precedes_stepsRecords, err := LoadPrecedesStepRecords(precedes_stepsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf(&quot;PrecedesSteps: failed to load - %v&quot;, err)
-		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedPrecedesStep []PrecedesStep
-		for _, r := range precedes_stepsRecords {
-			computedPrecedesStep = append(computedPrecedesStep, *r.ComputeAll())
-		}
-
-		if err := SavePrecedesStepRecords(precedes_stepsOutput, computedPrecedesStep); err != nil {
-			errMsg := fmt.Sprintf(&quot;PrecedesSteps: failed to save - %v&quot;, err)
-			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf(&quot;  ✓ precedes_steps: %d records processed\n&quot;, len(computedPrecedesStep))
-			totalRecords += len(computedPrecedesStep)
-		}
-	}
-	fmt.Println(&quot;&quot;)
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Roles
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing Roles...&quot;)
-	rolesInput := filepath.Join(blankTestsDir, &quot;roles.json&quot;)
-	rolesOutput := filepath.Join(testAnswersDir, &quot;roles.json&quot;)
-
-	rolesRecords, err := LoadRoleRecords(rolesInput)
-	if err != nil {
-		errMsg := fmt.Sprintf(&quot;Roles: failed to load - %v&quot;, err)
-		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedRole []Role
-		for _, r := range rolesRecords {
-			computedRole = append(computedRole, *r.ComputeAll())
-		}
-
-		if err := SaveRoleRecords(rolesOutput, computedRole); err != nil {
-			errMsg := fmt.Sprintf(&quot;Roles: failed to save - %v&quot;, err)
-			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf(&quot;  ✓ roles: %d records processed\n&quot;, len(computedRole))
-			totalRecords += len(computedRole)
-		}
-	}
-	fmt.Println(&quot;&quot;)
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Departments
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing Departments...&quot;)
-	departmentsInput := filepath.Join(blankTestsDir, &quot;departments.json&quot;)
-	departmentsOutput := filepath.Join(testAnswersDir, &quot;departments.json&quot;)
-
-	departmentsRecords, err := LoadDepartmentRecords(departmentsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf(&quot;Departments: failed to load - %v&quot;, err)
-		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedDepartment []Department
-		for _, r := range departmentsRecords {
-			computedDepartment = append(computedDepartment, *r.ComputeAll())
-		}
-
-		if err := SaveDepartmentRecords(departmentsOutput, computedDepartment); err != nil {
-			errMsg := fmt.Sprintf(&quot;Departments: failed to save - %v&quot;, err)
-			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf(&quot;  ✓ departments: %d records processed\n&quot;, len(computedDepartment))
-			totalRecords += len(computedDepartment)
+			fmt.Printf(&quot;  ✓ customers: %d records processed\n&quot;, len(computedCustomer))
+			totalRecords += len(computedCustomer)
 		}
 	}
 	fmt.Println(&quot;&quot;)
@@ -608,7 +402,7 @@ func main() {
 	}
 
 	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
-	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 6, totalRecords)
+	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 1, totalRecords)
 	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
 }</pre>
             </div>

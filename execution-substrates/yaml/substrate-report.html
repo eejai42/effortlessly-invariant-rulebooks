@@ -68,8 +68,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>YAML Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
-            <div class="stat"><span>0/0 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -109,13 +109,14 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <h2>Execution Log</h2>
                 <pre>=== YAML Substrate Test Run ===
 
-Traceback (most recent call last):
-  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/take-test.py&quot;, line 41, in &lt;module&gt;
-    from erb_calc import compute_all_calculated_fields
-  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/../python/erb_calc.py&quot;, line 39
-    else:
-    ^^^^
-SyntaxError: invalid syntax
+YAML substrate: Loaded schema with 5 calculated fields
+  - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+  - has_more_than1_step: ={{CountOfSteps}} &gt; 1
+  - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+  - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+  - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
+  -&gt; customers: 3 records
+YAML substrate: Processed 1 entities, 3 total records
 
 </pre>
             </div>
@@ -124,10 +125,10 @@ SyntaxError: invalid syntax
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>

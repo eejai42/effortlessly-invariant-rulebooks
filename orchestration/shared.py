@@ -279,7 +279,10 @@ def discover_computed_columns(rulebook: dict, entity_name: str) -> list:
 def get_calculated_fields(schema: list) -> list:
     """
     Extract all calculated fields from a schema.
-    Returns list of field dicts where type == "calculated" and formula exists.
+    Returns list of field dicts where type is "calculated" and formula exists.
+
+    Note: "lookup" type fields are NOT included here - they use INDEX/MATCH formulas
+    that require cross-table access and are handled separately by compute_lookups().
     """
     return [
         field for field in schema
@@ -295,6 +298,106 @@ def get_raw_fields(schema: list) -> list:
 def get_aggregation_fields(schema: list) -> list:
     """Extract all aggregation fields from a schema."""
     return [field for field in schema if field.get('type') == 'aggregation']
+
+
+def get_lookup_fields(schema: list) -> list:
+    """Extract all lookup fields from a schema (INDEX/MATCH formulas)."""
+    return [field for field in schema if field.get('type') == 'lookup' and field.get('formula')]
+
+
+# =============================================================================
+# INDEX/MATCH LOOKUP COMPUTATION
+# =============================================================================
+# These functions compute lookup fields (INDEX/MATCH) by loading related data
+# from the testing/blank-tests or answer-keys directory.
+# =============================================================================
+
+def parse_index_match_formula(formula: str) -> tuple:
+    """
+    Parse an INDEX/MATCH formula to extract the lookup components.
+
+    Formula format: =INDEX(Table!{{FieldToReturn}}, MATCH(CurrentTable!{{KeyField}}, Table!{{PrimaryKeyField}}, 0))
+    Example: =INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
+
+    Returns: (lookup_table, return_field, key_field, pk_field) or (None, None, None, None) if not parseable
+    """
+    import re
+    # Match pattern: INDEX(Table!{{Field}}, MATCH(Table!{{Field}}, Table!{{Field}}, 0))
+    pattern = r'=INDEX\((\w+)!\{\{(\w+)\}\},\s*MATCH\(\w+!\{\{(\w+)\}\},\s*(\w+)!\{\{(\w+)\}\},\s*0\)\)'
+    match = re.match(pattern, formula)
+    if match:
+        lookup_table = match.group(1)    # e.g., "Workflows"
+        return_field = match.group(2)    # e.g., "Title"
+        key_field = match.group(3)       # e.g., "IsStepOf"
+        # pk_table = match.group(4)      # Should match lookup_table
+        pk_field = match.group(5)        # e.g., "WorkflowId"
+        return (lookup_table, return_field, key_field, pk_field)
+    return (None, None, None, None)
+
+
+def compute_lookups(records: list, entity_name: str, rulebook: dict, project_root: Path) -> list:
+    """
+    Compute lookup fields (INDEX/MATCH) for a list of records.
+
+    This function identifies lookup fields in the schema, loads related data,
+    and computes the lookup values by matching keys and returning indexed values.
+
+    Args:
+        records: List of records to update with lookup values
+        entity_name: Name of the entity (PascalCase or snake_case)
+        rulebook: The loaded rulebook dictionary
+        project_root: Path to the project root for loading related data
+
+    Returns:
+        Updated list of records with lookup fields populated
+    """
+    schema = get_entity_schema(rulebook, entity_name)
+    lookup_fields = get_lookup_fields(schema)
+
+    if not lookup_fields:
+        return records
+
+    # Cache for loaded related data
+    related_data_cache = {}
+
+    for field in lookup_fields:
+        field_name = field.get('name')
+        formula = field.get('formula', '')
+        snake_field_name = to_snake_case(field_name)
+
+        # Parse the INDEX/MATCH formula
+        lookup_table, return_field, key_field, pk_field = parse_index_match_formula(formula)
+
+        if not lookup_table:
+            # Not a valid INDEX/MATCH formula, skip
+            continue
+
+        # Load related table data
+        if lookup_table not in related_data_cache:
+            related_data_cache[lookup_table] = load_related_data(project_root, lookup_table)
+
+        related_records = related_data_cache[lookup_table]
+        snake_return_field = to_snake_case(return_field)
+        snake_key_field = to_snake_case(key_field)
+        snake_pk_field = to_snake_case(pk_field)
+
+        # Build a lookup map: pk_value -> return_value
+        lookup_map = {}
+        for related_record in related_records:
+            pk_value = related_record.get(snake_pk_field)
+            if pk_value is not None:
+                lookup_map[pk_value] = related_record.get(snake_return_field)
+
+        # Update each record with the lookup value
+        for record in records:
+            key_value = record.get(snake_key_field)
+            if key_value is not None and key_value in lookup_map:
+                record[snake_field_name] = lookup_map[key_value]
+            else:
+                # No match found - leave as None or empty string
+                record[snake_field_name] = None
+
+    return records
 
 
 # =============================================================================

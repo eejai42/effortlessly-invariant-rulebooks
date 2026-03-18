@@ -10,6 +10,40 @@ from raw field values. Supports multiple entities.
 from typing import Optional, Any
 
 
+# =============================================================================
+# CUSTOMERS CALCULATIONS
+# Table: Customers
+# =============================================================================
+
+# Level 1
+
+def calc_customers_full_name(first_name, last_name):
+    """
+    Full name is computed from the first and last name of the customer
+    
+    Formula: ={{FirstName}} & " " & {{LastName}}
+    """
+    return (str(first_name or "") + ' ' + str(last_name or ""))
+
+
+def compute_customers_fields(record: dict) -> dict:
+    """
+    Compute all calculated fields for Customers.
+    
+    Table: Customers
+    """
+    result = dict(record)
+
+    # Level 1 calculations
+    result['full_name'] = calc_customers_full_name(result.get('first_name'), result.get('last_name'))
+
+    # Convert empty strings to None for string fields
+    for key in ['full_name']:
+        if result.get(key) == '':
+            result[key] = None
+
+    return result
+
 
 # =============================================================================
 # DISPATCHER FUNCTION
@@ -36,6 +70,8 @@ def compute_all_calculated_fields(record: dict, entity_name: str = None) -> dict
     # Normalize to snake_case to support "LineItem", "line_item", "line-item"
     entity_lower = entity_name.lower().replace('-', '_')
 
+    if entity_lower == 'customers':
+        return compute_customers_fields(record)
     else:
         # Unknown entity - return record unchanged (no error)
         return dict(record)

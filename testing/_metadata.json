@@ -1,23 +1,9 @@
 {
-  "workflows": {
-    "primary_key": "workflow_id",
+  "customers": {
+    "primary_key": "customer_id",
     "computed_columns": [
-      "count_of_workflow_steps"
+      "full_name"
     ],
-    "record_count": 1
-  },
-  "roles": {
-    "primary_key": "role_id",
-    "computed_columns": [
-      "count_of_workflow_steps"
-    ],
-    "record_count": 5
-  },
-  "human_agents": {
-    "primary_key": "human_agent_id",
-    "computed_columns": [
-      "count_of_roles"
-    ],
-    "record_count": 2
+    "record_count": 3
   }
 }

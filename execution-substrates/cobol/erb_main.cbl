@@ -1,0 +1,157 @@
+       *> ERB Main Program (GENERATED - DO NOT EDIT)
+       *> Reads tab-delimited input, computes fields, writes tab-delimited output
+       *> Compile: cobc -free -x erb_main.cbl
+       *> Run: ./erb_main < erb_input.tsv > erb_output.tsv
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. ERBMAIN.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-EOF PIC 9 VALUE 0.
+       01 WS-PTR PIC 9(4).
+       01 WS-TAB PIC X VALUE X"09".
+       01 WS-RECORD-COUNT PIC 9(6) VALUE 0.
+       01 INPUT-LINE PIC X(5000).
+       01 OUTPUT-LINE PIC X(5000).
+       01 WS-TEMP-1 PIC X(500).
+       01 WS-TEMP-2 PIC X(500).
+       01 WS-TEMP-3 PIC X(500).
+       01 WS-TEMP-4 PIC X(500).
+       01 WS-TEMP-5 PIC X(500).
+       01 WS-TEMP-6 PIC X(500).
+       01 WS-TEMP-7 PIC X(500).
+       01 WS-TEMP-8 PIC X(500).
+       01 WS-TEMP-9 PIC X(500).
+       01 WS-TEMP-10 PIC X(500).
+       01 WS-FIND-NEEDLE   PIC X(500).
+       01 WS-FIND-HAYSTACK PIC X(500).
+       01 WS-FIND-RESULT   PIC X(5).
+       01 WS-FIND-I       PIC 9(6).
+       01 WS-FIND-LEN     PIC 9(6).
+       01 WS-FIND-NLEN    PIC 9(6).
+       01 WS-SUBST-INPUT  PIC X(500).
+       01 WS-SUBST-OLD    PIC X(100).
+       01 WS-SUBST-NEW    PIC X(100).
+       01 WS-SUBST-OUTPUT PIC X(500).
+       01 WS-SUBST-I      PIC 9(6).
+       01 WS-SUBST-OUT-I  PIC 9(6).
+       01 WS-SUBST-INLEN  PIC 9(6).
+       01 WS-SUBST-OLDLEN PIC 9(6).
+       01 WS-SUBST-NEWLEN PIC 9(6).
+       01 WS-REC.
+          02 WS-REC-CUSTOMER-ID PIC X(500).
+          02 WS-REC-CUSTOMER PIC X(500).
+          02 WS-REC-EMAIL-ADDRESS PIC X(500).
+          02 WS-REC-FIRST-NAME PIC X(500).
+          02 WS-REC-LAST-NAME PIC X(500).
+          02 WS-REC-FULL-NAME PIC X(500).
+       PROCEDURE DIVISION.
+       MAIN-PARA.
+           PERFORM READ-AND-PROCESS UNTIL WS-EOF = 1
+           STOP RUN.
+
+       READ-AND-PROCESS.
+           MOVE SPACES TO INPUT-LINE
+           ACCEPT INPUT-LINE
+           IF INPUT-LINE = SPACES
+               MOVE 1 TO WS-EOF
+           ELSE
+               PERFORM PROCESS-RECORD
+           END-IF.
+
+       PROCESS-RECORD.
+           PERFORM PARSE-INPUT
+           PERFORM COMPUTE-ALL-FIELDS
+           PERFORM WRITE-OUTPUT
+           ADD 1 TO WS-RECORD-COUNT.
+
+       PARSE-INPUT.
+           MOVE 1 TO WS-PTR
+           UNSTRING INPUT-LINE DELIMITED BY WS-TAB
+               INTO WS-REC-CUSTOMER-ID
+               WITH POINTER WS-PTR
+           UNSTRING INPUT-LINE DELIMITED BY WS-TAB
+               INTO WS-REC-CUSTOMER
+               WITH POINTER WS-PTR
+           UNSTRING INPUT-LINE DELIMITED BY WS-TAB
+               INTO WS-REC-EMAIL-ADDRESS
+               WITH POINTER WS-PTR
+           UNSTRING INPUT-LINE DELIMITED BY WS-TAB
+               INTO WS-REC-FIRST-NAME
+               WITH POINTER WS-PTR
+           UNSTRING INPUT-LINE DELIMITED BY WS-TAB OR SPACES
+               INTO WS-REC-LAST-NAME
+               WITH POINTER WS-PTR
+           .
+
+       *> Level 1
+       CALC-FULL-NAME.
+           MOVE SPACES TO WS-REC-FULL-NAME
+           STRING
+               FUNCTION TRIM(WS-REC-FIRST-NAME TRAILING) DELIMITED SIZE
+               " " DELIMITED SIZE
+               FUNCTION TRIM(WS-REC-LAST-NAME TRAILING) DELIMITED SIZE
+               INTO WS-REC-FULL-NAME
+       .
+
+       COMPUTE-ALL-FIELDS.
+           PERFORM CALC-FULL-NAME
+       .
+
+       WRITE-OUTPUT.
+           MOVE SPACES TO OUTPUT-LINE
+           STRING
+               FUNCTION TRIM(WS-REC-CUSTOMER-ID TRAILING) DELIMITED SIZE
+               WS-TAB DELIMITED SIZE
+               FUNCTION TRIM(WS-REC-CUSTOMER TRAILING) DELIMITED SIZE
+               WS-TAB DELIMITED SIZE
+               FUNCTION TRIM(WS-REC-EMAIL-ADDRESS TRAILING) DELIMITED SIZE
+               WS-TAB DELIMITED SIZE
+               FUNCTION TRIM(WS-REC-FIRST-NAME TRAILING) DELIMITED SIZE
+               WS-TAB DELIMITED SIZE
+               FUNCTION TRIM(WS-REC-LAST-NAME TRAILING) DELIMITED SIZE
+               WS-TAB DELIMITED SIZE
+               FUNCTION TRIM(WS-REC-FULL-NAME TRAILING) DELIMITED SIZE
+               INTO OUTPUT-LINE
+           DISPLAY FUNCTION TRIM(OUTPUT-LINE TRAILING)
+           .
+
+       FIND-CONTAINS.
+           MOVE "false" TO WS-FIND-RESULT
+           MOVE 1 TO WS-FIND-I
+           COMPUTE WS-FIND-LEN = FUNCTION LENGTH(WS-FIND-HAYSTACK)
+           COMPUTE WS-FIND-NLEN = FUNCTION LENGTH(WS-FIND-NEEDLE)
+           IF WS-FIND-NLEN = 0
+               MOVE "true" TO WS-FIND-RESULT
+           END-IF
+           PERFORM UNTIL WS-FIND-I > WS-FIND-LEN - WS-FIND-NLEN + 1
+               OR WS-FIND-RESULT = "true"
+               IF WS-FIND-HAYSTACK(WS-FIND-I:WS-FIND-NLEN) = WS-FIND-NEEDLE
+                   MOVE "true" TO WS-FIND-RESULT
+               END-IF
+               ADD 1 TO WS-FIND-I
+           END-PERFORM
+           .
+
+       SUBSTITUTE-ALL.
+           MOVE SPACES TO WS-SUBST-OUTPUT
+           MOVE 1 TO WS-SUBST-I
+           MOVE 1 TO WS-SUBST-OUT-I
+           COMPUTE WS-SUBST-INLEN = FUNCTION LENGTH(
+               FUNCTION TRIM(WS-SUBST-INPUT))
+*>         For single-char replacement, hardcode length to 1
+           MOVE 1 TO WS-SUBST-OLDLEN
+           MOVE 1 TO WS-SUBST-NEWLEN
+           PERFORM UNTIL WS-SUBST-I > WS-SUBST-INLEN
+               IF WS-SUBST-INPUT(WS-SUBST-I:1) = WS-SUBST-OLD(1:1)
+                   MOVE WS-SUBST-NEW(1:1)
+                       TO WS-SUBST-OUTPUT(WS-SUBST-OUT-I:1)
+                   ADD 1 TO WS-SUBST-OUT-I
+                   ADD 1 TO WS-SUBST-I
+               ELSE
+                   MOVE WS-SUBST-INPUT(WS-SUBST-I:1)
+                       TO WS-SUBST-OUTPUT(WS-SUBST-OUT-I:1)
+                   ADD 1 TO WS-SUBST-I
+                   ADD 1 TO WS-SUBST-OUT-I
+               END-IF
+           END-PERFORM
+       .

@@ -3,8 +3,7 @@
 // This file is REGENERATED every time inject-into-golang.py runs.
 // It must stay in sync with erb_sdk.go and the rulebook.
 //
-// Tables with calculated fields: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments
-// Tables with aggregations: Workflows
+// Tables with computed fields: Customers
 //
 // IMPORTANT: This runner processes ALL tables, not just a "primary" one.
 // If ANY table fails to process, the entire run fails with exit code 1.
@@ -15,7 +14,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
 )
 
 func main() {
@@ -35,8 +33,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Golang substrate: Processing 6 tables with calculated fields...")
-	fmt.Println("  Expected tables: Workflows, WorkflowSteps, Approvals, PrecedesSteps, Roles, Departments")
+	fmt.Println("Golang substrate: Processing 1 tables with calculated fields...")
+	fmt.Println("  Expected tables: Customers")
 	fmt.Println("")
 
 	// Track success/failure for ALL tables
@@ -44,218 +42,30 @@ func main() {
 	var totalRecords int
 
 	// ─────────────────────────────────────────────────────────────────
-	// Load related tables for aggregation calculations
+	// Process Customers
 	// ─────────────────────────────────────────────────────────────────
-	// Note: SUMIFS loads from answer-keys (has computed fields)
-	//       COUNTIFS loads from blank-tests
+	fmt.Println("Processing Customers...")
+	customersInput := filepath.Join(blankTestsDir, "customers.json")
+	customersOutput := filepath.Join(testAnswersDir, "customers.json")
 
-	workflow_stepsData, err := LoadWorkflowStepRecords(filepath.Join(blankTestsDir, "workflow_steps.json"))
+	customersRecords, err := LoadCustomerRecords(customersInput)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: Could not load WorkflowSteps for aggregations: %v\n", err)
-		workflow_stepsData = nil
-	}
-	// Sort workflow_steps by sequence_position for proper ordering
-	if workflow_stepsData != nil {
-		sort.Slice(workflow_stepsData, func(i, j int) bool {
-			vi, vj := 0, 0
-			if workflow_stepsData[i].SequencePosition != nil {
-				vi = *workflow_stepsData[i].SequencePosition
-			}
-			if workflow_stepsData[j].SequencePosition != nil {
-				vj = *workflow_stepsData[j].SequencePosition
-			}
-			return vi < vj
-		})
-	}
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Workflows
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing Workflows...")
-	workflowsInput := filepath.Join(blankTestsDir, "workflows.json")
-	workflowsOutput := filepath.Join(testAnswersDir, "workflows.json")
-
-	workflowsRecords, err := LoadWorkflowRecords(workflowsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf("Workflows: failed to load - %v", err)
+		errMsg := fmt.Sprintf("Customers: failed to load - %v", err)
 		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
 		errors = append(errors, errMsg)
 	} else {
-		// Compute aggregations for Workflows
-		count_of_stepsCountMap := make(map[string]int)
-		if workflow_stepsData != nil {
-			for _, rel := range workflow_stepsData {
-				if rel.Workflow != nil {
-					count_of_stepsCountMap[*rel.Workflow]++
-				}
-			}
+		var computedCustomer []Customer
+		for _, r := range customersRecords {
+			computedCustomer = append(computedCustomer, *r.ComputeAll())
 		}
 
-		// Update records with aggregation values
-		for i := range workflowsRecords {
-			if workflowsRecords[i].WorkflowId != "" {
-				count := count_of_stepsCountMap[workflowsRecords[i].WorkflowId]
-				workflowsRecords[i].CountOfSteps = &count
-			}
-		}
-
-		var computedWorkflow []Workflow
-		for _, r := range workflowsRecords {
-			computedWorkflow = append(computedWorkflow, *r.ComputeAll())
-		}
-
-		if err := SaveWorkflowRecords(workflowsOutput, computedWorkflow); err != nil {
-			errMsg := fmt.Sprintf("Workflows: failed to save - %v", err)
+		if err := SaveCustomerRecords(customersOutput, computedCustomer); err != nil {
+			errMsg := fmt.Sprintf("Customers: failed to save - %v", err)
 			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
 			errors = append(errors, errMsg)
 		} else {
-			fmt.Printf("  ✓ workflows: %d records processed\n", len(computedWorkflow))
-			totalRecords += len(computedWorkflow)
-		}
-	}
-	fmt.Println("")
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process WorkflowSteps
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing WorkflowSteps...")
-	workflow_stepsInput := filepath.Join(blankTestsDir, "workflow_steps.json")
-	workflow_stepsOutput := filepath.Join(testAnswersDir, "workflow_steps.json")
-
-	workflow_stepsRecords, err := LoadWorkflowStepRecords(workflow_stepsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf("WorkflowSteps: failed to load - %v", err)
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedWorkflowStep []WorkflowStep
-		for _, r := range workflow_stepsRecords {
-			computedWorkflowStep = append(computedWorkflowStep, *r.ComputeAll())
-		}
-
-		if err := SaveWorkflowStepRecords(workflow_stepsOutput, computedWorkflowStep); err != nil {
-			errMsg := fmt.Sprintf("WorkflowSteps: failed to save - %v", err)
-			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf("  ✓ workflow_steps: %d records processed\n", len(computedWorkflowStep))
-			totalRecords += len(computedWorkflowStep)
-		}
-	}
-	fmt.Println("")
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Approvals
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing Approvals...")
-	approvalsInput := filepath.Join(blankTestsDir, "approvals.json")
-	approvalsOutput := filepath.Join(testAnswersDir, "approvals.json")
-
-	approvalsRecords, err := LoadApprovalRecords(approvalsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf("Approvals: failed to load - %v", err)
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedApproval []Approval
-		for _, r := range approvalsRecords {
-			computedApproval = append(computedApproval, *r.ComputeAll())
-		}
-
-		if err := SaveApprovalRecords(approvalsOutput, computedApproval); err != nil {
-			errMsg := fmt.Sprintf("Approvals: failed to save - %v", err)
-			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf("  ✓ approvals: %d records processed\n", len(computedApproval))
-			totalRecords += len(computedApproval)
-		}
-	}
-	fmt.Println("")
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process PrecedesSteps
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing PrecedesSteps...")
-	precedes_stepsInput := filepath.Join(blankTestsDir, "precedes_steps.json")
-	precedes_stepsOutput := filepath.Join(testAnswersDir, "precedes_steps.json")
-
-	precedes_stepsRecords, err := LoadPrecedesStepRecords(precedes_stepsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf("PrecedesSteps: failed to load - %v", err)
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedPrecedesStep []PrecedesStep
-		for _, r := range precedes_stepsRecords {
-			computedPrecedesStep = append(computedPrecedesStep, *r.ComputeAll())
-		}
-
-		if err := SavePrecedesStepRecords(precedes_stepsOutput, computedPrecedesStep); err != nil {
-			errMsg := fmt.Sprintf("PrecedesSteps: failed to save - %v", err)
-			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf("  ✓ precedes_steps: %d records processed\n", len(computedPrecedesStep))
-			totalRecords += len(computedPrecedesStep)
-		}
-	}
-	fmt.Println("")
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Roles
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing Roles...")
-	rolesInput := filepath.Join(blankTestsDir, "roles.json")
-	rolesOutput := filepath.Join(testAnswersDir, "roles.json")
-
-	rolesRecords, err := LoadRoleRecords(rolesInput)
-	if err != nil {
-		errMsg := fmt.Sprintf("Roles: failed to load - %v", err)
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedRole []Role
-		for _, r := range rolesRecords {
-			computedRole = append(computedRole, *r.ComputeAll())
-		}
-
-		if err := SaveRoleRecords(rolesOutput, computedRole); err != nil {
-			errMsg := fmt.Sprintf("Roles: failed to save - %v", err)
-			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf("  ✓ roles: %d records processed\n", len(computedRole))
-			totalRecords += len(computedRole)
-		}
-	}
-	fmt.Println("")
-
-	// ─────────────────────────────────────────────────────────────────
-	// Process Departments
-	// ─────────────────────────────────────────────────────────────────
-	fmt.Println("Processing Departments...")
-	departmentsInput := filepath.Join(blankTestsDir, "departments.json")
-	departmentsOutput := filepath.Join(testAnswersDir, "departments.json")
-
-	departmentsRecords, err := LoadDepartmentRecords(departmentsInput)
-	if err != nil {
-		errMsg := fmt.Sprintf("Departments: failed to load - %v", err)
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-		errors = append(errors, errMsg)
-	} else {
-		var computedDepartment []Department
-		for _, r := range departmentsRecords {
-			computedDepartment = append(computedDepartment, *r.ComputeAll())
-		}
-
-		if err := SaveDepartmentRecords(departmentsOutput, computedDepartment); err != nil {
-			errMsg := fmt.Sprintf("Departments: failed to save - %v", err)
-			fmt.Fprintf(os.Stderr, "ERROR: %s\n", errMsg)
-			errors = append(errors, errMsg)
-		} else {
-			fmt.Printf("  ✓ departments: %d records processed\n", len(computedDepartment))
-			totalRecords += len(computedDepartment)
+			fmt.Printf("  ✓ customers: %d records processed\n", len(computedCustomer))
+			totalRecords += len(computedCustomer)
 		}
 	}
 	fmt.Println("")
@@ -276,6 +86,6 @@ func main() {
 	}
 
 	fmt.Println("════════════════════════════════════════════════════════════════")
-	fmt.Printf("Golang substrate: ALL %d tables processed successfully (%d total records)\n", 6, totalRecords)
+	fmt.Printf("Golang substrate: ALL %d tables processed successfully (%d total records)\n", 1, totalRecords)
 	fmt.Println("════════════════════════════════════════════════════════════════")
 }

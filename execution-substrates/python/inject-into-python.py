@@ -412,16 +412,21 @@ def generate_dispatcher_function(entities_with_calcs: List[str]) -> str:
     lines.append('')
 
     # Generate dispatch logic using if/elif chain
-    for i, entity in enumerate(entities_with_calcs):
-        entity_snake = to_snake_case(entity)
-        prefix = 'if' if i == 0 else 'elif'
-        lines.append(f"    {prefix} entity_lower == '{entity_snake}':")
-        lines.append(f"        return compute_{entity_snake}_fields(record)")
+    if entities_with_calcs:
+        for i, entity in enumerate(entities_with_calcs):
+            entity_snake = to_snake_case(entity)
+            prefix = 'if' if i == 0 else 'elif'
+            lines.append(f"    {prefix} entity_lower == '{entity_snake}':")
+            lines.append(f"        return compute_{entity_snake}_fields(record)")
 
-    # Fallback for unknown entities
-    lines.append('    else:')
-    lines.append('        # Unknown entity - return record unchanged (no error)')
-    lines.append('        return dict(record)')
+        # Fallback for unknown entities
+        lines.append('    else:')
+        lines.append('        # Unknown entity - return record unchanged (no error)')
+        lines.append('        return dict(record)')
+    else:
+        # No entities with calculated fields - just return record unchanged
+        lines.append('    # No entities have calculated fields in this rulebook')
+        lines.append('    return dict(record)')
 
     return '\n'.join(lines)
 

@@ -26,7 +26,7 @@ from dataclasses import dataclass
 script_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(script_dir.parent.parent))
 
-from orchestration.shared import to_snake_case, load_rulebook, compute_aggregations
+from orchestration.shared import to_snake_case, load_rulebook, compute_aggregations, compute_lookups
 
 
 # =============================================================================
@@ -401,8 +401,10 @@ def process_entity(
     with open(input_path, 'r') as f:
         records = json.load(f)
 
-    # Compute aggregation fields first (e.g., COUNTIFS)
     if rulebook is not None and project_root is not None:
+        # Compute lookup fields first (INDEX/MATCH)
+        records = compute_lookups(records, entity_name, rulebook, project_root)
+        # Then compute aggregation fields (COUNTIFS, SUMIFS)
         records = compute_aggregations(records, entity_name, rulebook, project_root)
 
     evaluator = ExplainEvaluator(semantics)
@@ -521,12 +523,17 @@ def main():
                 break
 
         if not entity_spec:
-            # No calculated fields for this entity, just copy
+            # No calculated fields for this entity, but still compute lookups/aggregations
             with open(input_path, 'r') as f:
                 records = json.load(f)
+            if rulebook is not None and project_root is not None:
+                records = compute_lookups(records, entity_name, rulebook, project_root)
+                records = compute_aggregations(records, entity_name, rulebook, project_root)
             with open(test_answers_dir / filename, 'w') as f:
                 json.dump(records, f, indent=2)
-            print(f"  -> {entity_name}: {len(records)} records (no calculated fields)")
+            total_records += len(records)
+            entity_count += 1
+            print(f"  -> {entity_name}: {len(records)} records (lookups/aggregations only)")
             continue
 
         answers_path = test_answers_dir / filename

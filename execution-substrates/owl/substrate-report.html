@@ -68,7 +68,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>8/8 passed</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -117,30 +117,28 @@ OWL Execution Substrate - SHACL Reasoning Test
 ======================================================================
 
 Loading rulebook...
-Tables with computed columns: Workflows, WorkflowSteps, Roles, HumanAgents
+Tables with computed columns: Customers
 
 Loading ontology and data...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/ontology.owl
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/individuals.ttl
-   Total triples: 300
+   Total triples: 53
 
 Loading SHACL rules...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/rules.shacl.ttl
-   Rule triples: 8
+   Rule triples: 7
 
 Running SHACL-SPARQL reasoning...
    (Multiple passes to resolve dependencies between computed fields)
-   Pass 1: 300 -&gt; 300 triples (0 added)
-   Completed in 1 passes
-   Final triple count: 300
+   Pass 1: 53 -&gt; 56 triples (3 added)
+   Pass 2: 56 -&gt; 56 triples (0 added)
+   Completed in 2 passes
+   Final triple count: 56
 
 Extracting computed values...
-   Workflows: 1 records (1 computed fields)
-   WorkflowSteps: 3 records (6 computed fields)
-   Roles: 5 records (4 computed fields)
-   HumanAgents: 2 records (1 computed fields)
+   Customers: 3 records (1 computed fields)
 
-Total: 11 records extracted
+Total: 3 records extracted
 Output: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/test-answers/
 
 ======================================================================
@@ -155,9 +153,9 @@ SHACL reasoning complete!
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">8</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">8</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -165,7 +163,7 @@ SHACL reasoning complete!
             <div class="card">
                 <div class="code-header">
                     <h2>ontology.owl</h2>
-                    <div><span class="code-info">252 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
+                    <div><span class="code-info">51 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
                 </div>
                 <pre id="ontology-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
@@ -177,247 +175,46 @@ erb: a owl:Ontology ;
     rdfs:label &quot;ERB Ontology&quot; ;
     rdfs:comment &quot;Generated from effortless-rulebook.json&quot; .
 
-# === Class: HumanAgents ===
-erb:HumanAgents a owl:Class ;
-    rdfs:label &quot;HumanAgents&quot; ;
-    rdfs:comment &quot;Table: HumanAgents&quot; .
+# === Class: Customers ===
+erb:Customers a owl:Class ;
+    rdfs:label &quot;Customers&quot; ;
+    rdfs:comment &quot;Table: Customers&quot; .
 
-erb:humanAgentId a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:customerId a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;HumanAgentId&quot; .
+    rdfs:label &quot;CustomerId&quot; .
 
-erb:name a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:customer a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;Name&quot; ;
-    rdfs:comment &quot;Full name of the person. Maps to foaf:name per FOAF ontology.&quot; .
+    rdfs:label &quot;Customer&quot; ;
+    rdfs:comment &quot;Identifier for the customers.&quot; .
 
-erb:mbox a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:emailAddress a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;Mbox&quot; ;
-    rdfs:comment &quot;Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution.&quot; .
+    rdfs:label &quot;EmailAddress&quot; ;
+    rdfs:comment &quot;Thec ustomers email address&quot; .
 
-erb:roles a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
+erb:firstName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;Roles&quot; ;
-    rdfs:comment &quot;Roles filled by this agent. Inverse of FilledBy.&quot; .
+    rdfs:label &quot;FirstName&quot; ;
+    rdfs:comment &quot;First Name of the customer - used to make the full name&quot; .
 
-erb:countOfRoles a owl:DatatypeProperty ;
-    rdfs:domain erb:HumanAgents ;
-    rdfs:range xsd:integer ;
-    rdfs:label &quot;CountOfRoles&quot; ;
-    rdfs:comment &quot;Count of roles currently filled by this agent.&quot; .
-    # calculated: aggregation
-
-# === Class: Roles ===
-erb:Roles a owl:Class ;
-    rdfs:label &quot;Roles&quot; ;
-    rdfs:comment &quot;Table: Roles&quot; .
-
-erb:roleId a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
+erb:lastName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;RoleId&quot; .
+    rdfs:label &quot;LastName&quot; ;
+    rdfs:comment &quot;Last Name of the customer - used to make the full name&quot; .
 
-erb:label a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
+erb:fullName a owl:DatatypeProperty ;
+    rdfs:domain erb:Customers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;Label&quot; ;
-    rdfs:comment &quot;Human-readable name for the role. Maps to rdfs:label.&quot; .
-
-erb:comment a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Comment&quot; ;
-    rdfs:comment &quot;Description of the role&#x27;s responsibilities. Maps to rdfs:comment.&quot; .
-
-erb:filledBy a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;FilledBy&quot; ;
-    rdfs:comment &quot;Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.&quot; .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;WorkflowSteps&quot; ;
-    rdfs:comment &quot;Steps assigned to this role. Inverse of AssignedRole.&quot; .
-
-erb:countOfWorkflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:integer ;
-    rdfs:label &quot;CountOfWorkflowSteps&quot; ;
-    rdfs:comment &quot;Count of workflow steps assigned to this role.&quot; .
-    # calculated: aggregation
-
-erb:delegatesTo a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;DelegatesTo&quot; ;
-    rdfs:comment &quot;Role to escalate to when this role&#x27;s agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.&quot; .
-
-erb:label_from_DelegatesTo a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Label_from_DelegatesTo&quot; .
-    # calculated: lookup
-
-erb:filledByName a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;FilledByName&quot; ;
-    rdfs:comment &quot;Denormalized lookup of agent name (foaf:name) filling this role.&quot; .
-    # calculated: lookup
-
-erb:filledByMBox a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;FilledByMBox&quot; ;
-    rdfs:comment &quot;Denormalized lookup of agent email (foaf:mbox) filling this role.&quot; .
-    # calculated: lookup
-
-erb:delegatedToBy a owl:DatatypeProperty ;
-    rdfs:domain erb:Roles ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;DelegatedToBy&quot; .
-
-# === Class: WorkflowSteps ===
-erb:WorkflowSteps a owl:Class ;
-    rdfs:label &quot;WorkflowSteps&quot; ;
-    rdfs:comment &quot;Table: WorkflowSteps&quot; .
-
-erb:workflowStepId a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;WorkflowStepId&quot; .
-
-erb:label a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Label&quot; ;
-    rdfs:comment &quot;Human-readable name for the step. Maps to rdfs:label.&quot; .
-
-erb:sequencePosition a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:integer ;
-    rdfs:label &quot;SequencePosition&quot; ;
-    rdfs:comment &quot;Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries.&quot; .
-
-erb:requiresHumanApproval a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:boolean ;
-    rdfs:label &quot;RequiresHumanApproval&quot; ;
-    rdfs:comment &quot;Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3.&quot; .
-
-erb:isStepOf a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;IsStepOf&quot; ;
-    rdfs:comment &quot;Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf.&quot; .
-
-erb:assignedRole a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;AssignedRole&quot; ;
-    rdfs:comment &quot;Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation.&quot; .
-
-erb:isStepOfTitle a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;IsStepOfTitle&quot; ;
-    rdfs:comment &quot;Denormalized lookup of parent workflow title.&quot; .
-    # calculated: lookup
-
-erb:isStepOfDescription a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;IsStepOfDescription&quot; ;
-    rdfs:comment &quot;Denormalized lookup of parent workflow description.&quot; .
-    # calculated: lookup
-
-erb:isStepOfIdentifier a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;IsStepOfIdentifier&quot; ;
-    rdfs:comment &quot;Denormalized lookup of parent workflow external identifier.&quot; .
-    # calculated: lookup
-
-erb:assignedRoleLabel a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;AssignedRoleLabel&quot; ;
-    rdfs:comment &quot;Denormalized lookup of assigned role label.&quot; .
-    # calculated: lookup
-
-erb:assignedRoleComment a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;AssignedRoleComment&quot; ;
-    rdfs:comment &quot;Denormalized lookup of assigned role comment/description.&quot; .
-    # calculated: lookup
-
-erb:assignedRoleFilledBy a owl:DatatypeProperty ;
-    rdfs:domain erb:WorkflowSteps ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;AssignedRoleFilledBy&quot; ;
-    rdfs:comment &quot;Denormalized lookup of agent currently filling the assigned role.&quot; .
-    # calculated: lookup
-
-# === Class: Workflows ===
-erb:Workflows a owl:Class ;
-    rdfs:label &quot;Workflows&quot; ;
-    rdfs:comment &quot;Table: Workflows&quot; .
-
-erb:workflowId a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;WorkflowId&quot; .
-
-erb:title a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Title&quot; ;
-    rdfs:comment &quot;Human-readable name for the workflow. Maps to dct:title per Dublin Core.&quot; .
-
-erb:description a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Description&quot; ;
-    rdfs:comment &quot;Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core.&quot; .
-
-erb:created a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Created&quot; ;
-    rdfs:comment &quot;Date the workflow was created. Maps to dct:created per Dublin Core.&quot; .
-
-erb:modified a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Modified&quot; ;
-    rdfs:comment &quot;Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5.&quot; .
-
-erb:identifier a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;Identifier&quot; ;
-    rdfs:comment &quot;External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems.&quot; .
-
-erb:workflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;WorkflowSteps&quot; ;
-    rdfs:comment &quot;Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep.&quot; .
-
-erb:countOfWorkflowSteps a owl:DatatypeProperty ;
-    rdfs:domain erb:Workflows ;
-    rdfs:range xsd:integer ;
-    rdfs:label &quot;CountOfWorkflowSteps&quot; ;
-    rdfs:comment &quot;Count of steps in this workflow. Aggregation over IsStepOf relationship.&quot; .
-    # calculated: aggregation
+    rdfs:label &quot;FullName&quot; ;
+    rdfs:comment &quot;Full name is computed from the first and last name of the customer&quot; .
+    # calculated: calculated
 </pre>
             </div>
         </div>
@@ -425,151 +222,35 @@ erb:countOfWorkflowSteps a owl:DatatypeProperty ;
             <div class="card">
                 <div class="code-header">
                     <h2>individuals.ttl</h2>
-                    <div><span class="code-info">144 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
+                    <div><span class="code-info">28 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
                 </div>
                 <pre id="individuals-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix erb: &lt;http://example.org/erb#&gt; .
 
-# === Individuals: HumanAgents ===
+# === Individuals: Customers ===
 
-erb:HumanAgents_0 a erb:HumanAgents ;
-    erb:humanAgentId &quot;maria-gonzalez&quot; ;
-    erb:name &quot;Maria Gonzalez&quot; ;
-    erb:mbox &quot;maria.gonzalez@specialsolutions.example&quot; ;
-    erb:roles &quot;release-manager&quot; ;
-    erb:countOfRoles 1 .
+erb:Customers_0 a erb:Customers ;
+    erb:customerId &quot;cust0001&quot; ;
+    erb:customer &quot;CUST0001&quot; ;
+    erb:emailAddress &quot;jane.smith@email.com&quot; ;
+    erb:firstName &quot;Jane&quot; ;
+    erb:lastName &quot;Smith&quot; .
 
-erb:HumanAgents_1 a erb:HumanAgents ;
-    erb:humanAgentId &quot;james-okafor&quot; ;
-    erb:name &quot;James Okafor&quot; ;
-    erb:mbox &quot;james.okafor@specialsolutions.example&quot; ;
-    erb:roles &quot;&quot; ;
-    erb:countOfRoles 0 .
+erb:Customers_1 a erb:Customers ;
+    erb:customerId &quot;cust0002&quot; ;
+    erb:customer &quot;CUST0002&quot; ;
+    erb:emailAddress &quot;john.doe@email.com&quot; ;
+    erb:firstName &quot;John&quot; ;
+    erb:lastName &quot;Doe&quot; .
 
-# === Individuals: Roles ===
-
-erb:Roles_0 a erb:Roles ;
-    erb:roleId &quot;release-manager&quot; ;
-    erb:label &quot;Release Manager&quot; ;
-    erb:comment &quot;Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: &#x27;filled by Maria Gonzalez&#x27;&quot; ;
-    erb:filledBy &quot;maria-gonzalez&quot; ;
-    erb:workflowSteps &quot;release-approval&quot; ;
-    erb:countOfWorkflowSteps 1 ;
-    erb:delegatesTo &quot;vp-engineering&quot; ;
-    erb:label_from_DelegatesTo &quot;VP Engineering&quot; ;
-    erb:filledByName &quot;Maria Gonzalez&quot; ;
-    erb:filledByMBox &quot;maria.gonzalez@specialsolutions.example&quot; ;
-    erb:delegatedToBy &quot;&quot; .
-
-erb:Roles_1 a erb:Roles ;
-    erb:roleId &quot;legal-compliance-reviewer&quot; ;
-    erb:label &quot;Legal Compliance Reviewer&quot; ;
-    erb:comment &quot;Role responsible for legal and compliance review of releases.&quot; ;
-    erb:filledBy &quot;&quot; ;
-    erb:workflowSteps &quot;legal-review&quot; ;
-    erb:countOfWorkflowSteps 1 ;
-    erb:delegatesTo &quot;&quot; ;
-    erb:label_from_DelegatesTo &quot;&quot; ;
-    erb:filledByName &quot;&quot; ;
-    erb:filledByMBox &quot;&quot; ;
-    erb:delegatedToBy &quot;&quot; .
-
-erb:Roles_2 a erb:Roles ;
-    erb:roleId &quot;risk-analyst&quot; ;
-    erb:label &quot;Risk Analyst&quot; ;
-    erb:comment &quot;Role responsible for risk assessment. In full ontology, filled by AI agent.&quot; ;
-    erb:filledBy &quot;&quot; ;
-    erb:workflowSteps &quot;risk-assessment&quot; ;
-    erb:countOfWorkflowSteps 1 ;
-    erb:delegatesTo &quot;&quot; ;
-    erb:label_from_DelegatesTo &quot;&quot; ;
-    erb:filledByName &quot;&quot; ;
-    erb:filledByMBox &quot;&quot; ;
-    erb:delegatedToBy &quot;&quot; .
-
-erb:Roles_3 a erb:Roles ;
-    erb:roleId &quot;vp-engineering&quot; ;
-    erb:label &quot;VP Engineering&quot; ;
-    erb:comment &quot;Secondary role in delegation chain. Escalation from Release Manager when primary agent unavailable. Article CQ6.&quot; ;
-    erb:filledBy &quot;&quot; ;
-    erb:workflowSteps &quot;&quot; ;
-    erb:countOfWorkflowSteps 0 ;
-    erb:delegatesTo &quot;cto&quot; ;
-    erb:label_from_DelegatesTo &quot;CTO&quot; ;
-    erb:filledByName &quot;&quot; ;
-    erb:filledByMBox &quot;&quot; ;
-    erb:delegatedToBy &quot;release-manager&quot; .
-
-erb:Roles_4 a erb:Roles ;
-    erb:roleId &quot;cto&quot; ;
-    erb:label &quot;CTO&quot; ;
-    erb:comment &quot;Final role in delegation chain. Ultimate authority for release decisions. Article CQ6.&quot; ;
-    erb:filledBy &quot;&quot; ;
-    erb:workflowSteps &quot;&quot; ;
-    erb:countOfWorkflowSteps 0 ;
-    erb:delegatesTo &quot;&quot; ;
-    erb:label_from_DelegatesTo &quot;&quot; ;
-    erb:filledByName &quot;&quot; ;
-    erb:filledByMBox &quot;&quot; ;
-    erb:delegatedToBy &quot;vp-engineering&quot; .
-
-# === Individuals: WorkflowSteps ===
-
-erb:WorkflowSteps_0 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;risk-assessment&quot; ;
-    erb:label &quot;Risk Assessment&quot; ;
-    erb:sequencePosition 1 ;
-    erb:requiresHumanApproval false ;
-    erb:isStepOf &quot;production-deployment-workflow&quot; ;
-    erb:assignedRole &quot;risk-analyst&quot; ;
-    erb:isStepOfTitle &quot;Production Deployment Workflow&quot; ;
-    erb:isStepOfDescription &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
-    erb:isStepOfIdentifier &quot;WF-PROD-001&quot; ;
-    erb:assignedRoleLabel &quot;Risk Analyst&quot; ;
-    erb:assignedRoleComment &quot;Role responsible for risk assessment. In full ontology, filled by AI agent.&quot; ;
-    erb:assignedRoleFilledBy &quot;&quot; .
-
-erb:WorkflowSteps_1 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;legal-review&quot; ;
-    erb:label &quot;Legal Review&quot; ;
-    erb:sequencePosition 2 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;production-deployment-workflow&quot; ;
-    erb:assignedRole &quot;legal-compliance-reviewer&quot; ;
-    erb:isStepOfTitle &quot;Production Deployment Workflow&quot; ;
-    erb:isStepOfDescription &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
-    erb:isStepOfIdentifier &quot;WF-PROD-001&quot; ;
-    erb:assignedRoleLabel &quot;Legal Compliance Reviewer&quot; ;
-    erb:assignedRoleComment &quot;Role responsible for legal and compliance review of releases.&quot; ;
-    erb:assignedRoleFilledBy &quot;&quot; .
-
-erb:WorkflowSteps_2 a erb:WorkflowSteps ;
-    erb:workflowStepId &quot;release-approval&quot; ;
-    erb:label &quot;Release Approval&quot; ;
-    erb:sequencePosition 3 ;
-    erb:requiresHumanApproval true ;
-    erb:isStepOf &quot;production-deployment-workflow&quot; ;
-    erb:assignedRole &quot;release-manager&quot; ;
-    erb:isStepOfTitle &quot;Production Deployment Workflow&quot; ;
-    erb:isStepOfDescription &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
-    erb:isStepOfIdentifier &quot;WF-PROD-001&quot; ;
-    erb:assignedRoleLabel &quot;Release Manager&quot; ;
-    erb:assignedRoleComment &quot;Primary role responsible for coordinating production releases. First in delegation chain. Article CQ2: &#x27;filled by Maria Gonzalez&#x27;&quot; ;
-    erb:assignedRoleFilledBy &quot;maria-gonzalez&quot; .
-
-# === Individuals: Workflows ===
-
-erb:Workflows_0 a erb:Workflows ;
-    erb:workflowId &quot;production-deployment-workflow&quot; ;
-    erb:title &quot;Production Deployment Workflow&quot; ;
-    erb:description &quot;End-to-end workflow for deploying software releases to production, including risk analysis, legal clearance, and release approval. From Jessica Talisman&#x27;s NTWF ontology article.&quot; ;
-    erb:created &quot;2026-01-15&quot; ;
-    erb:modified &quot;2026-01-15&quot; ;
-    erb:identifier &quot;WF-PROD-001&quot; ;
-    erb:workflowSteps &quot;legal-review, risk-assessment, release-approval&quot; ;
-    erb:countOfWorkflowSteps 3 .
+erb:Customers_2 a erb:Customers ;
+    erb:customerId &quot;cust0003&quot; ;
+    erb:customer &quot;CUST0003&quot; ;
+    erb:emailAddress &quot;emily.jones@email.com&quot; ;
+    erb:firstName &quot;Emily&quot; ;
+    erb:lastName &quot;Jones&quot; .
 </pre>
             </div>
         </div>
@@ -577,7 +258,7 @@ erb:Workflows_0 a erb:Workflows ;
             <div class="card">
                 <div class="code-header">
                     <h2>rules.shacl.ttl</h2>
-                    <div><span class="code-info">35 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
+                    <div><span class="code-info">29 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
                 </div>
                 <pre id="rules-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
@@ -585,35 +266,29 @@ erb:Workflows_0 a erb:Workflows ;
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix erb: &lt;http://example.org/erb#&gt; .
 
-# === Shape with rules for HumanAgents ===
-erb:HumanAgentsShape a sh:NodeShape ;
-    sh:targetClass erb:HumanAgents .
-# Rule for CountOfRoles - parse error: Unexpected character &#x27;!&#x27; at position 14
+# === Shape with rules for Customers ===
+erb:CustomersShape a sh:NodeShape ;
+    sh:targetClass erb:Customers ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Customers_FullName&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:fullName ?_result .
+            }
+            WHERE {
+    $this a erb:Customers .
+    OPTIONAL { $this erb:firstName ?first_name . }
+    OPTIONAL { $this erb:lastName ?last_name . }
+                BIND(CONCAT(?first_name, &quot; &quot;, ?last_name) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] .
 
-# === Shape with rules for Roles ===
-erb:RolesShape a sh:NodeShape ;
-    sh:targetClass erb:Roles .
-# Rule for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
-# Rule for Label_from_DelegatesTo - parse error: Unexpected character &#x27;!&#x27; at position 11
-# Rule for FilledByName - parse error: Unexpected character &#x27;!&#x27; at position 17
-# Rule for FilledByMBox - parse error: Unexpected character &#x27;!&#x27; at position 17
-
-# === Shape with rules for WorkflowSteps ===
-erb:WorkflowStepsShape a sh:NodeShape ;
-    sh:targetClass erb:WorkflowSteps .
-# Rule for IsStepOfTitle - parse error: Unexpected character &#x27;!&#x27; at position 15
-# Rule for IsStepOfDescription - parse error: Unexpected character &#x27;!&#x27; at position 15
-# Rule for IsStepOfIdentifier - parse error: Unexpected character &#x27;!&#x27; at position 15
-# Rule for AssignedRoleLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
-# Rule for AssignedRoleComment - parse error: Unexpected character &#x27;!&#x27; at position 11
-# Rule for AssignedRoleFilledBy - parse error: Unexpected character &#x27;!&#x27; at position 11
-
-# === Shape with rules for Workflows ===
-erb:WorkflowsShape a sh:NodeShape ;
-    sh:targetClass erb:Workflows .
-# Rule for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
-
-# Generated 0 SHACL rules</pre>
+# Generated 1 SHACL rules</pre>
             </div>
         </div>
     </main>

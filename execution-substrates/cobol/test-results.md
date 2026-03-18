@@ -4,14 +4,15 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Fields Tested | 0 |
-| Passed | 0 |
+| Total Fields Tested | 3 |
+| Passed | 3 |
 | Failed | 0 |
-| Score | 0.0% |
+| Score | 100.0% |
 | Duration | < 1s |
 
-## Error
+## Results by Entity
 
-```
-No test-answers found
-```
+### customers
+
+- Fields: 3/3 (100.0%)
+- Computed columns: full_name

@@ -36,7 +36,7 @@ from enum import Enum, auto
 # Add project root to path for shared imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from orchestration.shared import load_rulebook, discover_entities, get_entity_schema, to_snake_case, get_calculated_fields, compute_aggregations
+from orchestration.shared import load_rulebook, discover_entities, get_entity_schema, to_snake_case, get_calculated_fields, compute_aggregations, compute_lookups
 
 
 # =============================================================================
@@ -471,14 +471,6 @@ def run_multi_entity(script_dir: Path):
             except AttributeError:
                 print(f"    Missing: {func_name}")
 
-        if not available_funcs:
-            print(f"  -> {entity}: No assembly functions available, copying blank test")
-            with open(input_path, 'r') as f:
-                data = json.load(f)
-            with open(output_path, 'w') as f:
-                json.dump(data, f, indent=2)
-            continue
-
         # Load input data
         with open(input_path, 'r') as f:
             data = json.load(f)
@@ -490,8 +482,19 @@ def run_multi_entity(script_dir: Path):
             print(f"  -> {entity}: 0 records (empty)")
             continue
 
-        # Compute aggregation fields first (e.g., COUNTIFS)
+        # Compute lookup fields first (INDEX/MATCH)
+        data = compute_lookups(data, rulebook_entity, rulebook, project_root)
+        # Then compute aggregation fields (COUNTIFS, SUMIFS)
         data = compute_aggregations(data, rulebook_entity, rulebook, project_root)
+
+        if not available_funcs:
+            # No assembly functions - save with lookups/aggregations computed
+            print(f"  -> {entity}: No assembly functions, saved with lookups/aggregations only")
+            with open(output_path, 'w') as f:
+                json.dump(data, f, indent=2)
+            total_records += len(data)
+            entity_count += 1
+            continue
 
         # Process records using entity-specific schema and functions
         processed = process_records(data, lib, schema, struct_size, available_funcs)

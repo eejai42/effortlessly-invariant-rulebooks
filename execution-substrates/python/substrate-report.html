@@ -206,10 +206,10 @@ pre {
         <div class="header-stats">
             <div class="stat">
                 <span>Score:</span>
-                <span class="stat-value score-danger">0.0%</span>
+                <span class="stat-value score-perfect">100.0%</span>
             </div>
             <div class="stat">
-                <span>0/0 passed</span>
+                <span>3/3 passed</span>
             </div>
         </div>
         <button id="theme-toggle" title="Toggle theme">
@@ -286,13 +286,8 @@ pre {
                 <h2>Execution Log</h2>
                 <pre>=== Python Substrate Test Run ===
 
-Traceback (most recent call last):
-  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/take-test.py&quot;, line 29, in &lt;module&gt;
-    from erb_calc import compute_all_calculated_fields
-  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/erb_calc.py&quot;, line 39
-    else:
-    ^^^^
-SyntaxError: invalid syntax
+  -&gt; customers: 3 records
+Python substrate: Processed 1 entities, 3 total records
 
 </pre>
             </div>
@@ -303,11 +298,11 @@ SyntaxError: invalid syntax
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item">
-                        <div class="result-value score-danger">0.0%</div>
+                        <div class="result-value score-perfect">100.0%</div>
                         <div class="result-label">Score</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value score-perfect">0</div>
+                        <div class="result-value score-perfect">3</div>
                         <div class="result-label">Passed</div>
                     </div>
                     <div class="result-item">
@@ -315,7 +310,7 @@ SyntaxError: invalid syntax
                         <div class="result-label">Failed</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value">0</div>
+                        <div class="result-value">3</div>
                         <div class="result-label">Total</div>
                     </div>
                 </div>
@@ -325,7 +320,7 @@ SyntaxError: invalid syntax
                 <div class="markdown-content">
                     <h3>language_candidates</h3>
                     <ul>
-                        <li>Fields: 0/0 (0.0%)</li>
+                        <li>Fields: 3/3 (100.0%)</li>
                         <li>Computed columns: has_grammar, question, predicted_answer, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept</li>
                     </ul>
                 </div>
@@ -337,7 +332,7 @@ SyntaxError: invalid syntax
                 <div class="code-header">
                     <h2>erb_calc.py</h2>
                     <div>
-                        <span class="code-info">41 lines</span>
+                        <span class="code-info">77 lines</span>
                         <button class="copy-btn" onclick="copyCode('calc-code')">Copy</button>
                     </div>
                 </div>
@@ -352,6 +347,40 @@ from raw field values. Supports multiple entities.
 
 from typing import Optional, Any
 
+
+# =============================================================================
+# CUSTOMERS CALCULATIONS
+# Table: Customers
+# =============================================================================
+
+# Level 1
+
+def calc_customers_full_name(first_name, last_name):
+    &quot;&quot;&quot;
+    Full name is computed from the first and last name of the customer
+    
+    Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
+    &quot;&quot;&quot;
+    return (str(first_name or &quot;&quot;) + &#x27; &#x27; + str(last_name or &quot;&quot;))
+
+
+def compute_customers_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for Customers.
+    
+    Table: Customers
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;full_name&#x27;] = calc_customers_full_name(result.get(&#x27;first_name&#x27;), result.get(&#x27;last_name&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;full_name&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
 
 
 # =============================================================================
@@ -379,6 +408,8 @@ def compute_all_calculated_fields(record: dict, entity_name: str = None) -&gt; d
     # Normalize to snake_case to support &quot;LineItem&quot;, &quot;line_item&quot;, &quot;line-item&quot;
     entity_lower = entity_name.lower().replace(&#x27;-&#x27;, &#x27;_&#x27;)
 
+    if entity_lower == &#x27;customers&#x27;:
+        return compute_customers_fields(record)
     else:
         # Unknown entity - return record unchanged (no error)
         return dict(record)</pre>

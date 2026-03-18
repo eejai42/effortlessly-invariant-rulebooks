@@ -1,145 +1,27 @@
 @startuml
 
-object "Maria Gonzalez" as HumanAgents_0 {
-  HumanAgentId = "maria-gonzalez"
-  Name = "Maria Gonzalez"
-  Mbox = "maria.gonzalez@specialsolut..."
-  Roles = "release-manager"
-  CountOfRoles = 1
+object "Customers_0" as Customers_0 {
+  CustomerId = "cust0001"
+  Customer = "CUST0001"
+  EmailAddress = "jane.smith@email.com"
+  FirstName = "Jane"
+  LastName = "Smith"
 }
 
-object "James Okafor" as HumanAgents_1 {
-  HumanAgentId = "james-okafor"
-  Name = "James Okafor"
-  Mbox = "james.okafor@specialsolutio..."
-  Roles = ""
-  CountOfRoles = 0
+object "Customers_1" as Customers_1 {
+  CustomerId = "cust0002"
+  Customer = "CUST0002"
+  EmailAddress = "john.doe@email.com"
+  FirstName = "John"
+  LastName = "Doe"
 }
 
-object "Roles_0" as Roles_0 {
-  RoleId = "release-manager"
-  Label = "Release Manager"
-  Comment = "Primary role responsible fo..."
-  FilledBy = "maria-gonzalez"
-  WorkflowSteps = "release-approval"
-  CountOfWorkflowSteps = 1
-  DelegatesTo = "vp-engineering"
-  Label_from_DelegatesTo = "VP Engineering"
-  FilledByName = "Maria Gonzalez"
-  FilledByMBox = "maria.gonzalez@specialsolut..."
-  DelegatedToBy = ""
-}
-
-object "Roles_1" as Roles_1 {
-  RoleId = "legal-compliance-reviewer"
-  Label = "Legal Compliance Reviewer"
-  Comment = "Role responsible for legal ..."
-  FilledBy = ""
-  WorkflowSteps = "legal-review"
-  CountOfWorkflowSteps = 1
-  DelegatesTo = ""
-  Label_from_DelegatesTo = ""
-  FilledByName = ""
-  FilledByMBox = ""
-  DelegatedToBy = ""
-}
-
-object "Roles_2" as Roles_2 {
-  RoleId = "risk-analyst"
-  Label = "Risk Analyst"
-  Comment = "Role responsible for risk a..."
-  FilledBy = ""
-  WorkflowSteps = "risk-assessment"
-  CountOfWorkflowSteps = 1
-  DelegatesTo = ""
-  Label_from_DelegatesTo = ""
-  FilledByName = ""
-  FilledByMBox = ""
-  DelegatedToBy = ""
-}
-
-object "Roles_3" as Roles_3 {
-  RoleId = "vp-engineering"
-  Label = "VP Engineering"
-  Comment = "Secondary role in delegatio..."
-  FilledBy = ""
-  WorkflowSteps = ""
-  CountOfWorkflowSteps = 0
-  DelegatesTo = "cto"
-  Label_from_DelegatesTo = "CTO"
-  FilledByName = ""
-  FilledByMBox = ""
-  DelegatedToBy = "release-manager"
-}
-
-object "Roles_4" as Roles_4 {
-  RoleId = "cto"
-  Label = "CTO"
-  Comment = "Final role in delegation ch..."
-  FilledBy = ""
-  WorkflowSteps = ""
-  CountOfWorkflowSteps = 0
-  DelegatesTo = ""
-  Label_from_DelegatesTo = ""
-  FilledByName = ""
-  FilledByMBox = ""
-  DelegatedToBy = "vp-engineering"
-}
-
-object "WorkflowSteps_0" as WorkflowSteps_0 {
-  WorkflowStepId = "risk-assessment"
-  Label = "Risk Assessment"
-  SequencePosition = 1
-  RequiresHumanApproval = false
-  IsStepOf = "production-deployment-workflow"
-  AssignedRole = "risk-analyst"
-  IsStepOfTitle = "Production Deployment Workflow"
-  IsStepOfDescription = "End-to-end workflow for dep..."
-  IsStepOfIdentifier = "WF-PROD-001"
-  AssignedRoleLabel = "Risk Analyst"
-  AssignedRoleComment = "Role responsible for risk a..."
-  AssignedRoleFilledBy = ""
-}
-
-object "WorkflowSteps_1" as WorkflowSteps_1 {
-  WorkflowStepId = "legal-review"
-  Label = "Legal Review"
-  SequencePosition = 2
-  RequiresHumanApproval = true
-  IsStepOf = "production-deployment-workflow"
-  AssignedRole = "legal-compliance-reviewer"
-  IsStepOfTitle = "Production Deployment Workflow"
-  IsStepOfDescription = "End-to-end workflow for dep..."
-  IsStepOfIdentifier = "WF-PROD-001"
-  AssignedRoleLabel = "Legal Compliance Reviewer"
-  AssignedRoleComment = "Role responsible for legal ..."
-  AssignedRoleFilledBy = ""
-}
-
-object "WorkflowSteps_2" as WorkflowSteps_2 {
-  WorkflowStepId = "release-approval"
-  Label = "Release Approval"
-  SequencePosition = 3
-  RequiresHumanApproval = true
-  IsStepOf = "production-deployment-workflow"
-  AssignedRole = "release-manager"
-  IsStepOfTitle = "Production Deployment Workflow"
-  IsStepOfDescription = "End-to-end workflow for dep..."
-  IsStepOfIdentifier = "WF-PROD-001"
-  AssignedRoleLabel = "Release Manager"
-  AssignedRoleComment = "Primary role responsible fo..."
-  AssignedRoleFilledBy = "maria-gonzalez"
-}
-
-object "Workflows_0" as Workflows_0 {
-  WorkflowId = "production-deployment-workflow"
-  Title = "Production Deployment Workflow"
-  Description = "End-to-end workflow for dep..."
-  Created = "2026-01-15"
-  Modified = "2026-01-15"
-  Identifier = "WF-PROD-001"
-  WorkflowSteps = "legal-review, risk-assessme..."
-  CountOfWorkflowSteps = 3
+object "Customers_2" as Customers_2 {
+  CustomerId = "cust0003"
+  Customer = "CUST0003"
+  EmailAddress = "emily.jones@email.com"
+  FirstName = "Emily"
+  LastName = "Jones"
 }
 
 @enduml

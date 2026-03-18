@@ -40,7 +40,9 @@ from orchestration.shared import (
     get_calculated_fields,
     get_raw_fields,
     to_snake_case,
-    to_pascal_case
+    to_pascal_case,
+    compute_lookups,
+    compute_aggregations
 )
 
 
@@ -376,7 +378,8 @@ def extract_json_from_response(response_text: str) -> list:
 # =============================================================================
 
 def process_entity(input_path: str, output_path: str, entity_name: str,
-                   schema: list, glossary: str = "", specification: str = "") -> tuple:
+                   schema: list, glossary: str = "", specification: str = "",
+                   rulebook: dict = None, project_root = None) -> tuple:
     """
     Process a single entity file using the LLM.
 
@@ -397,11 +400,16 @@ def process_entity(input_path: str, output_path: str, entity_name: str,
             json.dump(test_data, f, indent=2)
         return (0, 0)
 
+    # Always compute lookups/aggregations first
+    if rulebook is not None and project_root is not None:
+        test_data = compute_lookups(test_data, entity_name, rulebook, project_root)
+        test_data = compute_aggregations(test_data, entity_name, rulebook, project_root)
+
     computed_columns = build_computed_columns_list(schema)
 
     if not computed_columns:
-        # No calculated fields - just copy the data
-        print(f"    No calculated fields for {entity_name}, copying as-is")
+        # No calculated fields - save with lookups/aggregations computed
+        print(f"    No calculated fields for {entity_name}, saved with lookups/aggregations")
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(test_data, f, indent=2)
         return (len(test_data), 0)
@@ -560,7 +568,8 @@ def run_multi_entity():
         # Process the entity using English documents
         record_count, filled_count = process_entity(
             input_path, output_path, entity_snake, schema,
-            glossary=glossary, specification=specification
+            glossary=glossary, specification=specification,
+            rulebook=rulebook, project_root=project_root
         )
 
         total_records += record_count

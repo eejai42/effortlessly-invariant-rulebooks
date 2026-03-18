@@ -296,13 +296,13 @@ def discover_primary_key(rulebook: dict, entity_name: str) -> str:
 def discover_computed_columns(rulebook: dict, entity_name: str) -> list:
     """
     Discover computed columns for an entity.
-    Returns list of snake_case column names where type == "calculated" or "aggregation".
+    Returns list of snake_case column names where type is "calculated", "aggregation", or "lookup".
     """
     schema = get_entity_schema(rulebook, entity_name)
 
     computed = []
     for field in schema:
-        if field.get('type') in ('calculated', 'aggregation'):
+        if field.get('type') in ('calculated', 'aggregation', 'lookup'):
             computed.append(to_snake_case(field['name']))
 
     return computed

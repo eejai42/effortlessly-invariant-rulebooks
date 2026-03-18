@@ -68,7 +68,7 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
         </div>
         <div class="header-stats">
             <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>8/8 passed</span></div>
+            <div class="stat"><span>3/3 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -115,16 +115,11 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
 UML Execution Substrate - Multi-Entity Test Execution (OCL)
 ======================================================================
 
-Loaded 0 OCL constraints from constraints.ocl
+Loaded 1 OCL constraints from constraints.ocl
 
-   Warning: No OCL constraints found for class &#x27;HumanAgents&#x27;
-  -&gt; human_agents: 2 records (via OCL)
-   Warning: No OCL constraints found for class &#x27;Roles&#x27;
-  -&gt; roles: 5 records (via OCL)
-   Warning: No OCL constraints found for class &#x27;Workflows&#x27;
-  -&gt; workflows: 1 records (via OCL)
+  -&gt; customers: 3 records (via OCL)
 
-UML substrate: Processed 3 entities, 8 total records
+UML substrate: Processed 1 entities, 3 total records
 ======================================================================
 
 </pre>
@@ -135,9 +130,9 @@ UML substrate: Processed 3 entities, 8 total records
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">8</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">8</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -145,77 +140,23 @@ UML substrate: Processed 3 entities, 8 total records
             <div class="card">
                 <div class="code-header">
                     <h2>class-diagram.puml</h2>
-                    <div><span class="code-info">72 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
+                    <div><span class="code-info">18 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
                 </div>
                 <pre id="class-code">@startuml
 skinparam classAttributeIconSize 0
 
-note top of HumanAgents
-  Table: HumanAgents
+note top of Customers
+  Table: Customers
 end note
 
-class HumanAgents {
-  +HumanAgentId: String
-  +Name: String -- Full name of the person. Maps to foaf:name per FOAF ontology.
-  +Mbox: String -- Email address of the person. Maps to foaf:mbox per FOAF ontology. Used for contact and identity resolution.
-  +Roles: String -- Roles filled by this agent. Inverse of FilledBy.
-  +CountOfRoles: Integer -- Count of roles currently filled by this agent.
+class Customers {
+  +CustomerId: String
+  +Customer: String -- Identifier for the customers.
+  +EmailAddress: String -- Thec ustomers email address
+  +FirstName: String -- First Name of the customer - used to make the full name
+  +LastName: String -- Last Name of the customer - used to make the full name
   --
-}
-
-note top of Roles
-  Table: Roles
-end note
-
-class Roles {
-  +RoleId: String
-  +Label: String -- Human-readable name for the role. Maps to rdfs:label.
-  +Comment: String -- Description of the role&#x27;s responsibilities. Maps to rdfs:comment.
-  +FilledBy: String -- Agent currently filling this role. Maps to ntwf:filledBy. The change-management triple - update this when personnel change.
-  +WorkflowSteps: String -- Steps assigned to this role. Inverse of AssignedRole.
-  +CountOfWorkflowSteps: Integer -- Count of workflow steps assigned to this role.
-  +DelegatesTo: String -- Role to escalate to when this role&#x27;s agent is unavailable. Maps to ntwf:delegatesTo. Enables delegation chain queries.
-  +Label_from_DelegatesTo: String
-  +FilledByName: String -- Denormalized lookup of agent name (foaf:name) filling this role.
-  +FilledByMBox: String -- Denormalized lookup of agent email (foaf:mbox) filling this role.
-  +DelegatedToBy: String
-  --
-}
-
-note top of WorkflowSteps
-  Table: WorkflowSteps
-end note
-
-class WorkflowSteps {
-  +WorkflowStepId: String
-  +Label: String -- Human-readable name for the step. Maps to rdfs:label.
-  +SequencePosition: Integer -- Ordinal position in workflow sequence. Maps to ntwf:sequencePosition (functional). Supports positional ordering queries.
-  +RequiresHumanApproval: Boolean -- Whether this step requires a human agent. Maps to ntwf:requiresHumanApproval. Answers NTWF CQ3.
-  +IsStepOf: String -- Parent workflow containing this step. Inverse of WorkflowSteps. Maps to ntwf:isStepOf.
-  +AssignedRole: String -- Role responsible for this step. Maps to ntwf:assignedRole (functional). Implements role-agent separation.
-  +IsStepOfTitle: String -- Denormalized lookup of parent workflow title.
-  +IsStepOfDescription: String -- Denormalized lookup of parent workflow description.
-  +IsStepOfIdentifier: String -- Denormalized lookup of parent workflow external identifier.
-  +AssignedRoleLabel: String -- Denormalized lookup of assigned role label.
-  +AssignedRoleComment: String -- Denormalized lookup of assigned role comment/description.
-  +AssignedRoleFilledBy: String -- Denormalized lookup of agent currently filling the assigned role.
-  --
-}
-
-note top of Workflows
-  Table: Workflows
-end note
-
-class Workflows {
-  +WorkflowId: String
-  +Title: String -- Human-readable name for the workflow. Maps to dct:title per Dublin Core.
-  +Description: String -- Detailed description of the workflow purpose and scope. Maps to dct:description per Dublin Core.
-  +Created: String -- Date the workflow was created. Maps to dct:created per Dublin Core.
-  +Modified: String -- Date the workflow was last modified. Maps to dct:modified. Used to identify stale workflows per NTWF CQ5.
-  +Identifier: String -- External reference identifier (e.g., ticket number). Maps to dct:identifier. Join key to operational systems.
-  +WorkflowSteps: String -- Steps contained in this workflow. Inverse of IsStepOf. Maps to ntwf:hasStep.
-  +CountOfWorkflowSteps: Integer -- Count of steps in this workflow. Aggregation over IsStepOf relationship.
-  --
+  /FullName: String  {derived} -- Full name is computed from the first and last name of the customer
 }
 
 @enduml</pre>
@@ -225,150 +166,32 @@ class Workflows {
             <div class="card">
                 <div class="code-header">
                     <h2>objects.puml</h2>
-                    <div><span class="code-info">145 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
+                    <div><span class="code-info">27 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
                 </div>
                 <pre id="objects-code">@startuml
 
-object &quot;Maria Gonzalez&quot; as HumanAgents_0 {
-  HumanAgentId = &quot;maria-gonzalez&quot;
-  Name = &quot;Maria Gonzalez&quot;
-  Mbox = &quot;maria.gonzalez@specialsolut...&quot;
-  Roles = &quot;release-manager&quot;
-  CountOfRoles = 1
+object &quot;Customers_0&quot; as Customers_0 {
+  CustomerId = &quot;cust0001&quot;
+  Customer = &quot;CUST0001&quot;
+  EmailAddress = &quot;jane.smith@email.com&quot;
+  FirstName = &quot;Jane&quot;
+  LastName = &quot;Smith&quot;
 }
 
-object &quot;James Okafor&quot; as HumanAgents_1 {
-  HumanAgentId = &quot;james-okafor&quot;
-  Name = &quot;James Okafor&quot;
-  Mbox = &quot;james.okafor@specialsolutio...&quot;
-  Roles = &quot;&quot;
-  CountOfRoles = 0
+object &quot;Customers_1&quot; as Customers_1 {
+  CustomerId = &quot;cust0002&quot;
+  Customer = &quot;CUST0002&quot;
+  EmailAddress = &quot;john.doe@email.com&quot;
+  FirstName = &quot;John&quot;
+  LastName = &quot;Doe&quot;
 }
 
-object &quot;Roles_0&quot; as Roles_0 {
-  RoleId = &quot;release-manager&quot;
-  Label = &quot;Release Manager&quot;
-  Comment = &quot;Primary role responsible fo...&quot;
-  FilledBy = &quot;maria-gonzalez&quot;
-  WorkflowSteps = &quot;release-approval&quot;
-  CountOfWorkflowSteps = 1
-  DelegatesTo = &quot;vp-engineering&quot;
-  Label_from_DelegatesTo = &quot;VP Engineering&quot;
-  FilledByName = &quot;Maria Gonzalez&quot;
-  FilledByMBox = &quot;maria.gonzalez@specialsolut...&quot;
-  DelegatedToBy = &quot;&quot;
-}
-
-object &quot;Roles_1&quot; as Roles_1 {
-  RoleId = &quot;legal-compliance-reviewer&quot;
-  Label = &quot;Legal Compliance Reviewer&quot;
-  Comment = &quot;Role responsible for legal ...&quot;
-  FilledBy = &quot;&quot;
-  WorkflowSteps = &quot;legal-review&quot;
-  CountOfWorkflowSteps = 1
-  DelegatesTo = &quot;&quot;
-  Label_from_DelegatesTo = &quot;&quot;
-  FilledByName = &quot;&quot;
-  FilledByMBox = &quot;&quot;
-  DelegatedToBy = &quot;&quot;
-}
-
-object &quot;Roles_2&quot; as Roles_2 {
-  RoleId = &quot;risk-analyst&quot;
-  Label = &quot;Risk Analyst&quot;
-  Comment = &quot;Role responsible for risk a...&quot;
-  FilledBy = &quot;&quot;
-  WorkflowSteps = &quot;risk-assessment&quot;
-  CountOfWorkflowSteps = 1
-  DelegatesTo = &quot;&quot;
-  Label_from_DelegatesTo = &quot;&quot;
-  FilledByName = &quot;&quot;
-  FilledByMBox = &quot;&quot;
-  DelegatedToBy = &quot;&quot;
-}
-
-object &quot;Roles_3&quot; as Roles_3 {
-  RoleId = &quot;vp-engineering&quot;
-  Label = &quot;VP Engineering&quot;
-  Comment = &quot;Secondary role in delegatio...&quot;
-  FilledBy = &quot;&quot;
-  WorkflowSteps = &quot;&quot;
-  CountOfWorkflowSteps = 0
-  DelegatesTo = &quot;cto&quot;
-  Label_from_DelegatesTo = &quot;CTO&quot;
-  FilledByName = &quot;&quot;
-  FilledByMBox = &quot;&quot;
-  DelegatedToBy = &quot;release-manager&quot;
-}
-
-object &quot;Roles_4&quot; as Roles_4 {
-  RoleId = &quot;cto&quot;
-  Label = &quot;CTO&quot;
-  Comment = &quot;Final role in delegation ch...&quot;
-  FilledBy = &quot;&quot;
-  WorkflowSteps = &quot;&quot;
-  CountOfWorkflowSteps = 0
-  DelegatesTo = &quot;&quot;
-  Label_from_DelegatesTo = &quot;&quot;
-  FilledByName = &quot;&quot;
-  FilledByMBox = &quot;&quot;
-  DelegatedToBy = &quot;vp-engineering&quot;
-}
-
-object &quot;WorkflowSteps_0&quot; as WorkflowSteps_0 {
-  WorkflowStepId = &quot;risk-assessment&quot;
-  Label = &quot;Risk Assessment&quot;
-  SequencePosition = 1
-  RequiresHumanApproval = false
-  IsStepOf = &quot;production-deployment-workflow&quot;
-  AssignedRole = &quot;risk-analyst&quot;
-  IsStepOfTitle = &quot;Production Deployment Workflow&quot;
-  IsStepOfDescription = &quot;End-to-end workflow for dep...&quot;
-  IsStepOfIdentifier = &quot;WF-PROD-001&quot;
-  AssignedRoleLabel = &quot;Risk Analyst&quot;
-  AssignedRoleComment = &quot;Role responsible for risk a...&quot;
-  AssignedRoleFilledBy = &quot;&quot;
-}
-
-object &quot;WorkflowSteps_1&quot; as WorkflowSteps_1 {
-  WorkflowStepId = &quot;legal-review&quot;
-  Label = &quot;Legal Review&quot;
-  SequencePosition = 2
-  RequiresHumanApproval = true
-  IsStepOf = &quot;production-deployment-workflow&quot;
-  AssignedRole = &quot;legal-compliance-reviewer&quot;
-  IsStepOfTitle = &quot;Production Deployment Workflow&quot;
-  IsStepOfDescription = &quot;End-to-end workflow for dep...&quot;
-  IsStepOfIdentifier = &quot;WF-PROD-001&quot;
-  AssignedRoleLabel = &quot;Legal Compliance Reviewer&quot;
-  AssignedRoleComment = &quot;Role responsible for legal ...&quot;
-  AssignedRoleFilledBy = &quot;&quot;
-}
-
-object &quot;WorkflowSteps_2&quot; as WorkflowSteps_2 {
-  WorkflowStepId = &quot;release-approval&quot;
-  Label = &quot;Release Approval&quot;
-  SequencePosition = 3
-  RequiresHumanApproval = true
-  IsStepOf = &quot;production-deployment-workflow&quot;
-  AssignedRole = &quot;release-manager&quot;
-  IsStepOfTitle = &quot;Production Deployment Workflow&quot;
-  IsStepOfDescription = &quot;End-to-end workflow for dep...&quot;
-  IsStepOfIdentifier = &quot;WF-PROD-001&quot;
-  AssignedRoleLabel = &quot;Release Manager&quot;
-  AssignedRoleComment = &quot;Primary role responsible fo...&quot;
-  AssignedRoleFilledBy = &quot;maria-gonzalez&quot;
-}
-
-object &quot;Workflows_0&quot; as Workflows_0 {
-  WorkflowId = &quot;production-deployment-workflow&quot;
-  Title = &quot;Production Deployment Workflow&quot;
-  Description = &quot;End-to-end workflow for dep...&quot;
-  Created = &quot;2026-01-15&quot;
-  Modified = &quot;2026-01-15&quot;
-  Identifier = &quot;WF-PROD-001&quot;
-  WorkflowSteps = &quot;legal-review, risk-assessme...&quot;
-  CountOfWorkflowSteps = 3
+object &quot;Customers_2&quot; as Customers_2 {
+  CustomerId = &quot;cust0003&quot;
+  Customer = &quot;CUST0003&quot;
+  EmailAddress = &quot;emily.jones@email.com&quot;
+  FirstName = &quot;Emily&quot;
+  LastName = &quot;Jones&quot;
 }
 
 @enduml</pre>
@@ -378,69 +201,17 @@ object &quot;Workflows_0&quot; as Workflows_0 {
             <div class="card">
                 <div class="code-header">
                     <h2>constraints.ocl</h2>
-                    <div><span class="code-info">62 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
+                    <div><span class="code-info">10 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
                 </div>
                 <pre id="ocl-code">-- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
 
--- Table: HumanAgents
-context HumanAgents
+-- Table: Customers
+context Customers
 
--- Count of roles currently filled by this agent.
--- Formula for CountOfRoles - parse error: Unexpected character &#x27;!&#x27; at position 14
--- Original: =COUNTIFS(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}})
-
--- Table: Roles
-context Roles
-
--- Count of workflow steps assigned to this role.
--- Formula for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
--- Original: =COUNTIFS(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}})
-
--- Formula for Label_from_DelegatesTo - parse error: Unexpected character &#x27;!&#x27; at position 11
--- Original: =INDEX(Roles!{{Label}}, MATCH(Roles!{{DelegatesTo}}, Roles!{{RoleId}}, 0))
-
--- Denormalized lookup of agent name (foaf:name) filling this role.
--- Formula for FilledByName - parse error: Unexpected character &#x27;!&#x27; at position 17
--- Original: =INDEX(HumanAgents!{{Name}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))
-
--- Denormalized lookup of agent email (foaf:mbox) filling this role.
--- Formula for FilledByMBox - parse error: Unexpected character &#x27;!&#x27; at position 17
--- Original: =INDEX(HumanAgents!{{Mbox}}, MATCH(Roles!{{FilledBy}}, HumanAgents!{{HumanAgentId}}, 0))
-
--- Table: WorkflowSteps
-context WorkflowSteps
-
--- Denormalized lookup of parent workflow title.
--- Formula for IsStepOfTitle - parse error: Unexpected character &#x27;!&#x27; at position 15
--- Original: =INDEX(Workflows!{{Title}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
-
--- Denormalized lookup of parent workflow description.
--- Formula for IsStepOfDescription - parse error: Unexpected character &#x27;!&#x27; at position 15
--- Original: =INDEX(Workflows!{{Description}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
-
--- Denormalized lookup of parent workflow external identifier.
--- Formula for IsStepOfIdentifier - parse error: Unexpected character &#x27;!&#x27; at position 15
--- Original: =INDEX(Workflows!{{Identifier}}, MATCH(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}}, 0))
-
--- Denormalized lookup of assigned role label.
--- Formula for AssignedRoleLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
--- Original: =INDEX(Roles!{{Label}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
-
--- Denormalized lookup of assigned role comment/description.
--- Formula for AssignedRoleComment - parse error: Unexpected character &#x27;!&#x27; at position 11
--- Original: =INDEX(Roles!{{Comment}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
-
--- Denormalized lookup of agent currently filling the assigned role.
--- Formula for AssignedRoleFilledBy - parse error: Unexpected character &#x27;!&#x27; at position 11
--- Original: =INDEX(Roles!{{FilledBy}}, MATCH(WorkflowSteps!{{AssignedRole}}, Roles!{{RoleId}}, 0))
-
--- Table: Workflows
-context Workflows
-
--- Count of steps in this workflow. Aggregation over IsStepOf relationship.
--- Formula for CountOfWorkflowSteps - parse error: Unexpected character &#x27;!&#x27; at position 22
--- Original: =COUNTIFS(WorkflowSteps!{{IsStepOf}}, Workflows!{{WorkflowId}})
+-- Full name is computed from the first and last name of the customer
+-- Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
+derive FullName: self.firstName + &#x27; &#x27; + self.lastName
 </pre>
             </div>
         </div>
