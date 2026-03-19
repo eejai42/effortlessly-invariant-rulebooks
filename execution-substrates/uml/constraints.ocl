@@ -1,9 +1,112 @@
 -- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
 
--- Table: Customers
-context Customers
+-- Table: ERBVersions
+context ERBVersions
 
--- Full name is computed from the first and last name of the customer
--- Formula: ={{FirstName}} & " " & {{LastName}}
-derive FullName: self.firstName + ' ' + self.lastName
+-- Formula: ={{BaseId}} & "-" & {{Name}}
+derive PK: self.baseId + '-' + self.name
+
+-- Table: Shapes
+context Shapes
+
+-- Formula for HowManySides - parse error: Unexpected character '!' at position 14
+-- Original: =COUNTIFS(Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula: =AND({{HowManySides}}=4)
+derive IsRectangle: ((self.howManySides = 4))
+
+-- Formula: =AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)
+derive IsTriangle: ((self.sumOfInternalAngles = 180) and (self.howManySides = 3))
+
+-- Formula: =AND({{IsTriangle}}, {{MaxAngle}} = 90)
+derive IsRightTriangle: (self.isTriangle and (self.maxAngle = 90))
+
+-- Formula for SumOfInternalAngles - parse error: Unexpected character '!' at position 12
+-- Original: =SUMIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula for MaxAngle - parse error: Unexpected character '!' at position 12
+-- Original: =MAXIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula for HypotenuseLengthSquared - parse error: Unexpected character '!' at position 12
+-- Original: =SUMIFS(Sides!{{HypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula for NonHypotenuseSidesSquared - parse error: Unexpected character '!' at position 12
+-- Original: =SUMIFS(Sides!{{NonHypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula: =AND(   {{IsRightTriangle}},     {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}} )
+derive PythagoreanTheoremHolds: (self.isRightTriangle and (self.hypotenuseLengthSquared = self.nonHypotenuseSidesSquared))
+
+-- Table: Sides
+context Sides
+
+-- Formula: ={{Shape}} & "-Side-" & {{Label}}
+derive Name: self.shape + '-Side-' + self.label
+
+-- Formula for ShapeSides - parse error: Unexpected character '!' at position 12
+-- Original: =INDEX(Shapes!{{HowManySides}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Formula for IsRectangle - parse error: Unexpected character '!' at position 12
+-- Original: =INDEX(Shapes!{{IsRectangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Formula for IsTriangle - parse error: Unexpected character '!' at position 12
+-- Original: =INDEX(Shapes!{{IsTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Is this the Hypotenuse of a Right Angle Triangle?
+-- Formula for IsRightTriangle - parse error: Unexpected character '!' at position 12
+-- Original: =INDEX(Shapes!{{IsRightTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Is this the Hypotenuse of a Right Angle Triangle?
+-- Formula: =AND(   {{IsTriangle}},   {{Length}} > {{PreviousSideLength}},   {{Length}} > {{NextLength}} )
+derive IsHypotenuse: (self.isTriangle and (self.length > self.previousSideLength) and (self.length > self.nextLength))
+
+-- Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+-- Formula: =IF({{IsTriangle}},    IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})),      "PYTHAGOREAN THEOREM FALSIFIED!",      "Pythagorean Theorem Holds (obviously)."   ),   "NA" )
+derive StatusOfTheorem: if self.isTriangle then if (self.isRightTriangle and not (self.pythagoreanTheoremHolds)) then 'PYTHAGOREAN THEOREM FALSIFIED!' else 'Pythagorean Theorem Holds (obviously).' endif else 'NA' endif
+
+-- Does the Pythagorean Theorem Hold?
+-- Formula for PythagoreanTheoremHolds - parse error: Unexpected character '!' at position 12
+-- Original: =INDEX(Shapes!{{PythagoreanTheoremHolds}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Formula for LengthSquared - parse error: Unexpected character '*' at position 11
+-- Original: ={{Length}} * {{Length}}
+
+-- Formula: =IF({{IsHypotenuse}}, {{LengthSquared}})
+derive HypotenuseLengthSquared: if self.isHypotenuse then self.lengthSquared else '' endif
+
+-- Formula: =IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})
+derive NonHypotenuseLengthSquared: if (not (self.isHypotenuse) and self.isTriangle) then self.lengthSquared else '' endif
+
+-- Previous Edge Length
+-- Formula for PreviousSideLength - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Sides!{{Length}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))
+
+-- Next Edge Length
+-- Formula for NextLength - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Sides!{{Length}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))
+
+-- Previous Angle
+-- Formula for PreviousAngle - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Sides!{{Angle}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))
+
+-- Next Angle
+-- Formula for NextAngle - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Sides!{{Angle}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))
+
+-- Formula for PreviousLabel - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Sides!{{Label}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))
+
+-- Formula for NextLabel - parse error: Unexpected character '!' at position 11
+-- Original: =INDEX(Sides!{{Label}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))
+
+-- Table: Widgets
+context Widgets
+
+-- Formula for Name_from_Appuser - parse error: Unexpected character '!' at position 14
+-- Original: =INDEX(AppUsers!{{Name}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))
+
+-- Formula for EmailAddress_from_Appuser - parse error: Unexpected character '!' at position 14
+-- Original: =INDEX(AppUsers!{{EmailAddress}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))
+
+-- Formula for Role_from_Appuser - parse error: Unexpected character '!' at position 14
+-- Original: =INDEX(AppUsers!{{Role}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))

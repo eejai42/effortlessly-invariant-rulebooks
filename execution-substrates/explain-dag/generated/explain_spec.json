@@ -1,8 +1,8 @@
 {
   "schema_version": "erb.explain_spec.v1",
   "rulebook": {
-    "name": "DEMO: Customer FullName",
-    "rulebook_hash": "sha256:281e1c07bfb8103b69f875aaea560661"
+    "name": "DEMO: Pythagorean Theorem",
+    "rulebook_hash": "sha256:0031044289b0585a19e3098513138e91"
   },
   "semantics": {
     "profile": "excel",
@@ -11,79 +11,623 @@
     "boolean_coercion": "strict"
   },
   "entities": {
-    "Customers": {
-      "id_field": "CustomerId",
-      "id_field_snake": "customer_id",
+    "Shapes": {
+      "id_field": "ShapeId",
+      "id_field_snake": "shape_id",
       "fields": {
-        "CustomerId": {
+        "ShapeId": {
           "datatype": "string",
           "nullable": false,
           "type": "raw"
         },
-        "Customer": {
+        "Name": {
           "datatype": "string",
           "nullable": true,
-          "type": "raw",
-          "description": "Identifier for the customers."
+          "type": "raw"
         },
-        "EmailAddress": {
+        "Sides": {
           "datatype": "string",
           "nullable": true,
-          "type": "raw",
-          "description": "Thec ustomers email address"
+          "type": "relationship"
         },
-        "FirstName": {
-          "datatype": "string",
+        "HowManySides": {
+          "datatype": "integer",
           "nullable": true,
-          "type": "raw",
-          "description": "First Name of the customer - used to make the full name"
+          "type": "aggregation"
         },
-        "LastName": {
-          "datatype": "string",
+        "IsRectangle": {
+          "datatype": "boolean",
           "nullable": true,
-          "type": "raw",
-          "description": "Last Name of the customer - used to make the full name"
+          "type": "calculated"
         },
-        "FullName": {
-          "datatype": "string",
+        "IsTriangle": {
+          "datatype": "boolean",
           "nullable": true,
-          "type": "calculated",
-          "description": "Full name is computed from the first and last name of the customer"
+          "type": "calculated"
+        },
+        "IsRightTriangle": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "SumOfInternalAngles": {
+          "datatype": "number",
+          "nullable": true,
+          "type": "aggregation"
+        },
+        "MaxAngle": {
+          "datatype": "number",
+          "nullable": true,
+          "type": "aggregation"
+        },
+        "HypotenuseLengthSquared": {
+          "datatype": "number",
+          "nullable": true,
+          "type": "aggregation"
+        },
+        "NonHypotenuseSidesSquared": {
+          "datatype": "number",
+          "nullable": true,
+          "type": "aggregation"
+        },
+        "PythagoreanTheoremHolds": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "calculated"
         }
       },
       "calc_order": [
-        "FullName"
+        "IsRectangle",
+        "IsRightTriangle",
+        "IsTriangle",
+        "PythagoreanTheoremHolds"
       ],
       "dep_edges": [
         [
-          "FirstName",
-          "FullName"
+          "HowManySides",
+          "IsRectangle"
         ],
         [
-          "LastName",
-          "FullName"
+          "IsTriangle",
+          "IsRightTriangle"
+        ],
+        [
+          "MaxAngle",
+          "IsRightTriangle"
+        ],
+        [
+          "HowManySides",
+          "IsTriangle"
+        ],
+        [
+          "SumOfInternalAngles",
+          "IsTriangle"
+        ],
+        [
+          "HypotenuseLengthSquared",
+          "PythagoreanTheoremHolds"
+        ],
+        [
+          "IsRightTriangle",
+          "PythagoreanTheoremHolds"
+        ],
+        [
+          "NonHypotenuseSidesSquared",
+          "PythagoreanTheoremHolds"
         ]
       ],
       "expr_templates": {
-        "FullName": {
-          "formula_source": "={{FirstName}} & \" \" & {{LastName}}",
-          "template_hash": "sha256:ae6e94fd35af410b",
-          "root_node": "n_result_FullName",
+        "IsRectangle": {
+          "formula_source": "=AND({{HowManySides}}=4)",
+          "template_hash": "sha256:66055d099c8bb0f6",
+          "root_node": "n_result_IsRectangle",
           "nodes": {
             "n_ref_1": {
               "kind": "field_ref",
-              "field": "FirstName",
-              "field_snake": "first_name"
+              "field": "HowManySides",
+              "field_snake": "how_many_sides"
             },
             "n_const_2": {
               "kind": "const",
-              "value": " ",
+              "value": 4,
+              "type": "integer"
+            },
+            "n_op_3": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_1",
+                "n_const_2"
+              ]
+            },
+            "n_fn_4": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_op_3"
+              ]
+            },
+            "n_result_IsRectangle": {
+              "kind": "result",
+              "field": "IsRectangle",
+              "field_snake": "is_rectangle",
+              "in": [
+                "n_fn_4"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_1",
+              "n_op_3"
+            ],
+            [
+              "n_const_2",
+              "n_op_3"
+            ],
+            [
+              "n_op_3",
+              "n_fn_4"
+            ],
+            [
+              "n_fn_4",
+              "n_result_IsRectangle"
+            ]
+          ]
+        },
+        "IsTriangle": {
+          "formula_source": "=AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)",
+          "template_hash": "sha256:b647bc1b768f4dc3",
+          "root_node": "n_result_IsTriangle",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "SumOfInternalAngles",
+              "field_snake": "sum_of_internal_angles"
+            },
+            "n_const_2": {
+              "kind": "const",
+              "value": 180,
+              "type": "integer"
+            },
+            "n_op_3": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_1",
+                "n_const_2"
+              ]
+            },
+            "n_ref_4": {
+              "kind": "field_ref",
+              "field": "HowManySides",
+              "field_snake": "how_many_sides"
+            },
+            "n_const_5": {
+              "kind": "const",
+              "value": 3,
+              "type": "integer"
+            },
+            "n_op_6": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_4",
+                "n_const_5"
+              ]
+            },
+            "n_fn_7": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_op_3",
+                "n_op_6"
+              ]
+            },
+            "n_result_IsTriangle": {
+              "kind": "result",
+              "field": "IsTriangle",
+              "field_snake": "is_triangle",
+              "in": [
+                "n_fn_7"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_1",
+              "n_op_3"
+            ],
+            [
+              "n_const_2",
+              "n_op_3"
+            ],
+            [
+              "n_ref_4",
+              "n_op_6"
+            ],
+            [
+              "n_const_5",
+              "n_op_6"
+            ],
+            [
+              "n_op_3",
+              "n_fn_7"
+            ],
+            [
+              "n_op_6",
+              "n_fn_7"
+            ],
+            [
+              "n_fn_7",
+              "n_result_IsTriangle"
+            ]
+          ]
+        },
+        "IsRightTriangle": {
+          "formula_source": "=AND({{IsTriangle}}, {{MaxAngle}} = 90)",
+          "template_hash": "sha256:a24daf66b429f04b",
+          "root_node": "n_result_IsRightTriangle",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "IsTriangle",
+              "field_snake": "is_triangle"
+            },
+            "n_ref_2": {
+              "kind": "field_ref",
+              "field": "MaxAngle",
+              "field_snake": "max_angle"
+            },
+            "n_const_3": {
+              "kind": "const",
+              "value": 90,
+              "type": "integer"
+            },
+            "n_op_4": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_2",
+                "n_const_3"
+              ]
+            },
+            "n_fn_5": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_ref_1",
+                "n_op_4"
+              ]
+            },
+            "n_result_IsRightTriangle": {
+              "kind": "result",
+              "field": "IsRightTriangle",
+              "field_snake": "is_right_triangle",
+              "in": [
+                "n_fn_5"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_2",
+              "n_op_4"
+            ],
+            [
+              "n_const_3",
+              "n_op_4"
+            ],
+            [
+              "n_ref_1",
+              "n_fn_5"
+            ],
+            [
+              "n_op_4",
+              "n_fn_5"
+            ],
+            [
+              "n_fn_5",
+              "n_result_IsRightTriangle"
+            ]
+          ]
+        },
+        "PythagoreanTheoremHolds": {
+          "formula_source": "=AND(\r\n  {{IsRightTriangle}},  \r\n  {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}\r\n)",
+          "template_hash": "sha256:3efdc54ae62c0d1f",
+          "root_node": "n_result_PythagoreanTheoremHolds",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "IsRightTriangle",
+              "field_snake": "is_right_triangle"
+            },
+            "n_ref_2": {
+              "kind": "field_ref",
+              "field": "HypotenuseLengthSquared",
+              "field_snake": "hypotenuse_length_squared"
+            },
+            "n_ref_3": {
+              "kind": "field_ref",
+              "field": "NonHypotenuseSidesSquared",
+              "field_snake": "non_hypotenuse_sides_squared"
+            },
+            "n_op_4": {
+              "kind": "op",
+              "name": "=",
+              "args": [
+                "n_ref_2",
+                "n_ref_3"
+              ]
+            },
+            "n_fn_5": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_ref_1",
+                "n_op_4"
+              ]
+            },
+            "n_result_PythagoreanTheoremHolds": {
+              "kind": "result",
+              "field": "PythagoreanTheoremHolds",
+              "field_snake": "pythagorean_theorem_holds",
+              "in": [
+                "n_fn_5"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_2",
+              "n_op_4"
+            ],
+            [
+              "n_ref_3",
+              "n_op_4"
+            ],
+            [
+              "n_ref_1",
+              "n_fn_5"
+            ],
+            [
+              "n_op_4",
+              "n_fn_5"
+            ],
+            [
+              "n_fn_5",
+              "n_result_PythagoreanTheoremHolds"
+            ]
+          ]
+        }
+      },
+      "description": "Table: Shapes"
+    },
+    "Sides": {
+      "id_field": "SideId",
+      "id_field_snake": "side_id",
+      "fields": {
+        "SideId": {
+          "datatype": "string",
+          "nullable": false,
+          "type": "raw"
+        },
+        "Name": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "ShapeSides": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "Label": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "raw",
+          "description": "Label for this edge"
+        },
+        "IsRectangle": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "IsTriangle": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "IsRightTriangle": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "lookup",
+          "description": "Is this the Hypotenuse of a Right Angle Triangle?"
+        },
+        "IsHypotenuse": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "calculated",
+          "description": "Is this the Hypotenuse of a Right Angle Triangle?"
+        },
+        "StatusOfTheorem": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "calculated",
+          "description": "Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles."
+        },
+        "PythagoreanTheoremHolds": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "lookup",
+          "description": "Does the Pythagorean Theorem Hold?"
+        },
+        "LengthSquared": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "HypotenuseLengthSquared": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "NonHypotenuseLengthSquared": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "PreviousSideLength": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup",
+          "description": "Previous Edge Length"
+        },
+        "Length": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "raw",
+          "description": "Length"
+        },
+        "NextLength": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup",
+          "description": "Next Edge Length"
+        },
+        "PreviousAngle": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup",
+          "description": "Previous Angle"
+        },
+        "Angle": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "raw",
+          "description": "Internal angles for the shapes"
+        },
+        "NextAngle": {
+          "datatype": "integer",
+          "nullable": true,
+          "type": "lookup",
+          "description": "Next Angle"
+        },
+        "PreviousSide": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship",
+          "description": "Previous Edge"
+        },
+        "NextSide": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship",
+          "description": "Next Edge"
+        },
+        "Shape": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "relationship",
+          "description": "Shape"
+        },
+        "PreviousLabel": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        },
+        "NextLabel": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "lookup"
+        }
+      },
+      "calc_order": [
+        "LengthSquared",
+        "HypotenuseLengthSquared",
+        "IsHypotenuse",
+        "Name",
+        "NonHypotenuseLengthSquared",
+        "StatusOfTheorem"
+      ],
+      "dep_edges": [
+        [
+          "IsHypotenuse",
+          "HypotenuseLengthSquared"
+        ],
+        [
+          "LengthSquared",
+          "HypotenuseLengthSquared"
+        ],
+        [
+          "IsTriangle",
+          "IsHypotenuse"
+        ],
+        [
+          "Length",
+          "IsHypotenuse"
+        ],
+        [
+          "NextLength",
+          "IsHypotenuse"
+        ],
+        [
+          "PreviousSideLength",
+          "IsHypotenuse"
+        ],
+        [
+          "Label",
+          "Name"
+        ],
+        [
+          "Shape",
+          "Name"
+        ],
+        [
+          "IsHypotenuse",
+          "NonHypotenuseLengthSquared"
+        ],
+        [
+          "IsTriangle",
+          "NonHypotenuseLengthSquared"
+        ],
+        [
+          "LengthSquared",
+          "NonHypotenuseLengthSquared"
+        ],
+        [
+          "IsRightTriangle",
+          "StatusOfTheorem"
+        ],
+        [
+          "IsTriangle",
+          "StatusOfTheorem"
+        ],
+        [
+          "PythagoreanTheoremHolds",
+          "StatusOfTheorem"
+        ]
+      ],
+      "expr_templates": {
+        "Name": {
+          "formula_source": "={{Shape}} & \"-Side-\" & {{Label}}",
+          "template_hash": "sha256:693e60dd43e6c772",
+          "root_node": "n_result_Name",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "Shape",
+              "field_snake": "shape"
+            },
+            "n_const_2": {
+              "kind": "const",
+              "value": "-Side-",
               "type": "string"
             },
             "n_ref_3": {
               "kind": "field_ref",
-              "field": "LastName",
-              "field_snake": "last_name"
+              "field": "Label",
+              "field_snake": "label"
             },
             "n_op_4": {
               "kind": "op",
@@ -94,10 +638,10 @@
                 "n_ref_3"
               ]
             },
-            "n_result_FullName": {
+            "n_result_Name": {
               "kind": "result",
-              "field": "FullName",
-              "field_snake": "full_name",
+              "field": "Name",
+              "field_snake": "name",
               "in": [
                 "n_op_4"
               ]
@@ -118,13 +662,486 @@
             ],
             [
               "n_op_4",
-              "n_result_FullName"
+              "n_result_Name"
+            ]
+          ]
+        },
+        "IsHypotenuse": {
+          "formula_source": "=AND(\r\n  {{IsTriangle}},\r\n  {{Length}} > {{PreviousSideLength}},\r\n  {{Length}} > {{NextLength}}\r\n)",
+          "template_hash": "sha256:f70948cb0c09e474",
+          "root_node": "n_result_IsHypotenuse",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "IsTriangle",
+              "field_snake": "is_triangle"
+            },
+            "n_ref_2": {
+              "kind": "field_ref",
+              "field": "Length",
+              "field_snake": "length"
+            },
+            "n_ref_3": {
+              "kind": "field_ref",
+              "field": "PreviousSideLength",
+              "field_snake": "previous_side_length"
+            },
+            "n_op_4": {
+              "kind": "op",
+              "name": ">",
+              "args": [
+                "n_ref_2",
+                "n_ref_3"
+              ]
+            },
+            "n_ref_5": {
+              "kind": "field_ref",
+              "field": "Length",
+              "field_snake": "length"
+            },
+            "n_ref_6": {
+              "kind": "field_ref",
+              "field": "NextLength",
+              "field_snake": "next_length"
+            },
+            "n_op_7": {
+              "kind": "op",
+              "name": ">",
+              "args": [
+                "n_ref_5",
+                "n_ref_6"
+              ]
+            },
+            "n_fn_8": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_ref_1",
+                "n_op_4",
+                "n_op_7"
+              ]
+            },
+            "n_result_IsHypotenuse": {
+              "kind": "result",
+              "field": "IsHypotenuse",
+              "field_snake": "is_hypotenuse",
+              "in": [
+                "n_fn_8"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_2",
+              "n_op_4"
+            ],
+            [
+              "n_ref_3",
+              "n_op_4"
+            ],
+            [
+              "n_ref_5",
+              "n_op_7"
+            ],
+            [
+              "n_ref_6",
+              "n_op_7"
+            ],
+            [
+              "n_ref_1",
+              "n_fn_8"
+            ],
+            [
+              "n_op_4",
+              "n_fn_8"
+            ],
+            [
+              "n_op_7",
+              "n_fn_8"
+            ],
+            [
+              "n_fn_8",
+              "n_result_IsHypotenuse"
             ]
           ],
-          "description": "Full name is computed from the first and last name of the customer"
+          "description": "Is this the Hypotenuse of a Right Angle Triangle?"
+        },
+        "StatusOfTheorem": {
+          "formula_source": "=IF({{IsTriangle}}, \n  IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})), \n    \"PYTHAGOREAN THEOREM FALSIFIED!\", \n    \"Pythagorean Theorem Holds (obviously).\"\n  ),\n  \"NA\"\n)",
+          "template_hash": "sha256:68b692a291ac51aa",
+          "root_node": "n_result_StatusOfTheorem",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "IsTriangle",
+              "field_snake": "is_triangle"
+            },
+            "n_ref_2": {
+              "kind": "field_ref",
+              "field": "IsRightTriangle",
+              "field_snake": "is_right_triangle"
+            },
+            "n_ref_3": {
+              "kind": "field_ref",
+              "field": "PythagoreanTheoremHolds",
+              "field_snake": "pythagorean_theorem_holds"
+            },
+            "n_fn_4": {
+              "kind": "fn",
+              "name": "NOT",
+              "args": [
+                "n_ref_3"
+              ]
+            },
+            "n_fn_5": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_ref_2",
+                "n_fn_4"
+              ]
+            },
+            "n_const_6": {
+              "kind": "const",
+              "value": "PYTHAGOREAN THEOREM FALSIFIED!",
+              "type": "string"
+            },
+            "n_const_7": {
+              "kind": "const",
+              "value": "Pythagorean Theorem Holds (obviously).",
+              "type": "string"
+            },
+            "n_fn_8": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_fn_5",
+                "n_const_6",
+                "n_const_7"
+              ]
+            },
+            "n_const_9": {
+              "kind": "const",
+              "value": "NA",
+              "type": "string"
+            },
+            "n_fn_10": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_ref_1",
+                "n_fn_8",
+                "n_const_9"
+              ]
+            },
+            "n_result_StatusOfTheorem": {
+              "kind": "result",
+              "field": "StatusOfTheorem",
+              "field_snake": "status_of_theorem",
+              "in": [
+                "n_fn_10"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_3",
+              "n_fn_4"
+            ],
+            [
+              "n_ref_2",
+              "n_fn_5"
+            ],
+            [
+              "n_fn_4",
+              "n_fn_5"
+            ],
+            [
+              "n_fn_5",
+              "n_fn_8"
+            ],
+            [
+              "n_const_6",
+              "n_fn_8"
+            ],
+            [
+              "n_const_7",
+              "n_fn_8"
+            ],
+            [
+              "n_ref_1",
+              "n_fn_10"
+            ],
+            [
+              "n_fn_8",
+              "n_fn_10"
+            ],
+            [
+              "n_const_9",
+              "n_fn_10"
+            ],
+            [
+              "n_fn_10",
+              "n_result_StatusOfTheorem"
+            ]
+          ],
+          "description": "Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles."
+        },
+        "LengthSquared": {
+          "formula_source": "={{Length}} * {{Length}}",
+          "template_hash": "error",
+          "error": "Unexpected character '*' at position 11",
+          "root_node": null,
+          "nodes": {},
+          "edges": []
+        },
+        "HypotenuseLengthSquared": {
+          "formula_source": "=IF({{IsHypotenuse}}, {{LengthSquared}})",
+          "template_hash": "sha256:c80ec66f593e94ac",
+          "root_node": "n_result_HypotenuseLengthSquared",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "IsHypotenuse",
+              "field_snake": "is_hypotenuse"
+            },
+            "n_ref_2": {
+              "kind": "field_ref",
+              "field": "LengthSquared",
+              "field_snake": "length_squared"
+            },
+            "n_fn_3": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_ref_1",
+                "n_ref_2"
+              ]
+            },
+            "n_result_HypotenuseLengthSquared": {
+              "kind": "result",
+              "field": "HypotenuseLengthSquared",
+              "field_snake": "hypotenuse_length_squared",
+              "in": [
+                "n_fn_3"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_1",
+              "n_fn_3"
+            ],
+            [
+              "n_ref_2",
+              "n_fn_3"
+            ],
+            [
+              "n_fn_3",
+              "n_result_HypotenuseLengthSquared"
+            ]
+          ]
+        },
+        "NonHypotenuseLengthSquared": {
+          "formula_source": "=IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})",
+          "template_hash": "sha256:d458f437e7f04392",
+          "root_node": "n_result_NonHypotenuseLengthSquared",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "IsHypotenuse",
+              "field_snake": "is_hypotenuse"
+            },
+            "n_fn_2": {
+              "kind": "fn",
+              "name": "NOT",
+              "args": [
+                "n_ref_1"
+              ]
+            },
+            "n_ref_3": {
+              "kind": "field_ref",
+              "field": "IsTriangle",
+              "field_snake": "is_triangle"
+            },
+            "n_fn_4": {
+              "kind": "fn",
+              "name": "AND",
+              "args": [
+                "n_fn_2",
+                "n_ref_3"
+              ]
+            },
+            "n_ref_5": {
+              "kind": "field_ref",
+              "field": "LengthSquared",
+              "field_snake": "length_squared"
+            },
+            "n_fn_6": {
+              "kind": "fn",
+              "name": "IF",
+              "args": [
+                "n_fn_4",
+                "n_ref_5"
+              ]
+            },
+            "n_result_NonHypotenuseLengthSquared": {
+              "kind": "result",
+              "field": "NonHypotenuseLengthSquared",
+              "field_snake": "non_hypotenuse_length_squared",
+              "in": [
+                "n_fn_6"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_1",
+              "n_fn_2"
+            ],
+            [
+              "n_fn_2",
+              "n_fn_4"
+            ],
+            [
+              "n_ref_3",
+              "n_fn_4"
+            ],
+            [
+              "n_fn_4",
+              "n_fn_6"
+            ],
+            [
+              "n_ref_5",
+              "n_fn_6"
+            ],
+            [
+              "n_fn_6",
+              "n_result_NonHypotenuseLengthSquared"
+            ]
+          ]
         }
       },
-      "description": "Table: Customers"
+      "description": "Table: Sides"
+    },
+    "ERBVersions": {
+      "id_field": "ERBVersionId",
+      "id_field_snake": "erb_version_id",
+      "fields": {
+        "ERBVersionId": {
+          "datatype": "string",
+          "nullable": false,
+          "type": "raw"
+        },
+        "PK": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "calculated"
+        },
+        "BaseId": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "raw"
+        },
+        "Name": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "raw"
+        },
+        "Message": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "raw"
+        },
+        "Notes": {
+          "datatype": "string",
+          "nullable": true,
+          "type": "raw"
+        },
+        "CommitDate": {
+          "datatype": "datetime",
+          "nullable": true,
+          "type": "raw"
+        },
+        "IsPublished": {
+          "datatype": "boolean",
+          "nullable": true,
+          "type": "raw"
+        }
+      },
+      "calc_order": [
+        "PK"
+      ],
+      "dep_edges": [
+        [
+          "BaseId",
+          "PK"
+        ],
+        [
+          "Name",
+          "PK"
+        ]
+      ],
+      "expr_templates": {
+        "PK": {
+          "formula_source": "={{BaseId}} & \"-\" & {{Name}}",
+          "template_hash": "sha256:e8b7ee4ec802c4c3",
+          "root_node": "n_result_PK",
+          "nodes": {
+            "n_ref_1": {
+              "kind": "field_ref",
+              "field": "BaseId",
+              "field_snake": "base_id"
+            },
+            "n_const_2": {
+              "kind": "const",
+              "value": "-",
+              "type": "string"
+            },
+            "n_ref_3": {
+              "kind": "field_ref",
+              "field": "Name",
+              "field_snake": "name"
+            },
+            "n_op_4": {
+              "kind": "op",
+              "name": "CONCAT",
+              "args": [
+                "n_ref_1",
+                "n_const_2",
+                "n_ref_3"
+              ]
+            },
+            "n_result_PK": {
+              "kind": "result",
+              "field": "PK",
+              "field_snake": "pk",
+              "in": [
+                "n_op_4"
+              ]
+            }
+          },
+          "edges": [
+            [
+              "n_ref_1",
+              "n_op_4"
+            ],
+            [
+              "n_const_2",
+              "n_op_4"
+            ],
+            [
+              "n_ref_3",
+              "n_op_4"
+            ],
+            [
+              "n_op_4",
+              "n_result_PK"
+            ]
+          ]
+        }
+      },
+      "description": "Table: ERBVersions"
     }
   }
 }

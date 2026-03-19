@@ -68,8 +68,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>YAML Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-danger">50.0%</span></div>
+            <div class="stat"><span>9/18 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -115,8 +115,26 @@ YAML substrate: Loaded schema with 5 calculated fields
   - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
   - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
   - name: =SUBSTITUTE(LOWER({{DisplayName}}), &quot; &quot;, &quot;-&quot;)
-  -&gt; customers: 3 records
-YAML substrate: Processed 1 entities, 3 total records
+  -&gt; shapes: 2 records
+Traceback (most recent call last):
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/take-test.py&quot;, line 206, in &lt;module&gt;
+    main()
+    ~~~~^^
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/take-test.py&quot;, line 202, in main
+    run_multi_entity()
+    ~~~~~~~~~~~~~~~~^^
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/take-test.py&quot;, line 161, in run_multi_entity
+    count = process_entity(input_path, str(output_path), entity, rulebook, project_root)
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/take-test.py&quot;, line 113, in process_entity
+    computed = compute_all_calculated_fields(record, entity_name)
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/../python/erb_calc.py&quot;, line 196, in compute_all_calculated_fields
+    return compute_sides_fields(record)
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/../python/erb_calc.py&quot;, line 121, in compute_sides_fields
+    result[&#x27;length_squared&#x27;] = calc_sides_length_squared()
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/yaml/../python/erb_calc.py&quot;, line 68, in calc_sides_length_squared
+    raise NotImplementedError(&quot;Formula parsing failed&quot;)
+NotImplementedError: Formula parsing failed
 
 </pre>
             </div>
@@ -125,10 +143,10 @@ YAML substrate: Processed 1 entities, 3 total records
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-danger">50.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">9</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">9</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">18</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>

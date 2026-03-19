@@ -67,8 +67,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>UML Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-warning">74.7%</span></div>
+            <div class="stat"><span>109/146 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -115,11 +115,14 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
 UML Execution Substrate - Multi-Entity Test Execution (OCL)
 ======================================================================
 
-Loaded 1 OCL constraints from constraints.ocl
+Loaded 10 OCL constraints from constraints.ocl
 
-  -&gt; customers: 3 records (via OCL)
+  -&gt; shapes: 2 records (via OCL)
+  -&gt; sides: 7 records (via OCL)
+   Warning: No OCL constraints found for class &#x27;Widgets&#x27;
+  -&gt; widgets: 3 records (via OCL)
 
-UML substrate: Processed 1 entities, 3 total records
+UML substrate: Processed 3 entities, 12 total records
 ======================================================================
 
 </pre>
@@ -129,10 +132,10 @@ UML substrate: Processed 1 entities, 3 total records
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-warning">74.7%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">109</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">37</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">146</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -140,23 +143,142 @@ UML substrate: Processed 1 entities, 3 total records
             <div class="card">
                 <div class="code-header">
                     <h2>class-diagram.puml</h2>
-                    <div><span class="code-info">18 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
+                    <div><span class="code-info">137 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
                 </div>
                 <pre id="class-code">@startuml
 skinparam classAttributeIconSize 0
 
-note top of Customers
-  Table: Customers
+note top of AppUsers
+  Table: AppUsers
 end note
 
-class Customers {
-  +CustomerId: String
-  +Customer: String -- Identifier for the customers.
-  +EmailAddress: String -- Thec ustomers email address
-  +FirstName: String -- First Name of the customer - used to make the full name
-  +LastName: String -- Last Name of the customer - used to make the full name
+class AppUsers {
+  +AppUserId: String
+  +Name: String
+  +EmailAddress: String
+  +Role: String
+  +IsActive: Boolean
+  +Widgets: String
+  +Notes: String
   --
-  /FullName: String  {derived} -- Full name is computed from the first and last name of the customer
+}
+
+note top of ERBCustomizations
+  Table: ERBCustomizations
+end note
+
+class ERBCustomizations {
+  +ERBCustomizationId: String
+  +Name: String
+  +Title: String
+  +SQLCode: String
+  +SQLTarget: String
+  +CustomizationType: String
+  --
+}
+
+note top of ERBVersions
+  Table: ERBVersions
+end note
+
+class ERBVersions {
+  +ERBVersionId: String
+  +BaseId: String
+  +Name: String
+  +Message: String
+  +Notes: String
+  +CommitDate: String
+  +IsPublished: Boolean
+  --
+  /PK: String  {derived}
+}
+
+note top of MagicLinkIntegration
+  Table: MagicLinkIntegration
+end note
+
+class MagicLinkIntegration {
+  +MagicLinkIntegrationId: String
+  +Name: String
+  +Enabled: Boolean
+  +TenantId: String
+  +PublicKeyPem: String
+  +UserTableName: String
+  +EmailField: String
+  +RoleField: String
+  +IsActiveField: String
+  +UserIdField: String
+  +AllowedAlgorithms: String
+  +RequireTenantBinding: Boolean
+  +UseEmailDagPattern: Boolean
+  --
+}
+
+note top of Shapes
+  Table: Shapes
+end note
+
+class Shapes {
+  +ShapeId: String
+  +Name: String
+  +Sides: String
+  +HowManySides: Integer
+  +SumOfInternalAngles: String
+  +MaxAngle: String
+  +HypotenuseLengthSquared: String
+  +NonHypotenuseSidesSquared: String
+  --
+  /IsRectangle: Boolean  {derived}
+  /IsTriangle: Boolean  {derived}
+  /IsRightTriangle: Boolean  {derived}
+  /PythagoreanTheoremHolds: Boolean  {derived}
+}
+
+note top of Sides
+  Table: Sides
+end note
+
+class Sides {
+  +SideId: String
+  +ShapeSides: Integer
+  +Label: String -- Label for this edge
+  +IsRectangle: Boolean
+  +IsTriangle: Boolean
+  +IsRightTriangle: Boolean -- Is this the Hypotenuse of a Right Angle Triangle?
+  +PythagoreanTheoremHolds: Boolean -- Does the Pythagorean Theorem Hold?
+  +PreviousSideLength: Integer -- Previous Edge Length
+  +Length: Integer -- Length
+  +NextLength: Integer -- Next Edge Length
+  +PreviousAngle: Integer -- Previous Angle
+  +Angle: Integer -- Internal angles for the shapes
+  +NextAngle: Integer -- Next Angle
+  +PreviousSide: String -- Previous Edge
+  +NextSide: String -- Next Edge
+  +Shape: String -- Shape
+  +PreviousLabel: String
+  +NextLabel: String
+  --
+  /Name: String  {derived}
+  /IsHypotenuse: Boolean  {derived} -- Is this the Hypotenuse of a Right Angle Triangle?
+  /StatusOfTheorem: String  {derived} -- Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+  /LengthSquared: Integer  {derived}
+  /HypotenuseLengthSquared: Integer  {derived}
+  /NonHypotenuseLengthSquared: Integer  {derived}
+}
+
+note top of Widgets
+  Table: Widgets
+end note
+
+class Widgets {
+  +WidgetId: String
+  +Name: String
+  +Appuser: String
+  +Name_from_Appuser: String
+  +EmailAddress_from_Appuser: String
+  +Role_from_Appuser: String
+  +Color: String
+  --
 }
 
 @enduml</pre>
@@ -166,32 +288,459 @@ class Customers {
             <div class="card">
                 <div class="code-header">
                     <h2>objects.puml</h2>
-                    <div><span class="code-info">27 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
+                    <div><span class="code-info">454 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
                 </div>
                 <pre id="objects-code">@startuml
 
-object &quot;Customers_0&quot; as Customers_0 {
-  CustomerId = &quot;cust0001&quot;
-  Customer = &quot;CUST0001&quot;
-  EmailAddress = &quot;jane.smith@email.com&quot;
-  FirstName = &quot;Jannice&quot;
-  LastName = &quot;Smith&quot;
+object &quot;EJ&quot; as AppUsers_0 {
+  AppUserId = &quot;ej&quot;
+  Name = &quot;EJ&quot;
+  EmailAddress = &quot;ej@ssot.me&quot;
+  Role = &quot;Admin&quot;
+  IsActive = true
+  Widgets = &quot;&quot;
+  Notes = &quot;&quot;
 }
 
-object &quot;Customers_1&quot; as Customers_1 {
-  CustomerId = &quot;cust0002&quot;
-  Customer = &quot;CUST0002&quot;
-  EmailAddress = &quot;john.doe@email.com&quot;
-  FirstName = &quot;John&quot;
-  LastName = &quot;Doe&quot;
+object &quot;Bob&quot; as AppUsers_1 {
+  AppUserId = &quot;bob&quot;
+  Name = &quot;Bob&quot;
+  EmailAddress = &quot;bob@ssot.me&quot;
+  Role = &quot;Mathemetician&quot;
+  IsActive = true
+  Widgets = &quot;widget1, widget2&quot;
+  Notes = &quot;&quot;
 }
 
-object &quot;Customers_2&quot; as Customers_2 {
-  CustomerId = &quot;cust0003&quot;
-  Customer = &quot;CUST0003&quot;
-  EmailAddress = &quot;emily.jones@email.com&quot;
-  FirstName = &quot;Emily&quot;
-  LastName = &quot;Jones&quot;
+object &quot;Andy&quot; as AppUsers_2 {
+  AppUserId = &quot;andy&quot;
+  Name = &quot;Andy&quot;
+  EmailAddress = &quot;guest@ssot.me&quot;
+  Role = &quot;Guest&quot;
+  IsActive = true
+  Widgets = &quot;widget3&quot;
+  Notes = &quot;&quot;
+}
+
+object &quot;Bob2&quot; as AppUsers_3 {
+  AppUserId = &quot;bob2&quot;
+  Name = &quot;Bob2&quot;
+  EmailAddress = &quot;bob@ssot.me&quot;
+  Role = &quot;&quot;
+  IsActive = false
+  Widgets = &quot;&quot;
+  Notes = &quot;&quot;
+}
+
+object &quot;03a-customize-schema.sql&quot; as ERBCustomizations_0 {
+  ERBCustomizationId = &quot;03a-customize-schema-sql&quot;
+  Name = &quot;03a-customize-schema.sql&quot;
+  Title = &quot;Customize Schema&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Schema&quot;
+}
+
+object &quot;03b-customize-functions.sql&quot; as ERBCustomizations_1 {
+  ERBCustomizationId = &quot;03b-customize-functions-sql&quot;
+  Name = &quot;03b-customize-functions.sql&quot;
+  Title = &quot;Customize Functions&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Functions&quot;
+}
+
+object &quot;03c-customize-views.sql&quot; as ERBCustomizations_2 {
+  ERBCustomizationId = &quot;03c-customize-views-sql&quot;
+  Name = &quot;03c-customize-views.sql&quot;
+  Title = &quot;Customize Views&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Views&quot;
+}
+
+object &quot;03d-customize-rls.sql&quot; as ERBCustomizations_3 {
+  ERBCustomizationId = &quot;03d-customize-rls-sql&quot;
+  Name = &quot;03d-customize-rls.sql&quot;
+  Title = &quot;Customize Policies (RLS)&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;RLS&quot;
+}
+
+object &quot;03e-customize-data.sql&quot; as ERBCustomizations_4 {
+  ERBCustomizationId = &quot;03e-customize-data-sql&quot;
+  Name = &quot;03e-customize-data.sql&quot;
+  Title = &quot;Customize Data (Seeds / Mig...&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Data&quot;
+}
+
+object &quot;Version 2026-02-06 22:18:34&quot; as ERBVersions_0 {
+  ERBVersionId = &quot;b0e261e6-9ded-4ed0-817a-12a...&quot;
+  BaseId = &quot;b0e261e6-9ded-4ed0-817a-12a...&quot;
+  Name = &quot;Version 2026-02-06 22:18:34&quot;
+  Message = &quot;fixed custom RLS policies.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-06&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 01:50:20&quot; as ERBVersions_1 {
+  ERBVersionId = &quot;b0e261e6-9ded-4ed0-817a-12a...&quot;
+  BaseId = &quot;b0e261e6-9ded-4ed0-817a-12a...&quot;
+  Name = &quot;Version 2026-02-07 01:50:20&quot;
+  Message = &quot;Trying to get data in as well.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 01:54:24&quot; as ERBVersions_2 {
+  ERBVersionId = &quot;b0e261e6-9ded-4ed0-817a-12a...&quot;
+  BaseId = &quot;b0e261e6-9ded-4ed0-817a-12a...&quot;
+  Name = &quot;Version 2026-02-07 01:54:24&quot;
+  Message = &quot;Updated base again.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 02:00:40&quot; as ERBVersions_3 {
+  ERBVersionId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  BaseId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  Name = &quot;Version 2026-02-07 02:00:40&quot;
+  Message = &quot;Trying to get data in the db.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 02:18:06&quot; as ERBVersions_4 {
+  ERBVersionId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  BaseId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  Name = &quot;Version 2026-02-07 02:18:06&quot;
+  Message = &quot;Added app users.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 02:27:57&quot; as ERBVersions_5 {
+  ERBVersionId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  BaseId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  Name = &quot;Version 2026-02-07 02:27:57&quot;
+  Message = &quot;Added AppUsers.IsActive&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 22:46:12&quot; as ERBVersions_6 {
+  ERBVersionId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  BaseId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  Name = &quot;Version 2026-02-07 22:46:12&quot;
+  Message = &quot;trying new admin/anon users.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-07 22:47:11&quot; as ERBVersions_7 {
+  ERBVersionId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  BaseId = &quot;e7b6e278-92b8-4a76-a3bf-d2b...&quot;
+  Name = &quot;Version 2026-02-07 22:47:11&quot;
+  Message = &quot;added admin/anon users.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-07&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-08 03:55:18&quot; as ERBVersions_8 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-08 03:55:18&quot;
+  Message = &quot;fixing auth&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-08&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-09 06:07:44&quot; as ERBVersions_9 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-09 06:07:44&quot;
+  Message = &quot;temp 4&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-09&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-09 06:14:38&quot; as ERBVersions_10 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-09 06:14:38&quot;
+  Message = &quot;added ownership records to ...&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-09&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-09 07:22:15&quot; as ERBVersions_11 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-09 07:22:15&quot;
+  Message = &quot;test preserving builders&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-09&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-09 07:41:26&quot; as ERBVersions_12 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-09 07:41:26&quot;
+  Message = &quot;preserves policies now?&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-09&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-09 07:46:04&quot; as ERBVersions_13 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-09 07:46:04&quot;
+  Message = &quot;added color to widgets&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-09&quot;
+  IsPublished = false
+}
+
+object &quot;Version 2026-02-11 00:40:18&quot; as ERBVersions_14 {
+  ERBVersionId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  BaseId = &quot;f4cefffd-29c7-4dc6-8b5b-214...&quot;
+  Name = &quot;Version 2026-02-11 00:40:18&quot;
+  Message = &quot;added another b ob.&quot;
+  Notes = &quot;&quot;
+  CommitDate = &quot;2026-02-11&quot;
+  IsPublished = false
+}
+
+object &quot;Magic Link Config&quot; as MagicLinkIntegration_0 {
+  MagicLinkIntegrationId = &quot;magic-link-config&quot;
+  Name = &quot;Magic Link Config&quot;
+  Enabled = true
+  TenantId = &quot;c03e9d56-9525-47dd-9ee1-2f2...&quot;
+  PublicKeyPem = &quot;-----BEGIN PUBLIC KEY-----
+...&quot;
+  UserTableName = &quot;app_users&quot;
+  EmailField = &quot;email_address&quot;
+  RoleField = &quot;role&quot;
+  IsActiveField = &quot;is_active&quot;
+  UserIdField = &quot;&quot;
+  AllowedAlgorithms = &quot;RS256&quot;
+  RequireTenantBinding = true
+  UseEmailDagPattern = true
+}
+
+object &quot;Shape1&quot; as Shapes_0 {
+  ShapeId = &quot;shape1&quot;
+  Name = &quot;Shape1&quot;
+  Sides = &quot;shape1-side-a, shape1-side-...&quot;
+  HowManySides = 3
+  SumOfInternalAngles = 180
+  MaxAngle = 90
+  HypotenuseLengthSquared = 25
+  NonHypotenuseSidesSquared = 25
+}
+
+object &quot;Shape2&quot; as Shapes_1 {
+  ShapeId = &quot;shape2&quot;
+  Name = &quot;Shape2&quot;
+  Sides = &quot;shape2-side-a, shape2-side-...&quot;
+  HowManySides = 4
+  SumOfInternalAngles = 360
+  MaxAngle = 90
+  HypotenuseLengthSquared = 0
+  NonHypotenuseSidesSquared = 0
+}
+
+object &quot;Shape1-Side-A&quot; as Sides_0 {
+  SideId = &quot;shape1-side-a&quot;
+  ShapeSides = &quot;3&quot;
+  Label = &quot;A&quot;
+  IsRectangle = false
+  IsTriangle = &quot;True&quot;
+  IsRightTriangle = &quot;True&quot;
+  PythagoreanTheoremHolds = &quot;True&quot;
+  PreviousSideLength = &quot;3&quot;
+  Length = 5
+  NextLength = &quot;4&quot;
+  PreviousAngle = &quot;90&quot;
+  Angle = 45
+  NextAngle = &quot;45&quot;
+  PreviousSide = &quot;shape1-side-c&quot;
+  NextSide = &quot;shape1-side-b&quot;
+  Shape = &quot;shape1&quot;
+  PreviousLabel = &quot;C&quot;
+  NextLabel = &quot;B&quot;
+}
+
+object &quot;Shape1-Side-B&quot; as Sides_1 {
+  SideId = &quot;shape1-side-b&quot;
+  ShapeSides = &quot;3&quot;
+  Label = &quot;B&quot;
+  IsRectangle = false
+  IsTriangle = &quot;True&quot;
+  IsRightTriangle = &quot;True&quot;
+  PythagoreanTheoremHolds = &quot;True&quot;
+  PreviousSideLength = &quot;5&quot;
+  Length = 4
+  NextLength = &quot;3&quot;
+  PreviousAngle = &quot;45&quot;
+  Angle = 45
+  NextAngle = &quot;90&quot;
+  PreviousSide = &quot;shape1-side-a&quot;
+  NextSide = &quot;shape1-side-c&quot;
+  Shape = &quot;shape1&quot;
+  PreviousLabel = &quot;A&quot;
+  NextLabel = &quot;C&quot;
+}
+
+object &quot;Shape1-Side-C&quot; as Sides_2 {
+  SideId = &quot;shape1-side-c&quot;
+  ShapeSides = &quot;3&quot;
+  Label = &quot;C&quot;
+  IsRectangle = false
+  IsTriangle = &quot;True&quot;
+  IsRightTriangle = &quot;True&quot;
+  PythagoreanTheoremHolds = &quot;True&quot;
+  PreviousSideLength = &quot;4&quot;
+  Length = 3
+  NextLength = &quot;5&quot;
+  PreviousAngle = &quot;45&quot;
+  Angle = 90
+  NextAngle = &quot;45&quot;
+  PreviousSide = &quot;shape1-side-b&quot;
+  NextSide = &quot;shape1-side-a&quot;
+  Shape = &quot;shape1&quot;
+  PreviousLabel = &quot;B&quot;
+  NextLabel = &quot;A&quot;
+}
+
+object &quot;Shape2-Side-A&quot; as Sides_3 {
+  SideId = &quot;shape2-side-a&quot;
+  ShapeSides = &quot;4&quot;
+  Label = &quot;A&quot;
+  IsRectangle = &quot;True&quot;
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = &quot;2&quot;
+  Length = 2
+  NextLength = &quot;2&quot;
+  PreviousAngle = &quot;90&quot;
+  Angle = 90
+  NextAngle = &quot;90&quot;
+  PreviousSide = &quot;shape2-side-d&quot;
+  NextSide = &quot;shape2-side-b&quot;
+  Shape = &quot;shape2&quot;
+  PreviousLabel = &quot;D&quot;
+  NextLabel = &quot;B&quot;
+}
+
+object &quot;Shape2-Side-B&quot; as Sides_4 {
+  SideId = &quot;shape2-side-b&quot;
+  ShapeSides = &quot;4&quot;
+  Label = &quot;B&quot;
+  IsRectangle = &quot;True&quot;
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = &quot;2&quot;
+  Length = 2
+  NextLength = &quot;2&quot;
+  PreviousAngle = &quot;90&quot;
+  Angle = 90
+  NextAngle = &quot;90&quot;
+  PreviousSide = &quot;shape2-side-a&quot;
+  NextSide = &quot;shape2-side-c&quot;
+  Shape = &quot;shape2&quot;
+  PreviousLabel = &quot;A&quot;
+  NextLabel = &quot;C&quot;
+}
+
+object &quot;Shape2-Side-C&quot; as Sides_5 {
+  SideId = &quot;shape2-side-c&quot;
+  ShapeSides = &quot;4&quot;
+  Label = &quot;C&quot;
+  IsRectangle = &quot;True&quot;
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = &quot;2&quot;
+  Length = 2
+  NextLength = &quot;2&quot;
+  PreviousAngle = &quot;90&quot;
+  Angle = 90
+  NextAngle = &quot;90&quot;
+  PreviousSide = &quot;shape2-side-b&quot;
+  NextSide = &quot;shape2-side-d&quot;
+  Shape = &quot;shape2&quot;
+  PreviousLabel = &quot;B&quot;
+  NextLabel = &quot;D&quot;
+}
+
+object &quot;Shape2-Side-D&quot; as Sides_6 {
+  SideId = &quot;shape2-side-d&quot;
+  ShapeSides = &quot;4&quot;
+  Label = &quot;D&quot;
+  IsRectangle = &quot;True&quot;
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = &quot;2&quot;
+  Length = 2
+  NextLength = &quot;2&quot;
+  PreviousAngle = &quot;90&quot;
+  Angle = 90
+  NextAngle = &quot;90&quot;
+  PreviousSide = &quot;shape2-side-c&quot;
+  NextSide = &quot;shape2-side-a&quot;
+  Shape = &quot;shape2&quot;
+  PreviousLabel = &quot;C&quot;
+  NextLabel = &quot;A&quot;
+}
+
+object &quot;widget1&quot; as Widgets_0 {
+  WidgetId = &quot;widget1&quot;
+  Name = &quot;widget1&quot;
+  Appuser = &quot;bob&quot;
+  Name_from_Appuser = &quot;Bob&quot;
+  EmailAddress_from_Appuser = &quot;bob@ssot.me&quot;
+  Role_from_Appuser = &quot;Mathemetician&quot;
+  Color = &quot;Blue&quot;
+}
+
+object &quot;widget2&quot; as Widgets_1 {
+  WidgetId = &quot;widget2&quot;
+  Name = &quot;widget2&quot;
+  Appuser = &quot;bob&quot;
+  Name_from_Appuser = &quot;Bob&quot;
+  EmailAddress_from_Appuser = &quot;bob@ssot.me&quot;
+  Role_from_Appuser = &quot;Mathemetician&quot;
+  Color = &quot;pink&quot;
+}
+
+object &quot;widget3&quot; as Widgets_2 {
+  WidgetId = &quot;widget3&quot;
+  Name = &quot;widget3&quot;
+  Appuser = &quot;andy&quot;
+  Name_from_Appuser = &quot;Andy&quot;
+  EmailAddress_from_Appuser = &quot;guest@ssot.me&quot;
+  Role_from_Appuser = &quot;Guest&quot;
+  Color = &quot;&quot;
 }
 
 @enduml</pre>
@@ -201,17 +750,127 @@ object &quot;Customers_2&quot; as Customers_2 {
             <div class="card">
                 <div class="code-header">
                     <h2>constraints.ocl</h2>
-                    <div><span class="code-info">10 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
+                    <div><span class="code-info">120 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
                 </div>
                 <pre id="ocl-code">-- OCL Constraints for ERB
 -- Generated from effortless-rulebook.json
 
--- Table: Customers
-context Customers
+-- Table: ERBVersions
+context ERBVersions
 
--- Full name is computed from the first and last name of the customer
--- Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
-derive FullName: self.firstName + &#x27; &#x27; + self.lastName
+-- Formula: ={{BaseId}} &amp; &quot;-&quot; &amp; {{Name}}
+derive PK: self.baseId + &#x27;-&#x27; + self.name
+
+-- Table: Shapes
+context Shapes
+
+-- Formula for HowManySides - parse error: Unexpected character &#x27;!&#x27; at position 14
+-- Original: =COUNTIFS(Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula: =AND({{HowManySides}}=4)
+derive IsRectangle: ((self.howManySides = 4))
+
+-- Formula: =AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)
+derive IsTriangle: ((self.sumOfInternalAngles = 180) and (self.howManySides = 3))
+
+-- Formula: =AND({{IsTriangle}}, {{MaxAngle}} = 90)
+derive IsRightTriangle: (self.isTriangle and (self.maxAngle = 90))
+
+-- Formula for SumOfInternalAngles - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =SUMIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula for MaxAngle - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =MAXIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula for HypotenuseLengthSquared - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =SUMIFS(Sides!{{HypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula for NonHypotenuseSidesSquared - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =SUMIFS(Sides!{{NonHypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})
+
+-- Formula: =AND(
+   {{IsRightTriangle}},  
+   {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}
+ )
+derive PythagoreanTheoremHolds: (self.isRightTriangle and (self.hypotenuseLengthSquared = self.nonHypotenuseSidesSquared))
+
+-- Table: Sides
+context Sides
+
+-- Formula: ={{Shape}} &amp; &quot;-Side-&quot; &amp; {{Label}}
+derive Name: self.shape + &#x27;-Side-&#x27; + self.label
+
+-- Formula for ShapeSides - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =INDEX(Shapes!{{HowManySides}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Formula for IsRectangle - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =INDEX(Shapes!{{IsRectangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Formula for IsTriangle - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =INDEX(Shapes!{{IsTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Is this the Hypotenuse of a Right Angle Triangle?
+-- Formula for IsRightTriangle - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =INDEX(Shapes!{{IsRightTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Is this the Hypotenuse of a Right Angle Triangle?
+-- Formula: =AND(
+   {{IsTriangle}},
+   {{Length}} &gt; {{PreviousSideLength}},
+   {{Length}} &gt; {{NextLength}}
+ )
+derive IsHypotenuse: (self.isTriangle and (self.length &gt; self.previousSideLength) and (self.length &gt; self.nextLength))
+
+-- Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+-- Formula: =IF({{IsTriangle}},    IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})),      &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot;,      &quot;Pythagorean Theorem Holds (obviously).&quot;   ),   &quot;NA&quot; )
+derive StatusOfTheorem: if self.isTriangle then if (self.isRightTriangle and not (self.pythagoreanTheoremHolds)) then &#x27;PYTHAGOREAN THEOREM FALSIFIED!&#x27; else &#x27;Pythagorean Theorem Holds (obviously).&#x27; endif else &#x27;NA&#x27; endif
+
+-- Does the Pythagorean Theorem Hold?
+-- Formula for PythagoreanTheoremHolds - parse error: Unexpected character &#x27;!&#x27; at position 12
+-- Original: =INDEX(Shapes!{{PythagoreanTheoremHolds}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))
+
+-- Formula for LengthSquared - parse error: Unexpected character &#x27;*&#x27; at position 11
+-- Original: ={{Length}} * {{Length}}
+
+-- Formula: =IF({{IsHypotenuse}}, {{LengthSquared}})
+derive HypotenuseLengthSquared: if self.isHypotenuse then self.lengthSquared else &#x27;&#x27; endif
+
+-- Formula: =IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})
+derive NonHypotenuseLengthSquared: if (not (self.isHypotenuse) and self.isTriangle) then self.lengthSquared else &#x27;&#x27; endif
+
+-- Previous Edge Length
+-- Formula for PreviousSideLength - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Sides!{{Length}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))
+
+-- Next Edge Length
+-- Formula for NextLength - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Sides!{{Length}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))
+
+-- Previous Angle
+-- Formula for PreviousAngle - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Sides!{{Angle}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))
+
+-- Next Angle
+-- Formula for NextAngle - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Sides!{{Angle}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))
+
+-- Formula for PreviousLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Sides!{{Label}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))
+
+-- Formula for NextLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
+-- Original: =INDEX(Sides!{{Label}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))
+
+-- Table: Widgets
+context Widgets
+
+-- Formula for Name_from_Appuser - parse error: Unexpected character &#x27;!&#x27; at position 14
+-- Original: =INDEX(AppUsers!{{Name}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))
+
+-- Formula for EmailAddress_from_Appuser - parse error: Unexpected character &#x27;!&#x27; at position 14
+-- Original: =INDEX(AppUsers!{{EmailAddress}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))
+
+-- Formula for Role_from_Appuser - parse error: Unexpected character &#x27;!&#x27; at position 14
+-- Original: =INDEX(AppUsers!{{Role}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))
 </pre>
             </div>
         </div>

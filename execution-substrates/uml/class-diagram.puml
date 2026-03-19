@@ -1,18 +1,137 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-note top of Customers
-  Table: Customers
+note top of AppUsers
+  Table: AppUsers
 end note
 
-class Customers {
-  +CustomerId: String
-  +Customer: String -- Identifier for the customers.
-  +EmailAddress: String -- Thec ustomers email address
-  +FirstName: String -- First Name of the customer - used to make the full name
-  +LastName: String -- Last Name of the customer - used to make the full name
+class AppUsers {
+  +AppUserId: String
+  +Name: String
+  +EmailAddress: String
+  +Role: String
+  +IsActive: Boolean
+  +Widgets: String
+  +Notes: String
   --
-  /FullName: String  {derived} -- Full name is computed from the first and last name of the customer
+}
+
+note top of ERBCustomizations
+  Table: ERBCustomizations
+end note
+
+class ERBCustomizations {
+  +ERBCustomizationId: String
+  +Name: String
+  +Title: String
+  +SQLCode: String
+  +SQLTarget: String
+  +CustomizationType: String
+  --
+}
+
+note top of ERBVersions
+  Table: ERBVersions
+end note
+
+class ERBVersions {
+  +ERBVersionId: String
+  +BaseId: String
+  +Name: String
+  +Message: String
+  +Notes: String
+  +CommitDate: String
+  +IsPublished: Boolean
+  --
+  /PK: String  {derived}
+}
+
+note top of MagicLinkIntegration
+  Table: MagicLinkIntegration
+end note
+
+class MagicLinkIntegration {
+  +MagicLinkIntegrationId: String
+  +Name: String
+  +Enabled: Boolean
+  +TenantId: String
+  +PublicKeyPem: String
+  +UserTableName: String
+  +EmailField: String
+  +RoleField: String
+  +IsActiveField: String
+  +UserIdField: String
+  +AllowedAlgorithms: String
+  +RequireTenantBinding: Boolean
+  +UseEmailDagPattern: Boolean
+  --
+}
+
+note top of Shapes
+  Table: Shapes
+end note
+
+class Shapes {
+  +ShapeId: String
+  +Name: String
+  +Sides: String
+  +HowManySides: Integer
+  +SumOfInternalAngles: String
+  +MaxAngle: String
+  +HypotenuseLengthSquared: String
+  +NonHypotenuseSidesSquared: String
+  --
+  /IsRectangle: Boolean  {derived}
+  /IsTriangle: Boolean  {derived}
+  /IsRightTriangle: Boolean  {derived}
+  /PythagoreanTheoremHolds: Boolean  {derived}
+}
+
+note top of Sides
+  Table: Sides
+end note
+
+class Sides {
+  +SideId: String
+  +ShapeSides: Integer
+  +Label: String -- Label for this edge
+  +IsRectangle: Boolean
+  +IsTriangle: Boolean
+  +IsRightTriangle: Boolean -- Is this the Hypotenuse of a Right Angle Triangle?
+  +PythagoreanTheoremHolds: Boolean -- Does the Pythagorean Theorem Hold?
+  +PreviousSideLength: Integer -- Previous Edge Length
+  +Length: Integer -- Length
+  +NextLength: Integer -- Next Edge Length
+  +PreviousAngle: Integer -- Previous Angle
+  +Angle: Integer -- Internal angles for the shapes
+  +NextAngle: Integer -- Next Angle
+  +PreviousSide: String -- Previous Edge
+  +NextSide: String -- Next Edge
+  +Shape: String -- Shape
+  +PreviousLabel: String
+  +NextLabel: String
+  --
+  /Name: String  {derived}
+  /IsHypotenuse: Boolean  {derived} -- Is this the Hypotenuse of a Right Angle Triangle?
+  /StatusOfTheorem: String  {derived} -- Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+  /LengthSquared: Integer  {derived}
+  /HypotenuseLengthSquared: Integer  {derived}
+  /NonHypotenuseLengthSquared: Integer  {derived}
+}
+
+note top of Widgets
+  Table: Widgets
+end note
+
+class Widgets {
+  +WidgetId: String
+  +Name: String
+  +Appuser: String
+  +Name_from_Appuser: String
+  +EmailAddress_from_Appuser: String
+  +Role_from_Appuser: String
+  +Color: String
+  --
 }
 
 @enduml

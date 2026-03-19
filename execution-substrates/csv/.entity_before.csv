@@ -1,0 +1,5 @@
+AppUserId,Name,EmailAddress,Role,IsActive,Widgets,Notes
+ej,EJ,ej@ssot.me,Admin,True,,
+bob,Bob,bob@ssot.me,Mathemetician,True,"widget1, widget2",
+andy,Andy,guest@ssot.me,Guest,True,widget3,
+bob2,Bob2,bob@ssot.me,,False,,

@@ -1,0 +1,17 @@
+[
+  {
+    "magic_link_integration_id": "magic-link-config",
+    "name": "Magic Link Config",
+    "enabled": true,
+    "tenant_id": "c03e9d56-9525-47dd-9ee1-2f2a20383048",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2XyDcVliu0wjQjDY1Rez\n/krdzYL3v4TXCJbYu2V1EkrKlVjO+ZGCIHu0yMAw5A+cUMm5cXtYyIXNln6tCg0M\nLHcNVrSDm5QuQSUuGP/SVrgSUItyrGfLZOwl+kYXgMmle4t11ecVhkaVARisBcRz\nIrh9ofSNtLR6UlJzKH4uFFswId5HrgwMCbart2YcrA7lrEt1hqASZ7pPPX6/i771\n97VqSf+clLX3Wq5VwyrtC9taTiVZrN/OhtWbSAkUX+NMkCc57MN4CcjP3/8JXbjv\n4L5ExZOpc14zRhOnOnC0cHRX475WoJbjI3+EfYDjaNrV6MVd444S/8HOOz3D8Pki\nXwIDAQAB\n-----END PUBLIC KEY-----",
+    "user_table_name": "app_users",
+    "email_field": "email_address",
+    "role_field": "role",
+    "is_active_field": "is_active",
+    "allowed_algorithms": "RS256",
+    "require_tenant_binding": true,
+    "use_email_dag_pattern": true,
+    "user_id_field": ""
+  }
+]

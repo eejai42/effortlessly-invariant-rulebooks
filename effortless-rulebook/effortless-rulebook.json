@@ -1,85 +1,1051 @@
 {
   "$schema": "https://example.com/cmcc-schema/v1",
-  "Name": "DEMO: Customer FullName",
-  "Description": "Rulebook generated from Airtable base \u0027DEMO: Customer FullName\u0027.",
-  "Customers": {
-    "Description": "Table: Customers",
+  "Name": "DEMO: Pythagorean Theorem",
+  "Description": "Rulebook generated from Airtable base \u0027DEMO: Pythagorean Theorem\u0027.",
+  "AppUsers": {
+    "Description": "Table: AppUsers",
     "schema": [
       {
-        "name": "CustomerId",
+        "name": "AppUserId",
         "datatype": "string",
         "type": "raw",
         "nullable": false
       },
       {
-        "name": "Customer",
+        "name": "Name",
         "datatype": "string",
         "type": "raw",
-        "nullable": true,
-        "Description": "Identifier for the customers."
+        "nullable": true
       },
       {
         "name": "EmailAddress",
         "datatype": "string",
         "type": "raw",
-        "nullable": true,
-        "Description": "Thec ustomers email address"
+        "nullable": true
       },
       {
-        "name": "FirstName",
+        "name": "Role",
         "datatype": "string",
         "type": "raw",
-        "nullable": true,
-        "Description": "First Name of the customer - used to make the full name"
+        "nullable": true
       },
       {
-        "name": "LastName",
+        "name": "IsActive",
+        "datatype": "boolean",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Widgets",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Widgets"
+      },
+      {
+        "name": "Notes",
         "datatype": "string",
         "type": "raw",
-        "nullable": true,
-        "Description": "Last Name of the customer - used to make the full name"
-      },
-      {
-        "name": "FullName",
-        "datatype": "string",
-        "type": "calculated",
-        "nullable": true,
-        "Description": "Full name is computed from the first and last name of the customer",
-        "formula": "={{FirstName}} \u0026 \u0022 \u0022 \u0026 {{LastName}}"
+        "nullable": true
       }
     ],
     "data": [
       {
-        "CustomerId": "cust0001",
-        "Customer": "CUST0001",
-        "EmailAddress": "jane.smith@email.com",
-        "FirstName": "Jannice",
-        "LastName": "Smith",
-        "FullName": "Jannice Smith"
+        "AppUserId": "ej",
+        "Name": "EJ",
+        "EmailAddress": "ej@ssot.me",
+        "Role": "Admin",
+        "IsActive": true,
+        "Widgets": "",
+        "Notes": ""
       },
       {
-        "CustomerId": "cust0002",
-        "Customer": "CUST0002",
-        "EmailAddress": "john.doe@email.com",
-        "FirstName": "John",
-        "LastName": "Doe",
-        "FullName": "John Doe"
+        "AppUserId": "bob",
+        "Name": "Bob",
+        "EmailAddress": "bob@ssot.me",
+        "Role": "Mathemetician",
+        "IsActive": true,
+        "Widgets": "widget1, widget2",
+        "Notes": ""
       },
       {
-        "CustomerId": "cust0003",
-        "Customer": "CUST0003",
-        "EmailAddress": "emily.jones@email.com",
-        "FirstName": "Emily",
-        "LastName": "Jones",
-        "FullName": "Emily Jones"
+        "AppUserId": "andy",
+        "Name": "Andy",
+        "EmailAddress": "guest@ssot.me",
+        "Role": "Guest",
+        "IsActive": true,
+        "Widgets": "widget3",
+        "Notes": ""
+      },
+      {
+        "AppUserId": "bob2",
+        "Name": "Bob2",
+        "EmailAddress": "bob@ssot.me",
+        "Role": "",
+        "IsActive": false,
+        "Widgets": "",
+        "Notes": ""
+      }
+    ]
+  },
+  "Shapes": {
+    "Description": "Table: Shapes",
+    "schema": [
+      {
+        "name": "ShapeId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Sides",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "Sides"
+      },
+      {
+        "name": "HowManySides",
+        "datatype": "integer",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=COUNTIFS(Sides!{{Shape}}, Shapes!{{ShapeId}})"
+      },
+      {
+        "name": "IsRectangle",
+        "datatype": "boolean",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=AND({{HowManySides}}=4)"
+      },
+      {
+        "name": "IsTriangle",
+        "datatype": "boolean",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)"
+      },
+      {
+        "name": "IsRightTriangle",
+        "datatype": "boolean",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=AND({{IsTriangle}}, {{MaxAngle}} = 90)"
+      },
+      {
+        "name": "SumOfInternalAngles",
+        "datatype": "number",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=SUMIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+      },
+      {
+        "name": "MaxAngle",
+        "datatype": "number",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=MAXIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+      },
+      {
+        "name": "HypotenuseLengthSquared",
+        "datatype": "number",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=SUMIFS(Sides!{{HypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+      },
+      {
+        "name": "NonHypotenuseSidesSquared",
+        "datatype": "number",
+        "type": "aggregation",
+        "nullable": true,
+        "formula": "=SUMIFS(Sides!{{NonHypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+      },
+      {
+        "name": "PythagoreanTheoremHolds",
+        "datatype": "boolean",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=AND(\r\n  {{IsRightTriangle}},  \r\n  {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}\r\n)"
+      }
+    ],
+    "data": [
+      {
+        "ShapeId": "shape1",
+        "Name": "Shape1",
+        "Sides": "shape1-side-a, shape1-side-b, shape1-side-c",
+        "HowManySides": 3,
+        "SumOfInternalAngles": 180,
+        "IsTriangle": true,
+        "MaxAngle": 90,
+        "IsRightTriangle": true,
+        "HypotenuseLengthSquared": 25,
+        "NonHypotenuseSidesSquared": 25,
+        "PythagoreanTheoremHolds": true,
+        "IsRectangle": false
+      },
+      {
+        "ShapeId": "shape2",
+        "Name": "Shape2",
+        "Sides": "shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d",
+        "HowManySides": 4,
+        "SumOfInternalAngles": 360,
+        "MaxAngle": 90,
+        "HypotenuseLengthSquared": 0,
+        "NonHypotenuseSidesSquared": 0,
+        "IsRectangle": true,
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "PythagoreanTheoremHolds": false
+      }
+    ]
+  },
+  "Sides": {
+    "Description": "Table: Sides",
+    "schema": [
+      {
+        "name": "SideId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "={{Shape}} \u0026 \u0022-Side-\u0022 \u0026 {{Label}}"
+      },
+      {
+        "name": "ShapeSides",
+        "datatype": "integer",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Shapes!{{HowManySides}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+      },
+      {
+        "name": "Label",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Label for this edge"
+      },
+      {
+        "name": "IsRectangle",
+        "datatype": "boolean",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Shapes!{{IsRectangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+      },
+      {
+        "name": "IsTriangle",
+        "datatype": "boolean",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Shapes!{{IsTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+      },
+      {
+        "name": "IsRightTriangle",
+        "datatype": "boolean",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Is this the Hypotenuse of a Right Angle Triangle?",
+        "formula": "=INDEX(Shapes!{{IsRightTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+      },
+      {
+        "name": "IsHypotenuse",
+        "datatype": "boolean",
+        "type": "calculated",
+        "nullable": true,
+        "Description": "Is this the Hypotenuse of a Right Angle Triangle?",
+        "formula": "=AND(\r\n  {{IsTriangle}},\r\n  {{Length}} \u003E {{PreviousSideLength}},\r\n  {{Length}} \u003E {{NextLength}}\r\n)"
+      },
+      {
+        "name": "StatusOfTheorem",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "Description": "Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.",
+        "formula": "=IF({{IsTriangle}}, \n  IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})), \n    \u0022PYTHAGOREAN THEOREM FALSIFIED!\u0022, \n    \u0022Pythagorean Theorem Holds (obviously).\u0022\n  ),\n  \u0022NA\u0022\n)"
+      },
+      {
+        "name": "PythagoreanTheoremHolds",
+        "datatype": "boolean",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Does the Pythagorean Theorem Hold?",
+        "formula": "=INDEX(Shapes!{{PythagoreanTheoremHolds}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+      },
+      {
+        "name": "LengthSquared",
+        "datatype": "integer",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "={{Length}} * {{Length}}"
+      },
+      {
+        "name": "HypotenuseLengthSquared",
+        "datatype": "integer",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=IF({{IsHypotenuse}}, {{LengthSquared}})"
+      },
+      {
+        "name": "NonHypotenuseLengthSquared",
+        "datatype": "integer",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "=IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})"
+      },
+      {
+        "name": "PreviousSideLength",
+        "datatype": "integer",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Previous Edge Length",
+        "formula": "=INDEX(Sides!{{Length}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))"
+      },
+      {
+        "name": "Length",
+        "datatype": "integer",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Length"
+      },
+      {
+        "name": "NextLength",
+        "datatype": "integer",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Next Edge Length",
+        "formula": "=INDEX(Sides!{{Length}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))"
+      },
+      {
+        "name": "PreviousAngle",
+        "datatype": "integer",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Previous Angle",
+        "formula": "=INDEX(Sides!{{Angle}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))"
+      },
+      {
+        "name": "Angle",
+        "datatype": "integer",
+        "type": "raw",
+        "nullable": true,
+        "Description": "Internal angles for the shapes"
+      },
+      {
+        "name": "NextAngle",
+        "datatype": "integer",
+        "type": "lookup",
+        "nullable": true,
+        "Description": "Next Angle",
+        "formula": "=INDEX(Sides!{{Angle}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))"
+      },
+      {
+        "name": "PreviousSide",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Previous Edge",
+        "RelatedTo": "Sides"
+      },
+      {
+        "name": "NextSide",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Next Edge",
+        "RelatedTo": "Sides"
+      },
+      {
+        "name": "Shape",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "Description": "Shape",
+        "RelatedTo": "Shapes"
+      },
+      {
+        "name": "PreviousLabel",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Sides!{{Label}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))"
+      },
+      {
+        "name": "NextLabel",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(Sides!{{Label}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))"
+      }
+    ],
+    "data": [
+      {
+        "SideId": "shape1-side-a",
+        "Name": "Shape1-Side-A",
+        "Shape": "shape1",
+        "Label": "A",
+        "Length": 5,
+        "Angle": 45,
+        "PreviousSide": "shape1-side-c",
+        "PreviousAngle": "90",
+        "PreviousSideLength": "3",
+        "PreviousLabel": "C",
+        "NextSide": "shape1-side-b",
+        "NextAngle": "45",
+        "NextLength": "4",
+        "NextLabel": "B",
+        "IsHypotenuse": true,
+        "LengthSquared": 25,
+        "PythagoreanTheoremHolds": "True",
+        "StatusOfTheorem": "Pythagorean Theorem Holds (obviously).",
+        "IsRightTriangle": "True",
+        "ShapeSides": "3",
+        "IsTriangle": "True",
+        "HypotenuseLengthSquared": 25,
+        "IsRectangle": false,
+        "NonHypotenuseLengthSquared": 0
+      },
+      {
+        "SideId": "shape1-side-b",
+        "Name": "Shape1-Side-B",
+        "Shape": "shape1",
+        "Label": "B",
+        "Length": 4,
+        "Angle": 45,
+        "PreviousSide": "shape1-side-a",
+        "PreviousAngle": "45",
+        "PreviousSideLength": "5",
+        "PreviousLabel": "A",
+        "NextSide": "shape1-side-c",
+        "NextAngle": "90",
+        "NextLength": "3",
+        "NextLabel": "C",
+        "LengthSquared": 16,
+        "PythagoreanTheoremHolds": "True",
+        "StatusOfTheorem": "Pythagorean Theorem Holds (obviously).",
+        "IsRightTriangle": "True",
+        "ShapeSides": "3",
+        "IsTriangle": "True",
+        "NonHypotenuseLengthSquared": 16,
+        "IsRectangle": false,
+        "IsHypotenuse": false,
+        "HypotenuseLengthSquared": 0
+      },
+      {
+        "SideId": "shape1-side-c",
+        "Name": "Shape1-Side-C",
+        "Shape": "shape1",
+        "Label": "C",
+        "Length": 3,
+        "Angle": 90,
+        "PreviousSide": "shape1-side-b",
+        "PreviousAngle": "45",
+        "PreviousSideLength": "4",
+        "PreviousLabel": "B",
+        "NextSide": "shape1-side-a",
+        "NextAngle": "45",
+        "NextLength": "5",
+        "NextLabel": "A",
+        "LengthSquared": 9,
+        "PythagoreanTheoremHolds": "True",
+        "StatusOfTheorem": "Pythagorean Theorem Holds (obviously).",
+        "IsRightTriangle": "True",
+        "ShapeSides": "3",
+        "IsTriangle": "True",
+        "NonHypotenuseLengthSquared": 9,
+        "IsRectangle": false,
+        "IsHypotenuse": false,
+        "HypotenuseLengthSquared": 0
+      },
+      {
+        "SideId": "shape2-side-a",
+        "Name": "Shape2-Side-A",
+        "Shape": "shape2",
+        "Label": "A",
+        "Length": 2,
+        "Angle": 90,
+        "PreviousSide": "shape2-side-d",
+        "PreviousAngle": "90",
+        "PreviousSideLength": "2",
+        "PreviousLabel": "D",
+        "NextSide": "shape2-side-b",
+        "NextAngle": "90",
+        "NextLength": "2",
+        "NextLabel": "B",
+        "LengthSquared": 4,
+        "StatusOfTheorem": "NA",
+        "ShapeSides": "4",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "IsHypotenuse": false,
+        "PythagoreanTheoremHolds": false,
+        "HypotenuseLengthSquared": 0,
+        "NonHypotenuseLengthSquared": 0
+      },
+      {
+        "SideId": "shape2-side-b",
+        "Name": "Shape2-Side-B",
+        "Shape": "shape2",
+        "Label": "B",
+        "Length": 2,
+        "Angle": 90,
+        "PreviousSide": "shape2-side-a",
+        "PreviousAngle": "90",
+        "PreviousSideLength": "2",
+        "PreviousLabel": "A",
+        "NextSide": "shape2-side-c",
+        "NextAngle": "90",
+        "NextLength": "2",
+        "NextLabel": "C",
+        "LengthSquared": 4,
+        "StatusOfTheorem": "NA",
+        "ShapeSides": "4",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "IsHypotenuse": false,
+        "PythagoreanTheoremHolds": false,
+        "HypotenuseLengthSquared": 0,
+        "NonHypotenuseLengthSquared": 0
+      },
+      {
+        "SideId": "shape2-side-c",
+        "Name": "Shape2-Side-C",
+        "Shape": "shape2",
+        "Label": "C",
+        "Length": 2,
+        "Angle": 90,
+        "PreviousSide": "shape2-side-b",
+        "PreviousAngle": "90",
+        "PreviousSideLength": "2",
+        "PreviousLabel": "B",
+        "NextSide": "shape2-side-d",
+        "NextAngle": "90",
+        "NextLength": "2",
+        "NextLabel": "D",
+        "LengthSquared": 4,
+        "StatusOfTheorem": "NA",
+        "ShapeSides": "4",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "IsHypotenuse": false,
+        "PythagoreanTheoremHolds": false,
+        "HypotenuseLengthSquared": 0,
+        "NonHypotenuseLengthSquared": 0
+      },
+      {
+        "SideId": "shape2-side-d",
+        "Name": "Shape2-Side-D",
+        "Shape": "shape2",
+        "Label": "D",
+        "Length": 2,
+        "Angle": 90,
+        "PreviousSide": "shape2-side-c",
+        "PreviousAngle": "90",
+        "PreviousSideLength": "2",
+        "PreviousLabel": "C",
+        "NextSide": "shape2-side-a",
+        "NextAngle": "90",
+        "NextLength": "2",
+        "NextLabel": "A",
+        "LengthSquared": 4,
+        "StatusOfTheorem": "NA",
+        "ShapeSides": "4",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "IsHypotenuse": false,
+        "PythagoreanTheoremHolds": false,
+        "HypotenuseLengthSquared": 0,
+        "NonHypotenuseLengthSquared": 0
+      }
+    ]
+  },
+  "Widgets": {
+    "Description": "Table: Widgets",
+    "schema": [
+      {
+        "name": "WidgetId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Appuser",
+        "datatype": "string",
+        "type": "relationship",
+        "nullable": true,
+        "RelatedTo": "AppUsers"
+      },
+      {
+        "name": "Name_from_Appuser",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(AppUsers!{{Name}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))"
+      },
+      {
+        "name": "EmailAddress_from_Appuser",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(AppUsers!{{EmailAddress}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))"
+      },
+      {
+        "name": "Role_from_Appuser",
+        "datatype": "string",
+        "type": "lookup",
+        "nullable": true,
+        "formula": "=INDEX(AppUsers!{{Role}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))"
+      },
+      {
+        "name": "Color",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      }
+    ],
+    "data": [
+      {
+        "WidgetId": "widget1",
+        "Name": "widget1",
+        "Appuser": "bob",
+        "Role_from_Appuser": "Mathemetician",
+        "EmailAddress_from_Appuser": "bob@ssot.me",
+        "Name_from_Appuser": "Bob",
+        "Color": "Blue"
+      },
+      {
+        "WidgetId": "widget2",
+        "Name": "widget2",
+        "Appuser": "bob",
+        "Role_from_Appuser": "Mathemetician",
+        "EmailAddress_from_Appuser": "bob@ssot.me",
+        "Name_from_Appuser": "Bob",
+        "Color": "pink"
+      },
+      {
+        "WidgetId": "widget3",
+        "Name": "widget3",
+        "Appuser": "andy",
+        "Role_from_Appuser": "Guest",
+        "EmailAddress_from_Appuser": "guest@ssot.me",
+        "Name_from_Appuser": "Andy",
+        "Color": ""
+      }
+    ]
+  },
+  "ERBVersions": {
+    "Description": "Table: ERBVersions",
+    "schema": [
+      {
+        "name": "ERBVersionId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "PK",
+        "datatype": "string",
+        "type": "calculated",
+        "nullable": true,
+        "formula": "={{BaseId}} \u0026 \u0022-\u0022 \u0026 {{Name}}"
+      },
+      {
+        "name": "BaseId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Message",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Notes",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "CommitDate",
+        "datatype": "datetime",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "IsPublished",
+        "datatype": "boolean",
+        "type": "raw",
+        "nullable": true
+      }
+    ],
+    "data": [
+      {
+        "ERBVersionId": "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-06-22-18-34",
+        "PK": "b0e261e6-9ded-4ed0-817a-12a82a538201-Version 2026-02-06 22:18:34",
+        "Name": "Version 2026-02-06 22:18:34",
+        "Message": "fixed custom RLS policies.",
+        "CommitDate": "2026-02-06",
+        "BaseId": "b0e261e6-9ded-4ed0-817a-12a82a538201",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-50-20",
+        "PK": "b0e261e6-9ded-4ed0-817a-12a82a538201-Version 2026-02-07 01:50:20",
+        "Name": "Version 2026-02-07 01:50:20",
+        "Message": "Trying to get data in as well.",
+        "CommitDate": "2026-02-07",
+        "BaseId": "b0e261e6-9ded-4ed0-817a-12a82a538201",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-54-24",
+        "PK": "b0e261e6-9ded-4ed0-817a-12a82a538201-Version 2026-02-07 01:54:24",
+        "Name": "Version 2026-02-07 01:54:24",
+        "Message": "Updated base again.",
+        "CommitDate": "2026-02-07",
+        "BaseId": "b0e261e6-9ded-4ed0-817a-12a82a538201",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-00-40",
+        "PK": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-Version 2026-02-07 02:00:40",
+        "Name": "Version 2026-02-07 02:00:40",
+        "Message": "Trying to get data in the db.",
+        "CommitDate": "2026-02-07",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-18-06",
+        "PK": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-Version 2026-02-07 02:18:06",
+        "Name": "Version 2026-02-07 02:18:06",
+        "Message": "Added app users.",
+        "CommitDate": "2026-02-07",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-27-57",
+        "PK": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-Version 2026-02-07 02:27:57",
+        "Name": "Version 2026-02-07 02:27:57",
+        "Message": "Added AppUsers.IsActive",
+        "CommitDate": "2026-02-07",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-46-12",
+        "PK": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-Version 2026-02-07 22:46:12",
+        "Name": "Version 2026-02-07 22:46:12",
+        "Message": "trying new admin/anon users.",
+        "CommitDate": "2026-02-07",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-47-11",
+        "PK": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-Version 2026-02-07 22:47:11",
+        "Name": "Version 2026-02-07 22:47:11",
+        "Message": "added admin/anon users.",
+        "CommitDate": "2026-02-07",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-08-03-55-18",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-08 03:55:18",
+        "Name": "Version 2026-02-08 03:55:18",
+        "Message": "fixing auth",
+        "CommitDate": "2026-02-08",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-07-44",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-09 06:07:44",
+        "Name": "Version 2026-02-09 06:07:44",
+        "Message": "temp 4",
+        "CommitDate": "2026-02-09",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-14-38",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-09 06:14:38",
+        "Name": "Version 2026-02-09 06:14:38",
+        "Message": "added ownership records to widgets",
+        "CommitDate": "2026-02-09",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-22-15",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-09 07:22:15",
+        "Name": "Version 2026-02-09 07:22:15",
+        "Message": "test preserving builders",
+        "CommitDate": "2026-02-09",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-41-26",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-09 07:41:26",
+        "Name": "Version 2026-02-09 07:41:26",
+        "Message": "preserves policies now?",
+        "CommitDate": "2026-02-09",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-46-04",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-09 07:46:04",
+        "Name": "Version 2026-02-09 07:46:04",
+        "Message": "added color to widgets",
+        "CommitDate": "2026-02-09",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      },
+      {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-11-00-40-18",
+        "PK": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-Version 2026-02-11 00:40:18",
+        "Name": "Version 2026-02-11 00:40:18",
+        "Message": "added another b ob.",
+        "CommitDate": "2026-02-11",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Notes": "",
+        "IsPublished": false
+      }
+    ]
+  },
+  "ERBCustomizations": {
+    "Description": "Table: ERBCustomizations",
+    "schema": [
+      {
+        "name": "ERBCustomizationId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Title",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "SQLCode",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "SQLTarget",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "CustomizationType",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      }
+    ],
+    "data": [
+      {
+        "ERBCustomizationId": "03a-customize-schema-sql",
+        "Name": "03a-customize-schema.sql",
+        "Title": "Customize Schema",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE SCHEMA - User-defined tables and schema modifications\n-- ============================================================================\n-- This file is for YOUR custom schema changes that should persist across\n-- regeneration of the base ERB files.\n--\n-- USE THIS FILE FOR:\n--   - Additional tables not defined in the rulebook\n--   - Extra columns on existing tables (ALTER TABLE)\n--   - Custom indexes for performance tuning\n--   - Custom constraints or triggers\n--\n-- IMPORTANT:\n--   - This file runs AFTER 01-drop-and-create-tables.sql\n--   - The base tables already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom schema changes go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Schema"
+      },
+      {
+        "ERBCustomizationId": "03b-customize-functions-sql",
+        "Name": "03b-customize-functions.sql",
+        "Title": "Customize Functions",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE FUNCTIONS - User-defined calculation functions\n-- ============================================================================\n-- This file is for YOUR custom PostgreSQL functions that should persist\n-- across regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 02-create-functions.sql\n--   - Base ERB calc functions already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom functions go here:\nCREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)\n RETURNS numeric\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));\nEND;\n$function$;\n\n\nCREATE OR REPLACE FUNCTION public.calc_sides_length_squared(p_side_id text)\n RETURNS integer\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN ((SELECT length FROM sides WHERE side_id = p_side_id) * (SELECT length FROM sides WHERE side_id = p_side_id));\nEND;\n$function$;\n\nCREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)\n RETURNS numeric\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));\nEND;\n$function$;\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Functions"
+      },
+      {
+        "ERBCustomizationId": "03c-customize-views-sql",
+        "Name": "03c-customize-views.sql",
+        "Title": "Customize Views",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE VIEWS - User-defined views and view extensions\n-- ============================================================================\n-- This file is for YOUR custom views that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 03-create-views.sql\n--   - All base vw_* views already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom views go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Views"
+      },
+      {
+        "ERBCustomizationId": "03d-customize-rls-sql",
+        "Name": "03d-customize-rls.sql",
+        "Title": "Customize Policies (RLS)",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE POLICIES - User-defined Row Level Security policies\n-- ============================================================================\n-- This file is for YOUR custom RLS policies that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 04-create-policies.sql\n--   - Base RLS policies already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom policies go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "RLS"
+      },
+      {
+        "ERBCustomizationId": "03e-customize-data-sql",
+        "Name": "03e-customize-data.sql",
+        "Title": "Customize Data (Seeds / Migrations)",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE DATA - User-defined seed data and data migrations\n-- ============================================================================\n-- This file is for YOUR custom seed data that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 05-insert-data.sql\n--   - Base seed data already exists when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom data inserts go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Data"
+      }
+    ]
+  },
+  "MagicLinkIntegration": {
+    "Description": "Table: MagicLinkIntegration",
+    "schema": [
+      {
+        "name": "MagicLinkIntegrationId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": false
+      },
+      {
+        "name": "Name",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "Enabled",
+        "datatype": "boolean",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "TenantId",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "PublicKeyPem",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "UserTableName",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "EmailField",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "RoleField",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "IsActiveField",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "UserIdField",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "AllowedAlgorithms",
+        "datatype": "string",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "RequireTenantBinding",
+        "datatype": "boolean",
+        "type": "raw",
+        "nullable": true
+      },
+      {
+        "name": "UseEmailDagPattern",
+        "datatype": "boolean",
+        "type": "raw",
+        "nullable": true
+      }
+    ],
+    "data": [
+      {
+        "MagicLinkIntegrationId": "magic-link-config",
+        "Name": "Magic Link Config",
+        "Enabled": true,
+        "TenantId": "c03e9d56-9525-47dd-9ee1-2f2a20383048",
+        "PublicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2XyDcVliu0wjQjDY1Rez\n/krdzYL3v4TXCJbYu2V1EkrKlVjO\u002BZGCIHu0yMAw5A\u002BcUMm5cXtYyIXNln6tCg0M\nLHcNVrSDm5QuQSUuGP/SVrgSUItyrGfLZOwl\u002BkYXgMmle4t11ecVhkaVARisBcRz\nIrh9ofSNtLR6UlJzKH4uFFswId5HrgwMCbart2YcrA7lrEt1hqASZ7pPPX6/i771\n97VqSf\u002BclLX3Wq5VwyrtC9taTiVZrN/OhtWbSAkUX\u002BNMkCc57MN4CcjP3/8JXbjv\n4L5ExZOpc14zRhOnOnC0cHRX475WoJbjI3\u002BEfYDjaNrV6MVd444S/8HOOz3D8Pki\nXwIDAQAB\n-----END PUBLIC KEY-----",
+        "UserTableName": "app_users",
+        "EmailField": "email_address",
+        "RoleField": "role",
+        "IsActiveField": "is_active",
+        "AllowedAlgorithms": "RS256",
+        "RequireTenantBinding": true,
+        "UseEmailDagPattern": true,
+        "UserIdField": ""
       }
     ]
   },
   "_meta": {
     "_CMCC_Summary": "Airtable export with schema-first type mapping: Schemas, Data, Relationships (FK links), Lookups (INDEX/MATCH), Aggregations (SUMIFS/COUNTIFS/Rollups), and Calculated fields (formulas) in Excel dialect. Field types are determined from Airtable\u0027s schema metadata FIRST (no coercion), with intelligent fallback to formula/data analysis only when schema is unavailable.",
     "_conversion_metadata": {
-      "source_base_id": "appWrXPvXbkgQGOxt",
-      "table_count": 1,
+      "source_base_id": "appgL4RGsias8VrLu",
+      "table_count": 7,
       "tool_version": "2.0.0",
       "field_type_mapping": "checkbox\u2192boolean, number\u2192number/integer, multipleRecordLinks\u2192relationship, multipleLookupValues\u2192lookup, rollup\u2192aggregation, count\u2192aggregation, formula\u2192calculated",
       "export_mode": "schema_first_type_mapping",

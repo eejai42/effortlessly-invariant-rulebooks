@@ -67,8 +67,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>OWL/SHACL Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-good">85.6%</span></div>
+            <div class="stat"><span>125/146 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -117,28 +117,31 @@ OWL Execution Substrate - SHACL Reasoning Test
 ======================================================================
 
 Loading rulebook...
-Tables with computed columns: Customers
+Tables with computed columns: Shapes, Sides, Widgets, ERBVersions
 
 Loading ontology and data...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/ontology.owl
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/individuals.ttl
-   Total triples: 53
+   Total triples: 687
 
 Loading SHACL rules...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/rules.shacl.ttl
-   Rule triples: 7
+   Rule triples: 58
 
 Running SHACL-SPARQL reasoning...
    (Multiple passes to resolve dependencies between computed fields)
-   Pass 1: 53 -&gt; 56 triples (3 added)
-   Pass 2: 56 -&gt; 56 triples (0 added)
+   Pass 1: 687 -&gt; 742 triples (55 added)
+   Pass 2: 742 -&gt; 742 triples (0 added)
    Completed in 2 passes
-   Final triple count: 56
+   Final triple count: 742
 
 Extracting computed values...
-   Customers: 3 records (1 computed fields)
+   Shapes: 2 records (9 computed fields)
+   Sides: 7 records (17 computed fields)
+   Widgets: 3 records (3 computed fields)
+   ERBVersions: 15 records (1 computed fields)
 
-Total: 3 records extracted
+Total: 27 records extracted
 Output: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/owl/test-answers/
 
 ======================================================================
@@ -152,10 +155,10 @@ SHACL reasoning complete!
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-good">85.6%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">125</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">21</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">146</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -163,7 +166,7 @@ SHACL reasoning complete!
             <div class="card">
                 <div class="code-header">
                     <h2>ontology.owl</h2>
-                    <div><span class="code-info">51 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
+                    <div><span class="code-info">474 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
                 </div>
                 <pre id="ontology-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
@@ -175,46 +178,469 @@ erb: a owl:Ontology ;
     rdfs:label &quot;ERB Ontology&quot; ;
     rdfs:comment &quot;Generated from effortless-rulebook.json&quot; .
 
-# === Class: Customers ===
-erb:Customers a owl:Class ;
-    rdfs:label &quot;Customers&quot; ;
-    rdfs:comment &quot;Table: Customers&quot; .
+# === Class: AppUsers ===
+erb:AppUsers a owl:Class ;
+    rdfs:label &quot;AppUsers&quot; ;
+    rdfs:comment &quot;Table: AppUsers&quot; .
 
-erb:customerId a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:appUserId a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;CustomerId&quot; .
+    rdfs:label &quot;AppUserId&quot; .
 
-erb:customer a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;Customer&quot; ;
-    rdfs:comment &quot;Identifier for the customers.&quot; .
+    rdfs:label &quot;Name&quot; .
 
 erb:emailAddress a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;EmailAddress&quot; ;
-    rdfs:comment &quot;Thec ustomers email address&quot; .
+    rdfs:label &quot;EmailAddress&quot; .
 
-erb:firstName a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:role a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;FirstName&quot; ;
-    rdfs:comment &quot;First Name of the customer - used to make the full name&quot; .
+    rdfs:label &quot;Role&quot; .
 
-erb:lastName a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
-    rdfs:range xsd:string ;
-    rdfs:label &quot;LastName&quot; ;
-    rdfs:comment &quot;Last Name of the customer - used to make the full name&quot; .
+erb:isActive a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsActive&quot; .
 
-erb:fullName a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:widgets a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label &quot;FullName&quot; ;
-    rdfs:comment &quot;Full name is computed from the first and last name of the customer&quot; .
+    rdfs:label &quot;Widgets&quot; .
+
+erb:notes a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Notes&quot; .
+
+# === Class: ERBCustomizations ===
+erb:ERBCustomizations a owl:Class ;
+    rdfs:label &quot;ERBCustomizations&quot; ;
+    rdfs:comment &quot;Table: ERBCustomizations&quot; .
+
+erb:eRBCustomizationId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ERBCustomizationId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:title a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Title&quot; .
+
+erb:sQLCode a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;SQLCode&quot; .
+
+erb:sQLTarget a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;SQLTarget&quot; .
+
+erb:customizationType a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;CustomizationType&quot; .
+
+# === Class: ERBVersions ===
+erb:ERBVersions a owl:Class ;
+    rdfs:label &quot;ERBVersions&quot; ;
+    rdfs:comment &quot;Table: ERBVersions&quot; .
+
+erb:eRBVersionId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ERBVersionId&quot; .
+
+erb:pK a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;PK&quot; .
     # calculated: calculated
+
+erb:baseId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;BaseId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:message a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Message&quot; .
+
+erb:notes a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Notes&quot; .
+
+erb:commitDate a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;CommitDate&quot; .
+
+erb:isPublished a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsPublished&quot; .
+
+# === Class: MagicLinkIntegration ===
+erb:MagicLinkIntegration a owl:Class ;
+    rdfs:label &quot;MagicLinkIntegration&quot; ;
+    rdfs:comment &quot;Table: MagicLinkIntegration&quot; .
+
+erb:magicLinkIntegrationId a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;MagicLinkIntegrationId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:enabled a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;Enabled&quot; .
+
+erb:tenantId a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;TenantId&quot; .
+
+erb:publicKeyPem a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;PublicKeyPem&quot; .
+
+erb:userTableName a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;UserTableName&quot; .
+
+erb:emailField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;EmailField&quot; .
+
+erb:roleField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;RoleField&quot; .
+
+erb:isActiveField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;IsActiveField&quot; .
+
+erb:userIdField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;UserIdField&quot; .
+
+erb:allowedAlgorithms a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;AllowedAlgorithms&quot; .
+
+erb:requireTenantBinding a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;RequireTenantBinding&quot; .
+
+erb:useEmailDagPattern a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;UseEmailDagPattern&quot; .
+
+# === Class: Shapes ===
+erb:Shapes a owl:Class ;
+    rdfs:label &quot;Shapes&quot; ;
+    rdfs:comment &quot;Table: Shapes&quot; .
+
+erb:shapeId a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ShapeId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:sides a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Sides&quot; .
+
+erb:howManySides a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;HowManySides&quot; .
+    # calculated: aggregation
+
+erb:isRectangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsRectangle&quot; .
+    # calculated: calculated
+
+erb:isTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsTriangle&quot; .
+    # calculated: calculated
+
+erb:isRightTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsRightTriangle&quot; .
+    # calculated: calculated
+
+erb:sumOfInternalAngles a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;SumOfInternalAngles&quot; .
+    # calculated: aggregation
+
+erb:maxAngle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;MaxAngle&quot; .
+    # calculated: aggregation
+
+erb:hypotenuseLengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;HypotenuseLengthSquared&quot; .
+    # calculated: aggregation
+
+erb:nonHypotenuseSidesSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;NonHypotenuseSidesSquared&quot; .
+    # calculated: aggregation
+
+erb:pythagoreanTheoremHolds a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;PythagoreanTheoremHolds&quot; .
+    # calculated: calculated
+
+# === Class: Sides ===
+erb:Sides a owl:Class ;
+    rdfs:label &quot;Sides&quot; ;
+    rdfs:comment &quot;Table: Sides&quot; .
+
+erb:sideId a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;SideId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+    # calculated: calculated
+
+erb:shapeSides a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;ShapeSides&quot; .
+    # calculated: lookup
+
+erb:label a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Label&quot; ;
+    rdfs:comment &quot;Label for this edge&quot; .
+
+erb:isRectangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsRectangle&quot; .
+    # calculated: lookup
+
+erb:isTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsTriangle&quot; .
+    # calculated: lookup
+
+erb:isRightTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsRightTriangle&quot; ;
+    rdfs:comment &quot;Is this the Hypotenuse of a Right Angle Triangle?&quot; .
+    # calculated: lookup
+
+erb:isHypotenuse a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsHypotenuse&quot; ;
+    rdfs:comment &quot;Is this the Hypotenuse of a Right Angle Triangle?&quot; .
+    # calculated: calculated
+
+erb:statusOfTheorem a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;StatusOfTheorem&quot; ;
+    rdfs:comment &quot;Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.&quot; .
+    # calculated: calculated
+
+erb:pythagoreanTheoremHolds a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;PythagoreanTheoremHolds&quot; ;
+    rdfs:comment &quot;Does the Pythagorean Theorem Hold?&quot; .
+    # calculated: lookup
+
+erb:lengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;LengthSquared&quot; .
+    # calculated: calculated
+
+erb:hypotenuseLengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;HypotenuseLengthSquared&quot; .
+    # calculated: calculated
+
+erb:nonHypotenuseLengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;NonHypotenuseLengthSquared&quot; .
+    # calculated: calculated
+
+erb:previousSideLength a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;PreviousSideLength&quot; ;
+    rdfs:comment &quot;Previous Edge Length&quot; .
+    # calculated: lookup
+
+erb:length a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;Length&quot; ;
+    rdfs:comment &quot;Length&quot; .
+
+erb:nextLength a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;NextLength&quot; ;
+    rdfs:comment &quot;Next Edge Length&quot; .
+    # calculated: lookup
+
+erb:previousAngle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;PreviousAngle&quot; ;
+    rdfs:comment &quot;Previous Angle&quot; .
+    # calculated: lookup
+
+erb:angle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;Angle&quot; ;
+    rdfs:comment &quot;Internal angles for the shapes&quot; .
+
+erb:nextAngle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;NextAngle&quot; ;
+    rdfs:comment &quot;Next Angle&quot; .
+    # calculated: lookup
+
+erb:previousSide a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;PreviousSide&quot; ;
+    rdfs:comment &quot;Previous Edge&quot; .
+
+erb:nextSide a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;NextSide&quot; ;
+    rdfs:comment &quot;Next Edge&quot; .
+
+erb:shape a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Shape&quot; ;
+    rdfs:comment &quot;Shape&quot; .
+
+erb:previousLabel a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;PreviousLabel&quot; .
+    # calculated: lookup
+
+erb:nextLabel a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;NextLabel&quot; .
+    # calculated: lookup
+
+# === Class: Widgets ===
+erb:Widgets a owl:Class ;
+    rdfs:label &quot;Widgets&quot; ;
+    rdfs:comment &quot;Table: Widgets&quot; .
+
+erb:widgetId a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;WidgetId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Appuser&quot; .
+
+erb:name_from_Appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name_from_Appuser&quot; .
+    # calculated: lookup
+
+erb:emailAddress_from_Appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;EmailAddress_from_Appuser&quot; .
+    # calculated: lookup
+
+erb:role_from_Appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Role_from_Appuser&quot; .
+    # calculated: lookup
+
+erb:color a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Color&quot; .
 </pre>
             </div>
         </div>
@@ -222,35 +648,553 @@ erb:fullName a owl:DatatypeProperty ;
             <div class="card">
                 <div class="code-header">
                     <h2>individuals.ttl</h2>
-                    <div><span class="code-info">28 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
+                    <div><span class="code-info">546 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
                 </div>
                 <pre id="individuals-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix erb: &lt;http://example.org/erb#&gt; .
 
-# === Individuals: Customers ===
+# === Individuals: AppUsers ===
 
-erb:Customers_0 a erb:Customers ;
-    erb:customerId &quot;cust0001&quot; ;
-    erb:customer &quot;CUST0001&quot; ;
-    erb:emailAddress &quot;jane.smith@email.com&quot; ;
-    erb:firstName &quot;Jannice&quot; ;
-    erb:lastName &quot;Smith&quot; .
+erb:AppUsers_0 a erb:AppUsers ;
+    erb:appUserId &quot;ej&quot; ;
+    erb:name &quot;EJ&quot; ;
+    erb:emailAddress &quot;ej@ssot.me&quot; ;
+    erb:role &quot;Admin&quot; ;
+    erb:isActive true ;
+    erb:widgets &quot;&quot; ;
+    erb:notes &quot;&quot; .
 
-erb:Customers_1 a erb:Customers ;
-    erb:customerId &quot;cust0002&quot; ;
-    erb:customer &quot;CUST0002&quot; ;
-    erb:emailAddress &quot;john.doe@email.com&quot; ;
-    erb:firstName &quot;John&quot; ;
-    erb:lastName &quot;Doe&quot; .
+erb:AppUsers_1 a erb:AppUsers ;
+    erb:appUserId &quot;bob&quot; ;
+    erb:name &quot;Bob&quot; ;
+    erb:emailAddress &quot;bob@ssot.me&quot; ;
+    erb:role &quot;Mathemetician&quot; ;
+    erb:isActive true ;
+    erb:widgets &quot;widget1, widget2&quot; ;
+    erb:notes &quot;&quot; .
 
-erb:Customers_2 a erb:Customers ;
-    erb:customerId &quot;cust0003&quot; ;
-    erb:customer &quot;CUST0003&quot; ;
-    erb:emailAddress &quot;emily.jones@email.com&quot; ;
-    erb:firstName &quot;Emily&quot; ;
-    erb:lastName &quot;Jones&quot; .
+erb:AppUsers_2 a erb:AppUsers ;
+    erb:appUserId &quot;andy&quot; ;
+    erb:name &quot;Andy&quot; ;
+    erb:emailAddress &quot;guest@ssot.me&quot; ;
+    erb:role &quot;Guest&quot; ;
+    erb:isActive true ;
+    erb:widgets &quot;widget3&quot; ;
+    erb:notes &quot;&quot; .
+
+erb:AppUsers_3 a erb:AppUsers ;
+    erb:appUserId &quot;bob2&quot; ;
+    erb:name &quot;Bob2&quot; ;
+    erb:emailAddress &quot;bob@ssot.me&quot; ;
+    erb:role &quot;&quot; ;
+    erb:isActive false ;
+    erb:widgets &quot;&quot; ;
+    erb:notes &quot;&quot; .
+
+# === Individuals: ERBCustomizations ===
+
+erb:ERBCustomizations_0 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;03a-customize-schema-sql&quot; ;
+    erb:name &quot;03a-customize-schema.sql&quot; ;
+    erb:title &quot;Customize Schema&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE SCHEMA - User-defined tables and schema modifications
+-- ============================================================================
+-- This file is for YOUR custom schema changes that should persist across
+-- regeneration of the base ERB files.
+--
+-- USE THIS FILE FOR:
+--   - Additional tables not defined in the rulebook
+--   - Extra columns on existing tables (ALTER TABLE)
+--   - Custom indexes for performance tuning
+--   - Custom constraints or triggers
+--
+-- IMPORTANT:
+--   - This file runs AFTER 01-drop-and-create-tables.sql
+--   - The base tables already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom schema changes go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Schema&quot; .
+
+erb:ERBCustomizations_1 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;03b-customize-functions-sql&quot; ;
+    erb:name &quot;03b-customize-functions.sql&quot; ;
+    erb:title &quot;Customize Functions&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE FUNCTIONS - User-defined calculation functions
+-- ============================================================================
+-- This file is for YOUR custom PostgreSQL functions that should persist
+-- across regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 02-create-functions.sql
+--   - Base ERB calc functions already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom functions go here:
+CREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)
+ RETURNS numeric
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$function$;
+
+
+CREATE OR REPLACE FUNCTION public.calc_sides_length_squared(p_side_id text)
+ RETURNS integer
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN ((SELECT length FROM sides WHERE side_id = p_side_id) * (SELECT length FROM sides WHERE side_id = p_side_id));
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)
+ RETURNS numeric
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$function$;
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Functions&quot; .
+
+erb:ERBCustomizations_2 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;03c-customize-views-sql&quot; ;
+    erb:name &quot;03c-customize-views.sql&quot; ;
+    erb:title &quot;Customize Views&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE VIEWS - User-defined views and view extensions
+-- ============================================================================
+-- This file is for YOUR custom views that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 03-create-views.sql
+--   - All base vw_* views already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom views go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Views&quot; .
+
+erb:ERBCustomizations_3 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;03d-customize-rls-sql&quot; ;
+    erb:name &quot;03d-customize-rls.sql&quot; ;
+    erb:title &quot;Customize Policies (RLS)&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE POLICIES - User-defined Row Level Security policies
+-- ============================================================================
+-- This file is for YOUR custom RLS policies that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 04-create-policies.sql
+--   - Base RLS policies already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom policies go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;RLS&quot; .
+
+erb:ERBCustomizations_4 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;03e-customize-data-sql&quot; ;
+    erb:name &quot;03e-customize-data.sql&quot; ;
+    erb:title &quot;Customize Data (Seeds / Migrations)&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE DATA - User-defined seed data and data migrations
+-- ============================================================================
+-- This file is for YOUR custom seed data that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 05-insert-data.sql
+--   - Base seed data already exists when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom data inserts go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Data&quot; .
+
+# === Individuals: ERBVersions ===
+
+erb:ERBVersions_0 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-06-22-18-34&quot; ;
+    erb:baseId &quot;b0e261e6-9ded-4ed0-817a-12a82a538201&quot; ;
+    erb:name &quot;Version 2026-02-06 22:18:34&quot; ;
+    erb:message &quot;fixed custom RLS policies.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-06&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_1 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-50-20&quot; ;
+    erb:baseId &quot;b0e261e6-9ded-4ed0-817a-12a82a538201&quot; ;
+    erb:name &quot;Version 2026-02-07 01:50:20&quot; ;
+    erb:message &quot;Trying to get data in as well.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_2 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-54-24&quot; ;
+    erb:baseId &quot;b0e261e6-9ded-4ed0-817a-12a82a538201&quot; ;
+    erb:name &quot;Version 2026-02-07 01:54:24&quot; ;
+    erb:message &quot;Updated base again.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_3 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-00-40&quot; ;
+    erb:baseId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77&quot; ;
+    erb:name &quot;Version 2026-02-07 02:00:40&quot; ;
+    erb:message &quot;Trying to get data in the db.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_4 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-18-06&quot; ;
+    erb:baseId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77&quot; ;
+    erb:name &quot;Version 2026-02-07 02:18:06&quot; ;
+    erb:message &quot;Added app users.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_5 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-27-57&quot; ;
+    erb:baseId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77&quot; ;
+    erb:name &quot;Version 2026-02-07 02:27:57&quot; ;
+    erb:message &quot;Added AppUsers.IsActive&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_6 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-46-12&quot; ;
+    erb:baseId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77&quot; ;
+    erb:name &quot;Version 2026-02-07 22:46:12&quot; ;
+    erb:message &quot;trying new admin/anon users.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_7 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-47-11&quot; ;
+    erb:baseId &quot;e7b6e278-92b8-4a76-a3bf-d2b1183d1c77&quot; ;
+    erb:name &quot;Version 2026-02-07 22:47:11&quot; ;
+    erb:message &quot;added admin/anon users.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-07&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_8 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-08-03-55-18&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-08 03:55:18&quot; ;
+    erb:message &quot;fixing auth&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-08&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_9 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-07-44&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-09 06:07:44&quot; ;
+    erb:message &quot;temp 4&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-09&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_10 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-14-38&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-09 06:14:38&quot; ;
+    erb:message &quot;added ownership records to widgets&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-09&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_11 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-22-15&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-09 07:22:15&quot; ;
+    erb:message &quot;test preserving builders&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-09&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_12 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-41-26&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-09 07:41:26&quot; ;
+    erb:message &quot;preserves policies now?&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-09&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_13 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-46-04&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-09 07:46:04&quot; ;
+    erb:message &quot;added color to widgets&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-09&quot; ;
+    erb:isPublished false .
+
+erb:ERBVersions_14 a erb:ERBVersions ;
+    erb:eRBVersionId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-11-00-40-18&quot; ;
+    erb:baseId &quot;f4cefffd-29c7-4dc6-8b5b-2142c62a475c&quot; ;
+    erb:name &quot;Version 2026-02-11 00:40:18&quot; ;
+    erb:message &quot;added another b ob.&quot; ;
+    erb:notes &quot;&quot; ;
+    erb:commitDate &quot;2026-02-11&quot; ;
+    erb:isPublished false .
+
+# === Individuals: MagicLinkIntegration ===
+
+erb:MagicLinkIntegration_0 a erb:MagicLinkIntegration ;
+    erb:magicLinkIntegrationId &quot;magic-link-config&quot; ;
+    erb:name &quot;Magic Link Config&quot; ;
+    erb:enabled true ;
+    erb:tenantId &quot;c03e9d56-9525-47dd-9ee1-2f2a20383048&quot; ;
+    erb:publicKeyPem &quot;&quot;&quot;-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2XyDcVliu0wjQjDY1Rez
+/krdzYL3v4TXCJbYu2V1EkrKlVjO+ZGCIHu0yMAw5A+cUMm5cXtYyIXNln6tCg0M
+LHcNVrSDm5QuQSUuGP/SVrgSUItyrGfLZOwl+kYXgMmle4t11ecVhkaVARisBcRz
+Irh9ofSNtLR6UlJzKH4uFFswId5HrgwMCbart2YcrA7lrEt1hqASZ7pPPX6/i771
+97VqSf+clLX3Wq5VwyrtC9taTiVZrN/OhtWbSAkUX+NMkCc57MN4CcjP3/8JXbjv
+4L5ExZOpc14zRhOnOnC0cHRX475WoJbjI3+EfYDjaNrV6MVd444S/8HOOz3D8Pki
+XwIDAQAB
+-----END PUBLIC KEY-----&quot;&quot;&quot; ;
+    erb:userTableName &quot;app_users&quot; ;
+    erb:emailField &quot;email_address&quot; ;
+    erb:roleField &quot;role&quot; ;
+    erb:isActiveField &quot;is_active&quot; ;
+    erb:userIdField &quot;&quot; ;
+    erb:allowedAlgorithms &quot;RS256&quot; ;
+    erb:requireTenantBinding true ;
+    erb:useEmailDagPattern true .
+
+# === Individuals: Shapes ===
+
+erb:Shapes_0 a erb:Shapes ;
+    erb:shapeId &quot;shape1&quot; ;
+    erb:name &quot;Shape1&quot; ;
+    erb:sides &quot;shape1-side-a, shape1-side-b, shape1-side-c&quot; ;
+    erb:howManySides 3 ;
+    erb:sumOfInternalAngles &quot;180&quot; ;
+    erb:maxAngle &quot;90&quot; ;
+    erb:hypotenuseLengthSquared &quot;25&quot; ;
+    erb:nonHypotenuseSidesSquared &quot;25&quot; .
+
+erb:Shapes_1 a erb:Shapes ;
+    erb:shapeId &quot;shape2&quot; ;
+    erb:name &quot;Shape2&quot; ;
+    erb:sides &quot;shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d&quot; ;
+    erb:howManySides 4 ;
+    erb:sumOfInternalAngles &quot;360&quot; ;
+    erb:maxAngle &quot;90&quot; ;
+    erb:hypotenuseLengthSquared &quot;0&quot; ;
+    erb:nonHypotenuseSidesSquared &quot;0&quot; .
+
+# === Individuals: Sides ===
+
+erb:Sides_0 a erb:Sides ;
+    erb:sideId &quot;shape1-side-a&quot; ;
+    erb:shapeSides 3 ;
+    erb:label &quot;A&quot; ;
+    erb:isRectangle false ;
+    erb:isTriangle true ;
+    erb:isRightTriangle true ;
+    erb:pythagoreanTheoremHolds true ;
+    erb:previousSideLength 3 ;
+    erb:length 5 ;
+    erb:nextLength 4 ;
+    erb:previousAngle 90 ;
+    erb:angle 45 ;
+    erb:nextAngle 45 ;
+    erb:previousSide &quot;shape1-side-c&quot; ;
+    erb:nextSide &quot;shape1-side-b&quot; ;
+    erb:shape &quot;shape1&quot; ;
+    erb:previousLabel &quot;C&quot; ;
+    erb:nextLabel &quot;B&quot; .
+
+erb:Sides_1 a erb:Sides ;
+    erb:sideId &quot;shape1-side-b&quot; ;
+    erb:shapeSides 3 ;
+    erb:label &quot;B&quot; ;
+    erb:isRectangle false ;
+    erb:isTriangle true ;
+    erb:isRightTriangle true ;
+    erb:pythagoreanTheoremHolds true ;
+    erb:previousSideLength 5 ;
+    erb:length 4 ;
+    erb:nextLength 3 ;
+    erb:previousAngle 45 ;
+    erb:angle 45 ;
+    erb:nextAngle 90 ;
+    erb:previousSide &quot;shape1-side-a&quot; ;
+    erb:nextSide &quot;shape1-side-c&quot; ;
+    erb:shape &quot;shape1&quot; ;
+    erb:previousLabel &quot;A&quot; ;
+    erb:nextLabel &quot;C&quot; .
+
+erb:Sides_2 a erb:Sides ;
+    erb:sideId &quot;shape1-side-c&quot; ;
+    erb:shapeSides 3 ;
+    erb:label &quot;C&quot; ;
+    erb:isRectangle false ;
+    erb:isTriangle true ;
+    erb:isRightTriangle true ;
+    erb:pythagoreanTheoremHolds true ;
+    erb:previousSideLength 4 ;
+    erb:length 3 ;
+    erb:nextLength 5 ;
+    erb:previousAngle 45 ;
+    erb:angle 90 ;
+    erb:nextAngle 45 ;
+    erb:previousSide &quot;shape1-side-b&quot; ;
+    erb:nextSide &quot;shape1-side-a&quot; ;
+    erb:shape &quot;shape1&quot; ;
+    erb:previousLabel &quot;B&quot; ;
+    erb:nextLabel &quot;A&quot; .
+
+erb:Sides_3 a erb:Sides ;
+    erb:sideId &quot;shape2-side-a&quot; ;
+    erb:shapeSides 4 ;
+    erb:label &quot;A&quot; ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide &quot;shape2-side-d&quot; ;
+    erb:nextSide &quot;shape2-side-b&quot; ;
+    erb:shape &quot;shape2&quot; ;
+    erb:previousLabel &quot;D&quot; ;
+    erb:nextLabel &quot;B&quot; .
+
+erb:Sides_4 a erb:Sides ;
+    erb:sideId &quot;shape2-side-b&quot; ;
+    erb:shapeSides 4 ;
+    erb:label &quot;B&quot; ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide &quot;shape2-side-a&quot; ;
+    erb:nextSide &quot;shape2-side-c&quot; ;
+    erb:shape &quot;shape2&quot; ;
+    erb:previousLabel &quot;A&quot; ;
+    erb:nextLabel &quot;C&quot; .
+
+erb:Sides_5 a erb:Sides ;
+    erb:sideId &quot;shape2-side-c&quot; ;
+    erb:shapeSides 4 ;
+    erb:label &quot;C&quot; ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide &quot;shape2-side-b&quot; ;
+    erb:nextSide &quot;shape2-side-d&quot; ;
+    erb:shape &quot;shape2&quot; ;
+    erb:previousLabel &quot;B&quot; ;
+    erb:nextLabel &quot;D&quot; .
+
+erb:Sides_6 a erb:Sides ;
+    erb:sideId &quot;shape2-side-d&quot; ;
+    erb:shapeSides 4 ;
+    erb:label &quot;D&quot; ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide &quot;shape2-side-c&quot; ;
+    erb:nextSide &quot;shape2-side-a&quot; ;
+    erb:shape &quot;shape2&quot; ;
+    erb:previousLabel &quot;C&quot; ;
+    erb:nextLabel &quot;A&quot; .
+
+# === Individuals: Widgets ===
+
+erb:Widgets_0 a erb:Widgets ;
+    erb:widgetId &quot;widget1&quot; ;
+    erb:name &quot;widget1&quot; ;
+    erb:appuser &quot;bob&quot; ;
+    erb:name_from_Appuser &quot;Bob&quot; ;
+    erb:emailAddress_from_Appuser &quot;bob@ssot.me&quot; ;
+    erb:role_from_Appuser &quot;Mathemetician&quot; ;
+    erb:color &quot;Blue&quot; .
+
+erb:Widgets_1 a erb:Widgets ;
+    erb:widgetId &quot;widget2&quot; ;
+    erb:name &quot;widget2&quot; ;
+    erb:appuser &quot;bob&quot; ;
+    erb:name_from_Appuser &quot;Bob&quot; ;
+    erb:emailAddress_from_Appuser &quot;bob@ssot.me&quot; ;
+    erb:role_from_Appuser &quot;Mathemetician&quot; ;
+    erb:color &quot;pink&quot; .
+
+erb:Widgets_2 a erb:Widgets ;
+    erb:widgetId &quot;widget3&quot; ;
+    erb:name &quot;widget3&quot; ;
+    erb:appuser &quot;andy&quot; ;
+    erb:name_from_Appuser &quot;Andy&quot; ;
+    erb:emailAddress_from_Appuser &quot;guest@ssot.me&quot; ;
+    erb:role_from_Appuser &quot;Guest&quot; ;
+    erb:color &quot;&quot; .
 </pre>
             </div>
         </div>
@@ -258,7 +1202,7 @@ erb:Customers_2 a erb:Customers ;
             <div class="card">
                 <div class="code-header">
                     <h2>rules.shacl.ttl</h2>
-                    <div><span class="code-info">29 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
+                    <div><span class="code-info">227 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
                 </div>
                 <pre id="rules-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
@@ -266,29 +1210,227 @@ erb:Customers_2 a erb:Customers ;
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix erb: &lt;http://example.org/erb#&gt; .
 
-# === Shape with rules for Customers ===
-erb:CustomersShape a sh:NodeShape ;
-    sh:targetClass erb:Customers ;
+# === Shape with rules for ERBVersions ===
+erb:ERBVersionsShape a sh:NodeShape ;
+    sh:targetClass erb:ERBVersions ;
     sh:rule [
         a sh:SPARQLRule ;
-        rdfs:label &quot;rule_Customers_FullName&quot; ;
+        rdfs:label &quot;rule_ERBVersions_PK&quot; ;
         sh:prefixes erb: ;
         sh:construct &quot;&quot;&quot;
             PREFIX erb: &lt;http://example.org/erb#&gt;
             PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
             CONSTRUCT {
-                $this erb:fullName ?_result .
+                $this erb:pK ?_result .
             }
             WHERE {
-    $this a erb:Customers .
-    OPTIONAL { $this erb:firstName ?first_name . }
-    OPTIONAL { $this erb:lastName ?last_name . }
-                BIND(CONCAT(?first_name, &quot; &quot;, ?last_name) AS ?_result)
+    $this a erb:ERBVersions .
+    OPTIONAL { $this erb:baseId ?base_id . }
+    OPTIONAL { $this erb:name ?name . }
+                BIND(CONCAT(?base_id, &quot;-&quot;, ?name) AS ?_result)
             }
         &quot;&quot;&quot; ;
     ] .
 
-# Generated 1 SHACL rules</pre>
+# === Shape with rules for Shapes ===
+erb:ShapesShape a sh:NodeShape ;
+    sh:targetClass erb:Shapes ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Shapes_IsRectangle&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:isRectangle ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:howManySides ?how_many_sides . }
+                BIND(((?how_many_sides = 4)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Shapes_IsTriangle&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:isTriangle ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:howManySides ?how_many_sides . }
+    OPTIONAL { $this erb:sumOfInternalAngles ?sum_of_internal_angles . }
+                BIND(((?sum_of_internal_angles = 180) &amp;&amp; (?how_many_sides = 3)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Shapes_IsRightTriangle&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:isRightTriangle ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:maxAngle ?max_angle . }
+                BIND((?is_triangle &amp;&amp; (?max_angle = 90)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Shapes_PythagoreanTheoremHolds&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:pythagoreanTheoremHolds ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:hypotenuseLengthSquared ?hypotenuse_length_squared . }
+    OPTIONAL { $this erb:isRightTriangle ?is_right_triangle . }
+    OPTIONAL { $this erb:nonHypotenuseSidesSquared ?non_hypotenuse_sides_squared . }
+                BIND((?is_right_triangle &amp;&amp; (?hypotenuse_length_squared = ?non_hypotenuse_sides_squared)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] .
+# Rule for HowManySides - parse error: Unexpected character &#x27;!&#x27; at position 14
+# Rule for SumOfInternalAngles - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for MaxAngle - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for HypotenuseLengthSquared - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for NonHypotenuseSidesSquared - parse error: Unexpected character &#x27;!&#x27; at position 12
+
+# === Shape with rules for Sides ===
+erb:SidesShape a sh:NodeShape ;
+    sh:targetClass erb:Sides ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Sides_Name&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:name ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:label ?label . }
+    OPTIONAL { $this erb:shape ?shape . }
+                BIND(CONCAT(?shape, &quot;-Side-&quot;, ?label) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Sides_IsHypotenuse&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:isHypotenuse ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:length ?length . }
+    OPTIONAL { $this erb:nextLength ?next_length . }
+    OPTIONAL { $this erb:previousSideLength ?previous_side_length . }
+                BIND((?is_triangle &amp;&amp; (?length &gt; ?previous_side_length) &amp;&amp; (?length &gt; ?next_length)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Sides_StatusOfTheorem&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:statusOfTheorem ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isRightTriangle ?is_right_triangle . }
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:pythagoreanTheoremHolds ?pythagorean_theorem_holds . }
+                BIND(IF(?is_triangle, IF((?is_right_triangle &amp;&amp; (!(?pythagorean_theorem_holds))), &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot;, &quot;Pythagorean Theorem Holds (obviously).&quot;), &quot;NA&quot;) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Sides_HypotenuseLengthSquared&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:hypotenuseLengthSquared ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isHypotenuse ?is_hypotenuse . }
+    OPTIONAL { $this erb:lengthSquared ?length_squared . }
+                BIND(IF(?is_hypotenuse, ?length_squared, &quot;&quot;) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_Sides_NonHypotenuseLengthSquared&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:nonHypotenuseLengthSquared ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isHypotenuse ?is_hypotenuse . }
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:lengthSquared ?length_squared . }
+                BIND(IF(((!(?is_hypotenuse)) &amp;&amp; ?is_triangle), ?length_squared, &quot;&quot;) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] .
+# Rule for ShapeSides - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for IsRectangle - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for IsTriangle - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for IsRightTriangle - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for PythagoreanTheoremHolds - parse error: Unexpected character &#x27;!&#x27; at position 12
+# Rule for LengthSquared - parse error: Unexpected character &#x27;*&#x27; at position 11
+# Rule for PreviousSideLength - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for NextLength - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for PreviousAngle - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for NextAngle - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for PreviousLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
+# Rule for NextLabel - parse error: Unexpected character &#x27;!&#x27; at position 11
+
+# === Shape with rules for Widgets ===
+erb:WidgetsShape a sh:NodeShape ;
+    sh:targetClass erb:Widgets .
+# Rule for Name_from_Appuser - parse error: Unexpected character &#x27;!&#x27; at position 14
+# Rule for EmailAddress_from_Appuser - parse error: Unexpected character &#x27;!&#x27; at position 14
+# Rule for Role_from_Appuser - parse error: Unexpected character &#x27;!&#x27; at position 14
+
+# Generated 10 SHACL rules</pre>
             </div>
         </div>
     </main>

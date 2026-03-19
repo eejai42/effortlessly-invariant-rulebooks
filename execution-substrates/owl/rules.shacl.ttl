@@ -4,26 +4,224 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Shape with rules for Customers ===
-erb:CustomersShape a sh:NodeShape ;
-    sh:targetClass erb:Customers ;
+# === Shape with rules for ERBVersions ===
+erb:ERBVersionsShape a sh:NodeShape ;
+    sh:targetClass erb:ERBVersions ;
     sh:rule [
         a sh:SPARQLRule ;
-        rdfs:label "rule_Customers_FullName" ;
+        rdfs:label "rule_ERBVersions_PK" ;
         sh:prefixes erb: ;
         sh:construct """
             PREFIX erb: <http://example.org/erb#>
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
             CONSTRUCT {
-                $this erb:fullName ?_result .
+                $this erb:pK ?_result .
             }
             WHERE {
-    $this a erb:Customers .
-    OPTIONAL { $this erb:firstName ?first_name . }
-    OPTIONAL { $this erb:lastName ?last_name . }
-                BIND(CONCAT(?first_name, " ", ?last_name) AS ?_result)
+    $this a erb:ERBVersions .
+    OPTIONAL { $this erb:baseId ?base_id . }
+    OPTIONAL { $this erb:name ?name . }
+                BIND(CONCAT(?base_id, "-", ?name) AS ?_result)
             }
         """ ;
     ] .
 
-# Generated 1 SHACL rules
+# === Shape with rules for Shapes ===
+erb:ShapesShape a sh:NodeShape ;
+    sh:targetClass erb:Shapes ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Shapes_IsRectangle" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:isRectangle ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:howManySides ?how_many_sides . }
+                BIND(((?how_many_sides = 4)) AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Shapes_IsTriangle" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:isTriangle ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:howManySides ?how_many_sides . }
+    OPTIONAL { $this erb:sumOfInternalAngles ?sum_of_internal_angles . }
+                BIND(((?sum_of_internal_angles = 180) && (?how_many_sides = 3)) AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Shapes_IsRightTriangle" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:isRightTriangle ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:maxAngle ?max_angle . }
+                BIND((?is_triangle && (?max_angle = 90)) AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Shapes_PythagoreanTheoremHolds" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:pythagoreanTheoremHolds ?_result .
+            }
+            WHERE {
+    $this a erb:Shapes .
+    OPTIONAL { $this erb:hypotenuseLengthSquared ?hypotenuse_length_squared . }
+    OPTIONAL { $this erb:isRightTriangle ?is_right_triangle . }
+    OPTIONAL { $this erb:nonHypotenuseSidesSquared ?non_hypotenuse_sides_squared . }
+                BIND((?is_right_triangle && (?hypotenuse_length_squared = ?non_hypotenuse_sides_squared)) AS ?_result)
+            }
+        """ ;
+    ] .
+# Rule for HowManySides - parse error: Unexpected character '!' at position 14
+# Rule for SumOfInternalAngles - parse error: Unexpected character '!' at position 12
+# Rule for MaxAngle - parse error: Unexpected character '!' at position 12
+# Rule for HypotenuseLengthSquared - parse error: Unexpected character '!' at position 12
+# Rule for NonHypotenuseSidesSquared - parse error: Unexpected character '!' at position 12
+
+# === Shape with rules for Sides ===
+erb:SidesShape a sh:NodeShape ;
+    sh:targetClass erb:Sides ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Sides_Name" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:name ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:label ?label . }
+    OPTIONAL { $this erb:shape ?shape . }
+                BIND(CONCAT(?shape, "-Side-", ?label) AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Sides_IsHypotenuse" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:isHypotenuse ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:length ?length . }
+    OPTIONAL { $this erb:nextLength ?next_length . }
+    OPTIONAL { $this erb:previousSideLength ?previous_side_length . }
+                BIND((?is_triangle && (?length > ?previous_side_length) && (?length > ?next_length)) AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Sides_StatusOfTheorem" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:statusOfTheorem ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isRightTriangle ?is_right_triangle . }
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:pythagoreanTheoremHolds ?pythagorean_theorem_holds . }
+                BIND(IF(?is_triangle, IF((?is_right_triangle && (!(?pythagorean_theorem_holds))), "PYTHAGOREAN THEOREM FALSIFIED!", "Pythagorean Theorem Holds (obviously)."), "NA") AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Sides_HypotenuseLengthSquared" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:hypotenuseLengthSquared ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isHypotenuse ?is_hypotenuse . }
+    OPTIONAL { $this erb:lengthSquared ?length_squared . }
+                BIND(IF(?is_hypotenuse, ?length_squared, "") AS ?_result)
+            }
+        """ ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label "rule_Sides_NonHypotenuseLengthSquared" ;
+        sh:prefixes erb: ;
+        sh:construct """
+            PREFIX erb: <http://example.org/erb#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            CONSTRUCT {
+                $this erb:nonHypotenuseLengthSquared ?_result .
+            }
+            WHERE {
+    $this a erb:Sides .
+    OPTIONAL { $this erb:isHypotenuse ?is_hypotenuse . }
+    OPTIONAL { $this erb:isTriangle ?is_triangle . }
+    OPTIONAL { $this erb:lengthSquared ?length_squared . }
+                BIND(IF(((!(?is_hypotenuse)) && ?is_triangle), ?length_squared, "") AS ?_result)
+            }
+        """ ;
+    ] .
+# Rule for ShapeSides - parse error: Unexpected character '!' at position 12
+# Rule for IsRectangle - parse error: Unexpected character '!' at position 12
+# Rule for IsTriangle - parse error: Unexpected character '!' at position 12
+# Rule for IsRightTriangle - parse error: Unexpected character '!' at position 12
+# Rule for PythagoreanTheoremHolds - parse error: Unexpected character '!' at position 12
+# Rule for LengthSquared - parse error: Unexpected character '*' at position 11
+# Rule for PreviousSideLength - parse error: Unexpected character '!' at position 11
+# Rule for NextLength - parse error: Unexpected character '!' at position 11
+# Rule for PreviousAngle - parse error: Unexpected character '!' at position 11
+# Rule for NextAngle - parse error: Unexpected character '!' at position 11
+# Rule for PreviousLabel - parse error: Unexpected character '!' at position 11
+# Rule for NextLabel - parse error: Unexpected character '!' at position 11
+
+# === Shape with rules for Widgets ===
+erb:WidgetsShape a sh:NodeShape ;
+    sh:targetClass erb:Widgets .
+# Rule for Name_from_Appuser - parse error: Unexpected character '!' at position 14
+# Rule for EmailAddress_from_Appuser - parse error: Unexpected character '!' at position 14
+# Rule for Role_from_Appuser - parse error: Unexpected character '!' at position 14
+
+# Generated 10 SHACL rules

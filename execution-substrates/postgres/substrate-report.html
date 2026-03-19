@@ -215,18 +215,34 @@ python3 take-test.py
 
 | Metric | Value |
 |--------|-------|
-| Total Fields Tested | 3 |
-| Passed | 3 |
-| Failed | 0 |
-| Score | 100.0% |
+| Total Fields Tested | 507 |
+| Passed | 504 |
+| Failed | 3 |
+| Score | 99.4% |
 | Duration | 2s |
 
 ## Results by Entity
 
-### customers
+### games
 
-- Fields: 3/3 (100.0%)
-- Computed columns: full_name
+- Fields: 297/297 (100.0%)
+- Computed columns: name, player_name, player_email_address, word_name, category, category_name, level, level_name, level_min_length, level_max_length, level_description
+
+### words
+
+- Fields: 198/198 (100.0%)
+- Computed columns: category_name, category_description, level_name, level_description, level_min_length, level_max_length
+
+### players
+
+- Fields: 9/12 (75.0%)
+- Computed columns: count_of_games_played, has_played_a_lot, can_comment, count_of_wins
+
+| PK | Field | Expected | Actual |
+|-----|-------|----------|--------|
+| p001 | count_of_wins | 0 | 1 |
+| p002 | count_of_wins | 0 | 10 |
+| p003 | count_of_wins | 1 | 16 |
 </pre>
         </div>
     </div>
@@ -240,9 +256,15 @@ postgres: Starting test...
 postgres: Connecting to database and querying views...
 PostgreSQL Substrate: Starting test...
 PostgreSQL Substrate: Connected to database
-PostgreSQL Substrate: Found 1 views
-  -&gt; customers: 3 records
-PostgreSQL Substrate: Processed 1 views, 3 total records
+PostgreSQL Substrate: Found 7 views
+  -&gt; app_users: 4 records
+  -&gt; erb_customizations: 5 records
+  -&gt; erb_versions: 15 records
+  -&gt; magic_link_integration: 1 records
+  -&gt; shapes: 2 records
+  -&gt; sides: 7 records
+  -&gt; widgets: 3 records
+PostgreSQL Substrate: Processed 7 views, 37 total records
 
 </pre>
         </div>

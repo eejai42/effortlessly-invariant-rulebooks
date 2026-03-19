@@ -8,43 +8,466 @@ erb: a owl:Ontology ;
     rdfs:label "ERB Ontology" ;
     rdfs:comment "Generated from effortless-rulebook.json" .
 
-# === Class: Customers ===
-erb:Customers a owl:Class ;
-    rdfs:label "Customers" ;
-    rdfs:comment "Table: Customers" .
+# === Class: AppUsers ===
+erb:AppUsers a owl:Class ;
+    rdfs:label "AppUsers" ;
+    rdfs:comment "Table: AppUsers" .
 
-erb:customerId a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:appUserId a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label "CustomerId" .
+    rdfs:label "AppUserId" .
 
-erb:customer a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label "Customer" ;
-    rdfs:comment "Identifier for the customers." .
+    rdfs:label "Name" .
 
 erb:emailAddress a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label "EmailAddress" ;
-    rdfs:comment "Thec ustomers email address" .
+    rdfs:label "EmailAddress" .
 
-erb:firstName a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:role a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label "FirstName" ;
-    rdfs:comment "First Name of the customer - used to make the full name" .
+    rdfs:label "Role" .
 
-erb:lastName a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
-    rdfs:range xsd:string ;
-    rdfs:label "LastName" ;
-    rdfs:comment "Last Name of the customer - used to make the full name" .
+erb:isActive a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsActive" .
 
-erb:fullName a owl:DatatypeProperty ;
-    rdfs:domain erb:Customers ;
+erb:widgets a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
     rdfs:range xsd:string ;
-    rdfs:label "FullName" ;
-    rdfs:comment "Full name is computed from the first and last name of the customer" .
+    rdfs:label "Widgets" .
+
+erb:notes a owl:DatatypeProperty ;
+    rdfs:domain erb:AppUsers ;
+    rdfs:range xsd:string ;
+    rdfs:label "Notes" .
+
+# === Class: ERBCustomizations ===
+erb:ERBCustomizations a owl:Class ;
+    rdfs:label "ERBCustomizations" ;
+    rdfs:comment "Table: ERBCustomizations" .
+
+erb:eRBCustomizationId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "ERBCustomizationId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:title a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "Title" .
+
+erb:sQLCode a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "SQLCode" .
+
+erb:sQLTarget a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "SQLTarget" .
+
+erb:customizationType a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label "CustomizationType" .
+
+# === Class: ERBVersions ===
+erb:ERBVersions a owl:Class ;
+    rdfs:label "ERBVersions" ;
+    rdfs:comment "Table: ERBVersions" .
+
+erb:eRBVersionId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "ERBVersionId" .
+
+erb:pK a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "PK" .
     # calculated: calculated
+
+erb:baseId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "BaseId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:message a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Message" .
+
+erb:notes a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "Notes" .
+
+erb:commitDate a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:string ;
+    rdfs:label "CommitDate" .
+
+erb:isPublished a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBVersions ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsPublished" .
+
+# === Class: MagicLinkIntegration ===
+erb:MagicLinkIntegration a owl:Class ;
+    rdfs:label "MagicLinkIntegration" ;
+    rdfs:comment "Table: MagicLinkIntegration" .
+
+erb:magicLinkIntegrationId a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "MagicLinkIntegrationId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:enabled a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "Enabled" .
+
+erb:tenantId a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "TenantId" .
+
+erb:publicKeyPem a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "PublicKeyPem" .
+
+erb:userTableName a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "UserTableName" .
+
+erb:emailField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "EmailField" .
+
+erb:roleField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "RoleField" .
+
+erb:isActiveField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "IsActiveField" .
+
+erb:userIdField a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "UserIdField" .
+
+erb:allowedAlgorithms a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:string ;
+    rdfs:label "AllowedAlgorithms" .
+
+erb:requireTenantBinding a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "RequireTenantBinding" .
+
+erb:useEmailDagPattern a owl:DatatypeProperty ;
+    rdfs:domain erb:MagicLinkIntegration ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "UseEmailDagPattern" .
+
+# === Class: Shapes ===
+erb:Shapes a owl:Class ;
+    rdfs:label "Shapes" ;
+    rdfs:comment "Table: Shapes" .
+
+erb:shapeId a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "ShapeId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:sides a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "Sides" .
+
+erb:howManySides a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:integer ;
+    rdfs:label "HowManySides" .
+    # calculated: aggregation
+
+erb:isRectangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsRectangle" .
+    # calculated: calculated
+
+erb:isTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsTriangle" .
+    # calculated: calculated
+
+erb:isRightTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsRightTriangle" .
+    # calculated: calculated
+
+erb:sumOfInternalAngles a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "SumOfInternalAngles" .
+    # calculated: aggregation
+
+erb:maxAngle a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "MaxAngle" .
+    # calculated: aggregation
+
+erb:hypotenuseLengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "HypotenuseLengthSquared" .
+    # calculated: aggregation
+
+erb:nonHypotenuseSidesSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:string ;
+    rdfs:label "NonHypotenuseSidesSquared" .
+    # calculated: aggregation
+
+erb:pythagoreanTheoremHolds a owl:DatatypeProperty ;
+    rdfs:domain erb:Shapes ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "PythagoreanTheoremHolds" .
+    # calculated: calculated
+
+# === Class: Sides ===
+erb:Sides a owl:Class ;
+    rdfs:label "Sides" ;
+    rdfs:comment "Table: Sides" .
+
+erb:sideId a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "SideId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+    # calculated: calculated
+
+erb:shapeSides a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "ShapeSides" .
+    # calculated: lookup
+
+erb:label a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "Label" ;
+    rdfs:comment "Label for this edge" .
+
+erb:isRectangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsRectangle" .
+    # calculated: lookup
+
+erb:isTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsTriangle" .
+    # calculated: lookup
+
+erb:isRightTriangle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsRightTriangle" ;
+    rdfs:comment "Is this the Hypotenuse of a Right Angle Triangle?" .
+    # calculated: lookup
+
+erb:isHypotenuse a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "IsHypotenuse" ;
+    rdfs:comment "Is this the Hypotenuse of a Right Angle Triangle?" .
+    # calculated: calculated
+
+erb:statusOfTheorem a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "StatusOfTheorem" ;
+    rdfs:comment "Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles." .
+    # calculated: calculated
+
+erb:pythagoreanTheoremHolds a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "PythagoreanTheoremHolds" ;
+    rdfs:comment "Does the Pythagorean Theorem Hold?" .
+    # calculated: lookup
+
+erb:lengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "LengthSquared" .
+    # calculated: calculated
+
+erb:hypotenuseLengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "HypotenuseLengthSquared" .
+    # calculated: calculated
+
+erb:nonHypotenuseLengthSquared a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "NonHypotenuseLengthSquared" .
+    # calculated: calculated
+
+erb:previousSideLength a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "PreviousSideLength" ;
+    rdfs:comment "Previous Edge Length" .
+    # calculated: lookup
+
+erb:length a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Length" ;
+    rdfs:comment "Length" .
+
+erb:nextLength a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "NextLength" ;
+    rdfs:comment "Next Edge Length" .
+    # calculated: lookup
+
+erb:previousAngle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "PreviousAngle" ;
+    rdfs:comment "Previous Angle" .
+    # calculated: lookup
+
+erb:angle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "Angle" ;
+    rdfs:comment "Internal angles for the shapes" .
+
+erb:nextAngle a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:integer ;
+    rdfs:label "NextAngle" ;
+    rdfs:comment "Next Angle" .
+    # calculated: lookup
+
+erb:previousSide a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "PreviousSide" ;
+    rdfs:comment "Previous Edge" .
+
+erb:nextSide a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "NextSide" ;
+    rdfs:comment "Next Edge" .
+
+erb:shape a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "Shape" ;
+    rdfs:comment "Shape" .
+
+erb:previousLabel a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "PreviousLabel" .
+    # calculated: lookup
+
+erb:nextLabel a owl:DatatypeProperty ;
+    rdfs:domain erb:Sides ;
+    rdfs:range xsd:string ;
+    rdfs:label "NextLabel" .
+    # calculated: lookup
+
+# === Class: Widgets ===
+erb:Widgets a owl:Class ;
+    rdfs:label "Widgets" ;
+    rdfs:comment "Table: Widgets" .
+
+erb:widgetId a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "WidgetId" .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name" .
+
+erb:appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "Appuser" .
+
+erb:name_from_Appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "Name_from_Appuser" .
+    # calculated: lookup
+
+erb:emailAddress_from_Appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "EmailAddress_from_Appuser" .
+    # calculated: lookup
+
+erb:role_from_Appuser a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "Role_from_Appuser" .
+    # calculated: lookup
+
+erb:color a owl:DatatypeProperty ;
+    rdfs:domain erb:Widgets ;
+    rdfs:range xsd:string ;
+    rdfs:label "Color" .

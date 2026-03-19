@@ -67,8 +67,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>Golang Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-danger">0.0%</span></div>
+            <div class="stat"><span>0/0 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -111,16 +111,18 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
 
 golang: Starting test...
 golang: Compiling and running...
-Golang substrate: Processing 1 tables with calculated fields...
-  Expected tables: Customers
-
-Processing Customers...
-  ✓ customers: 3 records processed
-
-════════════════════════════════════════════════════════════════
-Golang substrate: ALL 1 tables processed successfully (3 total records)
-════════════════════════════════════════════════════════════════
-
+# command-line-arguments
+./erb_sdk.go:141:71: invalid operation: *tc.SumOfInternalAngles == 180 (mismatched types FlexibleString and untyped int)
+./erb_sdk.go:147:75: invalid operation: *tc.MaxAngle == 90 (mismatched types string and untyped int)
+./erb_sdk.go:153:50: cannot use tc.HypotenuseLengthSquared (variable of type *FlexibleString) as *bool value in argument to boolVal
+./erb_sdk.go:153:89: cannot use tc.NonHypotenuseSidesSquared (variable of type *FlexibleString) as *bool value in argument to boolVal
+./erb_sdk.go:162:78: invalid operation: *tc.SumOfInternalAngles == 180 (mismatched types FlexibleString and untyped int)
+./erb_sdk.go:165:75: invalid operation: *tc.MaxAngle == 90 (mismatched types string and untyped int)
+./erb_sdk.go:168:58: cannot use tc.HypotenuseLengthSquared (variable of type *FlexibleString) as *bool value in argument to boolVal
+./erb_sdk.go:168:97: cannot use tc.NonHypotenuseSidesSquared (variable of type *FlexibleString) as *bool value in argument to boolVal
+./erb_sdk.go:232:45: cannot use tc.Length (variable of type *int) as *bool value in argument to boolVal
+./erb_sdk.go:232:66: cannot use tc.PreviousSideLength (variable of type *int) as *bool value in argument to boolVal
+./erb_sdk.go:232:66: too many errors
 </pre>
             </div>
         </div>
@@ -128,10 +130,10 @@ Golang substrate: ALL 1 tables processed successfully (3 total records)
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value score-danger">0.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">0</div><div class="result-label">Passed</div></div>
                     <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -139,7 +141,7 @@ Golang substrate: ALL 1 tables processed successfully (3 total records)
             <div class="card">
                 <div class="code-header">
                     <h2>erb_sdk.go</h2>
-                    <div><span class="code-info">165 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
+                    <div><span class="code-info">529 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
                 </div>
                 <pre id="sdk-code">// ERB SDK - Go Implementation (GENERATED - DO NOT EDIT)
 // ======================================================
@@ -232,59 +234,336 @@ func (f FlexibleString) String() string {
 }
 
 // =============================================================================
-// CUSTOMERS TABLE
-// Table: Customers
+// APPUSERS TABLE
+// Table: AppUsers
 // =============================================================================
 
-// Customer represents a row in the Customers table
-// Table: Customers
-type Customer struct {
-	CustomerId string `json:&quot;customer_id&quot;`
-	Customer *string `json:&quot;customer&quot;` // Identifier for the customers.
-	EmailAddress *string `json:&quot;email_address&quot;` // Thec ustomers email address
-	FirstName *string `json:&quot;first_name&quot;` // First Name of the customer - used to make the full name
-	LastName *string `json:&quot;last_name&quot;` // Last Name of the customer - used to make the full name
-	FullName *string `json:&quot;full_name&quot;` // Full name is computed from the first and last name of the customer
+// AppUser represents a row in the AppUsers table
+// Table: AppUsers
+type AppUser struct {
+	AppUserId string `json:&quot;app_user_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	EmailAddress *string `json:&quot;email_address&quot;`
+	Role *string `json:&quot;role&quot;`
+	IsActive *bool `json:&quot;is_active&quot;`
+	Widgets *string `json:&quot;widgets&quot;`
+	Notes *string `json:&quot;notes&quot;`
+}
+
+// =============================================================================
+// SHAPES TABLE
+// Table: Shapes
+// =============================================================================
+
+// Shape represents a row in the Shapes table
+// Table: Shapes
+type Shape struct {
+	ShapeId string `json:&quot;shape_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	Sides *string `json:&quot;sides&quot;`
+	HowManySides *int `json:&quot;how_many_sides&quot;`
+	SumOfInternalAngles *FlexibleString `json:&quot;sum_of_internal_angles&quot;`
+	MaxAngle *string `json:&quot;max_angle&quot;`
+	HypotenuseLengthSquared *FlexibleString `json:&quot;hypotenuse_length_squared&quot;`
+	NonHypotenuseSidesSquared *FlexibleString `json:&quot;non_hypotenuse_sides_squared&quot;`
+	IsRectangle *bool `json:&quot;is_rectangle&quot;`
+	IsTriangle *bool `json:&quot;is_triangle&quot;`
+	IsRightTriangle *bool `json:&quot;is_right_triangle&quot;`
+	PythagoreanTheoremHolds *bool `json:&quot;pythagorean_theorem_holds&quot;`
 }
 
 // --- Individual Calculation Functions ---
 
-// CalcFullName computes the FullName calculated field
-// Full name is computed from the first and last name of the customer
-// Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
-func (tc *Customer) CalcFullName() string {
-	return stringVal(tc.FirstName) + &quot; &quot; + stringVal(tc.LastName)
+// CalcIsRectangle computes the IsRectangle calculated field
+// Formula: =AND({{HowManySides}}=4)
+func (tc *Shape) CalcIsRectangle() bool {
+	return ((tc.HowManySides != nil &amp;&amp; *tc.HowManySides == 4))
+}
+
+// CalcIsTriangle computes the IsTriangle calculated field
+// Formula: =AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)
+func (tc *Shape) CalcIsTriangle() bool {
+	return ((tc.SumOfInternalAngles != nil &amp;&amp; *tc.SumOfInternalAngles == 180) &amp;&amp; (tc.HowManySides != nil &amp;&amp; *tc.HowManySides == 3))
+}
+
+// CalcIsRightTriangle computes the IsRightTriangle calculated field
+// Formula: =AND({{IsTriangle}}, {{MaxAngle}} = 90)
+func (tc *Shape) CalcIsRightTriangle() bool {
+	return (boolVal(tc.IsTriangle) &amp;&amp; (tc.MaxAngle != nil &amp;&amp; *tc.MaxAngle == 90))
+}
+
+// CalcPythagoreanTheoremHolds computes the PythagoreanTheoremHolds calculated field
+// Formula: =AND(
+   {{IsRightTriangle}},  
+   {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}
+ )
+func (tc *Shape) CalcPythagoreanTheoremHolds() bool {
+	return (boolVal(tc.IsRightTriangle) &amp;&amp; (boolVal(tc.HypotenuseLengthSquared) == boolVal(tc.NonHypotenuseSidesSquared)))
 }
 
 // --- Compute All Calculated Fields ---
 
 // ComputeAll computes all calculated fields and returns an updated struct
-func (tc *Customer) ComputeAll() *Customer {
+func (tc *Shape) ComputeAll() *Shape {
 	// Level 1 calculations
-	fullName := stringVal(tc.FirstName) + &quot; &quot; + stringVal(tc.LastName)
+	isRectangle := ((tc.HowManySides != nil &amp;&amp; *tc.HowManySides == 4))
+	isTriangle := ((tc.SumOfInternalAngles != nil &amp;&amp; *tc.SumOfInternalAngles == 180) &amp;&amp; (tc.HowManySides != nil &amp;&amp; *tc.HowManySides == 3))
 
-	return &amp;Customer{
-		CustomerId: tc.CustomerId,
-		Customer: tc.Customer,
-		EmailAddress: tc.EmailAddress,
-		FirstName: tc.FirstName,
-		LastName: tc.LastName,
-		FullName: nilIfEmpty(fullName),
+	// Level 2 calculations
+	isRightTriangle := (isTriangle &amp;&amp; (tc.MaxAngle != nil &amp;&amp; *tc.MaxAngle == 90))
+
+	// Level 3 calculations
+	pythagoreanTheoremHolds := (isRightTriangle &amp;&amp; (boolVal(tc.HypotenuseLengthSquared) == boolVal(tc.NonHypotenuseSidesSquared)))
+
+	return &amp;Shape{
+		ShapeId: tc.ShapeId,
+		Name: tc.Name,
+		Sides: tc.Sides,
+		HowManySides: tc.HowManySides,
+		SumOfInternalAngles: tc.SumOfInternalAngles,
+		MaxAngle: tc.MaxAngle,
+		HypotenuseLengthSquared: tc.HypotenuseLengthSquared,
+		NonHypotenuseSidesSquared: tc.NonHypotenuseSidesSquared,
+		IsRectangle: &amp;isRectangle,
+		IsTriangle: &amp;isTriangle,
+		IsRightTriangle: &amp;isRightTriangle,
+		PythagoreanTheoremHolds: &amp;pythagoreanTheoremHolds,
 	}
+}
+
+// =============================================================================
+// SIDES TABLE
+// Table: Sides
+// =============================================================================
+
+// Side represents a row in the Sides table
+// Table: Sides
+type Side struct {
+	SideId string `json:&quot;side_id&quot;`
+	ShapeSides *int `json:&quot;shape_sides&quot;`
+	Label *string `json:&quot;label&quot;` // Label for this edge
+	IsRectangle *bool `json:&quot;is_rectangle&quot;`
+	IsTriangle *bool `json:&quot;is_triangle&quot;`
+	IsRightTriangle *bool `json:&quot;is_right_triangle&quot;` // Is this the Hypotenuse of a Right Angle Triangle?
+	PythagoreanTheoremHolds *bool `json:&quot;pythagorean_theorem_holds&quot;` // Does the Pythagorean Theorem Hold?
+	PreviousSideLength *int `json:&quot;previous_side_length&quot;` // Previous Edge Length
+	Length *int `json:&quot;length&quot;` // Length
+	NextLength *int `json:&quot;next_length&quot;` // Next Edge Length
+	PreviousAngle *int `json:&quot;previous_angle&quot;` // Previous Angle
+	Angle *int `json:&quot;angle&quot;` // Internal angles for the shapes
+	NextAngle *int `json:&quot;next_angle&quot;` // Next Angle
+	PreviousSide *string `json:&quot;previous_side&quot;` // Previous Edge
+	NextSide *string `json:&quot;next_side&quot;` // Next Edge
+	Shape *string `json:&quot;shape&quot;` // Shape
+	PreviousLabel *string `json:&quot;previous_label&quot;`
+	NextLabel *string `json:&quot;next_label&quot;`
+	Name *string `json:&quot;name&quot;`
+	IsHypotenuse *bool `json:&quot;is_hypotenuse&quot;` // Is this the Hypotenuse of a Right Angle Triangle?
+	StatusOfTheorem *string `json:&quot;status_of_theorem&quot;` // Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+	LengthSquared *int `json:&quot;length_squared&quot;`
+	HypotenuseLengthSquared *int `json:&quot;hypotenuse_length_squared&quot;`
+	NonHypotenuseLengthSquared *int `json:&quot;non_hypotenuse_length_squared&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcName computes the Name calculated field
+// Formula: ={{Shape}} &amp; &quot;-Side-&quot; &amp; {{Label}}
+func (tc *Side) CalcName() string {
+	return stringVal(tc.Shape) + &quot;-Side-&quot; + stringVal(tc.Label)
+}
+
+// CalcIsHypotenuse computes the IsHypotenuse calculated field
+// Is this the Hypotenuse of a Right Angle Triangle?
+// Formula: =AND(
+   {{IsTriangle}},
+   {{Length}} &gt; {{PreviousSideLength}},
+   {{Length}} &gt; {{NextLength}}
+ )
+func (tc *Side) CalcIsHypotenuse() bool {
+	return (boolVal(tc.IsTriangle) &amp;&amp; (boolVal(tc.Length) &gt; boolVal(tc.PreviousSideLength)) &amp;&amp; (boolVal(tc.Length) &gt; boolVal(tc.NextLength)))
+}
+
+// CalcStatusOfTheorem computes the StatusOfTheorem calculated field
+// Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+// Formula: =IF({{IsTriangle}},    IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})),      &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot;,      &quot;Pythagorean Theorem Holds (obviously).&quot;   ),   &quot;NA&quot; )
+func (tc *Side) CalcStatusOfTheorem() string {
+	return func() string { if boolVal(tc.IsTriangle) { return func() string { if (boolVal(tc.IsRightTriangle) &amp;&amp; !boolVal(tc.PythagoreanTheoremHolds)) { return &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot; }; return &quot;Pythagorean Theorem Holds (obviously).&quot; }() }; return &quot;NA&quot; }()
+}
+
+// CalcLengthSquared computes the LengthSquared calculated field
+// Formula: ={{Length}} * {{Length}}
+func (tc *Side) CalcLengthSquared() int {
+	return func() interface{} { panic(&quot;Formula parse error: Unexpected character &#x27;*&#x27; at position 11&quot;) }()
+}
+
+// CalcHypotenuseLengthSquared computes the HypotenuseLengthSquared calculated field
+// Formula: =IF({{IsHypotenuse}}, {{LengthSquared}})
+func (tc *Side) CalcHypotenuseLengthSquared() int {
+	return func() string { if boolVal(tc.IsHypotenuse) { return tc.LengthSquared }; return &quot;&quot; }()
+}
+
+// CalcNonHypotenuseLengthSquared computes the NonHypotenuseLengthSquared calculated field
+// Formula: =IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})
+func (tc *Side) CalcNonHypotenuseLengthSquared() int {
+	return func() string { if (!boolVal(tc.IsHypotenuse) &amp;&amp; boolVal(tc.IsTriangle)) { return tc.LengthSquared }; return &quot;&quot; }()
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *Side) ComputeAll() *Side {
+	// Level 1 calculations
+	name := stringVal(tc.Shape) + &quot;-Side-&quot; + stringVal(tc.Label)
+	isHypotenuse := (boolVal(tc.IsTriangle) &amp;&amp; (boolVal(tc.Length) &gt; boolVal(tc.PreviousSideLength)) &amp;&amp; (boolVal(tc.Length) &gt; boolVal(tc.NextLength)))
+	statusOfTheorem := func() string { if boolVal(tc.IsTriangle) { return func() string { if (boolVal(tc.IsRightTriangle) &amp;&amp; !boolVal(tc.PythagoreanTheoremHolds)) { return &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot; }; return &quot;Pythagorean Theorem Holds (obviously).&quot; }() }; return &quot;NA&quot; }()
+	lengthSquared := func() interface{} { panic(&quot;Formula parse error: Unexpected character &#x27;*&#x27; at position 11&quot;) }()
+
+	// Level 2 calculations
+	hypotenuseLengthSquared := func() string { if isHypotenuse { return lengthSquared }; return &quot;&quot; }()
+	nonHypotenuseLengthSquared := func() string { if (!isHypotenuse &amp;&amp; boolVal(tc.IsTriangle)) { return lengthSquared }; return &quot;&quot; }()
+
+	return &amp;Side{
+		SideId: tc.SideId,
+		ShapeSides: tc.ShapeSides,
+		Label: tc.Label,
+		IsRectangle: tc.IsRectangle,
+		IsTriangle: tc.IsTriangle,
+		IsRightTriangle: tc.IsRightTriangle,
+		PythagoreanTheoremHolds: tc.PythagoreanTheoremHolds,
+		PreviousSideLength: tc.PreviousSideLength,
+		Length: tc.Length,
+		NextLength: tc.NextLength,
+		PreviousAngle: tc.PreviousAngle,
+		Angle: tc.Angle,
+		NextAngle: tc.NextAngle,
+		PreviousSide: tc.PreviousSide,
+		NextSide: tc.NextSide,
+		Shape: tc.Shape,
+		PreviousLabel: tc.PreviousLabel,
+		NextLabel: tc.NextLabel,
+		Name: nilIfEmpty(name),
+		IsHypotenuse: &amp;isHypotenuse,
+		StatusOfTheorem: nilIfEmpty(statusOfTheorem),
+		LengthSquared: &amp;lengthSquared,
+		HypotenuseLengthSquared: &amp;hypotenuseLengthSquared,
+		NonHypotenuseLengthSquared: &amp;nonHypotenuseLengthSquared,
+	}
+}
+
+// =============================================================================
+// WIDGETS TABLE
+// Table: Widgets
+// =============================================================================
+
+// Widget represents a row in the Widgets table
+// Table: Widgets
+type Widget struct {
+	WidgetId string `json:&quot;widget_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	Appuser *string `json:&quot;appuser&quot;`
+	Name_from_Appuser *string `json:&quot;name_from_appuser&quot;`
+	EmailAddress_from_Appuser *string `json:&quot;email_address_from_appuser&quot;`
+	Role_from_Appuser *string `json:&quot;role_from_appuser&quot;`
+	Color *string `json:&quot;color&quot;`
+}
+
+// =============================================================================
+// ERBVERSIONS TABLE
+// Table: ERBVersions
+// =============================================================================
+
+// ERBVersion represents a row in the ERBVersions table
+// Table: ERBVersions
+type ERBVersion struct {
+	ERBVersionId string `json:&quot;erb_version_id&quot;`
+	BaseId *string `json:&quot;base_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	Message *string `json:&quot;message&quot;`
+	Notes *string `json:&quot;notes&quot;`
+	CommitDate *string `json:&quot;commit_date&quot;`
+	IsPublished *bool `json:&quot;is_published&quot;`
+	PK *string `json:&quot;pk&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcPK computes the PK calculated field
+// Formula: ={{BaseId}} &amp; &quot;-&quot; &amp; {{Name}}
+func (tc *ERBVersion) CalcPK() string {
+	return stringVal(tc.BaseId) + &quot;-&quot; + stringVal(tc.Name)
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *ERBVersion) ComputeAll() *ERBVersion {
+	// Level 1 calculations
+	pK := stringVal(tc.BaseId) + &quot;-&quot; + stringVal(tc.Name)
+
+	return &amp;ERBVersion{
+		ERBVersionId: tc.ERBVersionId,
+		BaseId: tc.BaseId,
+		Name: tc.Name,
+		Message: tc.Message,
+		Notes: tc.Notes,
+		CommitDate: tc.CommitDate,
+		IsPublished: tc.IsPublished,
+		PK: nilIfEmpty(pK),
+	}
+}
+
+// =============================================================================
+// ERBCUSTOMIZATIONS TABLE
+// Table: ERBCustomizations
+// =============================================================================
+
+// ERBCustomization represents a row in the ERBCustomizations table
+// Table: ERBCustomizations
+type ERBCustomization struct {
+	ERBCustomizationId string `json:&quot;erb_customization_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	Title *string `json:&quot;title&quot;`
+	SQLCode *string `json:&quot;sql_code&quot;`
+	SQLTarget *string `json:&quot;sql_target&quot;`
+	CustomizationType *string `json:&quot;customization_type&quot;`
+}
+
+// =============================================================================
+// MAGICLINKINTEGRATION TABLE
+// Table: MagicLinkIntegration
+// =============================================================================
+
+// MagicLinkIntegration represents a row in the MagicLinkIntegration table
+// Table: MagicLinkIntegration
+type MagicLinkIntegration struct {
+	MagicLinkIntegrationId string `json:&quot;magic_link_integration_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	Enabled *bool `json:&quot;enabled&quot;`
+	TenantId *string `json:&quot;tenant_id&quot;`
+	PublicKeyPem *string `json:&quot;public_key_pem&quot;`
+	UserTableName *string `json:&quot;user_table_name&quot;`
+	EmailField *string `json:&quot;email_field&quot;`
+	RoleField *string `json:&quot;role_field&quot;`
+	IsActiveField *string `json:&quot;is_active_field&quot;`
+	UserIdField *string `json:&quot;user_id_field&quot;`
+	AllowedAlgorithms *string `json:&quot;allowed_algorithms&quot;`
+	RequireTenantBinding *bool `json:&quot;require_tenant_binding&quot;`
+	UseEmailDagPattern *bool `json:&quot;use_email_dag_pattern&quot;`
 }
 
 // =============================================================================
 // FILE I/O FUNCTIONS (for all tables with calculated fields)
 // =============================================================================
 
-// LoadCustomerRecords loads Customers records from a JSON file
-func LoadCustomerRecords(path string) ([]Customer, error) {
+// LoadShapeRecords loads Shapes records from a JSON file
+func LoadShapeRecords(path string) ([]Shape, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
 	}
 
-	var records []Customer
+	var records []Shape
 	if err := json.Unmarshal(data, &amp;records); err != nil {
 		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
 	}
@@ -292,8 +571,95 @@ func LoadCustomerRecords(path string) ([]Customer, error) {
 	return records, nil
 }
 
-// SaveCustomerRecords saves computed Customers records to a JSON file
-func SaveCustomerRecords(path string, records []Customer) error {
+// SaveShapeRecords saves computed Shapes records to a JSON file
+func SaveShapeRecords(path string, records []Shape) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadSideRecords loads Sides records from a JSON file
+func LoadSideRecords(path string) ([]Side, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []Side
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveSideRecords saves computed Sides records to a JSON file
+func SaveSideRecords(path string, records []Side) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadWidgetRecords loads Widgets records from a JSON file
+func LoadWidgetRecords(path string) ([]Widget, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []Widget
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveWidgetRecords saves computed Widgets records to a JSON file
+func SaveWidgetRecords(path string, records []Widget) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+
+// LoadERBVersionRecords loads ERBVersions records from a JSON file
+func LoadERBVersionRecords(path string) ([]ERBVersion, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []ERBVersion
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveERBVersionRecords saves computed ERBVersions records to a JSON file
+func SaveERBVersionRecords(path string, records []ERBVersion) error {
 	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
 	if err != nil {
 		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
@@ -312,14 +678,16 @@ func SaveCustomerRecords(path string, records []Customer) error {
             <div class="card">
                 <div class="code-header">
                     <h2>main.go</h2>
-                    <div><span class="code-info">91 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
+                    <div><span class="code-info">584 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
                 </div>
                 <pre id="main-code">// ERB SDK - Go Test Runner (GENERATED - DO NOT EDIT)
 // =======================================================
 // This file is REGENERATED every time inject-into-golang.py runs.
 // It must stay in sync with erb_sdk.go and the rulebook.
 //
-// Tables with computed fields: Customers
+// Tables with computed fields: Shapes, Sides, Widgets, ERBVersions
+// Tables with aggregations: Shapes
+// Tables with lookups: Sides, Widgets
 //
 // IMPORTANT: This runner processes ALL tables, not just a &quot;primary&quot; one.
 // If ANY table fails to process, the entire run fails with exit code 1.
@@ -330,6 +698,8 @@ import (
 	&quot;fmt&quot;
 	&quot;os&quot;
 	&quot;path/filepath&quot;
+	&quot;sort&quot;
+	&quot;strings&quot;
 )
 
 func main() {
@@ -349,8 +719,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(&quot;Golang substrate: Processing 1 tables with calculated fields...&quot;)
-	fmt.Println(&quot;  Expected tables: Customers&quot;)
+	fmt.Println(&quot;Golang substrate: Processing 4 tables with calculated fields...&quot;)
+	fmt.Println(&quot;  Expected tables: Shapes, Sides, Widgets, ERBVersions&quot;)
 	fmt.Println(&quot;&quot;)
 
 	// Track success/failure for ALL tables
@@ -358,30 +728,519 @@ func main() {
 	var totalRecords int
 
 	// ─────────────────────────────────────────────────────────────────
-	// Process Customers
+	// Load related tables for aggregation calculations
 	// ─────────────────────────────────────────────────────────────────
-	fmt.Println(&quot;Processing Customers...&quot;)
-	customersInput := filepath.Join(blankTestsDir, &quot;customers.json&quot;)
-	customersOutput := filepath.Join(testAnswersDir, &quot;customers.json&quot;)
+	// Note: SUMIFS loads from answer-keys (has computed fields)
+	//       COUNTIFS loads from blank-tests
+	answerKeysDir := filepath.Join(scriptDir, &quot;..&quot;, &quot;..&quot;, &quot;testing&quot;, &quot;answer-keys&quot;)
 
-	customersRecords, err := LoadCustomerRecords(customersInput)
+	app_usersData, err := LoadAppUserRecords(filepath.Join(blankTestsDir, &quot;app_users.json&quot;))
 	if err != nil {
-		errMsg := fmt.Sprintf(&quot;Customers: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;Warning: Could not load AppUsers for aggregations: %v\n&quot;, err)
+		app_usersData = nil
+	}
+	shapesData, err := LoadShapeRecords(filepath.Join(blankTestsDir, &quot;shapes.json&quot;))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, &quot;Warning: Could not load Shapes for aggregations: %v\n&quot;, err)
+		shapesData = nil
+	}
+	sidesData, err := LoadSideRecords(filepath.Join(answerKeysDir, &quot;sides.json&quot;))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, &quot;Warning: Could not load Sides for aggregations: %v\n&quot;, err)
+		sidesData = nil
+	}
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process Shapes
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing Shapes...&quot;)
+	shapesInput := filepath.Join(blankTestsDir, &quot;shapes.json&quot;)
+	shapesOutput := filepath.Join(testAnswersDir, &quot;shapes.json&quot;)
+
+	shapesRecords, err := LoadShapeRecords(shapesInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;Shapes: failed to load - %v&quot;, err)
 		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
 		errors = append(errors, errMsg)
 	} else {
-		var computedCustomer []Customer
-		for _, r := range customersRecords {
-			computedCustomer = append(computedCustomer, *r.ComputeAll())
+		// Compute aggregations for Shapes
+		how_many_sidesCountMap := make(map[string]int)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.Shape != nil {
+					how_many_sidesCountMap[*rel.Shape]++
+				}
+			}
 		}
 
-		if err := SaveCustomerRecords(customersOutput, computedCustomer); err != nil {
-			errMsg := fmt.Sprintf(&quot;Customers: failed to save - %v&quot;, err)
+		sum_of_internal_anglesLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				var val string
+				if rel.Angle != nil {
+					val = fmt.Sprintf(&quot;%s&quot;, *rel.Angle)
+				}
+				// Include all entries (even empty) to maintain position correspondence
+				sum_of_internal_anglesLookupMap[rel.SideId] = val
+			}
+		}
+
+		hypotenuse_length_squaredLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				var val string
+				if rel.HypotenuseLengthSquared != nil {
+					val = fmt.Sprintf(&quot;%s&quot;, *rel.HypotenuseLengthSquared)
+				}
+				// Include all entries (even empty) to maintain position correspondence
+				hypotenuse_length_squaredLookupMap[rel.SideId] = val
+			}
+		}
+
+		non_hypotenuse_sides_squaredLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				var val string
+				if rel.NonHypotenuseLengthSquared != nil {
+					val = fmt.Sprintf(&quot;%s&quot;, *rel.NonHypotenuseLengthSquared)
+				}
+				// Include all entries (even empty) to maintain position correspondence
+				non_hypotenuse_sides_squaredLookupMap[rel.SideId] = val
+			}
+		}
+
+		// Update records with aggregation values
+		for i := range shapesRecords {
+			if shapesRecords[i].ShapeId != &quot;&quot; {
+				count := how_many_sidesCountMap[shapesRecords[i].ShapeId]
+				shapesRecords[i].HowManySides = &amp;count
+			}
+			if shapesRecords[i].Sides != nil &amp;&amp; *shapesRecords[i].Sides != &quot;&quot; {
+				// Parse relationship field to get ordered PKs
+				relPKs := strings.Split(*shapesRecords[i].Sides, &quot;, &quot;)
+				var values []string
+				for _, pk := range relPKs {
+					pk = strings.TrimSpace(pk)
+					if val, ok := sum_of_internal_anglesLookupMap[pk]; ok {
+						values = append(values, val)
+					}
+				}
+				if len(values) &gt; 0 {
+					joined := FlexibleString(strings.Join(values, &quot;, &quot;))
+					shapesRecords[i].SumOfInternalAngles = &amp;joined
+				} else {
+					zero := FlexibleString(&quot;0&quot;)
+					shapesRecords[i].SumOfInternalAngles = &amp;zero
+				}
+			} else {
+				zero := FlexibleString(&quot;0&quot;)
+				shapesRecords[i].SumOfInternalAngles = &amp;zero
+			}
+			if shapesRecords[i].Sides != nil &amp;&amp; *shapesRecords[i].Sides != &quot;&quot; {
+				// Parse relationship field to get ordered PKs
+				relPKs := strings.Split(*shapesRecords[i].Sides, &quot;, &quot;)
+				var values []string
+				for _, pk := range relPKs {
+					pk = strings.TrimSpace(pk)
+					if val, ok := hypotenuse_length_squaredLookupMap[pk]; ok {
+						values = append(values, val)
+					}
+				}
+				if len(values) &gt; 0 {
+					joined := FlexibleString(strings.Join(values, &quot;, &quot;))
+					shapesRecords[i].HypotenuseLengthSquared = &amp;joined
+				} else {
+					zero := FlexibleString(&quot;0&quot;)
+					shapesRecords[i].HypotenuseLengthSquared = &amp;zero
+				}
+			} else {
+				zero := FlexibleString(&quot;0&quot;)
+				shapesRecords[i].HypotenuseLengthSquared = &amp;zero
+			}
+			if shapesRecords[i].Sides != nil &amp;&amp; *shapesRecords[i].Sides != &quot;&quot; {
+				// Parse relationship field to get ordered PKs
+				relPKs := strings.Split(*shapesRecords[i].Sides, &quot;, &quot;)
+				var values []string
+				for _, pk := range relPKs {
+					pk = strings.TrimSpace(pk)
+					if val, ok := non_hypotenuse_sides_squaredLookupMap[pk]; ok {
+						values = append(values, val)
+					}
+				}
+				if len(values) &gt; 0 {
+					joined := FlexibleString(strings.Join(values, &quot;, &quot;))
+					shapesRecords[i].NonHypotenuseSidesSquared = &amp;joined
+				} else {
+					zero := FlexibleString(&quot;0&quot;)
+					shapesRecords[i].NonHypotenuseSidesSquared = &amp;zero
+				}
+			} else {
+				zero := FlexibleString(&quot;0&quot;)
+				shapesRecords[i].NonHypotenuseSidesSquared = &amp;zero
+			}
+		}
+
+		var computedShape []Shape
+		for _, r := range shapesRecords {
+			computedShape = append(computedShape, *r.ComputeAll())
+		}
+
+		if err := SaveShapeRecords(shapesOutput, computedShape); err != nil {
+			errMsg := fmt.Sprintf(&quot;Shapes: failed to save - %v&quot;, err)
 			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
 			errors = append(errors, errMsg)
 		} else {
-			fmt.Printf(&quot;  ✓ customers: %d records processed\n&quot;, len(computedCustomer))
-			totalRecords += len(computedCustomer)
+			fmt.Printf(&quot;  ✓ shapes: %d records processed\n&quot;, len(computedShape))
+			totalRecords += len(computedShape)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process Sides
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing Sides...&quot;)
+	sidesInput := filepath.Join(blankTestsDir, &quot;sides.json&quot;)
+	sidesOutput := filepath.Join(testAnswersDir, &quot;sides.json&quot;)
+
+	sidesRecords, err := LoadSideRecords(sidesInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;Sides: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		// Compute lookups for Sides
+		shape_sidesLookupMap := make(map[string]string)
+		if shapesData != nil {
+			for _, rel := range shapesData {
+				if rel.ShapeId != &quot;&quot; {
+					var val string
+					if rel.HowManySides != nil {
+						val = *rel.HowManySides
+					}
+					shape_sidesLookupMap[rel.ShapeId] = val
+				}
+			}
+		}
+
+		is_rectangleLookupMap := make(map[string]string)
+		if shapesData != nil {
+			for _, rel := range shapesData {
+				if rel.ShapeId != &quot;&quot; {
+					var val string
+					if rel.IsRectangle != nil {
+						val = *rel.IsRectangle
+					}
+					is_rectangleLookupMap[rel.ShapeId] = val
+				}
+			}
+		}
+
+		is_triangleLookupMap := make(map[string]string)
+		if shapesData != nil {
+			for _, rel := range shapesData {
+				if rel.ShapeId != &quot;&quot; {
+					var val string
+					if rel.IsTriangle != nil {
+						val = *rel.IsTriangle
+					}
+					is_triangleLookupMap[rel.ShapeId] = val
+				}
+			}
+		}
+
+		is_right_triangleLookupMap := make(map[string]string)
+		if shapesData != nil {
+			for _, rel := range shapesData {
+				if rel.ShapeId != &quot;&quot; {
+					var val string
+					if rel.IsRightTriangle != nil {
+						val = *rel.IsRightTriangle
+					}
+					is_right_triangleLookupMap[rel.ShapeId] = val
+				}
+			}
+		}
+
+		pythagorean_theorem_holdsLookupMap := make(map[string]string)
+		if shapesData != nil {
+			for _, rel := range shapesData {
+				if rel.ShapeId != &quot;&quot; {
+					var val string
+					if rel.PythagoreanTheoremHolds != nil {
+						val = *rel.PythagoreanTheoremHolds
+					}
+					pythagorean_theorem_holdsLookupMap[rel.ShapeId] = val
+				}
+			}
+		}
+
+		previous_side_lengthLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.SideId != &quot;&quot; {
+					var val string
+					if rel.Length != nil {
+						val = *rel.Length
+					}
+					previous_side_lengthLookupMap[rel.SideId] = val
+				}
+			}
+		}
+
+		next_lengthLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.SideId != &quot;&quot; {
+					var val string
+					if rel.Length != nil {
+						val = *rel.Length
+					}
+					next_lengthLookupMap[rel.SideId] = val
+				}
+			}
+		}
+
+		previous_angleLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.SideId != &quot;&quot; {
+					var val string
+					if rel.Angle != nil {
+						val = *rel.Angle
+					}
+					previous_angleLookupMap[rel.SideId] = val
+				}
+			}
+		}
+
+		next_angleLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.SideId != &quot;&quot; {
+					var val string
+					if rel.Angle != nil {
+						val = *rel.Angle
+					}
+					next_angleLookupMap[rel.SideId] = val
+				}
+			}
+		}
+
+		previous_labelLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.SideId != &quot;&quot; {
+					var val string
+					if rel.Label != nil {
+						val = *rel.Label
+					}
+					previous_labelLookupMap[rel.SideId] = val
+				}
+			}
+		}
+
+		next_labelLookupMap := make(map[string]string)
+		if sidesData != nil {
+			for _, rel := range sidesData {
+				if rel.SideId != &quot;&quot; {
+					var val string
+					if rel.Label != nil {
+						val = *rel.Label
+					}
+					next_labelLookupMap[rel.SideId] = val
+				}
+			}
+		}
+
+		// Apply lookup values to records
+		for i := range sidesRecords {
+			if sidesRecords[i].Shape != nil &amp;&amp; *sidesRecords[i].Shape != &quot;&quot; {
+				if val, ok := shape_sidesLookupMap[*sidesRecords[i].Shape]; ok {
+					sidesRecords[i].ShapeSides = &amp;val
+				}
+			}
+			if sidesRecords[i].Shape != nil &amp;&amp; *sidesRecords[i].Shape != &quot;&quot; {
+				if val, ok := is_rectangleLookupMap[*sidesRecords[i].Shape]; ok {
+					sidesRecords[i].IsRectangle = &amp;val
+				}
+			}
+			if sidesRecords[i].Shape != nil &amp;&amp; *sidesRecords[i].Shape != &quot;&quot; {
+				if val, ok := is_triangleLookupMap[*sidesRecords[i].Shape]; ok {
+					sidesRecords[i].IsTriangle = &amp;val
+				}
+			}
+			if sidesRecords[i].Shape != nil &amp;&amp; *sidesRecords[i].Shape != &quot;&quot; {
+				if val, ok := is_right_triangleLookupMap[*sidesRecords[i].Shape]; ok {
+					sidesRecords[i].IsRightTriangle = &amp;val
+				}
+			}
+			if sidesRecords[i].Shape != nil &amp;&amp; *sidesRecords[i].Shape != &quot;&quot; {
+				if val, ok := pythagorean_theorem_holdsLookupMap[*sidesRecords[i].Shape]; ok {
+					sidesRecords[i].PythagoreanTheoremHolds = &amp;val
+				}
+			}
+			if sidesRecords[i].PreviousSide != nil &amp;&amp; *sidesRecords[i].PreviousSide != &quot;&quot; {
+				if val, ok := previous_side_lengthLookupMap[*sidesRecords[i].PreviousSide]; ok {
+					sidesRecords[i].PreviousSideLength = &amp;val
+				}
+			}
+			if sidesRecords[i].NextSide != nil &amp;&amp; *sidesRecords[i].NextSide != &quot;&quot; {
+				if val, ok := next_lengthLookupMap[*sidesRecords[i].NextSide]; ok {
+					sidesRecords[i].NextLength = &amp;val
+				}
+			}
+			if sidesRecords[i].PreviousSide != nil &amp;&amp; *sidesRecords[i].PreviousSide != &quot;&quot; {
+				if val, ok := previous_angleLookupMap[*sidesRecords[i].PreviousSide]; ok {
+					sidesRecords[i].PreviousAngle = &amp;val
+				}
+			}
+			if sidesRecords[i].NextSide != nil &amp;&amp; *sidesRecords[i].NextSide != &quot;&quot; {
+				if val, ok := next_angleLookupMap[*sidesRecords[i].NextSide]; ok {
+					sidesRecords[i].NextAngle = &amp;val
+				}
+			}
+			if sidesRecords[i].PreviousSide != nil &amp;&amp; *sidesRecords[i].PreviousSide != &quot;&quot; {
+				if val, ok := previous_labelLookupMap[*sidesRecords[i].PreviousSide]; ok {
+					sidesRecords[i].PreviousLabel = &amp;val
+				}
+			}
+			if sidesRecords[i].NextSide != nil &amp;&amp; *sidesRecords[i].NextSide != &quot;&quot; {
+				if val, ok := next_labelLookupMap[*sidesRecords[i].NextSide]; ok {
+					sidesRecords[i].NextLabel = &amp;val
+				}
+			}
+		}
+
+		var computedSide []Side
+		for _, r := range sidesRecords {
+			computedSide = append(computedSide, *r.ComputeAll())
+		}
+
+		if err := SaveSideRecords(sidesOutput, computedSide); err != nil {
+			errMsg := fmt.Sprintf(&quot;Sides: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ sides: %d records processed\n&quot;, len(computedSide))
+			totalRecords += len(computedSide)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process Widgets
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing Widgets...&quot;)
+	widgetsInput := filepath.Join(blankTestsDir, &quot;widgets.json&quot;)
+	widgetsOutput := filepath.Join(testAnswersDir, &quot;widgets.json&quot;)
+
+	widgetsRecords, err := LoadWidgetRecords(widgetsInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;Widgets: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		// Compute lookups for Widgets
+		name_from_appuserLookupMap := make(map[string]string)
+		if app_usersData != nil {
+			for _, rel := range app_usersData {
+				if rel.AppUserId != &quot;&quot; {
+					var val string
+					if rel.Name != nil {
+						val = *rel.Name
+					}
+					name_from_appuserLookupMap[rel.AppUserId] = val
+				}
+			}
+		}
+
+		email_address_from_appuserLookupMap := make(map[string]string)
+		if app_usersData != nil {
+			for _, rel := range app_usersData {
+				if rel.AppUserId != &quot;&quot; {
+					var val string
+					if rel.EmailAddress != nil {
+						val = *rel.EmailAddress
+					}
+					email_address_from_appuserLookupMap[rel.AppUserId] = val
+				}
+			}
+		}
+
+		role_from_appuserLookupMap := make(map[string]string)
+		if app_usersData != nil {
+			for _, rel := range app_usersData {
+				if rel.AppUserId != &quot;&quot; {
+					var val string
+					if rel.Role != nil {
+						val = *rel.Role
+					}
+					role_from_appuserLookupMap[rel.AppUserId] = val
+				}
+			}
+		}
+
+		// Apply lookup values to records
+		for i := range widgetsRecords {
+			if widgetsRecords[i].Appuser != nil &amp;&amp; *widgetsRecords[i].Appuser != &quot;&quot; {
+				if val, ok := name_from_appuserLookupMap[*widgetsRecords[i].Appuser]; ok {
+					widgetsRecords[i].Name_from_Appuser = &amp;val
+				}
+			}
+			if widgetsRecords[i].Appuser != nil &amp;&amp; *widgetsRecords[i].Appuser != &quot;&quot; {
+				if val, ok := email_address_from_appuserLookupMap[*widgetsRecords[i].Appuser]; ok {
+					widgetsRecords[i].EmailAddress_from_Appuser = &amp;val
+				}
+			}
+			if widgetsRecords[i].Appuser != nil &amp;&amp; *widgetsRecords[i].Appuser != &quot;&quot; {
+				if val, ok := role_from_appuserLookupMap[*widgetsRecords[i].Appuser]; ok {
+					widgetsRecords[i].Role_from_Appuser = &amp;val
+				}
+			}
+		}
+
+		var computedWidget []Widget
+		for _, r := range widgetsRecords {
+			computedWidget = append(computedWidget, r)
+		}
+
+		if err := SaveWidgetRecords(widgetsOutput, computedWidget); err != nil {
+			errMsg := fmt.Sprintf(&quot;Widgets: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ widgets: %d records processed\n&quot;, len(computedWidget))
+			totalRecords += len(computedWidget)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process ERBVersions
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing ERBVersions...&quot;)
+	erb_versionsInput := filepath.Join(blankTestsDir, &quot;erb_versions.json&quot;)
+	erb_versionsOutput := filepath.Join(testAnswersDir, &quot;erb_versions.json&quot;)
+
+	erb_versionsRecords, err := LoadERBVersionRecords(erb_versionsInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;ERBVersions: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedERBVersion []ERBVersion
+		for _, r := range erb_versionsRecords {
+			computedERBVersion = append(computedERBVersion, *r.ComputeAll())
+		}
+
+		if err := SaveERBVersionRecords(erb_versionsOutput, computedERBVersion); err != nil {
+			errMsg := fmt.Sprintf(&quot;ERBVersions: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ erb_versions: %d records processed\n&quot;, len(computedERBVersion))
+			totalRecords += len(computedERBVersion)
 		}
 	}
 	fmt.Println(&quot;&quot;)
@@ -402,7 +1261,7 @@ func main() {
 	}
 
 	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
-	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 1, totalRecords)
+	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 4, totalRecords)
 	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
 }</pre>
             </div>

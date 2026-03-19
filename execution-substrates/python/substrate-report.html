@@ -206,10 +206,10 @@ pre {
         <div class="header-stats">
             <div class="stat">
                 <span>Score:</span>
-                <span class="stat-value score-perfect">100.0%</span>
+                <span class="stat-value score-danger">50.0%</span>
             </div>
             <div class="stat">
-                <span>3/3 passed</span>
+                <span>9/18 passed</span>
             </div>
         </div>
         <button id="theme-toggle" title="Toggle theme">
@@ -286,8 +286,26 @@ pre {
                 <h2>Execution Log</h2>
                 <pre>=== Python Substrate Test Run ===
 
-  -&gt; customers: 3 records
-Python substrate: Processed 1 entities, 3 total records
+  -&gt; shapes: 2 records
+Traceback (most recent call last):
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/take-test.py&quot;, line 121, in &lt;module&gt;
+    main()
+    ~~~~^^
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/take-test.py&quot;, line 117, in main
+    run_multi_entity()
+    ~~~~~~~~~~~~~~~~^^
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/take-test.py&quot;, line 93, in run_multi_entity
+    count = process_entity(input_path, str(output_path), entity, rulebook, project_root)
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/take-test.py&quot;, line 48, in process_entity
+    computed = compute_all_calculated_fields(record, entity_name)
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/erb_calc.py&quot;, line 196, in compute_all_calculated_fields
+    return compute_sides_fields(record)
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/erb_calc.py&quot;, line 121, in compute_sides_fields
+    result[&#x27;length_squared&#x27;] = calc_sides_length_squared()
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File &quot;/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/python/erb_calc.py&quot;, line 68, in calc_sides_length_squared
+    raise NotImplementedError(&quot;Formula parsing failed&quot;)
+NotImplementedError: Formula parsing failed
 
 </pre>
             </div>
@@ -298,19 +316,19 @@ Python substrate: Processed 1 entities, 3 total records
                 <h2>Test Summary</h2>
                 <div class="results-summary">
                     <div class="result-item">
-                        <div class="result-value score-perfect">100.0%</div>
+                        <div class="result-value score-danger">50.0%</div>
                         <div class="result-label">Score</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value score-perfect">3</div>
+                        <div class="result-value score-perfect">9</div>
                         <div class="result-label">Passed</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value">0</div>
+                        <div class="result-value">9</div>
                         <div class="result-label">Failed</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-value">3</div>
+                        <div class="result-value">18</div>
                         <div class="result-label">Total</div>
                     </div>
                 </div>
@@ -320,7 +338,7 @@ Python substrate: Processed 1 entities, 3 total records
                 <div class="markdown-content">
                     <h3>language_candidates</h3>
                     <ul>
-                        <li>Fields: 3/3 (100.0%)</li>
+                        <li>Fields: 9/18 (50.0%)</li>
                         <li>Computed columns: has_grammar, question, predicted_answer, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept</li>
                     </ul>
                 </div>
@@ -332,7 +350,7 @@ Python substrate: Processed 1 entities, 3 total records
                 <div class="code-header">
                     <h2>erb_calc.py</h2>
                     <div>
-                        <span class="code-info">77 lines</span>
+                        <span class="code-info">201 lines</span>
                         <button class="copy-btn" onclick="copyCode('calc-code')">Copy</button>
                     </div>
                 </div>
@@ -349,34 +367,154 @@ from typing import Optional, Any
 
 
 # =============================================================================
-# CUSTOMERS CALCULATIONS
-# Table: Customers
+# SHAPES CALCULATIONS
+# Table: Shapes
 # =============================================================================
 
 # Level 1
 
-def calc_customers_full_name(first_name, last_name):
-    &quot;&quot;&quot;
-    Full name is computed from the first and last name of the customer
-    
-    Formula: ={{FirstName}} &amp; &quot; &quot; &amp; {{LastName}}
-    &quot;&quot;&quot;
-    return (str(first_name or &quot;&quot;) + &#x27; &#x27; + str(last_name or &quot;&quot;))
+def calc_shapes_is_rectangle(how_many_sides):
+    &quot;&quot;&quot;Formula: =AND({{HowManySides}}=4)&quot;&quot;&quot;
+    return ((how_many_sides == 4))
+
+def calc_shapes_is_triangle(sum_of_internal_angles, how_many_sides):
+    &quot;&quot;&quot;Formula: =AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)&quot;&quot;&quot;
+    return ((sum_of_internal_angles == 180) and (how_many_sides == 3))
+
+def calc_shapes_is_right_triangle(is_triangle, max_angle):
+    &quot;&quot;&quot;Formula: =AND({{IsTriangle}}, {{MaxAngle}} = 90)&quot;&quot;&quot;
+    return ((is_triangle is True) and (max_angle == 90))
+
+def calc_shapes_pythagorean_theorem_holds(is_right_triangle, hypotenuse_length_squared, non_hypotenuse_sides_squared):
+    &quot;&quot;&quot;Formula: =AND(
+  {{IsRightTriangle}},  
+  {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}
+)&quot;&quot;&quot;
+    return ((is_right_triangle is True) and (hypotenuse_length_squared == non_hypotenuse_sides_squared))
 
 
-def compute_customers_fields(record: dict) -&gt; dict:
+def compute_shapes_fields(record: dict) -&gt; dict:
     &quot;&quot;&quot;
-    Compute all calculated fields for Customers.
+    Compute all calculated fields for Shapes.
     
-    Table: Customers
+    Table: Shapes
     &quot;&quot;&quot;
     result = dict(record)
 
     # Level 1 calculations
-    result[&#x27;full_name&#x27;] = calc_customers_full_name(result.get(&#x27;first_name&#x27;), result.get(&#x27;last_name&#x27;))
+    result[&#x27;is_rectangle&#x27;] = calc_shapes_is_rectangle(result.get(&#x27;how_many_sides&#x27;))
+    result[&#x27;is_triangle&#x27;] = calc_shapes_is_triangle(result.get(&#x27;sum_of_internal_angles&#x27;), result.get(&#x27;how_many_sides&#x27;))
+    result[&#x27;is_right_triangle&#x27;] = calc_shapes_is_right_triangle(result.get(&#x27;is_triangle&#x27;), result.get(&#x27;max_angle&#x27;))
+    result[&#x27;pythagorean_theorem_holds&#x27;] = calc_shapes_pythagorean_theorem_holds(result.get(&#x27;is_right_triangle&#x27;), result.get(&#x27;hypotenuse_length_squared&#x27;), result.get(&#x27;non_hypotenuse_sides_squared&#x27;))
+
+    return result
+
+# =============================================================================
+# SIDES CALCULATIONS
+# Table: Sides
+# =============================================================================
+
+# Level 1
+
+
+def calc_sides_length_squared():
+    &quot;&quot;&quot;ERROR: Could not parse formula: ={{Length}} * {{Length}}
+    Error: Unexpected character &#x27;*&#x27; at position 11
+    &quot;&quot;&quot;
+    raise NotImplementedError(&quot;Formula parsing failed&quot;)
+
+
+# Level 2
+
+def calc_sides_name(shape, label):
+    &quot;&quot;&quot;Formula: ={{Shape}} &amp; &quot;-Side-&quot; &amp; {{Label}}&quot;&quot;&quot;
+    return (str(shape or &quot;&quot;) + &#x27;-Side-&#x27; + str(label or &quot;&quot;))
+
+def calc_sides_is_hypotenuse(is_triangle, length, previous_side_length, next_length):
+    &quot;&quot;&quot;
+    Is this the Hypotenuse of a Right Angle Triangle?
+    
+    Formula: =AND(
+  {{IsTriangle}},
+  {{Length}} &gt; {{PreviousSideLength}},
+  {{Length}} &gt; {{NextLength}}
+)
+    &quot;&quot;&quot;
+    return ((is_triangle is True) and (length &gt; previous_side_length) and (length &gt; next_length))
+
+def calc_sides_status_of_theorem(is_triangle, is_right_triangle, pythagorean_theorem_holds):
+    &quot;&quot;&quot;
+    Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+    
+    Formula: =IF({{IsTriangle}}, 
+  IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})), 
+    &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot;, 
+    &quot;Pythagorean Theorem Holds (obviously).&quot;
+  ),
+  &quot;NA&quot;
+)
+    &quot;&quot;&quot;
+    return ((&#x27;PYTHAGOREAN THEOREM FALSIFIED!&#x27; if ((is_right_triangle is True) and (pythagorean_theorem_holds is not True)) else &#x27;Pythagorean Theorem Holds (obviously).&#x27;) if is_triangle else &#x27;NA&#x27;)
+
+def calc_sides_hypotenuse_length_squared(is_hypotenuse, length_squared):
+    &quot;&quot;&quot;Formula: =IF({{IsHypotenuse}}, {{LengthSquared}})&quot;&quot;&quot;
+    return (length_squared if is_hypotenuse else None)
+
+def calc_sides_non_hypotenuse_length_squared(is_hypotenuse, is_triangle, length_squared):
+    &quot;&quot;&quot;Formula: =IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})&quot;&quot;&quot;
+    return (length_squared if ((is_hypotenuse is not True) and (is_triangle is True)) else None)
+
+
+def compute_sides_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for Sides.
+    
+    Table: Sides
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;length_squared&#x27;] = calc_sides_length_squared()
+
+    # Level 2 calculations
+    result[&#x27;name&#x27;] = calc_sides_name(result.get(&#x27;shape&#x27;), result.get(&#x27;label&#x27;))
+    result[&#x27;is_hypotenuse&#x27;] = calc_sides_is_hypotenuse(result.get(&#x27;is_triangle&#x27;), result.get(&#x27;length&#x27;), result.get(&#x27;previous_side_length&#x27;), result.get(&#x27;next_length&#x27;))
+    result[&#x27;status_of_theorem&#x27;] = calc_sides_status_of_theorem(result.get(&#x27;is_triangle&#x27;), result.get(&#x27;is_right_triangle&#x27;), result.get(&#x27;pythagorean_theorem_holds&#x27;))
+    result[&#x27;hypotenuse_length_squared&#x27;] = calc_sides_hypotenuse_length_squared(result.get(&#x27;is_hypotenuse&#x27;), result.get(&#x27;length_squared&#x27;))
+    result[&#x27;non_hypotenuse_length_squared&#x27;] = calc_sides_non_hypotenuse_length_squared(result.get(&#x27;is_hypotenuse&#x27;), result.get(&#x27;is_triangle&#x27;), result.get(&#x27;length_squared&#x27;))
 
     # Convert empty strings to None for string fields
-    for key in [&#x27;full_name&#x27;]:
+    for key in [&#x27;name&#x27;, &#x27;status_of_theorem&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+# =============================================================================
+# ERBVERSIONS CALCULATIONS
+# Table: ERBVersions
+# =============================================================================
+
+# Level 1
+
+def calc_erb_versions_pk(base_id, name):
+    &quot;&quot;&quot;Formula: ={{BaseId}} &amp; &quot;-&quot; &amp; {{Name}}&quot;&quot;&quot;
+    return (str(base_id or &quot;&quot;) + &#x27;-&#x27; + str(name or &quot;&quot;))
+
+
+def compute_erb_versions_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for ERBVersions.
+    
+    Table: ERBVersions
+    &quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;pk&#x27;] = calc_erb_versions_pk(result.get(&#x27;base_id&#x27;), result.get(&#x27;name&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;pk&#x27;]:
         if result.get(key) == &#x27;&#x27;:
             result[key] = None
 
@@ -408,8 +546,12 @@ def compute_all_calculated_fields(record: dict, entity_name: str = None) -&gt; d
     # Normalize to snake_case to support &quot;LineItem&quot;, &quot;line_item&quot;, &quot;line-item&quot;
     entity_lower = entity_name.lower().replace(&#x27;-&#x27;, &#x27;_&#x27;)
 
-    if entity_lower == &#x27;customers&#x27;:
-        return compute_customers_fields(record)
+    if entity_lower == &#x27;shapes&#x27;:
+        return compute_shapes_fields(record)
+    elif entity_lower == &#x27;sides&#x27;:
+        return compute_sides_fields(record)
+    elif entity_lower == &#x27;erb_versions&#x27;:
+        return compute_erb_versions_fields(record)
     else:
         # Unknown entity - return record unchanged (no error)
         return dict(record)</pre>

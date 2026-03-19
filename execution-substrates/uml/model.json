@@ -1,13 +1,13 @@
 {
   "classes": {
-    "Customers": {
+    "AppUsers": {
       "attributes": [
         {
-          "name": "CustomerId",
+          "name": "AppUserId",
           "type": "string"
         },
         {
-          "name": "Customer",
+          "name": "Name",
           "type": "string"
         },
         {
@@ -15,55 +15,929 @@
           "type": "string"
         },
         {
-          "name": "FirstName",
+          "name": "Role",
           "type": "string"
         },
         {
-          "name": "LastName",
+          "name": "IsActive",
+          "type": "boolean"
+        },
+        {
+          "name": "Widgets",
+          "type": "string"
+        },
+        {
+          "name": "Notes",
+          "type": "string"
+        }
+      ],
+      "derived": []
+    },
+    "ERBCustomizations": {
+      "attributes": [
+        {
+          "name": "ERBCustomizationId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Title",
+          "type": "string"
+        },
+        {
+          "name": "SQLCode",
+          "type": "string"
+        },
+        {
+          "name": "SQLTarget",
+          "type": "string"
+        },
+        {
+          "name": "CustomizationType",
+          "type": "string"
+        }
+      ],
+      "derived": []
+    },
+    "ERBVersions": {
+      "attributes": [
+        {
+          "name": "ERBVersionId",
+          "type": "string"
+        },
+        {
+          "name": "BaseId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Message",
+          "type": "string"
+        },
+        {
+          "name": "Notes",
+          "type": "string"
+        },
+        {
+          "name": "CommitDate",
+          "type": "datetime"
+        },
+        {
+          "name": "IsPublished",
+          "type": "boolean"
+        }
+      ],
+      "derived": [
+        {
+          "name": "PK",
+          "type": "string",
+          "formula": "={{BaseId}} & \"-\" & {{Name}}"
+        }
+      ]
+    },
+    "MagicLinkIntegration": {
+      "attributes": [
+        {
+          "name": "MagicLinkIntegrationId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Enabled",
+          "type": "boolean"
+        },
+        {
+          "name": "TenantId",
+          "type": "string"
+        },
+        {
+          "name": "PublicKeyPem",
+          "type": "string"
+        },
+        {
+          "name": "UserTableName",
+          "type": "string"
+        },
+        {
+          "name": "EmailField",
+          "type": "string"
+        },
+        {
+          "name": "RoleField",
+          "type": "string"
+        },
+        {
+          "name": "IsActiveField",
+          "type": "string"
+        },
+        {
+          "name": "UserIdField",
+          "type": "string"
+        },
+        {
+          "name": "AllowedAlgorithms",
+          "type": "string"
+        },
+        {
+          "name": "RequireTenantBinding",
+          "type": "boolean"
+        },
+        {
+          "name": "UseEmailDagPattern",
+          "type": "boolean"
+        }
+      ],
+      "derived": []
+    },
+    "Shapes": {
+      "attributes": [
+        {
+          "name": "ShapeId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Sides",
           "type": "string"
         }
       ],
       "derived": [
         {
-          "name": "FullName",
+          "name": "HowManySides",
+          "type": "integer",
+          "formula": "=COUNTIFS(Sides!{{Shape}}, Shapes!{{ShapeId}})"
+        },
+        {
+          "name": "IsRectangle",
+          "type": "boolean",
+          "formula": "=AND({{HowManySides}}=4)"
+        },
+        {
+          "name": "IsTriangle",
+          "type": "boolean",
+          "formula": "=AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)"
+        },
+        {
+          "name": "IsRightTriangle",
+          "type": "boolean",
+          "formula": "=AND({{IsTriangle}}, {{MaxAngle}} = 90)"
+        },
+        {
+          "name": "SumOfInternalAngles",
+          "type": "number",
+          "formula": "=SUMIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+        },
+        {
+          "name": "MaxAngle",
+          "type": "number",
+          "formula": "=MAXIFS(Sides!{{Angle}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+        },
+        {
+          "name": "HypotenuseLengthSquared",
+          "type": "number",
+          "formula": "=SUMIFS(Sides!{{HypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+        },
+        {
+          "name": "NonHypotenuseSidesSquared",
+          "type": "number",
+          "formula": "=SUMIFS(Sides!{{NonHypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})"
+        },
+        {
+          "name": "PythagoreanTheoremHolds",
+          "type": "boolean",
+          "formula": "=AND(\r\n  {{IsRightTriangle}},  \r\n  {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}\r\n)"
+        }
+      ]
+    },
+    "Sides": {
+      "attributes": [
+        {
+          "name": "SideId",
+          "type": "string"
+        },
+        {
+          "name": "Label",
+          "type": "string"
+        },
+        {
+          "name": "Length",
+          "type": "integer"
+        },
+        {
+          "name": "Angle",
+          "type": "integer"
+        },
+        {
+          "name": "PreviousSide",
+          "type": "string"
+        },
+        {
+          "name": "NextSide",
+          "type": "string"
+        },
+        {
+          "name": "Shape",
+          "type": "string"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Name",
           "type": "string",
-          "formula": "={{FirstName}} & \" \" & {{LastName}}"
+          "formula": "={{Shape}} & \"-Side-\" & {{Label}}"
+        },
+        {
+          "name": "ShapeSides",
+          "type": "integer",
+          "formula": "=INDEX(Shapes!{{HowManySides}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+        },
+        {
+          "name": "IsRectangle",
+          "type": "boolean",
+          "formula": "=INDEX(Shapes!{{IsRectangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+        },
+        {
+          "name": "IsTriangle",
+          "type": "boolean",
+          "formula": "=INDEX(Shapes!{{IsTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+        },
+        {
+          "name": "IsRightTriangle",
+          "type": "boolean",
+          "formula": "=INDEX(Shapes!{{IsRightTriangle}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+        },
+        {
+          "name": "IsHypotenuse",
+          "type": "boolean",
+          "formula": "=AND(\r\n  {{IsTriangle}},\r\n  {{Length}} > {{PreviousSideLength}},\r\n  {{Length}} > {{NextLength}}\r\n)"
+        },
+        {
+          "name": "StatusOfTheorem",
+          "type": "string",
+          "formula": "=IF({{IsTriangle}}, \n  IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})), \n    \"PYTHAGOREAN THEOREM FALSIFIED!\", \n    \"Pythagorean Theorem Holds (obviously).\"\n  ),\n  \"NA\"\n)"
+        },
+        {
+          "name": "PythagoreanTheoremHolds",
+          "type": "boolean",
+          "formula": "=INDEX(Shapes!{{PythagoreanTheoremHolds}}, MATCH(Sides!{{Shape}}, Shapes!{{ShapeId}}, 0))"
+        },
+        {
+          "name": "LengthSquared",
+          "type": "integer",
+          "formula": "={{Length}} * {{Length}}"
+        },
+        {
+          "name": "HypotenuseLengthSquared",
+          "type": "integer",
+          "formula": "=IF({{IsHypotenuse}}, {{LengthSquared}})"
+        },
+        {
+          "name": "NonHypotenuseLengthSquared",
+          "type": "integer",
+          "formula": "=IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})"
+        },
+        {
+          "name": "PreviousSideLength",
+          "type": "integer",
+          "formula": "=INDEX(Sides!{{Length}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))"
+        },
+        {
+          "name": "NextLength",
+          "type": "integer",
+          "formula": "=INDEX(Sides!{{Length}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))"
+        },
+        {
+          "name": "PreviousAngle",
+          "type": "integer",
+          "formula": "=INDEX(Sides!{{Angle}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))"
+        },
+        {
+          "name": "NextAngle",
+          "type": "integer",
+          "formula": "=INDEX(Sides!{{Angle}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))"
+        },
+        {
+          "name": "PreviousLabel",
+          "type": "string",
+          "formula": "=INDEX(Sides!{{Label}}, MATCH(Sides!{{PreviousSide}}, Sides!{{SideId}}, 0))"
+        },
+        {
+          "name": "NextLabel",
+          "type": "string",
+          "formula": "=INDEX(Sides!{{Label}}, MATCH(Sides!{{NextSide}}, Sides!{{SideId}}, 0))"
+        }
+      ]
+    },
+    "Widgets": {
+      "attributes": [
+        {
+          "name": "WidgetId",
+          "type": "string"
+        },
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Appuser",
+          "type": "string"
+        },
+        {
+          "name": "Color",
+          "type": "string"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Name_from_Appuser",
+          "type": "string",
+          "formula": "=INDEX(AppUsers!{{Name}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))"
+        },
+        {
+          "name": "EmailAddress_from_Appuser",
+          "type": "string",
+          "formula": "=INDEX(AppUsers!{{EmailAddress}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))"
+        },
+        {
+          "name": "Role_from_Appuser",
+          "type": "string",
+          "formula": "=INDEX(AppUsers!{{Role}}, MATCH(Widgets!{{Appuser}}, AppUsers!{{AppUserId}}, 0))"
         }
       ]
     }
   },
   "instances": [
     {
-      "class": "Customers",
-      "id": "Customers_0",
+      "class": "AppUsers",
+      "id": "AppUsers_0",
       "values": {
-        "CustomerId": "cust0001",
-        "Customer": "CUST0001",
-        "EmailAddress": "jane.smith@email.com",
-        "FirstName": "Jannice",
-        "LastName": "Smith"
+        "AppUserId": "ej",
+        "Name": "EJ",
+        "EmailAddress": "ej@ssot.me",
+        "Role": "Admin",
+        "IsActive": true,
+        "Widgets": "",
+        "Notes": ""
       }
     },
     {
-      "class": "Customers",
-      "id": "Customers_1",
+      "class": "AppUsers",
+      "id": "AppUsers_1",
       "values": {
-        "CustomerId": "cust0002",
-        "Customer": "CUST0002",
-        "EmailAddress": "john.doe@email.com",
-        "FirstName": "John",
-        "LastName": "Doe"
+        "AppUserId": "bob",
+        "Name": "Bob",
+        "EmailAddress": "bob@ssot.me",
+        "Role": "Mathemetician",
+        "IsActive": true,
+        "Widgets": "widget1, widget2",
+        "Notes": ""
       }
     },
     {
-      "class": "Customers",
-      "id": "Customers_2",
+      "class": "AppUsers",
+      "id": "AppUsers_2",
       "values": {
-        "CustomerId": "cust0003",
-        "Customer": "CUST0003",
-        "EmailAddress": "emily.jones@email.com",
-        "FirstName": "Emily",
-        "LastName": "Jones"
+        "AppUserId": "andy",
+        "Name": "Andy",
+        "EmailAddress": "guest@ssot.me",
+        "Role": "Guest",
+        "IsActive": true,
+        "Widgets": "widget3",
+        "Notes": ""
+      }
+    },
+    {
+      "class": "AppUsers",
+      "id": "AppUsers_3",
+      "values": {
+        "AppUserId": "bob2",
+        "Name": "Bob2",
+        "EmailAddress": "bob@ssot.me",
+        "Role": "",
+        "IsActive": false,
+        "Widgets": "",
+        "Notes": ""
+      }
+    },
+    {
+      "class": "ERBCustomizations",
+      "id": "ERBCustomizations_0",
+      "values": {
+        "ERBCustomizationId": "03a-customize-schema-sql",
+        "Name": "03a-customize-schema.sql",
+        "Title": "Customize Schema",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE SCHEMA - User-defined tables and schema modifications\n-- ============================================================================\n-- This file is for YOUR custom schema changes that should persist across\n-- regeneration of the base ERB files.\n--\n-- USE THIS FILE FOR:\n--   - Additional tables not defined in the rulebook\n--   - Extra columns on existing tables (ALTER TABLE)\n--   - Custom indexes for performance tuning\n--   - Custom constraints or triggers\n--\n-- IMPORTANT:\n--   - This file runs AFTER 01-drop-and-create-tables.sql\n--   - The base tables already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom schema changes go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Schema"
+      }
+    },
+    {
+      "class": "ERBCustomizations",
+      "id": "ERBCustomizations_1",
+      "values": {
+        "ERBCustomizationId": "03b-customize-functions-sql",
+        "Name": "03b-customize-functions.sql",
+        "Title": "Customize Functions",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE FUNCTIONS - User-defined calculation functions\n-- ============================================================================\n-- This file is for YOUR custom PostgreSQL functions that should persist\n-- across regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 02-create-functions.sql\n--   - Base ERB calc functions already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom functions go here:\nCREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)\n RETURNS numeric\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));\nEND;\n$function$;\n\n\nCREATE OR REPLACE FUNCTION public.calc_sides_length_squared(p_side_id text)\n RETURNS integer\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN ((SELECT length FROM sides WHERE side_id = p_side_id) * (SELECT length FROM sides WHERE side_id = p_side_id));\nEND;\n$function$;\n\nCREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)\n RETURNS numeric\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\nAS $function$\nBEGIN\n  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));\nEND;\n$function$;\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Functions"
+      }
+    },
+    {
+      "class": "ERBCustomizations",
+      "id": "ERBCustomizations_2",
+      "values": {
+        "ERBCustomizationId": "03c-customize-views-sql",
+        "Name": "03c-customize-views.sql",
+        "Title": "Customize Views",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE VIEWS - User-defined views and view extensions\n-- ============================================================================\n-- This file is for YOUR custom views that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 03-create-views.sql\n--   - All base vw_* views already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom views go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Views"
+      }
+    },
+    {
+      "class": "ERBCustomizations",
+      "id": "ERBCustomizations_3",
+      "values": {
+        "ERBCustomizationId": "03d-customize-rls-sql",
+        "Name": "03d-customize-rls.sql",
+        "Title": "Customize Policies (RLS)",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE POLICIES - User-defined Row Level Security policies\n-- ============================================================================\n-- This file is for YOUR custom RLS policies that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 04-create-policies.sql\n--   - Base RLS policies already exist when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom policies go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "RLS"
+      }
+    },
+    {
+      "class": "ERBCustomizations",
+      "id": "ERBCustomizations_4",
+      "values": {
+        "ERBCustomizationId": "03e-customize-data-sql",
+        "Name": "03e-customize-data.sql",
+        "Title": "Customize Data (Seeds / Migrations)",
+        "SQLCode": "-- ============================================================================\n-- CUSTOMIZE DATA - User-defined seed data and data migrations\n-- ============================================================================\n-- This file is for YOUR custom seed data that should persist across\n-- regeneration of the base ERB files.\n--\n-- IMPORTANT:\n--   - This file runs AFTER 05-insert-data.sql\n--   - Base seed data already exists when this runs\n--   - This file will NOT be overwritten by ERB regeneration\n--\n-- ============================================================================\n\n-- Your custom data inserts go here:\n",
+        "SQLTarget": "Postgres",
+        "CustomizationType": "Data"
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_0",
+      "values": {
+        "ERBVersionId": "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-06-22-18-34",
+        "BaseId": "b0e261e6-9ded-4ed0-817a-12a82a538201",
+        "Name": "Version 2026-02-06 22:18:34",
+        "Message": "fixed custom RLS policies.",
+        "Notes": "",
+        "CommitDate": "2026-02-06",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_1",
+      "values": {
+        "ERBVersionId": "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-50-20",
+        "BaseId": "b0e261e6-9ded-4ed0-817a-12a82a538201",
+        "Name": "Version 2026-02-07 01:50:20",
+        "Message": "Trying to get data in as well.",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_2",
+      "values": {
+        "ERBVersionId": "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-54-24",
+        "BaseId": "b0e261e6-9ded-4ed0-817a-12a82a538201",
+        "Name": "Version 2026-02-07 01:54:24",
+        "Message": "Updated base again.",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_3",
+      "values": {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-00-40",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Name": "Version 2026-02-07 02:00:40",
+        "Message": "Trying to get data in the db.",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_4",
+      "values": {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-18-06",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Name": "Version 2026-02-07 02:18:06",
+        "Message": "Added app users.",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_5",
+      "values": {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-27-57",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Name": "Version 2026-02-07 02:27:57",
+        "Message": "Added AppUsers.IsActive",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_6",
+      "values": {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-46-12",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Name": "Version 2026-02-07 22:46:12",
+        "Message": "trying new admin/anon users.",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_7",
+      "values": {
+        "ERBVersionId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-47-11",
+        "BaseId": "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77",
+        "Name": "Version 2026-02-07 22:47:11",
+        "Message": "added admin/anon users.",
+        "Notes": "",
+        "CommitDate": "2026-02-07",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_8",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-08-03-55-18",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-08 03:55:18",
+        "Message": "fixing auth",
+        "Notes": "",
+        "CommitDate": "2026-02-08",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_9",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-07-44",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-09 06:07:44",
+        "Message": "temp 4",
+        "Notes": "",
+        "CommitDate": "2026-02-09",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_10",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-14-38",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-09 06:14:38",
+        "Message": "added ownership records to widgets",
+        "Notes": "",
+        "CommitDate": "2026-02-09",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_11",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-22-15",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-09 07:22:15",
+        "Message": "test preserving builders",
+        "Notes": "",
+        "CommitDate": "2026-02-09",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_12",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-41-26",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-09 07:41:26",
+        "Message": "preserves policies now?",
+        "Notes": "",
+        "CommitDate": "2026-02-09",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_13",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-46-04",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-09 07:46:04",
+        "Message": "added color to widgets",
+        "Notes": "",
+        "CommitDate": "2026-02-09",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "ERBVersions",
+      "id": "ERBVersions_14",
+      "values": {
+        "ERBVersionId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-11-00-40-18",
+        "BaseId": "f4cefffd-29c7-4dc6-8b5b-2142c62a475c",
+        "Name": "Version 2026-02-11 00:40:18",
+        "Message": "added another b ob.",
+        "Notes": "",
+        "CommitDate": "2026-02-11",
+        "IsPublished": false
+      }
+    },
+    {
+      "class": "MagicLinkIntegration",
+      "id": "MagicLinkIntegration_0",
+      "values": {
+        "MagicLinkIntegrationId": "magic-link-config",
+        "Name": "Magic Link Config",
+        "Enabled": true,
+        "TenantId": "c03e9d56-9525-47dd-9ee1-2f2a20383048",
+        "PublicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2XyDcVliu0wjQjDY1Rez\n/krdzYL3v4TXCJbYu2V1EkrKlVjO+ZGCIHu0yMAw5A+cUMm5cXtYyIXNln6tCg0M\nLHcNVrSDm5QuQSUuGP/SVrgSUItyrGfLZOwl+kYXgMmle4t11ecVhkaVARisBcRz\nIrh9ofSNtLR6UlJzKH4uFFswId5HrgwMCbart2YcrA7lrEt1hqASZ7pPPX6/i771\n97VqSf+clLX3Wq5VwyrtC9taTiVZrN/OhtWbSAkUX+NMkCc57MN4CcjP3/8JXbjv\n4L5ExZOpc14zRhOnOnC0cHRX475WoJbjI3+EfYDjaNrV6MVd444S/8HOOz3D8Pki\nXwIDAQAB\n-----END PUBLIC KEY-----",
+        "UserTableName": "app_users",
+        "EmailField": "email_address",
+        "RoleField": "role",
+        "IsActiveField": "is_active",
+        "UserIdField": "",
+        "AllowedAlgorithms": "RS256",
+        "RequireTenantBinding": true,
+        "UseEmailDagPattern": true
+      }
+    },
+    {
+      "class": "Shapes",
+      "id": "Shapes_0",
+      "values": {
+        "ShapeId": "shape1",
+        "Name": "Shape1",
+        "Sides": "shape1-side-a, shape1-side-b, shape1-side-c",
+        "HowManySides": 3,
+        "SumOfInternalAngles": 180,
+        "MaxAngle": 90,
+        "HypotenuseLengthSquared": 25,
+        "NonHypotenuseSidesSquared": 25
+      }
+    },
+    {
+      "class": "Shapes",
+      "id": "Shapes_1",
+      "values": {
+        "ShapeId": "shape2",
+        "Name": "Shape2",
+        "Sides": "shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d",
+        "HowManySides": 4,
+        "SumOfInternalAngles": 360,
+        "MaxAngle": 90,
+        "HypotenuseLengthSquared": 0,
+        "NonHypotenuseSidesSquared": 0
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_0",
+      "values": {
+        "SideId": "shape1-side-a",
+        "ShapeSides": "3",
+        "Label": "A",
+        "IsRectangle": false,
+        "IsTriangle": "True",
+        "IsRightTriangle": "True",
+        "PythagoreanTheoremHolds": "True",
+        "PreviousSideLength": "3",
+        "Length": 5,
+        "NextLength": "4",
+        "PreviousAngle": "90",
+        "Angle": 45,
+        "NextAngle": "45",
+        "PreviousSide": "shape1-side-c",
+        "NextSide": "shape1-side-b",
+        "Shape": "shape1",
+        "PreviousLabel": "C",
+        "NextLabel": "B"
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_1",
+      "values": {
+        "SideId": "shape1-side-b",
+        "ShapeSides": "3",
+        "Label": "B",
+        "IsRectangle": false,
+        "IsTriangle": "True",
+        "IsRightTriangle": "True",
+        "PythagoreanTheoremHolds": "True",
+        "PreviousSideLength": "5",
+        "Length": 4,
+        "NextLength": "3",
+        "PreviousAngle": "45",
+        "Angle": 45,
+        "NextAngle": "90",
+        "PreviousSide": "shape1-side-a",
+        "NextSide": "shape1-side-c",
+        "Shape": "shape1",
+        "PreviousLabel": "A",
+        "NextLabel": "C"
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_2",
+      "values": {
+        "SideId": "shape1-side-c",
+        "ShapeSides": "3",
+        "Label": "C",
+        "IsRectangle": false,
+        "IsTriangle": "True",
+        "IsRightTriangle": "True",
+        "PythagoreanTheoremHolds": "True",
+        "PreviousSideLength": "4",
+        "Length": 3,
+        "NextLength": "5",
+        "PreviousAngle": "45",
+        "Angle": 90,
+        "NextAngle": "45",
+        "PreviousSide": "shape1-side-b",
+        "NextSide": "shape1-side-a",
+        "Shape": "shape1",
+        "PreviousLabel": "B",
+        "NextLabel": "A"
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_3",
+      "values": {
+        "SideId": "shape2-side-a",
+        "ShapeSides": "4",
+        "Label": "A",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "PythagoreanTheoremHolds": false,
+        "PreviousSideLength": "2",
+        "Length": 2,
+        "NextLength": "2",
+        "PreviousAngle": "90",
+        "Angle": 90,
+        "NextAngle": "90",
+        "PreviousSide": "shape2-side-d",
+        "NextSide": "shape2-side-b",
+        "Shape": "shape2",
+        "PreviousLabel": "D",
+        "NextLabel": "B"
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_4",
+      "values": {
+        "SideId": "shape2-side-b",
+        "ShapeSides": "4",
+        "Label": "B",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "PythagoreanTheoremHolds": false,
+        "PreviousSideLength": "2",
+        "Length": 2,
+        "NextLength": "2",
+        "PreviousAngle": "90",
+        "Angle": 90,
+        "NextAngle": "90",
+        "PreviousSide": "shape2-side-a",
+        "NextSide": "shape2-side-c",
+        "Shape": "shape2",
+        "PreviousLabel": "A",
+        "NextLabel": "C"
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_5",
+      "values": {
+        "SideId": "shape2-side-c",
+        "ShapeSides": "4",
+        "Label": "C",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "PythagoreanTheoremHolds": false,
+        "PreviousSideLength": "2",
+        "Length": 2,
+        "NextLength": "2",
+        "PreviousAngle": "90",
+        "Angle": 90,
+        "NextAngle": "90",
+        "PreviousSide": "shape2-side-b",
+        "NextSide": "shape2-side-d",
+        "Shape": "shape2",
+        "PreviousLabel": "B",
+        "NextLabel": "D"
+      }
+    },
+    {
+      "class": "Sides",
+      "id": "Sides_6",
+      "values": {
+        "SideId": "shape2-side-d",
+        "ShapeSides": "4",
+        "Label": "D",
+        "IsRectangle": "True",
+        "IsTriangle": false,
+        "IsRightTriangle": false,
+        "PythagoreanTheoremHolds": false,
+        "PreviousSideLength": "2",
+        "Length": 2,
+        "NextLength": "2",
+        "PreviousAngle": "90",
+        "Angle": 90,
+        "NextAngle": "90",
+        "PreviousSide": "shape2-side-c",
+        "NextSide": "shape2-side-a",
+        "Shape": "shape2",
+        "PreviousLabel": "C",
+        "NextLabel": "A"
+      }
+    },
+    {
+      "class": "Widgets",
+      "id": "Widgets_0",
+      "values": {
+        "WidgetId": "widget1",
+        "Name": "widget1",
+        "Appuser": "bob",
+        "Name_from_Appuser": "Bob",
+        "EmailAddress_from_Appuser": "bob@ssot.me",
+        "Role_from_Appuser": "Mathemetician",
+        "Color": "Blue"
+      }
+    },
+    {
+      "class": "Widgets",
+      "id": "Widgets_1",
+      "values": {
+        "WidgetId": "widget2",
+        "Name": "widget2",
+        "Appuser": "bob",
+        "Name_from_Appuser": "Bob",
+        "EmailAddress_from_Appuser": "bob@ssot.me",
+        "Role_from_Appuser": "Mathemetician",
+        "Color": "pink"
+      }
+    },
+    {
+      "class": "Widgets",
+      "id": "Widgets_2",
+      "values": {
+        "WidgetId": "widget3",
+        "Name": "widget3",
+        "Appuser": "andy",
+        "Name_from_Appuser": "Andy",
+        "EmailAddress_from_Appuser": "guest@ssot.me",
+        "Role_from_Appuser": "Guest",
+        "Color": ""
       }
     }
   ]

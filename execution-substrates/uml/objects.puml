@@ -1,27 +1,454 @@
 @startuml
 
-object "Customers_0" as Customers_0 {
-  CustomerId = "cust0001"
-  Customer = "CUST0001"
-  EmailAddress = "jane.smith@email.com"
-  FirstName = "Jannice"
-  LastName = "Smith"
+object "EJ" as AppUsers_0 {
+  AppUserId = "ej"
+  Name = "EJ"
+  EmailAddress = "ej@ssot.me"
+  Role = "Admin"
+  IsActive = true
+  Widgets = ""
+  Notes = ""
 }
 
-object "Customers_1" as Customers_1 {
-  CustomerId = "cust0002"
-  Customer = "CUST0002"
-  EmailAddress = "john.doe@email.com"
-  FirstName = "John"
-  LastName = "Doe"
+object "Bob" as AppUsers_1 {
+  AppUserId = "bob"
+  Name = "Bob"
+  EmailAddress = "bob@ssot.me"
+  Role = "Mathemetician"
+  IsActive = true
+  Widgets = "widget1, widget2"
+  Notes = ""
 }
 
-object "Customers_2" as Customers_2 {
-  CustomerId = "cust0003"
-  Customer = "CUST0003"
-  EmailAddress = "emily.jones@email.com"
-  FirstName = "Emily"
-  LastName = "Jones"
+object "Andy" as AppUsers_2 {
+  AppUserId = "andy"
+  Name = "Andy"
+  EmailAddress = "guest@ssot.me"
+  Role = "Guest"
+  IsActive = true
+  Widgets = "widget3"
+  Notes = ""
+}
+
+object "Bob2" as AppUsers_3 {
+  AppUserId = "bob2"
+  Name = "Bob2"
+  EmailAddress = "bob@ssot.me"
+  Role = ""
+  IsActive = false
+  Widgets = ""
+  Notes = ""
+}
+
+object "03a-customize-schema.sql" as ERBCustomizations_0 {
+  ERBCustomizationId = "03a-customize-schema-sql"
+  Name = "03a-customize-schema.sql"
+  Title = "Customize Schema"
+  SQLCode = "-- ========================..."
+  SQLTarget = "Postgres"
+  CustomizationType = "Schema"
+}
+
+object "03b-customize-functions.sql" as ERBCustomizations_1 {
+  ERBCustomizationId = "03b-customize-functions-sql"
+  Name = "03b-customize-functions.sql"
+  Title = "Customize Functions"
+  SQLCode = "-- ========================..."
+  SQLTarget = "Postgres"
+  CustomizationType = "Functions"
+}
+
+object "03c-customize-views.sql" as ERBCustomizations_2 {
+  ERBCustomizationId = "03c-customize-views-sql"
+  Name = "03c-customize-views.sql"
+  Title = "Customize Views"
+  SQLCode = "-- ========================..."
+  SQLTarget = "Postgres"
+  CustomizationType = "Views"
+}
+
+object "03d-customize-rls.sql" as ERBCustomizations_3 {
+  ERBCustomizationId = "03d-customize-rls-sql"
+  Name = "03d-customize-rls.sql"
+  Title = "Customize Policies (RLS)"
+  SQLCode = "-- ========================..."
+  SQLTarget = "Postgres"
+  CustomizationType = "RLS"
+}
+
+object "03e-customize-data.sql" as ERBCustomizations_4 {
+  ERBCustomizationId = "03e-customize-data-sql"
+  Name = "03e-customize-data.sql"
+  Title = "Customize Data (Seeds / Mig..."
+  SQLCode = "-- ========================..."
+  SQLTarget = "Postgres"
+  CustomizationType = "Data"
+}
+
+object "Version 2026-02-06 22:18:34" as ERBVersions_0 {
+  ERBVersionId = "b0e261e6-9ded-4ed0-817a-12a..."
+  BaseId = "b0e261e6-9ded-4ed0-817a-12a..."
+  Name = "Version 2026-02-06 22:18:34"
+  Message = "fixed custom RLS policies."
+  Notes = ""
+  CommitDate = "2026-02-06"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 01:50:20" as ERBVersions_1 {
+  ERBVersionId = "b0e261e6-9ded-4ed0-817a-12a..."
+  BaseId = "b0e261e6-9ded-4ed0-817a-12a..."
+  Name = "Version 2026-02-07 01:50:20"
+  Message = "Trying to get data in as well."
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 01:54:24" as ERBVersions_2 {
+  ERBVersionId = "b0e261e6-9ded-4ed0-817a-12a..."
+  BaseId = "b0e261e6-9ded-4ed0-817a-12a..."
+  Name = "Version 2026-02-07 01:54:24"
+  Message = "Updated base again."
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 02:00:40" as ERBVersions_3 {
+  ERBVersionId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  BaseId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  Name = "Version 2026-02-07 02:00:40"
+  Message = "Trying to get data in the db."
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 02:18:06" as ERBVersions_4 {
+  ERBVersionId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  BaseId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  Name = "Version 2026-02-07 02:18:06"
+  Message = "Added app users."
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 02:27:57" as ERBVersions_5 {
+  ERBVersionId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  BaseId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  Name = "Version 2026-02-07 02:27:57"
+  Message = "Added AppUsers.IsActive"
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 22:46:12" as ERBVersions_6 {
+  ERBVersionId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  BaseId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  Name = "Version 2026-02-07 22:46:12"
+  Message = "trying new admin/anon users."
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-07 22:47:11" as ERBVersions_7 {
+  ERBVersionId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  BaseId = "e7b6e278-92b8-4a76-a3bf-d2b..."
+  Name = "Version 2026-02-07 22:47:11"
+  Message = "added admin/anon users."
+  Notes = ""
+  CommitDate = "2026-02-07"
+  IsPublished = false
+}
+
+object "Version 2026-02-08 03:55:18" as ERBVersions_8 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-08 03:55:18"
+  Message = "fixing auth"
+  Notes = ""
+  CommitDate = "2026-02-08"
+  IsPublished = false
+}
+
+object "Version 2026-02-09 06:07:44" as ERBVersions_9 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-09 06:07:44"
+  Message = "temp 4"
+  Notes = ""
+  CommitDate = "2026-02-09"
+  IsPublished = false
+}
+
+object "Version 2026-02-09 06:14:38" as ERBVersions_10 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-09 06:14:38"
+  Message = "added ownership records to ..."
+  Notes = ""
+  CommitDate = "2026-02-09"
+  IsPublished = false
+}
+
+object "Version 2026-02-09 07:22:15" as ERBVersions_11 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-09 07:22:15"
+  Message = "test preserving builders"
+  Notes = ""
+  CommitDate = "2026-02-09"
+  IsPublished = false
+}
+
+object "Version 2026-02-09 07:41:26" as ERBVersions_12 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-09 07:41:26"
+  Message = "preserves policies now?"
+  Notes = ""
+  CommitDate = "2026-02-09"
+  IsPublished = false
+}
+
+object "Version 2026-02-09 07:46:04" as ERBVersions_13 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-09 07:46:04"
+  Message = "added color to widgets"
+  Notes = ""
+  CommitDate = "2026-02-09"
+  IsPublished = false
+}
+
+object "Version 2026-02-11 00:40:18" as ERBVersions_14 {
+  ERBVersionId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  BaseId = "f4cefffd-29c7-4dc6-8b5b-214..."
+  Name = "Version 2026-02-11 00:40:18"
+  Message = "added another b ob."
+  Notes = ""
+  CommitDate = "2026-02-11"
+  IsPublished = false
+}
+
+object "Magic Link Config" as MagicLinkIntegration_0 {
+  MagicLinkIntegrationId = "magic-link-config"
+  Name = "Magic Link Config"
+  Enabled = true
+  TenantId = "c03e9d56-9525-47dd-9ee1-2f2..."
+  PublicKeyPem = "-----BEGIN PUBLIC KEY-----
+..."
+  UserTableName = "app_users"
+  EmailField = "email_address"
+  RoleField = "role"
+  IsActiveField = "is_active"
+  UserIdField = ""
+  AllowedAlgorithms = "RS256"
+  RequireTenantBinding = true
+  UseEmailDagPattern = true
+}
+
+object "Shape1" as Shapes_0 {
+  ShapeId = "shape1"
+  Name = "Shape1"
+  Sides = "shape1-side-a, shape1-side-..."
+  HowManySides = 3
+  SumOfInternalAngles = 180
+  MaxAngle = 90
+  HypotenuseLengthSquared = 25
+  NonHypotenuseSidesSquared = 25
+}
+
+object "Shape2" as Shapes_1 {
+  ShapeId = "shape2"
+  Name = "Shape2"
+  Sides = "shape2-side-a, shape2-side-..."
+  HowManySides = 4
+  SumOfInternalAngles = 360
+  MaxAngle = 90
+  HypotenuseLengthSquared = 0
+  NonHypotenuseSidesSquared = 0
+}
+
+object "Shape1-Side-A" as Sides_0 {
+  SideId = "shape1-side-a"
+  ShapeSides = "3"
+  Label = "A"
+  IsRectangle = false
+  IsTriangle = "True"
+  IsRightTriangle = "True"
+  PythagoreanTheoremHolds = "True"
+  PreviousSideLength = "3"
+  Length = 5
+  NextLength = "4"
+  PreviousAngle = "90"
+  Angle = 45
+  NextAngle = "45"
+  PreviousSide = "shape1-side-c"
+  NextSide = "shape1-side-b"
+  Shape = "shape1"
+  PreviousLabel = "C"
+  NextLabel = "B"
+}
+
+object "Shape1-Side-B" as Sides_1 {
+  SideId = "shape1-side-b"
+  ShapeSides = "3"
+  Label = "B"
+  IsRectangle = false
+  IsTriangle = "True"
+  IsRightTriangle = "True"
+  PythagoreanTheoremHolds = "True"
+  PreviousSideLength = "5"
+  Length = 4
+  NextLength = "3"
+  PreviousAngle = "45"
+  Angle = 45
+  NextAngle = "90"
+  PreviousSide = "shape1-side-a"
+  NextSide = "shape1-side-c"
+  Shape = "shape1"
+  PreviousLabel = "A"
+  NextLabel = "C"
+}
+
+object "Shape1-Side-C" as Sides_2 {
+  SideId = "shape1-side-c"
+  ShapeSides = "3"
+  Label = "C"
+  IsRectangle = false
+  IsTriangle = "True"
+  IsRightTriangle = "True"
+  PythagoreanTheoremHolds = "True"
+  PreviousSideLength = "4"
+  Length = 3
+  NextLength = "5"
+  PreviousAngle = "45"
+  Angle = 90
+  NextAngle = "45"
+  PreviousSide = "shape1-side-b"
+  NextSide = "shape1-side-a"
+  Shape = "shape1"
+  PreviousLabel = "B"
+  NextLabel = "A"
+}
+
+object "Shape2-Side-A" as Sides_3 {
+  SideId = "shape2-side-a"
+  ShapeSides = "4"
+  Label = "A"
+  IsRectangle = "True"
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = "2"
+  Length = 2
+  NextLength = "2"
+  PreviousAngle = "90"
+  Angle = 90
+  NextAngle = "90"
+  PreviousSide = "shape2-side-d"
+  NextSide = "shape2-side-b"
+  Shape = "shape2"
+  PreviousLabel = "D"
+  NextLabel = "B"
+}
+
+object "Shape2-Side-B" as Sides_4 {
+  SideId = "shape2-side-b"
+  ShapeSides = "4"
+  Label = "B"
+  IsRectangle = "True"
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = "2"
+  Length = 2
+  NextLength = "2"
+  PreviousAngle = "90"
+  Angle = 90
+  NextAngle = "90"
+  PreviousSide = "shape2-side-a"
+  NextSide = "shape2-side-c"
+  Shape = "shape2"
+  PreviousLabel = "A"
+  NextLabel = "C"
+}
+
+object "Shape2-Side-C" as Sides_5 {
+  SideId = "shape2-side-c"
+  ShapeSides = "4"
+  Label = "C"
+  IsRectangle = "True"
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = "2"
+  Length = 2
+  NextLength = "2"
+  PreviousAngle = "90"
+  Angle = 90
+  NextAngle = "90"
+  PreviousSide = "shape2-side-b"
+  NextSide = "shape2-side-d"
+  Shape = "shape2"
+  PreviousLabel = "B"
+  NextLabel = "D"
+}
+
+object "Shape2-Side-D" as Sides_6 {
+  SideId = "shape2-side-d"
+  ShapeSides = "4"
+  Label = "D"
+  IsRectangle = "True"
+  IsTriangle = false
+  IsRightTriangle = false
+  PythagoreanTheoremHolds = false
+  PreviousSideLength = "2"
+  Length = 2
+  NextLength = "2"
+  PreviousAngle = "90"
+  Angle = 90
+  NextAngle = "90"
+  PreviousSide = "shape2-side-c"
+  NextSide = "shape2-side-a"
+  Shape = "shape2"
+  PreviousLabel = "C"
+  NextLabel = "A"
+}
+
+object "widget1" as Widgets_0 {
+  WidgetId = "widget1"
+  Name = "widget1"
+  Appuser = "bob"
+  Name_from_Appuser = "Bob"
+  EmailAddress_from_Appuser = "bob@ssot.me"
+  Role_from_Appuser = "Mathemetician"
+  Color = "Blue"
+}
+
+object "widget2" as Widgets_1 {
+  WidgetId = "widget2"
+  Name = "widget2"
+  Appuser = "bob"
+  Name_from_Appuser = "Bob"
+  EmailAddress_from_Appuser = "bob@ssot.me"
+  Role_from_Appuser = "Mathemetician"
+  Color = "pink"
+}
+
+object "widget3" as Widgets_2 {
+  WidgetId = "widget3"
+  Name = "widget3"
+  Appuser = "andy"
+  Name_from_Appuser = "Andy"
+  EmailAddress_from_Appuser = "guest@ssot.me"
+  Role_from_Appuser = "Guest"
+  Color = ""
 }
 
 @enduml

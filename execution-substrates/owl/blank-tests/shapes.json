@@ -1,0 +1,30 @@
+[
+  {
+    "shape_id": "shape1",
+    "name": "Shape1",
+    "sides": "shape1-side-a, shape1-side-b, shape1-side-c",
+    "how_many_sides": null,
+    "sum_of_internal_angles": null,
+    "is_triangle": null,
+    "max_angle": null,
+    "is_right_triangle": null,
+    "hypotenuse_length_squared": null,
+    "non_hypotenuse_sides_squared": null,
+    "pythagorean_theorem_holds": null,
+    "is_rectangle": null
+  },
+  {
+    "shape_id": "shape2",
+    "name": "Shape2",
+    "sides": "shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d",
+    "how_many_sides": null,
+    "sum_of_internal_angles": null,
+    "max_angle": null,
+    "hypotenuse_length_squared": null,
+    "non_hypotenuse_sides_squared": null,
+    "is_rectangle": null,
+    "is_triangle": null,
+    "is_right_triangle": null,
+    "pythagorean_theorem_holds": null
+  }
+]

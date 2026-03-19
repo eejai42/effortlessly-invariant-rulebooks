@@ -1,0 +1,29 @@
+[
+  {
+    "widget_id": "widget1",
+    "name": "widget1",
+    "appuser": "bob",
+    "role_from_appuser": "Mathemetician",
+    "email_address_from_appuser": "bob@ssot.me",
+    "name_from_appuser": "Bob",
+    "color": "Blue"
+  },
+  {
+    "widget_id": "widget2",
+    "name": "widget2",
+    "appuser": "bob",
+    "role_from_appuser": "Mathemetician",
+    "email_address_from_appuser": "bob@ssot.me",
+    "name_from_appuser": "Bob",
+    "color": "pink"
+  },
+  {
+    "widget_id": "widget3",
+    "name": "widget3",
+    "appuser": "andy",
+    "role_from_appuser": "Guest",
+    "email_address_from_appuser": "guest@ssot.me",
+    "name_from_appuser": "Andy",
+    "color": ""
+  }
+]

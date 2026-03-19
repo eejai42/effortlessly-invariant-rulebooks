@@ -309,25 +309,52 @@ Lsubst_done:
     .data
     .globl str_0
 str_0:
-    .asciz " "
+    .asciz "-Side-"
     .globl str_0_len
 str_0_len:
+    .quad 6
+    .globl str_1
+str_1:
+    .asciz "PYTHAGOREAN THEOREM FALSIFIED!"
+    .globl str_1_len
+str_1_len:
+    .quad 30
+    .globl str_2
+str_2:
+    .asciz "Pythagorean Theorem Holds (obviously)."
+    .globl str_2_len
+str_2_len:
+    .quad 38
+    .globl str_3
+str_3:
+    .asciz "NA"
+    .globl str_3_len
+str_3_len:
+    .quad 2
+    .globl str_4
+str_4:
+    .asciz "-"
+    .globl str_4_len
+str_4_len:
     .quad 1
 
     // Static result buffers for string concatenation
     .bss
-    .globl _result_buf_eval_customers_full_name
+    .globl _result_buf_eval_erb_versions_pk
     .p2align 3
-_result_buf_eval_customers_full_name:
+_result_buf_eval_erb_versions_pk:
+    .space 1024
+    .globl _result_buf_eval_sides_name
+    .p2align 3
+_result_buf_eval_sides_name:
     .space 1024
 
     .text
 
-// Full name is computed from the first and last name of the customer
-// Formula: ={{FirstName}} & " " & {{LastName}}
-    .globl _eval_customers_full_name
+// Formula: =AND({{HowManySides}}=4)
+    .globl _eval_shapes_is_rectangle
     .p2align 2
-_eval_customers_full_name:
+_eval_shapes_is_rectangle:
     stp x29, x30, [sp, #-16]!
     mov x29, sp
     stp x19, x20, [sp, #-16]!
@@ -336,22 +363,373 @@ _eval_customers_full_name:
     sub sp, sp, #256
     mov x19, x0
     ldr x0, [x19, #48]
-    ldr x1, [x19, #56]
+    mov x20, x0
+    mov x0, #4
+    cmp x20, x0
+    cset w0, eq
+    cbz w0, and_false_1
+    mov w0, #1
+    b and_end_2
+and_false_1:
+    mov w0, #0
+and_end_2:
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)
+    .globl _eval_shapes_is_triangle
+    .p2align 2
+_eval_shapes_is_triangle:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #64]
+    ldr x1, [x19, #72]
+    mov x20, x0
+    mov x21, x1
+    mov x0, #180
+    mov x2, x0
+    mov x3, x1
+    mov x0, x20
+    mov x1, x21
+    bl _string_equals
+    cbz w0, and_false_3
+    ldr x0, [x19, #48]
+    mov x20, x0
+    mov x0, #3
+    cmp x20, x0
+    cset w0, eq
+    cbz w0, and_false_3
+    mov w0, #1
+    b and_end_4
+and_false_3:
+    mov w0, #0
+and_end_4:
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =AND({{IsTriangle}}, {{MaxAngle}} = 90)
+    .globl _eval_shapes_is_right_triangle
+    .p2align 2
+_eval_shapes_is_right_triangle:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldrb w0, [x19, #57]
+    cbz w0, and_false_5
+    ldr x0, [x19, #80]
+    ldr x1, [x19, #88]
+    mov x20, x0
+    mov x21, x1
+    mov x0, #90
+    mov x2, x0
+    mov x3, x1
+    mov x0, x20
+    mov x1, x21
+    bl _string_equals
+    cbz w0, and_false_5
+    mov w0, #1
+    b and_end_6
+and_false_5:
+    mov w0, #0
+and_end_6:
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =AND(   {{IsRightTriangle}},     {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}} )
+    .globl _eval_shapes_pythagorean_theorem_holds
+    .p2align 2
+_eval_shapes_pythagorean_theorem_holds:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldrb w0, [x19, #58]
+    cbz w0, and_false_7
+    ldr x0, [x19, #96]
+    ldr x1, [x19, #104]
+    mov x20, x0
+    mov x21, x1
+    ldr x0, [x19, #112]
+    ldr x1, [x19, #120]
+    mov x2, x0
+    mov x3, x1
+    mov x0, x20
+    mov x1, x21
+    bl _string_equals
+    cbz w0, and_false_7
+    mov w0, #1
+    b and_end_8
+and_false_7:
+    mov w0, #0
+and_end_8:
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: ={{Shape}} & "-Side-" & {{Label}}
+    .globl _eval_sides_name
+    .p2align 2
+_eval_sides_name:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #192]
+    ldr x1, [x19, #200]
     str x0, [sp, #16]
     str x1, [sp, #24]
     adrp x0, str_0@PAGE
     add x0, x0, str_0@PAGEOFF
-    mov x1, #1
+    mov x1, #6
     str x0, [sp, #32]
     str x1, [sp, #40]
-    ldr x0, [x19, #64]
-    ldr x1, [x19, #72]
+    ldr x0, [x19, #40]
+    ldr x1, [x19, #48]
     str x0, [sp, #48]
     str x1, [sp, #56]
     ldr x0, [sp, #16]
     ldr x1, [sp, #24]
-    adrp x22, _result_buf_eval_customers_full_name@PAGE
-    add x22, x22, _result_buf_eval_customers_full_name@PAGEOFF
+    adrp x22, _result_buf_eval_sides_name@PAGE
+    add x22, x22, _result_buf_eval_sides_name@PAGEOFF
+    ldr x4, [sp, #40]
+    ldr x3, [sp, #32]
+    mov x2, x1
+    mov x1, x0
+    mov x0, x22
+    bl _string_concat
+    ldr x4, [sp, #56]
+    ldr x3, [sp, #48]
+    mov x2, x1
+    mov x1, x0
+    mov x0, x22
+    bl _string_concat
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Is this the Hypotenuse of a Right Angle Triangle?
+// Formula: =AND(   {{IsTriangle}},   {{Length}} > {{PreviousSideLength}},   {{Length}} > {{NextLength}} )
+    .globl _eval_sides_is_hypotenuse
+    .p2align 2
+_eval_sides_is_hypotenuse:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldrb w0, [x19, #57]
+    cbz w0, and_false_9
+    ldr x0, [x19, #120]
+    mov x20, x0
+    ldr x0, [x19, #112]
+    cmp x20, x0
+    cset w0, gt
+    cbz w0, and_false_9
+    ldr x0, [x19, #120]
+    mov x20, x0
+    ldr x0, [x19, #128]
+    cmp x20, x0
+    cset w0, gt
+    cbz w0, and_false_9
+    mov w0, #1
+    b and_end_10
+and_false_9:
+    mov w0, #0
+and_end_10:
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.
+// Formula: =IF({{IsTriangle}},    IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})),      "PYTHAGOREAN THEOREM FALSIFIED!",      "Pythagorean Theorem Holds (obviously)."   ),   "NA" )
+    .globl _eval_sides_status_of_theorem
+    .p2align 2
+_eval_sides_status_of_theorem:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldrb w0, [x19, #57]
+    cbz w0, if_else_11
+    ldrb w0, [x19, #58]
+    cbz w0, and_false_15
+    ldrb w0, [x19, #80]
+    eor w0, w0, #1
+    cbz w0, and_false_15
+    mov w0, #1
+    b and_end_16
+and_false_15:
+    mov w0, #0
+and_end_16:
+    cbz w0, if_else_13
+    adrp x0, str_1@PAGE
+    add x0, x0, str_1@PAGEOFF
+    mov x1, #30
+    mov x22, x0
+    mov x23, x1
+    b if_end_14
+if_else_13:
+    adrp x0, str_2@PAGE
+    add x0, x0, str_2@PAGEOFF
+    mov x1, #38
+    mov x22, x0
+    mov x23, x1
+if_end_14:
+    mov x0, x22
+    mov x1, x23
+    mov x22, x0
+    mov x23, x1
+    b if_end_12
+if_else_11:
+    adrp x0, str_3@PAGE
+    add x0, x0, str_3@PAGEOFF
+    mov x1, #2
+    mov x22, x0
+    mov x23, x1
+if_end_12:
+    mov x0, x22
+    mov x1, x23
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =IF({{IsHypotenuse}}, {{LengthSquared}})
+    .globl _eval_sides_hypotenuse_length_squared
+    .p2align 2
+_eval_sides_hypotenuse_length_squared:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldrb w0, [x19, #59]
+    cbz w0, if_else_17
+    ldr x0, [x19, #88]
+    mov x22, x0
+    b if_end_18
+if_else_17:
+    mov x0, #0
+    mov x22, x0
+if_end_18:
+    mov x0, x22
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: =IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})
+    .globl _eval_sides_non_hypotenuse_length_squared
+    .p2align 2
+_eval_sides_non_hypotenuse_length_squared:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldrb w0, [x19, #59]
+    eor w0, w0, #1
+    cbz w0, and_false_21
+    ldrb w0, [x19, #57]
+    cbz w0, and_false_21
+    mov w0, #1
+    b and_end_22
+and_false_21:
+    mov w0, #0
+and_end_22:
+    cbz w0, if_else_19
+    ldr x0, [x19, #88]
+    mov x22, x0
+    b if_end_20
+if_else_19:
+    mov x0, #0
+    mov x22, x0
+if_end_20:
+    mov x0, x22
+    add sp, sp, #256
+    ldp x23, x24, [sp], #16
+    ldp x21, x22, [sp], #16
+    ldp x19, x20, [sp], #16
+    ldp x29, x30, [sp], #16
+    ret
+
+// Formula: ={{BaseId}} & "-" & {{Name}}
+    .globl _eval_erb_versions_pk
+    .p2align 2
+_eval_erb_versions_pk:
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+    stp x19, x20, [sp, #-16]!
+    stp x21, x22, [sp, #-16]!
+    stp x23, x24, [sp, #-16]!
+    sub sp, sp, #256
+    mov x19, x0
+    ldr x0, [x19, #32]
+    ldr x1, [x19, #40]
+    str x0, [sp, #16]
+    str x1, [sp, #24]
+    adrp x0, str_4@PAGE
+    add x0, x0, str_4@PAGEOFF
+    mov x1, #1
+    str x0, [sp, #32]
+    str x1, [sp, #40]
+    ldr x0, [x19, #48]
+    ldr x1, [x19, #56]
+    str x0, [sp, #48]
+    str x1, [sp, #56]
+    ldr x0, [sp, #16]
+    ldr x1, [sp, #24]
+    adrp x22, _result_buf_eval_erb_versions_pk@PAGE
+    add x22, x22, _result_buf_eval_erb_versions_pk@PAGEOFF
     ldr x4, [sp, #40]
     ldr x3, [sp, #32]
     mov x2, x1

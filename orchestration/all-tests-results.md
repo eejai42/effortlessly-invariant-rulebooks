@@ -4,35 +4,35 @@
 
 - **Rulebook:** `/Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/effortless-rulebook/effortless-rulebook.json`
 - **Substrates Tested:** 12
-- **Computed Columns Tested:** 1
+- **Computed Columns Tested:** 24
 
 ## Summary by Substrate
 
 | Substrate | Passed | Failed | Total | Score | Duration | Status |
 |-----------|--------|--------|-------|-------|----------|--------|
-| explain-dag | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| python | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| uml | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| yaml | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| binary | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| cobol | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| csv | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| golang | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| owl | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| xlsx | 3 | 0 | 3 | 100.0% | < 1s | PASS |
-| postgres | 3 | 0 | 3 | 100.0% | 2s | PASS |
-| english | 3 | 0 | 3 | 100.0% | 18s | PASS |
+| owl | 125 | 21 | 146 | 85.6% | < 1s | FAIL |
+| xlsx | 117 | 29 | 146 | 80.1% | < 1s | FAIL |
+| postgres | 114 | 32 | 146 | 78.1% | 2s | FAIL |
+| english | 112 | 34 | 146 | 76.7% | 1m 11s | FAIL |
+| explain-dag | 109 | 37 | 146 | 74.7% | < 1s | FAIL |
+| uml | 109 | 37 | 146 | 74.7% | < 1s | FAIL |
+| python | 9 | 9 | 18 | 50.0% | < 1s | FAIL |
+| yaml | 9 | 9 | 18 | 50.0% | < 1s | FAIL |
+| cobol | 4 | 14 | 18 | 22.2% | < 1s | FAIL |
+| binary | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
+| csv | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
+| golang | 0 | 0 | 0 | 0.0% | < 1s | ERROR: No test-answers found |
 
 ## Overall Statistics
 
 | Metric | Value |
 |--------|-------|
 | Total Substrates | 12 |
-| Total Fields Tested | 36 |
-| Total Passed | 36 |
-| Total Failed | 0 |
-| Overall Score | 100.0% |
-| Total Duration | 23s |
+| Total Fields Tested | 930 |
+| Total Passed | 708 |
+| Total Failed | 222 |
+| Overall Score | 76.1% |
+| Total Duration | 1m 16s |
 
 ---
 

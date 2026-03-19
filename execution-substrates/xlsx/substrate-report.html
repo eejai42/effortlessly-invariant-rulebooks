@@ -69,8 +69,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>XLSX Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-good">80.1%</span></div>
+            <div class="stat"><span>117/146 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -111,16 +111,34 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <pre>=== XLSX (Excel) Substrate Test Run ===
 
 
-  Processing customers...
-Found 6 fields in test answers
-Primary key field: customer_id
-Reading from worksheet: Customers
-Found 6 columns, matched 6 to JSON fields
-Loaded 3 rows from xlsx
-Filled 3 null fields across 3 records
-Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/customers.json
+  Processing shapes...
+Found 12 fields in test answers
+Primary key field: shape_id
+Reading from worksheet: Shapes
+Found 12 columns, matched 12 to JSON fields
+Loaded 2 rows from xlsx
+Filled 18 null fields across 2 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/shapes.json
 
-xlsx: Processed 1 entities from rulebook.xlsx
+  Processing sides...
+Found 24 fields in test answers
+Primary key field: side_id
+Reading from worksheet: Sides
+Found 24 columns, matched 24 to JSON fields
+Loaded 7 rows from xlsx
+Filled 109 null fields across 7 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/sides.json
+
+  Processing widgets...
+Found 7 fields in test answers
+Primary key field: widget_id
+Reading from worksheet: Widgets
+Found 7 columns, matched 7 to JSON fields
+Loaded 3 rows from xlsx
+Filled 9 null fields across 3 records
+Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/xlsx/test-answers/widgets.json
+
+xlsx: Processed 3 entities from rulebook.xlsx
 
 </pre>
             </div>
@@ -129,10 +147,10 @@ xlsx: Processed 1 entities from rulebook.xlsx
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-good">80.1%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">117</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">29</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">146</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -143,7 +161,7 @@ xlsx: Processed 1 entities from rulebook.xlsx
                     <span class="file-icon">📗</span>
                     <div class="file-info">
                         <h3>rulebook.xlsx</h3>
-                        <div class="file-meta">Size: 6.6 KB</div>
+                        <div class="file-meta">Size: 15.5 KB</div>
                     </div>
                 </div>
                 <div class="markdown-content" style="margin-top: 1rem;">

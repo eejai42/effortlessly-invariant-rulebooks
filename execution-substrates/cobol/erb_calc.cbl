@@ -29,19 +29,45 @@
            GOBACK.
        .
 
-       *> ========== CUSTOMERS ==========
+       *> ========== SHAPES ==========
        *> Level 1
-       CALC-FULL-NAME.
-           MOVE SPACES TO RECORD-FULL-NAME
-           STRING
-               FUNCTION TRIM(RECORD-FIRST-NAME TRAILING) DELIMITED SIZE
-               " " DELIMITED SIZE
-               FUNCTION TRIM(RECORD-LAST-NAME TRAILING) DELIMITED SIZE
-               INTO RECORD-FULL-NAME
+       CALC-IS-RECTANGLE.
+           IF (((RECORD-HOW-MANY-SIDES = 4)))
+               MOVE "true" TO RECORD-IS-RECTANGLE
+           ELSE
+               MOVE "false" TO RECORD-IS-RECTANGLE
+           END-IF
+       .
+
+       CALC-IS-TRIANGLE.
+           IF (((RECORD-SUM-OF-INTERNAL-ANGLES = 180)) AND ((RECORD-HOW-MANY-SIDES = 3)))
+               MOVE "true" TO RECORD-IS-TRIANGLE
+           ELSE
+               MOVE "false" TO RECORD-IS-TRIANGLE
+           END-IF
+       .
+
+       CALC-IS-RIGHT-TRIANGLE.
+           IF ((RECORD-IS-TRIANGLE = "true") AND ((RECORD-MAX-ANGLE = 90)))
+               MOVE "true" TO RECORD-IS-RIGHT-TRIANGLE
+           ELSE
+               MOVE "false" TO RECORD-IS-RIGHT-TRIANGLE
+           END-IF
+       .
+
+       CALC-PYTHAGOREAN-THEOREM-HOLDS.
+           IF ((RECORD-IS-RIGHT-TRIANGLE = "true") AND ((RECORD-HYPOTENUSE-LENGTH-SQUARED = RECORD-NON-HYPOTENUSE-SIDES-SQUARED)))
+               MOVE "true" TO RECORD-PYTHAGOREAN-THEOREM-HOLDS
+           ELSE
+               MOVE "false" TO RECORD-PYTHAGOREAN-THEOREM-HOLDS
+           END-IF
        .
 
        COMPUTE-ALL-FIELDS.
-           PERFORM CALC-FULL-NAME
+           PERFORM CALC-IS-RECTANGLE
+           PERFORM CALC-IS-TRIANGLE
+           PERFORM CALC-IS-RIGHT-TRIANGLE
+           PERFORM CALC-PYTHAGOREAN-THEOREM-HOLDS
        .
        FIND-CONTAINS.
            MOVE "false" TO WS-FIND-RESULT

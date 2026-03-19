@@ -1,0 +1,38 @@
+[
+  {
+    "app_user_id": "andy",
+    "name": "Andy",
+    "email_address": "guest@ssot.me",
+    "role": "Guest",
+    "is_active": true,
+    "widgets": "widget3",
+    "notes": ""
+  },
+  {
+    "app_user_id": "bob",
+    "name": "Bob",
+    "email_address": "bob@ssot.me",
+    "role": "Mathemetician",
+    "is_active": true,
+    "widgets": "widget1, widget2",
+    "notes": ""
+  },
+  {
+    "app_user_id": "bob2",
+    "name": "Bob2",
+    "email_address": "bob@ssot.me",
+    "role": "",
+    "is_active": false,
+    "widgets": "",
+    "notes": ""
+  },
+  {
+    "app_user_id": "ej",
+    "name": "EJ",
+    "email_address": "ej@ssot.me",
+    "role": "Admin",
+    "is_active": true,
+    "widgets": "",
+    "notes": ""
+  }
+]

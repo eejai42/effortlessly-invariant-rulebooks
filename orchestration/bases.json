@@ -22,6 +22,13 @@
     "complexity": "advanced"
   },
   {
+    "id": "appgL4RGsias8VrLu",
+    "name": "Pythagorean Theorem",
+    "description": "Exploring the Pythagorean Theorem with a simple math problem demonstrating emergent truth.",
+    "docs": "bases/pythagorean-theoremb",
+    "complexity": "moderate"
+  },
+  {
     "id": "appC8XTj95lubn6hz",
     "name": "is-everything-a-language",
     "description": "Meta-ontology exploring the thesis that all representations are languages with syntax, semantics, and pragmatics",

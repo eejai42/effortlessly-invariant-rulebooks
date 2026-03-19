@@ -9,11 +9,323 @@
 -- These functions perform lookups via foreign key relationships
 -- ============================================================================
 
-
-CREATE OR REPLACE FUNCTION calc_customers_full_name(p_customer_id TEXT)
+CREATE OR REPLACE FUNCTION get_widgets_name(p_widget_id TEXT)
 RETURNS TEXT AS $$
 BEGIN
-  RETURN (CONCAT((SELECT NULLIF(first_name, '') FROM customers WHERE customer_id = p_customer_id), ' ', (SELECT NULLIF(last_name, '') FROM customers WHERE customer_id = p_customer_id)))::text;
+  RETURN (SELECT name FROM widgets WHERE widget_id = p_widget_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_widgets_color(p_widget_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT color FROM widgets WHERE widget_id = p_widget_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_sides_label(p_side_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT label FROM sides WHERE side_id = p_side_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_sides_length(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT length FROM sides WHERE side_id = p_side_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_sides_angle(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT angle FROM sides WHERE side_id = p_side_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_how_many_sides(p_shape_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN ((SELECT COUNT(*) FROM sides WHERE shape = (SELECT NULLIF(shape_id, '') FROM shapes WHERE shape_id = p_shape_id)));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+-- WARNING: Formula translation failed: AND() requires at least 2 arguments, got 1
+CREATE OR REPLACE FUNCTION calc_shapes_is_rectangle(p_shape_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN NULL; -- Formula translation failed: AND() requires at least 2 arguments, got 1
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_is_triangle(p_shape_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN ((calc_shapes_sum_of_internal_angles(p_shape_id) = 180 AND calc_shapes_how_many_sides(p_shape_id) = 3))::boolean;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_is_right_triangle(p_shape_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (((calc_shapes_is_triangle(p_shape_id) = 'true') AND calc_shapes_max_angle(p_shape_id) = 90))::boolean;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_sum_of_internal_angles(p_shape_id TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN ((SELECT COALESCE(SUM(angle), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_max_angle(p_shape_id TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN ((SELECT COALESCE(MAX(angle), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_hypotenuse_length_squared(p_shape_id TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN ((SELECT COALESCE(SUM(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_non_hypotenuse_sides_squared(p_shape_id TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN ((SELECT COALESCE(SUM(calc_sides_non_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_shapes_pythagorean_theorem_holds(p_shape_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (((calc_shapes_is_right_triangle(p_shape_id) = 'true') AND calc_shapes_hypotenuse_length_squared(p_shape_id) = calc_shapes_non_hypotenuse_sides_squared(p_shape_id)))::boolean;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_shape_sides(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN calc_shapes_how_many_sides((SELECT shape FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_is_rectangle(p_side_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN calc_shapes_is_rectangle((SELECT shape FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_is_triangle(p_side_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN calc_shapes_is_triangle((SELECT shape FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_is_right_triangle(p_side_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN calc_shapes_is_right_triangle((SELECT shape FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_pythagorean_theorem_holds(p_side_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN calc_shapes_pythagorean_theorem_holds((SELECT shape FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_previous_side_length(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT length::integer FROM sides WHERE side_id = (SELECT previous_side FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_next_length(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT length::integer FROM sides WHERE side_id = (SELECT next_side FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_previous_angle(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT angle::integer FROM sides WHERE side_id = (SELECT previous_side FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_next_angle(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT angle::integer FROM sides WHERE side_id = (SELECT next_side FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_previous_label(p_side_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT label::text FROM sides WHERE side_id = (SELECT previous_side FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_next_label(p_side_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT label::text FROM sides WHERE side_id = (SELECT next_side FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_shapes_name(p_shape_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM shapes WHERE shape_id = p_shape_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_name(p_side_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (CONCAT((SELECT NULLIF(shape, '') FROM sides WHERE side_id = p_side_id), '-Side-', (SELECT NULLIF(label, '') FROM sides WHERE side_id = p_side_id)))::text;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_is_hypotenuse(p_side_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (((calc_sides_is_triangle(p_side_id) = 'true') AND COALESCE((SELECT length FROM sides WHERE side_id = p_side_id) > calc_sides_previous_side_length(p_side_id), FALSE) AND COALESCE((SELECT length FROM sides WHERE side_id = p_side_id) > calc_sides_next_length(p_side_id), FALSE)))::boolean;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_status_of_theorem(p_side_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (CASE WHEN (calc_sides_is_triangle(p_side_id) = 'true') THEN CASE WHEN ((calc_sides_is_right_triangle(p_side_id) = 'true') AND NOT ((calc_sides_pythagorean_theorem_holds(p_side_id) = 'true'))) THEN 'PYTHAGOREAN THEOREM ' ELSE 'Pythagorean Theorem Holds (obviously).' END ELSE 'NA' END)::text;
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_sides_length_squared(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN ((SELECT length FROM sides WHERE side_id = p_side_id) * (SELECT length FROM sides WHERE side_id = p_side_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+-- WARNING: Formula translation failed: IF() requires 3 arguments, got 2
+CREATE OR REPLACE FUNCTION calc_sides_hypotenuse_length_squared(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN NULL; -- Formula translation failed: IF() requires 3 arguments, got 2
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+-- WARNING: Formula translation failed: IF() requires 3 arguments, got 2
+CREATE OR REPLACE FUNCTION calc_sides_non_hypotenuse_length_squared(p_side_id TEXT)
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN NULL; -- Formula translation failed: IF() requires 3 arguments, got 2
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_widgets_name_from_appuser(p_widget_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name::text FROM app_users WHERE app_user_id = (SELECT appuser FROM widgets WHERE widget_id = p_widget_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_widgets_email_address_from_appuser(p_widget_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT email_address::text FROM app_users WHERE app_user_id = (SELECT appuser FROM widgets WHERE widget_id = p_widget_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_widgets_role_from_appuser(p_widget_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT role::text FROM app_users WHERE app_user_id = (SELECT appuser FROM widgets WHERE widget_id = p_widget_id));
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_app_users_name(p_app_user_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT name FROM app_users WHERE app_user_id = p_app_user_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_app_users_email_address(p_app_user_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT email_address FROM app_users WHERE app_user_id = p_app_user_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_app_users_role(p_app_user_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT role FROM app_users WHERE app_user_id = p_app_user_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_app_users_is_active(p_app_user_id TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (SELECT is_active FROM app_users WHERE app_user_id = p_app_user_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_app_users_notes(p_app_user_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (SELECT notes FROM app_users WHERE app_user_id = p_app_user_id);
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION calc_erb_versions_pk(p_erb_version_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (CONCAT((SELECT NULLIF(base_id, '') FROM erb_versions WHERE erb_version_id = p_erb_version_id), '-', (SELECT NULLIF(name, '') FROM erb_versions WHERE erb_version_id = p_erb_version_id)))::text;
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
@@ -21,4 +333,26 @@ $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 -- MANY-SIDE RELATIONSHIP FUNCTIONS
 -- These functions aggregate child records for many-side relationships
 -- ============================================================================
+
+CREATE OR REPLACE FUNCTION calc_app_users_widgets(p_app_user_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (
+    SELECT STRING_AGG(widget_id::TEXT, ', ' ORDER BY widget_id)
+    FROM widgets
+    WHERE appuser = p_app_user_id
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION calc_shapes_sides(p_shape_id TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN (
+    SELECT STRING_AGG(side_id::TEXT, ', ' ORDER BY side_id)
+    FROM sides
+    WHERE shape = p_shape_id
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 

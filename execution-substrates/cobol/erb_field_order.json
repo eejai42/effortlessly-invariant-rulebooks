@@ -1,25 +1,121 @@
 {
-  "Customers": {
+  "Shapes": {
     "fields": [
-      "CustomerId",
-      "Customer",
-      "EmailAddress",
-      "FirstName",
-      "LastName",
-      "FullName"
+      "ShapeId",
+      "Name",
+      "Sides",
+      "HowManySides",
+      "SumOfInternalAngles",
+      "MaxAngle",
+      "HypotenuseLengthSquared",
+      "NonHypotenuseSidesSquared",
+      "IsRectangle",
+      "IsTriangle",
+      "IsRightTriangle",
+      "PythagoreanTheoremHolds"
     ],
-    "raw_count": 5
+    "raw_count": 8
   },
-  "customers": {
+  "shapes": {
     "fields": [
-      "CustomerId",
-      "Customer",
-      "EmailAddress",
-      "FirstName",
-      "LastName",
-      "FullName"
+      "ShapeId",
+      "Name",
+      "Sides",
+      "HowManySides",
+      "SumOfInternalAngles",
+      "MaxAngle",
+      "HypotenuseLengthSquared",
+      "NonHypotenuseSidesSquared",
+      "IsRectangle",
+      "IsTriangle",
+      "IsRightTriangle",
+      "PythagoreanTheoremHolds"
     ],
-    "raw_count": 5
+    "raw_count": 8
   },
-  "_target_entity": "customers"
+  "Sides": {
+    "fields": [
+      "SideId",
+      "ShapeSides",
+      "Label",
+      "IsRectangle",
+      "IsTriangle",
+      "IsRightTriangle",
+      "PythagoreanTheoremHolds",
+      "PreviousSideLength",
+      "Length",
+      "NextLength",
+      "PreviousAngle",
+      "Angle",
+      "NextAngle",
+      "PreviousSide",
+      "NextSide",
+      "Shape",
+      "PreviousLabel",
+      "NextLabel",
+      "Name",
+      "IsHypotenuse",
+      "StatusOfTheorem",
+      "LengthSquared",
+      "HypotenuseLengthSquared",
+      "NonHypotenuseLengthSquared"
+    ],
+    "raw_count": 18
+  },
+  "sides": {
+    "fields": [
+      "SideId",
+      "ShapeSides",
+      "Label",
+      "IsRectangle",
+      "IsTriangle",
+      "IsRightTriangle",
+      "PythagoreanTheoremHolds",
+      "PreviousSideLength",
+      "Length",
+      "NextLength",
+      "PreviousAngle",
+      "Angle",
+      "NextAngle",
+      "PreviousSide",
+      "NextSide",
+      "Shape",
+      "PreviousLabel",
+      "NextLabel",
+      "Name",
+      "IsHypotenuse",
+      "StatusOfTheorem",
+      "LengthSquared",
+      "HypotenuseLengthSquared",
+      "NonHypotenuseLengthSquared"
+    ],
+    "raw_count": 18
+  },
+  "ERBVersions": {
+    "fields": [
+      "ERBVersionId",
+      "BaseId",
+      "Name",
+      "Message",
+      "Notes",
+      "CommitDate",
+      "IsPublished",
+      "PK"
+    ],
+    "raw_count": 7
+  },
+  "erb_versions": {
+    "fields": [
+      "ERBVersionId",
+      "BaseId",
+      "Name",
+      "Message",
+      "Notes",
+      "CommitDate",
+      "IsPublished",
+      "PK"
+    ],
+    "raw_count": 7
+  },
+  "_target_entity": "shapes"
 }

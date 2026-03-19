@@ -88,8 +88,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>English (NLG) Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-warning">76.7%</span></div>
+            <div class="stat"><span>112/146 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -129,41 +129,478 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
                 <h2>Graded Test Data</h2>
                 <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">All columns shown. <span style="color: var(--accent-color); font-weight: 500;">Blue headers</span> indicate computed fields being tested. <span style="color: var(--success-color);">✓</span> = passed, <span style="color: var(--danger-color);">E/A</span> = failed (Expected vs Actual).</p>
                 <div class="entity-section">
-<h3 class="entity-name">customers</h3>
+<h3 class="entity-name">shapes</h3>
 <div class="table-scroll"><table class="graded-table"><thead><tr>
-<th class="">customer_id</th>
-<th class="">customer</th>
-<th class="">email_address</th>
-<th class="">first_name</th>
-<th class="">last_name</th>
-<th class="computed-header">full_name</th>
+<th class="">shape_id</th>
+<th class="">name</th>
+<th class="">sides</th>
+<th class="computed-header">how_many_sides</th>
+<th class="computed-header">sum_of_internal_angles</th>
+<th class="computed-header">is_triangle</th>
+<th class="computed-header">max_angle</th>
+<th class="computed-header">is_right_triangle</th>
+<th class="computed-header">hypotenuse_length_squared</th>
+<th class="computed-header">non_hypotenuse_sides_squared</th>
+<th class="computed-header">pythagorean_theorem_holds</th>
+<th class="computed-header">is_rectangle</th>
 </tr></thead><tbody>
 <tr>
-<td class="cell-raw" title="cust0001">cust0001</td>
-<td class="cell-raw" title="CUST0001">CUST0001</td>
-<td class="cell-raw" title="jane.smith@email.com">jane.smith@email.com</td>
-<td class="cell-raw" title="Jannice">Jannice</td>
-<td class="cell-raw" title="Smith">Smith</td>
-<td class="cell-passed computed" title="Jannice Smith">
-<span class="check">✓</span><code>Jannice Smith</code></td>
+<td class="cell-raw" title="shape1">shape1</td>
+<td class="cell-raw" title="Shape1">Shape1</td>
+<td class="cell-raw" title="shape1-side-a, shape1-side-b, shape1-side-c">shape1-side-a, shape1-side-b, shape1-side-c</td>
+<td class="cell-passed computed" title="3">
+<span class="check">✓</span><code>3</code></td>
+<td class="cell-failed computed" title="Expected: 180&#10;Actual: 45, 45, 90">
+<div class="exp-act"><span class="label">E:</span><code class="expected">180</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">45, 45, 90</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 25&#10;Actual: 25, , ">
+<div class="exp-act"><span class="label">E:</span><code class="expected">25</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">25, , </code></div></td>
+<td class="cell-failed computed" title="Expected: 25&#10;Actual: , 16, 9">
+<div class="exp-act"><span class="label">E:</span><code class="expected">25</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">, 16, 9</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
 </tr>
 <tr>
-<td class="cell-raw" title="cust0002">cust0002</td>
-<td class="cell-raw" title="CUST0002">CUST0002</td>
-<td class="cell-raw" title="john.doe@email.com">john.doe@email.com</td>
-<td class="cell-raw" title="John">John</td>
-<td class="cell-raw" title="Doe">Doe</td>
-<td class="cell-passed computed" title="John Doe">
-<span class="check">✓</span><code>John Doe</code></td>
+<td class="cell-raw" title="shape2">shape2</td>
+<td class="cell-raw" title="Shape2">Shape2</td>
+<td class="cell-raw" title="shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d">shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d</td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-failed computed" title="Expected: 360&#10;Actual: 90, 90, 90, 90">
+<div class="exp-act"><span class="label">E:</span><code class="expected">360</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">90, 90, 90, 90</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="0">
+<span class="check">✓</span><code>0</code></td>
+<td class="cell-passed computed" title="0">
+<span class="check">✓</span><code>0</code></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">sides</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">side_id</th>
+<th class="computed-header">name</th>
+<th class="">shape</th>
+<th class="">label</th>
+<th class="">length</th>
+<th class="">angle</th>
+<th class="">previous_side</th>
+<th class="computed-header">previous_angle</th>
+<th class="computed-header">previous_side_length</th>
+<th class="computed-header">previous_label</th>
+<th class="">next_side</th>
+<th class="computed-header">next_angle</th>
+<th class="computed-header">next_length</th>
+<th class="computed-header">next_label</th>
+<th class="computed-header">is_hypotenuse</th>
+<th class="computed-header">length_squared</th>
+<th class="computed-header">pythagorean_theorem_holds</th>
+<th class="computed-header">status_of_theorem</th>
+<th class="computed-header">is_right_triangle</th>
+<th class="computed-header">shape_sides</th>
+<th class="computed-header">is_triangle</th>
+<th class="computed-header">hypotenuse_length_squared</th>
+<th class="computed-header">is_rectangle</th>
+<th class="computed-header">non_hypotenuse_length_squared</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="shape1-side-a">shape1-side-a</td>
+<td class="cell-failed computed" title="Expected: Shape1-Side-A&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape1-Side-A</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape1">shape1</td>
+<td class="cell-raw" title="A">A</td>
+<td class="cell-raw" title="5">5</td>
+<td class="cell-raw" title="45">45</td>
+<td class="cell-raw" title="shape1-side-c">shape1-side-c</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="3">
+<span class="check">✓</span><code>3</code></td>
+<td class="cell-passed computed" title="C">
+<span class="check">✓</span><code>C</code></td>
+<td class="cell-raw" title="shape1-side-b">shape1-side-b</td>
+<td class="cell-passed computed" title="45">
+<span class="check">✓</span><code>45</code></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="B">
+<span class="check">✓</span><code>B</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="25">
+<span class="check">✓</span><code>25</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: Pythagorean Theorem Holds (obviously).&#10;Actual: holds">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Pythagorean Theorem Holds (obviously).</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">holds</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="3">
+<span class="check">✓</span><code>3</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="25">
+<span class="check">✓</span><code>25</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: 25">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">25</code></div></td>
 </tr>
 <tr>
-<td class="cell-raw" title="cust0003">cust0003</td>
-<td class="cell-raw" title="CUST0003">CUST0003</td>
-<td class="cell-raw" title="emily.jones@email.com">emily.jones@email.com</td>
-<td class="cell-raw" title="Emily">Emily</td>
-<td class="cell-raw" title="Jones">Jones</td>
-<td class="cell-passed computed" title="Emily Jones">
-<span class="check">✓</span><code>Emily Jones</code></td>
+<td class="cell-raw" title="shape1-side-b">shape1-side-b</td>
+<td class="cell-failed computed" title="Expected: Shape1-Side-B&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape1-Side-B</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape1">shape1</td>
+<td class="cell-raw" title="B">B</td>
+<td class="cell-raw" title="4">4</td>
+<td class="cell-raw" title="45">45</td>
+<td class="cell-raw" title="shape1-side-a">shape1-side-a</td>
+<td class="cell-passed computed" title="45">
+<span class="check">✓</span><code>45</code></td>
+<td class="cell-passed computed" title="5">
+<span class="check">✓</span><code>5</code></td>
+<td class="cell-passed computed" title="A">
+<span class="check">✓</span><code>A</code></td>
+<td class="cell-raw" title="shape1-side-c">shape1-side-c</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="3">
+<span class="check">✓</span><code>3</code></td>
+<td class="cell-passed computed" title="C">
+<span class="check">✓</span><code>C</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="16">
+<span class="check">✓</span><code>16</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: Pythagorean Theorem Holds (obviously).&#10;Actual: holds">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Pythagorean Theorem Holds (obviously).</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">holds</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="3">
+<span class="check">✓</span><code>3</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="16">
+<span class="check">✓</span><code>16</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="shape1-side-c">shape1-side-c</td>
+<td class="cell-failed computed" title="Expected: Shape1-Side-C&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape1-Side-C</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape1">shape1</td>
+<td class="cell-raw" title="C">C</td>
+<td class="cell-raw" title="3">3</td>
+<td class="cell-raw" title="90">90</td>
+<td class="cell-raw" title="shape1-side-b">shape1-side-b</td>
+<td class="cell-passed computed" title="45">
+<span class="check">✓</span><code>45</code></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="B">
+<span class="check">✓</span><code>B</code></td>
+<td class="cell-raw" title="shape1-side-a">shape1-side-a</td>
+<td class="cell-passed computed" title="45">
+<span class="check">✓</span><code>45</code></td>
+<td class="cell-passed computed" title="5">
+<span class="check">✓</span><code>5</code></td>
+<td class="cell-passed computed" title="A">
+<span class="check">✓</span><code>A</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="9">
+<span class="check">✓</span><code>9</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: Pythagorean Theorem Holds (obviously).&#10;Actual: holds">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Pythagorean Theorem Holds (obviously).</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">holds</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-passed computed" title="3">
+<span class="check">✓</span><code>3</code></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="9">
+<span class="check">✓</span><code>9</code></td>
+</tr>
+<tr>
+<td class="cell-raw" title="shape2-side-a">shape2-side-a</td>
+<td class="cell-failed computed" title="Expected: Shape2-Side-A&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape2-Side-A</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape2">shape2</td>
+<td class="cell-raw" title="A">A</td>
+<td class="cell-raw" title="2">2</td>
+<td class="cell-raw" title="90">90</td>
+<td class="cell-raw" title="shape2-side-d">shape2-side-d</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="D">
+<span class="check">✓</span><code>D</code></td>
+<td class="cell-raw" title="shape2-side-b">shape2-side-b</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="B">
+<span class="check">✓</span><code>B</code></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: NA&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">NA</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="shape2-side-b">shape2-side-b</td>
+<td class="cell-failed computed" title="Expected: Shape2-Side-B&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape2-Side-B</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape2">shape2</td>
+<td class="cell-raw" title="B">B</td>
+<td class="cell-raw" title="2">2</td>
+<td class="cell-raw" title="90">90</td>
+<td class="cell-raw" title="shape2-side-a">shape2-side-a</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="A">
+<span class="check">✓</span><code>A</code></td>
+<td class="cell-raw" title="shape2-side-c">shape2-side-c</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="C">
+<span class="check">✓</span><code>C</code></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: NA&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">NA</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="shape2-side-c">shape2-side-c</td>
+<td class="cell-failed computed" title="Expected: Shape2-Side-C&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape2-Side-C</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape2">shape2</td>
+<td class="cell-raw" title="C">C</td>
+<td class="cell-raw" title="2">2</td>
+<td class="cell-raw" title="90">90</td>
+<td class="cell-raw" title="shape2-side-b">shape2-side-b</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="B">
+<span class="check">✓</span><code>B</code></td>
+<td class="cell-raw" title="shape2-side-d">shape2-side-d</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="D">
+<span class="check">✓</span><code>D</code></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: NA&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">NA</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+<tr>
+<td class="cell-raw" title="shape2-side-d">shape2-side-d</td>
+<td class="cell-failed computed" title="Expected: Shape2-Side-D&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">Shape2-Side-D</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-raw" title="shape2">shape2</td>
+<td class="cell-raw" title="D">D</td>
+<td class="cell-raw" title="2">2</td>
+<td class="cell-raw" title="90">90</td>
+<td class="cell-raw" title="shape2-side-c">shape2-side-c</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="C">
+<span class="check">✓</span><code>C</code></td>
+<td class="cell-raw" title="shape2-side-a">shape2-side-a</td>
+<td class="cell-passed computed" title="90">
+<span class="check">✓</span><code>90</code></td>
+<td class="cell-passed computed" title="2">
+<span class="check">✓</span><code>2</code></td>
+<td class="cell-passed computed" title="A">
+<span class="check">✓</span><code>A</code></td>
+<td class="cell-failed computed" title="Expected: False&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">False</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: NA&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">NA</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-passed computed" title="4">
+<span class="check">✓</span><code>4</code></td>
+<td class="cell-passed computed" title="False">
+<span class="check">✓</span><code>False</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+<td class="cell-passed computed" title="True">
+<span class="check">✓</span><code>True</code></td>
+<td class="cell-failed computed" title="Expected: 0&#10;Actual: null">
+<div class="exp-act"><span class="label">E:</span><code class="expected">0</code></div>
+<div class="exp-act"><span class="label">A:</span><code class="actual">null</code></div></td>
+</tr>
+</tbody></table></div></div>
+<div class="entity-section">
+<h3 class="entity-name">widgets</h3>
+<div class="table-scroll"><table class="graded-table"><thead><tr>
+<th class="">widget_id</th>
+<th class="">name</th>
+<th class="">appuser</th>
+<th class="computed-header">role_from_appuser</th>
+<th class="computed-header">email_address_from_appuser</th>
+<th class="computed-header">name_from_appuser</th>
+<th class="">color</th>
+</tr></thead><tbody>
+<tr>
+<td class="cell-raw" title="widget1">widget1</td>
+<td class="cell-raw" title="widget1">widget1</td>
+<td class="cell-raw" title="bob">bob</td>
+<td class="cell-passed computed" title="Mathemetician">
+<span class="check">✓</span><code>Mathemetician</code></td>
+<td class="cell-passed computed" title="bob@ssot.me">
+<span class="check">✓</span><code>bob@ssot.me</code></td>
+<td class="cell-passed computed" title="Bob">
+<span class="check">✓</span><code>Bob</code></td>
+<td class="cell-raw" title="Blue">Blue</td>
+</tr>
+<tr>
+<td class="cell-raw" title="widget2">widget2</td>
+<td class="cell-raw" title="widget2">widget2</td>
+<td class="cell-raw" title="bob">bob</td>
+<td class="cell-passed computed" title="Mathemetician">
+<span class="check">✓</span><code>Mathemetician</code></td>
+<td class="cell-passed computed" title="bob@ssot.me">
+<span class="check">✓</span><code>bob@ssot.me</code></td>
+<td class="cell-passed computed" title="Bob">
+<span class="check">✓</span><code>Bob</code></td>
+<td class="cell-raw" title="pink">pink</td>
+</tr>
+<tr>
+<td class="cell-raw" title="widget3">widget3</td>
+<td class="cell-raw" title="widget3">widget3</td>
+<td class="cell-raw" title="andy">andy</td>
+<td class="cell-passed computed" title="Guest">
+<span class="check">✓</span><code>Guest</code></td>
+<td class="cell-passed computed" title="guest@ssot.me">
+<span class="check">✓</span><code>guest@ssot.me</code></td>
+<td class="cell-passed computed" title="Andy">
+<span class="check">✓</span><code>Andy</code></td>
+<td class="cell-raw" title=""></td>
 </tr>
 </tbody></table></div></div>
             </div>
@@ -179,32 +616,55 @@ Using ENGLISH PROSE documents (glossary.md, specification.md)
 ======================================================================
 
 Loading English specification documents...
-  Loaded specification.md (2686 chars)
+  Loaded specification.md (5598 chars)
 
 Loading rulebook for schema metadata...
-Discovered 1 entities: Customers
+Discovered 7 entities: AppUsers, Shapes, Sides, Widgets, ERBVersions, ERBCustomizations, MagicLinkIntegration
 
-Processing customers...
-  Schema: 6 fields, 1 calculated
+Processing shapes...
+  Schema: 12 fields, 4 calculated
     Using English prose documents (specification)
 ============================================================
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (120 total lines, 4547 chars)
+  ... (160 total lines, 7798 chars)
 ============================================================
 Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
 RESPONSE (first 2 lines):
   [
     {
-  ... (26 total lines, 590 chars)
+  ... (30 total lines, 843 chars)
 ============================================================
-  -&gt; customers: 3 records, 3 computed fields filled
+  -&gt; shapes: 2 records, 7 computed fields filled
+
+Processing sides...
+  Schema: 24 fields, 6 calculated
+    Using English prose documents (specification)
+============================================================
+PROMPT (first 2 lines):
+  You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
+  
+  ... (314 total lines, 11680 chars)
+============================================================
+Calling OpenAI (gpt-4o-mini)... please wait...
+============================================================
+RESPONSE (first 2 lines):
+  [
+    {
+  ... (184 total lines, 4669 chars)
+============================================================
+  -&gt; sides: 7 records, 17 computed fields filled
+
+Processing widgets...
+  Schema: 7 fields, 0 calculated
+    No calculated fields for widgets, saved with lookups/aggregations
+  -&gt; widgets: 3 records, 0 computed fields filled
 
 ======================================================================
-English substrate: Processed 1 entities, 3 total records
-Filled 3 computed fields total
+English substrate: Processed 3 entities, 12 total records
+Filled 24 computed fields total
 ======================================================================
 
 </pre>
@@ -214,67 +674,116 @@ Filled 3 computed fields total
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-warning">76.7%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">112</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">34</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">146</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
         <div id="specification" class="tab-content">
             <div class="card">
                 <h2>specification.md (LLM-Generated)</h2>
-                <div class="prose-container markdown-content"><h2>Specification Document for DEMO: Customer FullName Rulebook</h2>
+                <div class="prose-container markdown-content"><h2>DEMO: Pythagorean Theorem Rulebook Specification</h2>
 <h3>Overview</h3>
-<p>This specification document outlines the structure and computation methods for the "DEMO: Customer FullName" rulebook, which is derived from an Airtable base. The primary purpose of this rulebook is to calculate the full names of customers based on their first and last names. The rulebook includes a schema defining the data types and relationships, along with the necessary formulas for calculated fields.</p>
-<h3>Entity: Customers</h3>
-<h4>Input Fields</h4>
-<p>The following input fields are defined in the "Customers" table, which are used to compute the calculated fields:</p>
-<p>1. <strong>CustomerId</strong></p>
-<p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Unique identifier for each customer. This field is mandatory and cannot be null.</p>
-<p>2. <strong>Customer</strong></p>
-<p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Identifier for the customers. This field is optional and can be null.</p>
-<p>3. <strong>EmailAddress</strong></p>
-<p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> The customer's email address. This field is optional and can be null.</p>
-<p>4. <strong>FirstName</strong></p>
-<p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> First name of the customer, used to create the full name. This field is optional and can be null.</p>
-<p>5. <strong>LastName</strong></p>
-<p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Last name of the customer, used to create the full name. This field is optional and can be null.</p>
-<h4>Calculated Fields</h4>
-<p>#### FullName</p>
+<p>This rulebook defines the structure and calculations for a system that evaluates geometric shapes, specifically focusing on the Pythagorean theorem. It includes entities for app users, shapes, sides, and their relationships, enabling the computation of various geometric properties and validations.</p>
+<p>---</p>
+<h3>Entities with Calculated Fields</h3>
+<h4>1. Shapes</h4>
+<p>#### Input Fields</p>
 <ul>
-<li>**Type:** Calculated</li>
-<li>**Description:** The full name is computed by concatenating the first name and last name of the customer, separated by a space.</li>
-<li>**Computation Method:** </li>
-<p>  To compute the `FullName`, take the value from the `FirstName` field and the value from the `LastName` field. If either the `FirstName` or `LastName` is null, the resulting `FullName` will only include the non-null value. If both are null, the `FullName` will also be null.</p>
+<li>**ShapeId**: `string` - Unique identifier for the shape.</li>
+<li>**Name**: `string` - Name of the shape.</li>
+<li>**Sides**: `string` - Relationship to the sides of the shape.</li>
+<li>**HowManySides**: `integer` - Number of sides of the shape (calculated).</li>
+<li>**SumOfInternalAngles**: `number` - Total sum of internal angles of the shape (calculated).</li>
+<li>**MaxAngle**: `number` - Maximum angle in the shape (calculated).</li>
+</ul>
+<p>#### Calculated Fields</p>
+<ul>
+<li>**IsRectangle**</li>
+<p>  - <strong>Description</strong>: Determines if the shape is a rectangle. A rectangle has exactly four sides.</p>
+<p>  - <strong>Calculation</strong>: Check if `HowManySides` equals 4.</p>
+<p>  - <strong>Formula</strong>: `=AND({{HowManySides}}=4)`</p>
+<p>  - <strong>Example</strong>: For a shape with `HowManySides` = 4, `IsRectangle` would be `true`.</p>
 </ul>
 <ul>
-<li>**Formula for Reference:** </li>
-<p>  ```</p>
-<p>  ={{FirstName}} & " " & {{LastName}}</p>
-<p>  ```</p>
+<li>**IsTriangle**</li>
+<p>  - <strong>Description</strong>: Determines if the shape is a triangle. A triangle has exactly three sides and the sum of internal angles equals 180 degrees.</p>
+<p>  - <strong>Calculation</strong>: Check if `SumOfInternalAngles` equals 180 and `HowManySides` equals 3.</p>
+<p>  - <strong>Formula</strong>: `=AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)`</p>
+<p>  - <strong>Example</strong>: For a shape with `SumOfInternalAngles` = 180 and `HowManySides` = 3, `IsTriangle` would be `true`.</p>
 </ul>
 <ul>
-<li>**Concrete Examples:**</li>
-<p>  1. For the customer with `CustomerId` "cust0001":</p>
-<p>     - `FirstName`: "Jannice"</p>
-<p>     - `LastName`: "Smith"</p>
-<p>     - <strong>Computed FullName:</strong> "Jannice Smith"</p>
+<li>**IsRightTriangle**</li>
+<p>  - <strong>Description</strong>: Determines if the triangle is a right triangle. A right triangle has a maximum angle of 90 degrees.</p>
+<p>  - <strong>Calculation</strong>: Check if the shape is a triangle and if `MaxAngle` equals 90.</p>
+<p>  - <strong>Formula</strong>: `=AND({{IsTriangle}}, {{MaxAngle}} = 90)`</p>
+<p>  - <strong>Example</strong>: For a shape that is a triangle with `MaxAngle` = 90, `IsRightTriangle` would be `true`.</p>
 </ul>
-<p>  2. For the customer with `CustomerId` "cust0002":</p>
-<p>     - `FirstName`: "John"</p>
-<p>     - `LastName`: "Doe"</p>
-<p>     - <strong>Computed FullName:</strong> "John Doe"</p>
-<p>  3. For the customer with `CustomerId` "cust0003":</p>
-<p>     - `FirstName`: "Emily"</p>
-<p>     - `LastName`: "Jones"</p>
-<p>     - <strong>Computed FullName:</strong> "Emily Jones"</p>
-<p>This specification provides a clear understanding of how to compute the `FullName` field based on the provided input fields in the "Customers" table. By following the outlined method, one can accurately derive the full names of customers as intended in the rulebook.</p></div>
+<ul>
+<li>**HypotenuseLengthSquared**</li>
+<p>  - <strong>Description</strong>: Computes the sum of the squares of the lengths of the hypotenuse sides.</p>
+<p>  - <strong>Calculation</strong>: Sum the squared lengths of sides identified as hypotenuses.</p>
+<p>  - <strong>Formula</strong>: `=SUMIFS(Sides!{{HypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})`</p>
+<p>  - <strong>Example</strong>: If the hypotenuse side has a length of 5, then `HypotenuseLengthSquared` would be 25.</p>
+</ul>
+<ul>
+<li>**NonHypotenuseSidesSquared**</li>
+<p>  - <strong>Description</strong>: Computes the sum of the squares of the lengths of the non-hypotenuse sides.</p>
+<p>  - <strong>Calculation</strong>: Sum the squared lengths of sides that are not hypotenuses.</p>
+<p>  - <strong>Formula</strong>: `=SUMIFS(Sides!{{NonHypotenuseLengthSquared}}, Sides!{{Shape}}, Shapes!{{ShapeId}})`</p>
+<p>  - <strong>Example</strong>: If the non-hypotenuse sides have lengths of 3 and 4, then `NonHypotenuseSidesSquared` would be 9 + 16 = 25.</p>
+</ul>
+<ul>
+<li>**PythagoreanTheoremHolds**</li>
+<p>  - <strong>Description</strong>: Validates if the Pythagorean theorem holds true for the shape.</p>
+<p>  - <strong>Calculation</strong>: Check if the shape is a right triangle and if the square of the hypotenuse equals the sum of the squares of the non-hypotenuse sides.</p>
+<p>  - <strong>Formula</strong>: `=AND({{IsRightTriangle}}, {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}})`</p>
+<p>  - <strong>Example</strong>: For a right triangle where `HypotenuseLengthSquared` = 25 and `NonHypotenuseSidesSquared` = 25, `PythagoreanTheoremHolds` would be `true`.</p>
+</ul>
+<p>---</p>
+<h4>2. Sides</h4>
+<p>#### Input Fields</p>
+<ul>
+<li>**SideId**: `string` - Unique identifier for the side.</li>
+<li>**Name**: `string` - Name of the side.</li>
+<li>**Shape**: `string` - Relationship to the shape.</li>
+<li>**Label**: `string` - Label for the side.</li>
+<li>**Length**: `integer` - Length of the side.</li>
+<li>**Angle**: `integer` - Internal angle for the side.</li>
+</ul>
+<p>#### Calculated Fields</p>
+<ul>
+<li>**LengthSquared**</li>
+<p>  - <strong>Description</strong>: Computes the square of the length of the side.</p>
+<p>  - <strong>Calculation</strong>: Multiply the length of the side by itself.</p>
+<p>  - <strong>Formula</strong>: `={{Length}} * {{Length}}`</p>
+<p>  - <strong>Example</strong>: For a side with `Length` = 5, `LengthSquared` would be 25.</p>
+</ul>
+<ul>
+<li>**IsHypotenuse**</li>
+<p>  - <strong>Description</strong>: Determines if the side is the hypotenuse of a right triangle.</p>
+<p>  - <strong>Calculation</strong>: Check if the side is part of a triangle and has a length greater than both adjacent sides.</p>
+<p>  - <strong>Formula</strong>: `=AND({{IsTriangle}}, {{Length}} > {{PreviousSideLength}}, {{Length}} > {{NextLength}})`</p>
+<p>  - <strong>Example</strong>: If a side has `Length` = 5, `PreviousSideLength` = 4, and `NextLength` = 3, then `IsHypotenuse` would be `true`.</p>
+</ul>
+<ul>
+<li>**HypotenuseLengthSquared**</li>
+<p>  - <strong>Description</strong>: Computes the squared length of the hypotenuse if this side is the hypotenuse.</p>
+<p>  - <strong>Calculation</strong>: If the side is identified as a hypotenuse, return its squared length.</p>
+<p>  - <strong>Formula</strong>: `=IF({{IsHypotenuse}}, {{LengthSquared}})`</p>
+<p>  - <strong>Example</strong>: If this side is a hypotenuse with `LengthSquared` = 25, then `HypotenuseLengthSquared` would be 25.</p>
+</ul>
+<ul>
+<li>**NonHypotenuseLengthSquared**</li>
+<p>  - <strong>Description</strong>: Computes the squared length of the side if it is not the hypotenuse.</p>
+<p>  - <strong>Calculation</strong>: If the side is part of a triangle but not the hypotenuse, return its squared length.</p>
+<p>  - <strong>Formula</strong>: `=IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})`</p>
+<p>  - <strong>Example</strong>: If this side has `LengthSquared` = 16 and is not the hypotenuse, then `NonHypotenuseLengthSquared` would be 16.</p>
+</ul>
+<p>---</p>
+<p>This specification provides a comprehensive guide to understanding how to compute the calculated fields in the DEMO: Pythagorean Theorem rulebook. By following the outlined calculations and examples, one can derive the necessary values without needing to reference the original formulas directly.</p></div>
             </div>
         </div>
     </main>

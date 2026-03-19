@@ -3,25 +3,543 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix erb: <http://example.org/erb#> .
 
-# === Individuals: Customers ===
+# === Individuals: AppUsers ===
 
-erb:Customers_0 a erb:Customers ;
-    erb:customerId "cust0001" ;
-    erb:customer "CUST0001" ;
-    erb:emailAddress "jane.smith@email.com" ;
-    erb:firstName "Jannice" ;
-    erb:lastName "Smith" .
+erb:AppUsers_0 a erb:AppUsers ;
+    erb:appUserId "ej" ;
+    erb:name "EJ" ;
+    erb:emailAddress "ej@ssot.me" ;
+    erb:role "Admin" ;
+    erb:isActive true ;
+    erb:widgets "" ;
+    erb:notes "" .
 
-erb:Customers_1 a erb:Customers ;
-    erb:customerId "cust0002" ;
-    erb:customer "CUST0002" ;
-    erb:emailAddress "john.doe@email.com" ;
-    erb:firstName "John" ;
-    erb:lastName "Doe" .
+erb:AppUsers_1 a erb:AppUsers ;
+    erb:appUserId "bob" ;
+    erb:name "Bob" ;
+    erb:emailAddress "bob@ssot.me" ;
+    erb:role "Mathemetician" ;
+    erb:isActive true ;
+    erb:widgets "widget1, widget2" ;
+    erb:notes "" .
 
-erb:Customers_2 a erb:Customers ;
-    erb:customerId "cust0003" ;
-    erb:customer "CUST0003" ;
-    erb:emailAddress "emily.jones@email.com" ;
-    erb:firstName "Emily" ;
-    erb:lastName "Jones" .
+erb:AppUsers_2 a erb:AppUsers ;
+    erb:appUserId "andy" ;
+    erb:name "Andy" ;
+    erb:emailAddress "guest@ssot.me" ;
+    erb:role "Guest" ;
+    erb:isActive true ;
+    erb:widgets "widget3" ;
+    erb:notes "" .
+
+erb:AppUsers_3 a erb:AppUsers ;
+    erb:appUserId "bob2" ;
+    erb:name "Bob2" ;
+    erb:emailAddress "bob@ssot.me" ;
+    erb:role "" ;
+    erb:isActive false ;
+    erb:widgets "" ;
+    erb:notes "" .
+
+# === Individuals: ERBCustomizations ===
+
+erb:ERBCustomizations_0 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId "03a-customize-schema-sql" ;
+    erb:name "03a-customize-schema.sql" ;
+    erb:title "Customize Schema" ;
+    erb:sQLCode """-- ============================================================================
+-- CUSTOMIZE SCHEMA - User-defined tables and schema modifications
+-- ============================================================================
+-- This file is for YOUR custom schema changes that should persist across
+-- regeneration of the base ERB files.
+--
+-- USE THIS FILE FOR:
+--   - Additional tables not defined in the rulebook
+--   - Extra columns on existing tables (ALTER TABLE)
+--   - Custom indexes for performance tuning
+--   - Custom constraints or triggers
+--
+-- IMPORTANT:
+--   - This file runs AFTER 01-drop-and-create-tables.sql
+--   - The base tables already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom schema changes go here:
+""" ;
+    erb:sQLTarget "Postgres" ;
+    erb:customizationType "Schema" .
+
+erb:ERBCustomizations_1 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId "03b-customize-functions-sql" ;
+    erb:name "03b-customize-functions.sql" ;
+    erb:title "Customize Functions" ;
+    erb:sQLCode """-- ============================================================================
+-- CUSTOMIZE FUNCTIONS - User-defined calculation functions
+-- ============================================================================
+-- This file is for YOUR custom PostgreSQL functions that should persist
+-- across regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 02-create-functions.sql
+--   - Base ERB calc functions already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom functions go here:
+CREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)
+ RETURNS numeric
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$function$;
+
+
+CREATE OR REPLACE FUNCTION public.calc_sides_length_squared(p_side_id text)
+ RETURNS integer
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN ((SELECT length FROM sides WHERE side_id = p_side_id) * (SELECT length FROM sides WHERE side_id = p_side_id));
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.calc_shapes_hypotenuse_length_squared(p_shape_id text)
+ RETURNS numeric
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN ((SELECT COALESCE(MAX(calc_sides_hypotenuse_length_squared(side_id)), 0) FROM sides WHERE shape = p_shape_id));
+END;
+$function$;
+""" ;
+    erb:sQLTarget "Postgres" ;
+    erb:customizationType "Functions" .
+
+erb:ERBCustomizations_2 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId "03c-customize-views-sql" ;
+    erb:name "03c-customize-views.sql" ;
+    erb:title "Customize Views" ;
+    erb:sQLCode """-- ============================================================================
+-- CUSTOMIZE VIEWS - User-defined views and view extensions
+-- ============================================================================
+-- This file is for YOUR custom views that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 03-create-views.sql
+--   - All base vw_* views already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom views go here:
+""" ;
+    erb:sQLTarget "Postgres" ;
+    erb:customizationType "Views" .
+
+erb:ERBCustomizations_3 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId "03d-customize-rls-sql" ;
+    erb:name "03d-customize-rls.sql" ;
+    erb:title "Customize Policies (RLS)" ;
+    erb:sQLCode """-- ============================================================================
+-- CUSTOMIZE POLICIES - User-defined Row Level Security policies
+-- ============================================================================
+-- This file is for YOUR custom RLS policies that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 04-create-policies.sql
+--   - Base RLS policies already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom policies go here:
+""" ;
+    erb:sQLTarget "Postgres" ;
+    erb:customizationType "RLS" .
+
+erb:ERBCustomizations_4 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId "03e-customize-data-sql" ;
+    erb:name "03e-customize-data.sql" ;
+    erb:title "Customize Data (Seeds / Migrations)" ;
+    erb:sQLCode """-- ============================================================================
+-- CUSTOMIZE DATA - User-defined seed data and data migrations
+-- ============================================================================
+-- This file is for YOUR custom seed data that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 05-insert-data.sql
+--   - Base seed data already exists when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom data inserts go here:
+""" ;
+    erb:sQLTarget "Postgres" ;
+    erb:customizationType "Data" .
+
+# === Individuals: ERBVersions ===
+
+erb:ERBVersions_0 a erb:ERBVersions ;
+    erb:eRBVersionId "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-06-22-18-34" ;
+    erb:baseId "b0e261e6-9ded-4ed0-817a-12a82a538201" ;
+    erb:name "Version 2026-02-06 22:18:34" ;
+    erb:message "fixed custom RLS policies." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-06" ;
+    erb:isPublished false .
+
+erb:ERBVersions_1 a erb:ERBVersions ;
+    erb:eRBVersionId "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-50-20" ;
+    erb:baseId "b0e261e6-9ded-4ed0-817a-12a82a538201" ;
+    erb:name "Version 2026-02-07 01:50:20" ;
+    erb:message "Trying to get data in as well." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_2 a erb:ERBVersions ;
+    erb:eRBVersionId "b0e261e6-9ded-4ed0-817a-12a82a538201-version-2026-02-07-01-54-24" ;
+    erb:baseId "b0e261e6-9ded-4ed0-817a-12a82a538201" ;
+    erb:name "Version 2026-02-07 01:54:24" ;
+    erb:message "Updated base again." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_3 a erb:ERBVersions ;
+    erb:eRBVersionId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-00-40" ;
+    erb:baseId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77" ;
+    erb:name "Version 2026-02-07 02:00:40" ;
+    erb:message "Trying to get data in the db." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_4 a erb:ERBVersions ;
+    erb:eRBVersionId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-18-06" ;
+    erb:baseId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77" ;
+    erb:name "Version 2026-02-07 02:18:06" ;
+    erb:message "Added app users." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_5 a erb:ERBVersions ;
+    erb:eRBVersionId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-02-27-57" ;
+    erb:baseId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77" ;
+    erb:name "Version 2026-02-07 02:27:57" ;
+    erb:message "Added AppUsers.IsActive" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_6 a erb:ERBVersions ;
+    erb:eRBVersionId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-46-12" ;
+    erb:baseId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77" ;
+    erb:name "Version 2026-02-07 22:46:12" ;
+    erb:message "trying new admin/anon users." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_7 a erb:ERBVersions ;
+    erb:eRBVersionId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77-version-2026-02-07-22-47-11" ;
+    erb:baseId "e7b6e278-92b8-4a76-a3bf-d2b1183d1c77" ;
+    erb:name "Version 2026-02-07 22:47:11" ;
+    erb:message "added admin/anon users." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-07" ;
+    erb:isPublished false .
+
+erb:ERBVersions_8 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-08-03-55-18" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-08 03:55:18" ;
+    erb:message "fixing auth" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-08" ;
+    erb:isPublished false .
+
+erb:ERBVersions_9 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-07-44" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-09 06:07:44" ;
+    erb:message "temp 4" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-09" ;
+    erb:isPublished false .
+
+erb:ERBVersions_10 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-06-14-38" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-09 06:14:38" ;
+    erb:message "added ownership records to widgets" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-09" ;
+    erb:isPublished false .
+
+erb:ERBVersions_11 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-22-15" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-09 07:22:15" ;
+    erb:message "test preserving builders" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-09" ;
+    erb:isPublished false .
+
+erb:ERBVersions_12 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-41-26" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-09 07:41:26" ;
+    erb:message "preserves policies now?" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-09" ;
+    erb:isPublished false .
+
+erb:ERBVersions_13 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-09-07-46-04" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-09 07:46:04" ;
+    erb:message "added color to widgets" ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-09" ;
+    erb:isPublished false .
+
+erb:ERBVersions_14 a erb:ERBVersions ;
+    erb:eRBVersionId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c-version-2026-02-11-00-40-18" ;
+    erb:baseId "f4cefffd-29c7-4dc6-8b5b-2142c62a475c" ;
+    erb:name "Version 2026-02-11 00:40:18" ;
+    erb:message "added another b ob." ;
+    erb:notes "" ;
+    erb:commitDate "2026-02-11" ;
+    erb:isPublished false .
+
+# === Individuals: MagicLinkIntegration ===
+
+erb:MagicLinkIntegration_0 a erb:MagicLinkIntegration ;
+    erb:magicLinkIntegrationId "magic-link-config" ;
+    erb:name "Magic Link Config" ;
+    erb:enabled true ;
+    erb:tenantId "c03e9d56-9525-47dd-9ee1-2f2a20383048" ;
+    erb:publicKeyPem """-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2XyDcVliu0wjQjDY1Rez
+/krdzYL3v4TXCJbYu2V1EkrKlVjO+ZGCIHu0yMAw5A+cUMm5cXtYyIXNln6tCg0M
+LHcNVrSDm5QuQSUuGP/SVrgSUItyrGfLZOwl+kYXgMmle4t11ecVhkaVARisBcRz
+Irh9ofSNtLR6UlJzKH4uFFswId5HrgwMCbart2YcrA7lrEt1hqASZ7pPPX6/i771
+97VqSf+clLX3Wq5VwyrtC9taTiVZrN/OhtWbSAkUX+NMkCc57MN4CcjP3/8JXbjv
+4L5ExZOpc14zRhOnOnC0cHRX475WoJbjI3+EfYDjaNrV6MVd444S/8HOOz3D8Pki
+XwIDAQAB
+-----END PUBLIC KEY-----""" ;
+    erb:userTableName "app_users" ;
+    erb:emailField "email_address" ;
+    erb:roleField "role" ;
+    erb:isActiveField "is_active" ;
+    erb:userIdField "" ;
+    erb:allowedAlgorithms "RS256" ;
+    erb:requireTenantBinding true ;
+    erb:useEmailDagPattern true .
+
+# === Individuals: Shapes ===
+
+erb:Shapes_0 a erb:Shapes ;
+    erb:shapeId "shape1" ;
+    erb:name "Shape1" ;
+    erb:sides "shape1-side-a, shape1-side-b, shape1-side-c" ;
+    erb:howManySides 3 ;
+    erb:sumOfInternalAngles "180" ;
+    erb:maxAngle "90" ;
+    erb:hypotenuseLengthSquared "25" ;
+    erb:nonHypotenuseSidesSquared "25" .
+
+erb:Shapes_1 a erb:Shapes ;
+    erb:shapeId "shape2" ;
+    erb:name "Shape2" ;
+    erb:sides "shape2-side-a, shape2-side-b, shape2-side-c, shape2-side-d" ;
+    erb:howManySides 4 ;
+    erb:sumOfInternalAngles "360" ;
+    erb:maxAngle "90" ;
+    erb:hypotenuseLengthSquared "0" ;
+    erb:nonHypotenuseSidesSquared "0" .
+
+# === Individuals: Sides ===
+
+erb:Sides_0 a erb:Sides ;
+    erb:sideId "shape1-side-a" ;
+    erb:shapeSides 3 ;
+    erb:label "A" ;
+    erb:isRectangle false ;
+    erb:isTriangle true ;
+    erb:isRightTriangle true ;
+    erb:pythagoreanTheoremHolds true ;
+    erb:previousSideLength 3 ;
+    erb:length 5 ;
+    erb:nextLength 4 ;
+    erb:previousAngle 90 ;
+    erb:angle 45 ;
+    erb:nextAngle 45 ;
+    erb:previousSide "shape1-side-c" ;
+    erb:nextSide "shape1-side-b" ;
+    erb:shape "shape1" ;
+    erb:previousLabel "C" ;
+    erb:nextLabel "B" .
+
+erb:Sides_1 a erb:Sides ;
+    erb:sideId "shape1-side-b" ;
+    erb:shapeSides 3 ;
+    erb:label "B" ;
+    erb:isRectangle false ;
+    erb:isTriangle true ;
+    erb:isRightTriangle true ;
+    erb:pythagoreanTheoremHolds true ;
+    erb:previousSideLength 5 ;
+    erb:length 4 ;
+    erb:nextLength 3 ;
+    erb:previousAngle 45 ;
+    erb:angle 45 ;
+    erb:nextAngle 90 ;
+    erb:previousSide "shape1-side-a" ;
+    erb:nextSide "shape1-side-c" ;
+    erb:shape "shape1" ;
+    erb:previousLabel "A" ;
+    erb:nextLabel "C" .
+
+erb:Sides_2 a erb:Sides ;
+    erb:sideId "shape1-side-c" ;
+    erb:shapeSides 3 ;
+    erb:label "C" ;
+    erb:isRectangle false ;
+    erb:isTriangle true ;
+    erb:isRightTriangle true ;
+    erb:pythagoreanTheoremHolds true ;
+    erb:previousSideLength 4 ;
+    erb:length 3 ;
+    erb:nextLength 5 ;
+    erb:previousAngle 45 ;
+    erb:angle 90 ;
+    erb:nextAngle 45 ;
+    erb:previousSide "shape1-side-b" ;
+    erb:nextSide "shape1-side-a" ;
+    erb:shape "shape1" ;
+    erb:previousLabel "B" ;
+    erb:nextLabel "A" .
+
+erb:Sides_3 a erb:Sides ;
+    erb:sideId "shape2-side-a" ;
+    erb:shapeSides 4 ;
+    erb:label "A" ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide "shape2-side-d" ;
+    erb:nextSide "shape2-side-b" ;
+    erb:shape "shape2" ;
+    erb:previousLabel "D" ;
+    erb:nextLabel "B" .
+
+erb:Sides_4 a erb:Sides ;
+    erb:sideId "shape2-side-b" ;
+    erb:shapeSides 4 ;
+    erb:label "B" ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide "shape2-side-a" ;
+    erb:nextSide "shape2-side-c" ;
+    erb:shape "shape2" ;
+    erb:previousLabel "A" ;
+    erb:nextLabel "C" .
+
+erb:Sides_5 a erb:Sides ;
+    erb:sideId "shape2-side-c" ;
+    erb:shapeSides 4 ;
+    erb:label "C" ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide "shape2-side-b" ;
+    erb:nextSide "shape2-side-d" ;
+    erb:shape "shape2" ;
+    erb:previousLabel "B" ;
+    erb:nextLabel "D" .
+
+erb:Sides_6 a erb:Sides ;
+    erb:sideId "shape2-side-d" ;
+    erb:shapeSides 4 ;
+    erb:label "D" ;
+    erb:isRectangle true ;
+    erb:isTriangle false ;
+    erb:isRightTriangle false ;
+    erb:pythagoreanTheoremHolds false ;
+    erb:previousSideLength 2 ;
+    erb:length 2 ;
+    erb:nextLength 2 ;
+    erb:previousAngle 90 ;
+    erb:angle 90 ;
+    erb:nextAngle 90 ;
+    erb:previousSide "shape2-side-c" ;
+    erb:nextSide "shape2-side-a" ;
+    erb:shape "shape2" ;
+    erb:previousLabel "C" ;
+    erb:nextLabel "A" .
+
+# === Individuals: Widgets ===
+
+erb:Widgets_0 a erb:Widgets ;
+    erb:widgetId "widget1" ;
+    erb:name "widget1" ;
+    erb:appuser "bob" ;
+    erb:name_from_Appuser "Bob" ;
+    erb:emailAddress_from_Appuser "bob@ssot.me" ;
+    erb:role_from_Appuser "Mathemetician" ;
+    erb:color "Blue" .
+
+erb:Widgets_1 a erb:Widgets ;
+    erb:widgetId "widget2" ;
+    erb:name "widget2" ;
+    erb:appuser "bob" ;
+    erb:name_from_Appuser "Bob" ;
+    erb:emailAddress_from_Appuser "bob@ssot.me" ;
+    erb:role_from_Appuser "Mathemetician" ;
+    erb:color "pink" .
+
+erb:Widgets_2 a erb:Widgets ;
+    erb:widgetId "widget3" ;
+    erb:name "widget3" ;
+    erb:appuser "andy" ;
+    erb:name_from_Appuser "Andy" ;
+    erb:emailAddress_from_Appuser "guest@ssot.me" ;
+    erb:role_from_Appuser "Guest" ;
+    erb:color "" .

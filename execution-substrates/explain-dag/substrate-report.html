@@ -68,8 +68,8 @@ pre { background: var(--code-bg); border: 1px solid var(--border-color); border-
             <h1>Explain-DAG Execution Substrate</h1>
         </div>
         <div class="header-stats">
-            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
-            <div class="stat"><span>3/3 passed</span></div>
+            <div class="stat"><span>Score:</span><span class="stat-value score-warning">74.7%</span></div>
+            <div class="stat"><span>109/146 passed</span></div>
         </div>
         <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
@@ -124,8 +124,10 @@ HasGrammar = true
                 <h2>Execution Log</h2>
                 <pre>=== ExplainDAG Substrate Test Run ===
 
-  -&gt; customers: 3 records with explanations
-ExplainDAG substrate: Processed 1 entities, 3 total records
+  -&gt; shapes: 2 records with explanations
+  -&gt; sides: 7 records with explanations
+  -&gt; widgets: 3 records (lookups/aggregations only)
+ExplainDAG substrate: Processed 3 entities, 12 total records
 Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/effortlessly-invariant-rulesbooks/execution-substrates/explain-dag/test-explanations
 
 </pre>
@@ -135,10 +137,10 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             <div class="card">
                 <h2>Test Summary</h2>
                 <div class="results-summary">
-                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
-                    <div class="result-item"><div class="result-value score-perfect">3</div><div class="result-label">Passed</div></div>
-                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
-                    <div class="result-item"><div class="result-value">3</div><div class="result-label">Total</div></div>
+                    <div class="result-item"><div class="result-value score-warning">74.7%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">109</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">37</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">146</div><div class="result-label">Total</div></div>
                 </div>
             </div>
         </div>
@@ -146,13 +148,13 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             <div class="card">
                 <div class="code-header">
                     <h2>explain_spec.json</h2>
-                    <div><span class="code-info">130 lines</span><button class="copy-btn" onclick="copyCode('spec-code')">Copy</button></div>
+                    <div><span class="code-info">1147 lines</span><button class="copy-btn" onclick="copyCode('spec-code')">Copy</button></div>
                 </div>
                 <pre id="spec-code">{
   &quot;schema_version&quot;: &quot;erb.explain_spec.v1&quot;,
   &quot;rulebook&quot;: {
-    &quot;name&quot;: &quot;DEMO: Customer FullName&quot;,
-    &quot;rulebook_hash&quot;: &quot;sha256:281e1c07bfb8103b69f875aaea560661&quot;
+    &quot;name&quot;: &quot;DEMO: Pythagorean Theorem&quot;,
+    &quot;rulebook_hash&quot;: &quot;sha256:0031044289b0585a19e3098513138e91&quot;
   },
   &quot;semantics&quot;: {
     &quot;profile&quot;: &quot;excel&quot;,
@@ -161,79 +163,623 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
     &quot;boolean_coercion&quot;: &quot;strict&quot;
   },
   &quot;entities&quot;: {
-    &quot;Customers&quot;: {
-      &quot;id_field&quot;: &quot;CustomerId&quot;,
-      &quot;id_field_snake&quot;: &quot;customer_id&quot;,
+    &quot;Shapes&quot;: {
+      &quot;id_field&quot;: &quot;ShapeId&quot;,
+      &quot;id_field_snake&quot;: &quot;shape_id&quot;,
       &quot;fields&quot;: {
-        &quot;CustomerId&quot;: {
+        &quot;ShapeId&quot;: {
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: false,
           &quot;type&quot;: &quot;raw&quot;
         },
-        &quot;Customer&quot;: {
+        &quot;Name&quot;: {
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;raw&quot;,
-          &quot;description&quot;: &quot;Identifier for the customers.&quot;
+          &quot;type&quot;: &quot;raw&quot;
         },
-        &quot;EmailAddress&quot;: {
+        &quot;Sides&quot;: {
           &quot;datatype&quot;: &quot;string&quot;,
           &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;raw&quot;,
-          &quot;description&quot;: &quot;Thec ustomers email address&quot;
+          &quot;type&quot;: &quot;relationship&quot;
         },
-        &quot;FirstName&quot;: {
-          &quot;datatype&quot;: &quot;string&quot;,
+        &quot;HowManySides&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
           &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;raw&quot;,
-          &quot;description&quot;: &quot;First Name of the customer - used to make the full name&quot;
+          &quot;type&quot;: &quot;aggregation&quot;
         },
-        &quot;LastName&quot;: {
-          &quot;datatype&quot;: &quot;string&quot;,
+        &quot;IsRectangle&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
           &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;raw&quot;,
-          &quot;description&quot;: &quot;Last Name of the customer - used to make the full name&quot;
+          &quot;type&quot;: &quot;calculated&quot;
         },
-        &quot;FullName&quot;: {
-          &quot;datatype&quot;: &quot;string&quot;,
+        &quot;IsTriangle&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
           &quot;nullable&quot;: true,
-          &quot;type&quot;: &quot;calculated&quot;,
-          &quot;description&quot;: &quot;Full name is computed from the first and last name of the customer&quot;
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;IsRightTriangle&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;SumOfInternalAngles&quot;: {
+          &quot;datatype&quot;: &quot;number&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;aggregation&quot;
+        },
+        &quot;MaxAngle&quot;: {
+          &quot;datatype&quot;: &quot;number&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;aggregation&quot;
+        },
+        &quot;HypotenuseLengthSquared&quot;: {
+          &quot;datatype&quot;: &quot;number&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;aggregation&quot;
+        },
+        &quot;NonHypotenuseSidesSquared&quot;: {
+          &quot;datatype&quot;: &quot;number&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;aggregation&quot;
+        },
+        &quot;PythagoreanTheoremHolds&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
         }
       },
       &quot;calc_order&quot;: [
-        &quot;FullName&quot;
+        &quot;IsRectangle&quot;,
+        &quot;IsRightTriangle&quot;,
+        &quot;IsTriangle&quot;,
+        &quot;PythagoreanTheoremHolds&quot;
       ],
       &quot;dep_edges&quot;: [
         [
-          &quot;FirstName&quot;,
-          &quot;FullName&quot;
+          &quot;HowManySides&quot;,
+          &quot;IsRectangle&quot;
         ],
         [
-          &quot;LastName&quot;,
-          &quot;FullName&quot;
+          &quot;IsTriangle&quot;,
+          &quot;IsRightTriangle&quot;
+        ],
+        [
+          &quot;MaxAngle&quot;,
+          &quot;IsRightTriangle&quot;
+        ],
+        [
+          &quot;HowManySides&quot;,
+          &quot;IsTriangle&quot;
+        ],
+        [
+          &quot;SumOfInternalAngles&quot;,
+          &quot;IsTriangle&quot;
+        ],
+        [
+          &quot;HypotenuseLengthSquared&quot;,
+          &quot;PythagoreanTheoremHolds&quot;
+        ],
+        [
+          &quot;IsRightTriangle&quot;,
+          &quot;PythagoreanTheoremHolds&quot;
+        ],
+        [
+          &quot;NonHypotenuseSidesSquared&quot;,
+          &quot;PythagoreanTheoremHolds&quot;
         ]
       ],
       &quot;expr_templates&quot;: {
-        &quot;FullName&quot;: {
-          &quot;formula_source&quot;: &quot;={{FirstName}} &amp; \&quot; \&quot; &amp; {{LastName}}&quot;,
-          &quot;template_hash&quot;: &quot;sha256:ae6e94fd35af410b&quot;,
-          &quot;root_node&quot;: &quot;n_result_FullName&quot;,
+        &quot;IsRectangle&quot;: {
+          &quot;formula_source&quot;: &quot;=AND({{HowManySides}}=4)&quot;,
+          &quot;template_hash&quot;: &quot;sha256:66055d099c8bb0f6&quot;,
+          &quot;root_node&quot;: &quot;n_result_IsRectangle&quot;,
           &quot;nodes&quot;: {
             &quot;n_ref_1&quot;: {
               &quot;kind&quot;: &quot;field_ref&quot;,
-              &quot;field&quot;: &quot;FirstName&quot;,
-              &quot;field_snake&quot;: &quot;first_name&quot;
+              &quot;field&quot;: &quot;HowManySides&quot;,
+              &quot;field_snake&quot;: &quot;how_many_sides&quot;
             },
             &quot;n_const_2&quot;: {
               &quot;kind&quot;: &quot;const&quot;,
-              &quot;value&quot;: &quot; &quot;,
+              &quot;value&quot;: 4,
+              &quot;type&quot;: &quot;integer&quot;
+            },
+            &quot;n_op_3&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_const_2&quot;
+              ]
+            },
+            &quot;n_fn_4&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_op_3&quot;
+              ]
+            },
+            &quot;n_result_IsRectangle&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;IsRectangle&quot;,
+              &quot;field_snake&quot;: &quot;is_rectangle&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_4&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_op_3&quot;
+            ],
+            [
+              &quot;n_const_2&quot;,
+              &quot;n_op_3&quot;
+            ],
+            [
+              &quot;n_op_3&quot;,
+              &quot;n_fn_4&quot;
+            ],
+            [
+              &quot;n_fn_4&quot;,
+              &quot;n_result_IsRectangle&quot;
+            ]
+          ]
+        },
+        &quot;IsTriangle&quot;: {
+          &quot;formula_source&quot;: &quot;=AND({{SumOfInternalAngles}}=180, {{HowManySides}}=3)&quot;,
+          &quot;template_hash&quot;: &quot;sha256:b647bc1b768f4dc3&quot;,
+          &quot;root_node&quot;: &quot;n_result_IsTriangle&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;SumOfInternalAngles&quot;,
+              &quot;field_snake&quot;: &quot;sum_of_internal_angles&quot;
+            },
+            &quot;n_const_2&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: 180,
+              &quot;type&quot;: &quot;integer&quot;
+            },
+            &quot;n_op_3&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_const_2&quot;
+              ]
+            },
+            &quot;n_ref_4&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;HowManySides&quot;,
+              &quot;field_snake&quot;: &quot;how_many_sides&quot;
+            },
+            &quot;n_const_5&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: 3,
+              &quot;type&quot;: &quot;integer&quot;
+            },
+            &quot;n_op_6&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_4&quot;,
+                &quot;n_const_5&quot;
+              ]
+            },
+            &quot;n_fn_7&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_op_3&quot;,
+                &quot;n_op_6&quot;
+              ]
+            },
+            &quot;n_result_IsTriangle&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;IsTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_triangle&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_7&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_op_3&quot;
+            ],
+            [
+              &quot;n_const_2&quot;,
+              &quot;n_op_3&quot;
+            ],
+            [
+              &quot;n_ref_4&quot;,
+              &quot;n_op_6&quot;
+            ],
+            [
+              &quot;n_const_5&quot;,
+              &quot;n_op_6&quot;
+            ],
+            [
+              &quot;n_op_3&quot;,
+              &quot;n_fn_7&quot;
+            ],
+            [
+              &quot;n_op_6&quot;,
+              &quot;n_fn_7&quot;
+            ],
+            [
+              &quot;n_fn_7&quot;,
+              &quot;n_result_IsTriangle&quot;
+            ]
+          ]
+        },
+        &quot;IsRightTriangle&quot;: {
+          &quot;formula_source&quot;: &quot;=AND({{IsTriangle}}, {{MaxAngle}} = 90)&quot;,
+          &quot;template_hash&quot;: &quot;sha256:a24daf66b429f04b&quot;,
+          &quot;root_node&quot;: &quot;n_result_IsRightTriangle&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_triangle&quot;
+            },
+            &quot;n_ref_2&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;MaxAngle&quot;,
+              &quot;field_snake&quot;: &quot;max_angle&quot;
+            },
+            &quot;n_const_3&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: 90,
+              &quot;type&quot;: &quot;integer&quot;
+            },
+            &quot;n_op_4&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_2&quot;,
+                &quot;n_const_3&quot;
+              ]
+            },
+            &quot;n_fn_5&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_op_4&quot;
+              ]
+            },
+            &quot;n_result_IsRightTriangle&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;IsRightTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_right_triangle&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_5&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_2&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_const_3&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_fn_5&quot;
+            ],
+            [
+              &quot;n_op_4&quot;,
+              &quot;n_fn_5&quot;
+            ],
+            [
+              &quot;n_fn_5&quot;,
+              &quot;n_result_IsRightTriangle&quot;
+            ]
+          ]
+        },
+        &quot;PythagoreanTheoremHolds&quot;: {
+          &quot;formula_source&quot;: &quot;=AND(\r\n  {{IsRightTriangle}},  \r\n  {{HypotenuseLengthSquared}} = {{NonHypotenuseSidesSquared}}\r\n)&quot;,
+          &quot;template_hash&quot;: &quot;sha256:3efdc54ae62c0d1f&quot;,
+          &quot;root_node&quot;: &quot;n_result_PythagoreanTheoremHolds&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsRightTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_right_triangle&quot;
+            },
+            &quot;n_ref_2&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;HypotenuseLengthSquared&quot;,
+              &quot;field_snake&quot;: &quot;hypotenuse_length_squared&quot;
+            },
+            &quot;n_ref_3&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;NonHypotenuseSidesSquared&quot;,
+              &quot;field_snake&quot;: &quot;non_hypotenuse_sides_squared&quot;
+            },
+            &quot;n_op_4&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;=&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_2&quot;,
+                &quot;n_ref_3&quot;
+              ]
+            },
+            &quot;n_fn_5&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_op_4&quot;
+              ]
+            },
+            &quot;n_result_PythagoreanTheoremHolds&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;PythagoreanTheoremHolds&quot;,
+              &quot;field_snake&quot;: &quot;pythagorean_theorem_holds&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_5&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_2&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_3&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_fn_5&quot;
+            ],
+            [
+              &quot;n_op_4&quot;,
+              &quot;n_fn_5&quot;
+            ],
+            [
+              &quot;n_fn_5&quot;,
+              &quot;n_result_PythagoreanTheoremHolds&quot;
+            ]
+          ]
+        }
+      },
+      &quot;description&quot;: &quot;Table: Shapes&quot;
+    },
+    &quot;Sides&quot;: {
+      &quot;id_field&quot;: &quot;SideId&quot;,
+      &quot;id_field_snake&quot;: &quot;side_id&quot;,
+      &quot;fields&quot;: {
+        &quot;SideId&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: false,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;Name&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;ShapeSides&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;Label&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;Label for this edge&quot;
+        },
+        &quot;IsRectangle&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;IsTriangle&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;IsRightTriangle&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;,
+          &quot;description&quot;: &quot;Is this the Hypotenuse of a Right Angle Triangle?&quot;
+        },
+        &quot;IsHypotenuse&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;,
+          &quot;description&quot;: &quot;Is this the Hypotenuse of a Right Angle Triangle?&quot;
+        },
+        &quot;StatusOfTheorem&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;,
+          &quot;description&quot;: &quot;Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.&quot;
+        },
+        &quot;PythagoreanTheoremHolds&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;,
+          &quot;description&quot;: &quot;Does the Pythagorean Theorem Hold?&quot;
+        },
+        &quot;LengthSquared&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;HypotenuseLengthSquared&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;NonHypotenuseLengthSquared&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;PreviousSideLength&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;,
+          &quot;description&quot;: &quot;Previous Edge Length&quot;
+        },
+        &quot;Length&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;Length&quot;
+        },
+        &quot;NextLength&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;,
+          &quot;description&quot;: &quot;Next Edge Length&quot;
+        },
+        &quot;PreviousAngle&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;,
+          &quot;description&quot;: &quot;Previous Angle&quot;
+        },
+        &quot;Angle&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;,
+          &quot;description&quot;: &quot;Internal angles for the shapes&quot;
+        },
+        &quot;NextAngle&quot;: {
+          &quot;datatype&quot;: &quot;integer&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;,
+          &quot;description&quot;: &quot;Next Angle&quot;
+        },
+        &quot;PreviousSide&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;description&quot;: &quot;Previous Edge&quot;
+        },
+        &quot;NextSide&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;description&quot;: &quot;Next Edge&quot;
+        },
+        &quot;Shape&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;description&quot;: &quot;Shape&quot;
+        },
+        &quot;PreviousLabel&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        },
+        &quot;NextLabel&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;lookup&quot;
+        }
+      },
+      &quot;calc_order&quot;: [
+        &quot;LengthSquared&quot;,
+        &quot;HypotenuseLengthSquared&quot;,
+        &quot;IsHypotenuse&quot;,
+        &quot;Name&quot;,
+        &quot;NonHypotenuseLengthSquared&quot;,
+        &quot;StatusOfTheorem&quot;
+      ],
+      &quot;dep_edges&quot;: [
+        [
+          &quot;IsHypotenuse&quot;,
+          &quot;HypotenuseLengthSquared&quot;
+        ],
+        [
+          &quot;LengthSquared&quot;,
+          &quot;HypotenuseLengthSquared&quot;
+        ],
+        [
+          &quot;IsTriangle&quot;,
+          &quot;IsHypotenuse&quot;
+        ],
+        [
+          &quot;Length&quot;,
+          &quot;IsHypotenuse&quot;
+        ],
+        [
+          &quot;NextLength&quot;,
+          &quot;IsHypotenuse&quot;
+        ],
+        [
+          &quot;PreviousSideLength&quot;,
+          &quot;IsHypotenuse&quot;
+        ],
+        [
+          &quot;Label&quot;,
+          &quot;Name&quot;
+        ],
+        [
+          &quot;Shape&quot;,
+          &quot;Name&quot;
+        ],
+        [
+          &quot;IsHypotenuse&quot;,
+          &quot;NonHypotenuseLengthSquared&quot;
+        ],
+        [
+          &quot;IsTriangle&quot;,
+          &quot;NonHypotenuseLengthSquared&quot;
+        ],
+        [
+          &quot;LengthSquared&quot;,
+          &quot;NonHypotenuseLengthSquared&quot;
+        ],
+        [
+          &quot;IsRightTriangle&quot;,
+          &quot;StatusOfTheorem&quot;
+        ],
+        [
+          &quot;IsTriangle&quot;,
+          &quot;StatusOfTheorem&quot;
+        ],
+        [
+          &quot;PythagoreanTheoremHolds&quot;,
+          &quot;StatusOfTheorem&quot;
+        ]
+      ],
+      &quot;expr_templates&quot;: {
+        &quot;Name&quot;: {
+          &quot;formula_source&quot;: &quot;={{Shape}} &amp; \&quot;-Side-\&quot; &amp; {{Label}}&quot;,
+          &quot;template_hash&quot;: &quot;sha256:693e60dd43e6c772&quot;,
+          &quot;root_node&quot;: &quot;n_result_Name&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;Shape&quot;,
+              &quot;field_snake&quot;: &quot;shape&quot;
+            },
+            &quot;n_const_2&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;-Side-&quot;,
               &quot;type&quot;: &quot;string&quot;
             },
             &quot;n_ref_3&quot;: {
               &quot;kind&quot;: &quot;field_ref&quot;,
-              &quot;field&quot;: &quot;LastName&quot;,
-              &quot;field_snake&quot;: &quot;last_name&quot;
+              &quot;field&quot;: &quot;Label&quot;,
+              &quot;field_snake&quot;: &quot;label&quot;
             },
             &quot;n_op_4&quot;: {
               &quot;kind&quot;: &quot;op&quot;,
@@ -244,10 +790,10 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
                 &quot;n_ref_3&quot;
               ]
             },
-            &quot;n_result_FullName&quot;: {
+            &quot;n_result_Name&quot;: {
               &quot;kind&quot;: &quot;result&quot;,
-              &quot;field&quot;: &quot;FullName&quot;,
-              &quot;field_snake&quot;: &quot;full_name&quot;,
+              &quot;field&quot;: &quot;Name&quot;,
+              &quot;field_snake&quot;: &quot;name&quot;,
               &quot;in&quot;: [
                 &quot;n_op_4&quot;
               ]
@@ -268,13 +814,486 @@ Explanations written to: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai
             ],
             [
               &quot;n_op_4&quot;,
-              &quot;n_result_FullName&quot;
+              &quot;n_result_Name&quot;
+            ]
+          ]
+        },
+        &quot;IsHypotenuse&quot;: {
+          &quot;formula_source&quot;: &quot;=AND(\r\n  {{IsTriangle}},\r\n  {{Length}} &gt; {{PreviousSideLength}},\r\n  {{Length}} &gt; {{NextLength}}\r\n)&quot;,
+          &quot;template_hash&quot;: &quot;sha256:f70948cb0c09e474&quot;,
+          &quot;root_node&quot;: &quot;n_result_IsHypotenuse&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_triangle&quot;
+            },
+            &quot;n_ref_2&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;Length&quot;,
+              &quot;field_snake&quot;: &quot;length&quot;
+            },
+            &quot;n_ref_3&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;PreviousSideLength&quot;,
+              &quot;field_snake&quot;: &quot;previous_side_length&quot;
+            },
+            &quot;n_op_4&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;&gt;&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_2&quot;,
+                &quot;n_ref_3&quot;
+              ]
+            },
+            &quot;n_ref_5&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;Length&quot;,
+              &quot;field_snake&quot;: &quot;length&quot;
+            },
+            &quot;n_ref_6&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;NextLength&quot;,
+              &quot;field_snake&quot;: &quot;next_length&quot;
+            },
+            &quot;n_op_7&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;&gt;&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_5&quot;,
+                &quot;n_ref_6&quot;
+              ]
+            },
+            &quot;n_fn_8&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_op_4&quot;,
+                &quot;n_op_7&quot;
+              ]
+            },
+            &quot;n_result_IsHypotenuse&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;IsHypotenuse&quot;,
+              &quot;field_snake&quot;: &quot;is_hypotenuse&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_8&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_2&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_3&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_5&quot;,
+              &quot;n_op_7&quot;
+            ],
+            [
+              &quot;n_ref_6&quot;,
+              &quot;n_op_7&quot;
+            ],
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_fn_8&quot;
+            ],
+            [
+              &quot;n_op_4&quot;,
+              &quot;n_fn_8&quot;
+            ],
+            [
+              &quot;n_op_7&quot;,
+              &quot;n_fn_8&quot;
+            ],
+            [
+              &quot;n_fn_8&quot;,
+              &quot;n_result_IsHypotenuse&quot;
             ]
           ],
-          &quot;description&quot;: &quot;Full name is computed from the first and last name of the customer&quot;
+          &quot;description&quot;: &quot;Is this the Hypotenuse of a Right Angle Triangle?&quot;
+        },
+        &quot;StatusOfTheorem&quot;: {
+          &quot;formula_source&quot;: &quot;=IF({{IsTriangle}}, \n  IF(AND({{IsRightTriangle}}, NOT({{PythagoreanTheoremHolds}})), \n    \&quot;PYTHAGOREAN THEOREM FALSIFIED!\&quot;, \n    \&quot;Pythagorean Theorem Holds (obviously).\&quot;\n  ),\n  \&quot;NA\&quot;\n)&quot;,
+          &quot;template_hash&quot;: &quot;sha256:68b692a291ac51aa&quot;,
+          &quot;root_node&quot;: &quot;n_result_StatusOfTheorem&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_triangle&quot;
+            },
+            &quot;n_ref_2&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsRightTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_right_triangle&quot;
+            },
+            &quot;n_ref_3&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;PythagoreanTheoremHolds&quot;,
+              &quot;field_snake&quot;: &quot;pythagorean_theorem_holds&quot;
+            },
+            &quot;n_fn_4&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;NOT&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_3&quot;
+              ]
+            },
+            &quot;n_fn_5&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_2&quot;,
+                &quot;n_fn_4&quot;
+              ]
+            },
+            &quot;n_const_6&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;PYTHAGOREAN THEOREM FALSIFIED!&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_const_7&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;Pythagorean Theorem Holds (obviously).&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_fn_8&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_fn_5&quot;,
+                &quot;n_const_6&quot;,
+                &quot;n_const_7&quot;
+              ]
+            },
+            &quot;n_const_9&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;NA&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_fn_10&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_fn_8&quot;,
+                &quot;n_const_9&quot;
+              ]
+            },
+            &quot;n_result_StatusOfTheorem&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;StatusOfTheorem&quot;,
+              &quot;field_snake&quot;: &quot;status_of_theorem&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_10&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_3&quot;,
+              &quot;n_fn_4&quot;
+            ],
+            [
+              &quot;n_ref_2&quot;,
+              &quot;n_fn_5&quot;
+            ],
+            [
+              &quot;n_fn_4&quot;,
+              &quot;n_fn_5&quot;
+            ],
+            [
+              &quot;n_fn_5&quot;,
+              &quot;n_fn_8&quot;
+            ],
+            [
+              &quot;n_const_6&quot;,
+              &quot;n_fn_8&quot;
+            ],
+            [
+              &quot;n_const_7&quot;,
+              &quot;n_fn_8&quot;
+            ],
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_fn_10&quot;
+            ],
+            [
+              &quot;n_fn_8&quot;,
+              &quot;n_fn_10&quot;
+            ],
+            [
+              &quot;n_const_9&quot;,
+              &quot;n_fn_10&quot;
+            ],
+            [
+              &quot;n_fn_10&quot;,
+              &quot;n_result_StatusOfTheorem&quot;
+            ]
+          ],
+          &quot;description&quot;: &quot;Invalid if it is a Triangle with Mismatchd Edge Lengths and Angles.&quot;
+        },
+        &quot;LengthSquared&quot;: {
+          &quot;formula_source&quot;: &quot;={{Length}} * {{Length}}&quot;,
+          &quot;template_hash&quot;: &quot;error&quot;,
+          &quot;error&quot;: &quot;Unexpected character &#x27;*&#x27; at position 11&quot;,
+          &quot;root_node&quot;: null,
+          &quot;nodes&quot;: {},
+          &quot;edges&quot;: []
+        },
+        &quot;HypotenuseLengthSquared&quot;: {
+          &quot;formula_source&quot;: &quot;=IF({{IsHypotenuse}}, {{LengthSquared}})&quot;,
+          &quot;template_hash&quot;: &quot;sha256:c80ec66f593e94ac&quot;,
+          &quot;root_node&quot;: &quot;n_result_HypotenuseLengthSquared&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsHypotenuse&quot;,
+              &quot;field_snake&quot;: &quot;is_hypotenuse&quot;
+            },
+            &quot;n_ref_2&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;LengthSquared&quot;,
+              &quot;field_snake&quot;: &quot;length_squared&quot;
+            },
+            &quot;n_fn_3&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_ref_2&quot;
+              ]
+            },
+            &quot;n_result_HypotenuseLengthSquared&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;HypotenuseLengthSquared&quot;,
+              &quot;field_snake&quot;: &quot;hypotenuse_length_squared&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_3&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_fn_3&quot;
+            ],
+            [
+              &quot;n_ref_2&quot;,
+              &quot;n_fn_3&quot;
+            ],
+            [
+              &quot;n_fn_3&quot;,
+              &quot;n_result_HypotenuseLengthSquared&quot;
+            ]
+          ]
+        },
+        &quot;NonHypotenuseLengthSquared&quot;: {
+          &quot;formula_source&quot;: &quot;=IF(AND(NOT({{IsHypotenuse}}), {{IsTriangle}}), {{LengthSquared}})&quot;,
+          &quot;template_hash&quot;: &quot;sha256:d458f437e7f04392&quot;,
+          &quot;root_node&quot;: &quot;n_result_NonHypotenuseLengthSquared&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsHypotenuse&quot;,
+              &quot;field_snake&quot;: &quot;is_hypotenuse&quot;
+            },
+            &quot;n_fn_2&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;NOT&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;
+              ]
+            },
+            &quot;n_ref_3&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;IsTriangle&quot;,
+              &quot;field_snake&quot;: &quot;is_triangle&quot;
+            },
+            &quot;n_fn_4&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;AND&quot;,
+              &quot;args&quot;: [
+                &quot;n_fn_2&quot;,
+                &quot;n_ref_3&quot;
+              ]
+            },
+            &quot;n_ref_5&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;LengthSquared&quot;,
+              &quot;field_snake&quot;: &quot;length_squared&quot;
+            },
+            &quot;n_fn_6&quot;: {
+              &quot;kind&quot;: &quot;fn&quot;,
+              &quot;name&quot;: &quot;IF&quot;,
+              &quot;args&quot;: [
+                &quot;n_fn_4&quot;,
+                &quot;n_ref_5&quot;
+              ]
+            },
+            &quot;n_result_NonHypotenuseLengthSquared&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;NonHypotenuseLengthSquared&quot;,
+              &quot;field_snake&quot;: &quot;non_hypotenuse_length_squared&quot;,
+              &quot;in&quot;: [
+                &quot;n_fn_6&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_fn_2&quot;
+            ],
+            [
+              &quot;n_fn_2&quot;,
+              &quot;n_fn_4&quot;
+            ],
+            [
+              &quot;n_ref_3&quot;,
+              &quot;n_fn_4&quot;
+            ],
+            [
+              &quot;n_fn_4&quot;,
+              &quot;n_fn_6&quot;
+            ],
+            [
+              &quot;n_ref_5&quot;,
+              &quot;n_fn_6&quot;
+            ],
+            [
+              &quot;n_fn_6&quot;,
+              &quot;n_result_NonHypotenuseLengthSquared&quot;
+            ]
+          ]
         }
       },
-      &quot;description&quot;: &quot;Table: Customers&quot;
+      &quot;description&quot;: &quot;Table: Sides&quot;
+    },
+    &quot;ERBVersions&quot;: {
+      &quot;id_field&quot;: &quot;ERBVersionId&quot;,
+      &quot;id_field_snake&quot;: &quot;erb_version_id&quot;,
+      &quot;fields&quot;: {
+        &quot;ERBVersionId&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: false,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;PK&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;calculated&quot;
+        },
+        &quot;BaseId&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;Name&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;Message&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;Notes&quot;: {
+          &quot;datatype&quot;: &quot;string&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;CommitDate&quot;: {
+          &quot;datatype&quot;: &quot;datetime&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;
+        },
+        &quot;IsPublished&quot;: {
+          &quot;datatype&quot;: &quot;boolean&quot;,
+          &quot;nullable&quot;: true,
+          &quot;type&quot;: &quot;raw&quot;
+        }
+      },
+      &quot;calc_order&quot;: [
+        &quot;PK&quot;
+      ],
+      &quot;dep_edges&quot;: [
+        [
+          &quot;BaseId&quot;,
+          &quot;PK&quot;
+        ],
+        [
+          &quot;Name&quot;,
+          &quot;PK&quot;
+        ]
+      ],
+      &quot;expr_templates&quot;: {
+        &quot;PK&quot;: {
+          &quot;formula_source&quot;: &quot;={{BaseId}} &amp; \&quot;-\&quot; &amp; {{Name}}&quot;,
+          &quot;template_hash&quot;: &quot;sha256:e8b7ee4ec802c4c3&quot;,
+          &quot;root_node&quot;: &quot;n_result_PK&quot;,
+          &quot;nodes&quot;: {
+            &quot;n_ref_1&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;BaseId&quot;,
+              &quot;field_snake&quot;: &quot;base_id&quot;
+            },
+            &quot;n_const_2&quot;: {
+              &quot;kind&quot;: &quot;const&quot;,
+              &quot;value&quot;: &quot;-&quot;,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;n_ref_3&quot;: {
+              &quot;kind&quot;: &quot;field_ref&quot;,
+              &quot;field&quot;: &quot;Name&quot;,
+              &quot;field_snake&quot;: &quot;name&quot;
+            },
+            &quot;n_op_4&quot;: {
+              &quot;kind&quot;: &quot;op&quot;,
+              &quot;name&quot;: &quot;CONCAT&quot;,
+              &quot;args&quot;: [
+                &quot;n_ref_1&quot;,
+                &quot;n_const_2&quot;,
+                &quot;n_ref_3&quot;
+              ]
+            },
+            &quot;n_result_PK&quot;: {
+              &quot;kind&quot;: &quot;result&quot;,
+              &quot;field&quot;: &quot;PK&quot;,
+              &quot;field_snake&quot;: &quot;pk&quot;,
+              &quot;in&quot;: [
+                &quot;n_op_4&quot;
+              ]
+            }
+          },
+          &quot;edges&quot;: [
+            [
+              &quot;n_ref_1&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_const_2&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_ref_3&quot;,
+              &quot;n_op_4&quot;
+            ],
+            [
+              &quot;n_op_4&quot;,
+              &quot;n_result_PK&quot;
+            ]
+          ]
+        }
+      },
+      &quot;description&quot;: &quot;Table: ERBVersions&quot;
     }
   }
 }</pre>

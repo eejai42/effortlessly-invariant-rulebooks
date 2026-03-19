@@ -1,0 +1,29 @@
+[
+  {
+    "widget_id": "widget1",
+    "name": "widget1",
+    "appuser": "bob",
+    "role_from_appuser": null,
+    "email_address_from_appuser": null,
+    "name_from_appuser": null,
+    "color": "Blue"
+  },
+  {
+    "widget_id": "widget2",
+    "name": "widget2",
+    "appuser": "bob",
+    "role_from_appuser": null,
+    "email_address_from_appuser": null,
+    "name_from_appuser": null,
+    "color": "pink"
+  },
+  {
+    "widget_id": "widget3",
+    "name": "widget3",
+    "appuser": "andy",
+    "role_from_appuser": null,
+    "email_address_from_appuser": null,
+    "name_from_appuser": null,
+    "color": ""
+  }
+]
