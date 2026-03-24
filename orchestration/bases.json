@@ -1,22 +1,23 @@
 [
   {
     "id": "appWrXPvXbkgQGOxt",
-    "name": "CustomerDemo",
+    "name": "ACME, LLC",
     "description": "Simplest possible example: 1 table, 1 calculated field (FullName = LastName + FirstName), 3 rows",
     "docs": "bases/customer-fullname",
     "complexity": "minimal",
     "default": true
   },
   {
-    "id": "app6afUqa0zBTiMzM",
-    "name": "Jessica Talisman's Special Solutions, Llc",
-    "description": "9-table workflow model: Workflows, Steps, Roles, Agents with approval gates and delegation chains",
-    "docs": "bases/jessica-basic",
-    "complexity": "moderate"
+    "id": "appWrXPvXbkgQGOxt",
+    "name": "ACME Corporation",
+    "description": "A extended version of ACME, llc with additional business rules, inferences, and cross-entity calculations",
+    "docs": "bases/acme-corp",
+    "complexity": "moderate",
+    "default": false
   },
   {
     "id": "appwN9EAp8IeIxM23",
-    "name": "Jessica Talisman's Special Solutions, Inc",
+    "name": "Jessica Talisman's Special Solutions (v2)",
     "description": "Extends LLC's Ontology with additional business rules, inferences, and cross-entity calculations",
     "docs": "bases/jessica-advanced",
     "complexity": "advanced"
