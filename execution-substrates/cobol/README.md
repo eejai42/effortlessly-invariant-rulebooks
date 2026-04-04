@@ -1,9 +1,4 @@
 # COBOL Execution Substrate
-## Written by @jbemmel 
-For the github.com/eejai42/is-everything-really-a-language version of this repo (same tools, different audience).
-
-Commited on Mar 11, 2026 @jbemmel
-# Add COBOL execution substrate and formula compiler
 
 COBOL calculation program generated from the Effortless Rulebook.
 
@@ -20,13 +15,13 @@ This substrate compiles rulebook formulas into GnuCOBOL free-format source. It g
 │                                                              │
 │   1. Load rulebook JSON (structured data)                    │
 │                          ↓                                   │
-│   2. Parse Excel-dialect formulas into expression tree       │
+│   2. Parse Excel-dialect formulas into an expression tree    │
 │                          ↓                                   │
 │   3. Build dependency DAG for calculation ordering           │
 │                          ↓                                   │
 │   4. Compile formulas to COBOL (compile_to_cobol)            │
 │                          ↓                                   │
-│   5. Generate erb_calc.cbl and erb_copy.cpy                   │
+│   5. Generate erb_calc.cbl and erb_copy.cpy                  │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -56,7 +51,7 @@ This substrate compiles rulebook formulas into GnuCOBOL free-format source. It g
 | `inject-into-cobol.py` | Compiler: parses formulas and generates COBOL |
 | `inject-substrate.sh` | Regenerates Python erb_calc, then COBOL, then runs take-test |
 | `take-test.sh` | Runs take-test.py and generates substrate report |
-| `take-test.py` | Uses Python erb_calc to produce test-answers |
+| `take-test.py` | Uses Python erb_calc to produce test-answers (runs `compute_aggregations` first, same as the Python substrate) |
 | `README.md` | This documentation |
 
 ## Cleaning
@@ -103,39 +98,6 @@ A concrete next-step demo is to drive this COBOL substrate from a realistic main
 1. **Extract a rulebook / model**: Use the CardDemo COBOL copybooks and batch logic as a source of truth to define an `effortless-rulebook.json` for a slice of the domain (for example, interest calculation, transaction classification, or statement generation). The goal is to capture the _business rules_ (fields, datatypes, calculated fields, and their Excel-style formulas) independent of any single runtime.
 2. **Generate COBOL that matches a functional demo**: Run the orchestration pipeline so that the new rulebook produces Python `erb_calc.py` and COBOL `erb_calc.cbl`/`erb_copy.cpy`. Wire the generated COBOL into a small CardDemo-inspired batch driver (or a minimal standalone program) and show that, for the same input transactions, the generated COBOL produces the same outputs as the original CardDemo programs.
 3. **Generalize to other substrates**: Reuse the same rulebook to generate and test other substrates (Python, YAML, Go, CSV, English, etc.), all against the same `testing/blank-tests/` cases derived from CardDemo data. This demonstrates that the model is **substrate-agnostic**: you describe the rules once, then project them consistently into multiple execution environments, including COBOL.
-
-## Limitations (Why COBOL Is Not a Preferred Substrate in 2026)
-
-While COBOL remains important for maintaining legacy systems, this substrate demonstrates why it's rarely chosen for new ERB deployments:
-
-### 1. Missing String Functions
-
-The COBOL formula compiler does not yet support `SUBSTITUTE()`, which is used in Workflows to generate URL-friendly names:
-
-```
-=SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")
-```
-
-COBOL lacks native string manipulation intrinsics. Implementing SUBSTITUTE requires character-by-character iteration with nested loops—tedious to generate and error-prone compared to a single function call in Python, Go, or JavaScript.
-
-### 2. No Cross-Table Lookups
-
-Formulas like `COUNTIFS(WorkflowSteps!{{Workflow}}, Workflows!{{WorkflowId}})` reference data across tables. Modern substrates (Python, Go, SQL) handle this naturally with dictionaries, maps, or JOINs.
-
-COBOL's record-at-a-time processing model has no built-in concept of relational lookups. Supporting COUNTIFS would require:
-- Pre-loading related tables into WORKING-STORAGE arrays
-- Generating nested PERFORM loops to scan and count matches
-- Managing memory limits for large datasets
-
-This architectural mismatch makes COBOL poorly suited for rulebooks with relational formulas.
-
-### When COBOL Still Makes Sense
-
-- **Legacy integration**: Embedding ERB logic into existing COBOL batch jobs
-- **Mainframe compliance**: Environments where only COBOL is approved
-- **CardDemo-style modernization**: Extracting rules from legacy COBOL into a portable rulebook, then optionally regenerating COBOL for continuity
-
-For greenfield projects, prefer Python, Go, or PostgreSQL substrates.
 
 ## Source
 
