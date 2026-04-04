@@ -10,6 +10,7 @@ Each substrate then compiles the expression tree to its target language:
 - JavaScript: compile_to_javascript()
 - Go: compile_to_go()
 - SPARQL: compile_to_sparql()
+- COBOL: compile_to_cobol() / compile_to_cobol_condition()
 
 Extracted from: execution-substrates/owl/inject-into-owl.py
 """
@@ -1172,323 +1173,276 @@ def evaluate_field(formula: str, record: dict, field_name_mapping: dict = None) 
 
 
 # =============================================================================
-# COBOL Code Generation
+# COBOL CODE GENERATOR (GnuCOBOL free-format)
 # =============================================================================
 
 def to_cobol_name(name: str) -> str:
-    """Convert a field name to COBOL format (uppercase, hyphens)."""
-    # Convert camelCase/PascalCase to hyphen-separated uppercase
-    import re
-    # Insert hyphen before uppercase letters (except at start)
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', name)
-    s2 = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s1)
-    # Replace underscores with hyphens and uppercase
-    return s2.replace('_', '-').upper()
+    """Convert PascalCase/snake_case to COBOL name (uppercase with hyphens).
 
-
-def compile_to_cobol(expr: ExprNode, prefix: str = "RECORD") -> str:
+    Examples:
+        ChosenLanguageCandidate -> CHOSEN-LANGUAGE-CANDIDATE
+        Bio_HockettScore -> BIO-HOCKETT-SCORE
     """
-    Compile an expression tree to COBOL expression.
-    Returns COBOL code that can be used in MOVE or condition statements.
-    """
-    if isinstance(expr, LiteralString):
-        # COBOL string literal (escape quotes by doubling)
-        escaped = expr.value.replace('"', '""')
-        return f'"{escaped}"'
+    snake = to_snake_case(name)
+    return snake.upper().replace('_', '-')
 
+
+def compile_to_cobol_condition(expr: ExprNode, record_var: str) -> str:
+    """Compile a boolean expression to a COBOL condition string for use after IF."""
     if isinstance(expr, LiteralBool):
         return '"true"' if expr.value else '"false"'
 
-    if isinstance(expr, LiteralInt):
-        return str(expr.value)
-
-    if isinstance(expr, Concat):
-        # Handle Concat expression type directly
-        parts = [compile_to_cobol(p, prefix) for p in expr.parts]
-        return ('CONCAT', *parts)
-
     if isinstance(expr, FieldRef):
-        cobol_name = to_cobol_name(expr.name)
-        return f'{prefix}-{cobol_name}'
+        cobol_field = f"{record_var}-{to_cobol_name(expr.name)}"
+        return f"{cobol_field} = 'true'"
 
     if isinstance(expr, UnaryOp):
         if expr.op == 'NOT':
-            operand = compile_to_cobol(expr.operand, prefix)
-            # NOT in COBOL context - handled in IF statement
-            return f'NOT ({operand} = "true")'
-        raise ValueError(f"Unknown unary operator: {expr.op}")
+            inner = compile_to_cobol_condition(expr.operand, record_var)
+            return f"NOT ({inner})"
+        raise ValueError(f"Unknown unary op: {expr.op}")
 
     if isinstance(expr, BinaryOp):
-        left = compile_to_cobol(expr.left, prefix)
-        right = compile_to_cobol(expr.right, prefix)
-        op_map = {
-            '=': '=', '<>': 'NOT =', '<': '<', '<=': '<=', '>': '>', '>=': '>=',
-            '+': '+', '-': '-', '*': '*', '/': '/'
-        }
-        if expr.op == '&':
-            # String concatenation - return as tuple for special handling
-            return ('CONCAT', left, right)
-        return f'({left} {op_map.get(expr.op, expr.op)} {right})'
+        left = expr.left
+        right = expr.right
+        if isinstance(left, FieldRef) and isinstance(right, LiteralBool):
+            cobol_field = f"{record_var}-{to_cobol_name(left.name)}"
+            if right.value:
+                return f"{cobol_field} = 'true'"
+            return f"{cobol_field} = 'false'"
+        if isinstance(left, FieldRef) and isinstance(right, LiteralInt):
+            cobol_field = f"{record_var}-{to_cobol_name(left.name)}"
+            return f"{cobol_field} {expr.op} {right.value}"
+        if isinstance(left, FieldRef) and isinstance(right, LiteralString):
+            cobol_field = f"{record_var}-{to_cobol_name(left.name)}"
+            esc = right.value.replace("'", "''")
+            op = "=" if expr.op == "=" else " NOT ="
+            return f"{cobol_field} {op} '{esc}'"
+        if isinstance(left, LiteralString) and isinstance(right, FieldRef):
+            cobol_field = f"{record_var}-{to_cobol_name(right.name)}"
+            esc = left.value.replace("'", "''")
+            op = "=" if expr.op == "=" else " NOT ="
+            return f"'{esc}' {op} {cobol_field}"
+        if isinstance(left, FieldRef) and isinstance(right, FieldRef):
+            lf = f"{record_var}-{to_cobol_name(left.name)}"
+            rf = f"{record_var}-{to_cobol_name(right.name)}"
+            op = "=" if expr.op == "=" else " NOT ="
+            return f"{lf} {op} {rf}"
+        left_s = compile_to_cobol_value_expr(left, record_var)
+        right_s = compile_to_cobol_value_expr(right, record_var)
+        op_map = {'=': '=', '<>': ' NOT =', '<': '<', '<=': '< =', '>': '>', '>=': '> ='}
+        return f"{left_s} {op_map[expr.op]} {right_s}"
 
     if isinstance(expr, FuncCall):
         if expr.name == 'AND':
-            conditions = [compile_to_cobol(arg, prefix) for arg in expr.args]
-            # Wrap each condition properly for COBOL
-            wrapped = []
-            for cond in conditions:
-                if isinstance(cond, tuple) and cond[0] == 'CONDITION':
-                    wrapped.append(cond[1])
-                elif ' = ' in str(cond) or ' NOT ' in str(cond):
-                    wrapped.append(f'({cond})')
-                else:
-                    wrapped.append(f'({cond} = "true")')
-            return '(' + ' AND '.join(wrapped) + ')'
-
+            parts = [compile_to_cobol_condition(a, record_var) for a in expr.args]
+            return " AND ".join(f"({p})" for p in parts)
         if expr.name == 'OR':
-            conditions = [compile_to_cobol(arg, prefix) for arg in expr.args]
-            wrapped = []
-            for cond in conditions:
-                if isinstance(cond, tuple) and cond[0] == 'CONDITION':
-                    wrapped.append(cond[1])
-                elif ' = ' in str(cond) or ' NOT ' in str(cond):
-                    wrapped.append(f'({cond})')
-                else:
-                    wrapped.append(f'({cond} = "true")')
-            return '(' + ' OR '.join(wrapped) + ')'
+            parts = [compile_to_cobol_condition(a, record_var) for a in expr.args]
+            return " OR ".join(f"({p})" for p in parts)
+        if expr.name == 'NOT' and len(expr.args) == 1:
+            return "NOT (" + compile_to_cobol_condition(expr.args[0], record_var) + ")"
+        if expr.name == 'FIND':
+            compile_to_cobol_value_expr(expr.args[0], record_var)
+            compile_to_cobol_value_expr(expr.args[1], record_var)
+            return "WS-FIND-RESULT = 'true'"  # caller sets WS-FIND-RESULT via paragraph
 
+    raise ValueError(f"Cannot compile node to COBOL condition: {type(expr)}")
+
+
+def compile_to_cobol_value_expr(expr: ExprNode, record_var: str) -> str:
+    """Compile to a single COBOL value expression (literal or identifier) for MOVE or IF."""
+    if isinstance(expr, LiteralBool):
+        return '"true"' if expr.value else '"false"'
+    if isinstance(expr, LiteralInt):
+        return str(expr.value)
+    if isinstance(expr, LiteralString):
+        esc = expr.value.replace("'", "''")
+        return f"'{esc}'"
+    if isinstance(expr, FieldRef):
+        return f"{record_var}-{to_cobol_name(expr.name)}"
+    raise ValueError(f"Not a simple value expression: {type(expr)}")
+
+
+def compile_to_cobol(
+    expr: ExprNode,
+    result_var: str,
+    record_var: str,
+    field_types: dict = None,
+    temp_prefix: str = "WS-TEMP",
+    temp_counter: list = None,
+) -> List[str]:
+    """Compile an expression tree to COBOL statements that leave the result in result_var.
+
+    Uses free-format COBOL (GnuCOBOL -free). temp_counter is a list with one int [n];
+    the generator uses temp_prefix-n for complex subexpressions and increments the int.
+    """
+    if field_types is None:
+        field_types = {}
+    if temp_counter is None:
+        temp_counter = [0]
+
+    def next_temp():
+        temp_counter[0] += 1
+        return f"{temp_prefix}-{temp_counter[0]}"
+
+    if isinstance(expr, LiteralBool):
+        val = '"true"' if expr.value else '"false"'
+        return [f"MOVE {val} TO {result_var}"]
+
+    if isinstance(expr, LiteralInt):
+        return [f"MOVE {expr.value} TO {result_var}"]
+
+    if isinstance(expr, LiteralString):
+        esc = expr.value.replace("'", "''")
+        return [f"MOVE '{esc}' TO {result_var}"]
+
+    if isinstance(expr, FieldRef):
+        src = f"{record_var}-{to_cobol_name(expr.name)}"
+        return [f"MOVE {src} TO {result_var}"]
+
+    if isinstance(expr, UnaryOp):
+        if expr.op == 'NOT':
+            cond = compile_to_cobol_condition(expr.operand, record_var)
+            return [
+                f"IF {cond}",
+                f"   MOVE \"false\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"true\" TO {result_var}",
+                "END-IF",
+            ]
+        raise ValueError(f"Unknown unary op: {expr.op}")
+
+    if isinstance(expr, BinaryOp):
+        try:
+            left_s = compile_to_cobol_value_expr(expr.left, record_var)
+        except ValueError:
+            left_s = next_temp()
+            lines_left = compile_to_cobol(expr.left, left_s, record_var, field_types, temp_prefix, temp_counter)
+        else:
+            lines_left = []
+        try:
+            right_s = compile_to_cobol_value_expr(expr.right, record_var)
+        except ValueError:
+            right_s = next_temp()
+            lines_right = compile_to_cobol(expr.right, right_s, record_var, field_types, temp_prefix, temp_counter)
+        else:
+            lines_right = []
+        op_map = {'=': '=', '<>': ' NOT =', '<': '<', '<=': '< =', '>': '>', '>=': '> ='}
+        op = op_map.get(expr.op, expr.op)
+        return (
+            lines_left + lines_right +
+            [
+                f"IF {left_s} {op} {right_s}",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        )
+
+    if isinstance(expr, FuncCall):
+        if expr.name == 'AND':
+            conds = [compile_to_cobol_condition(a, record_var) for a in expr.args]
+            combined = " AND ".join(f"({c})" for c in conds)
+            return [
+                f"IF {combined}",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        if expr.name == 'OR':
+            conds = [compile_to_cobol_condition(a, record_var) for a in expr.args]
+            combined = " OR ".join(f"({c})" for c in conds)
+            return [
+                f"IF {combined}",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        if expr.name == 'IF':
+            if len(expr.args) < 2:
+                raise ValueError("IF requires at least 2 arguments")
+            cond = compile_to_cobol_condition(expr.args[0], record_var)
+            then_expr = expr.args[1]
+            else_expr = expr.args[2] if len(expr.args) > 2 else LiteralString(value="")
+            then_lines = compile_to_cobol(then_expr, result_var, record_var, field_types, temp_prefix, temp_counter)
+            else_lines = compile_to_cobol(else_expr, result_var, record_var, field_types, temp_prefix, temp_counter)
+            return [f"IF {cond}"] + ["   " + ln for ln in then_lines] + ["ELSE"] + ["   " + ln for ln in else_lines] + ["END-IF"]
         if expr.name == 'NOT':
             if len(expr.args) != 1:
                 raise ValueError("NOT requires 1 argument")
-            operand = compile_to_cobol(expr.args[0], prefix)
-            return f'NOT ({operand} = "true")'
-
-        if expr.name == 'IF':
-            # IF in COBOL is a statement, not an expression
-            # Return a marker for the caller to handle
-            cond = compile_to_cobol(expr.args[0], prefix)
-            then_val = compile_to_cobol(expr.args[1], prefix)
-            else_val = compile_to_cobol(expr.args[2], prefix) if len(expr.args) > 2 else '"false"'
-            return ('IF', cond, then_val, else_val)
-
-        if expr.name == 'CONCAT':
-            parts = [compile_to_cobol(arg, prefix) for arg in expr.args]
-            return ('CONCAT', *parts)
-
+            cond = compile_to_cobol_condition(expr.args[0], record_var)
+            return [
+                f"IF NOT ({cond})",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
         if expr.name == 'LOWER':
-            arg = compile_to_cobol(expr.args[0], prefix)
-            return ('LOWER', arg)
-
-        if expr.name == 'TRIM':
-            arg = compile_to_cobol(expr.args[0], prefix)
-            return ('TRIM', arg)
-
-        if expr.name == 'SUM':
-            parts = [compile_to_cobol(arg, prefix) for arg in expr.args]
-            return ('SUM', parts)
-
+            if len(expr.args) != 1:
+                raise ValueError("LOWER requires 1 argument")
+            arg = compile_to_cobol_value_expr(expr.args[0], record_var)
+            return [f"MOVE FUNCTION LOWER-CASE({arg}) TO {result_var}"]
         if expr.name == 'FIND':
-            needle = compile_to_cobol(expr.args[0], prefix)
-            haystack = compile_to_cobol(expr.args[1], prefix)
-            return ('FIND', needle, haystack)
-
+            if len(expr.args) != 2:
+                raise ValueError("FIND requires 2 arguments")
+            needle = compile_to_cobol_value_expr(expr.args[0], record_var)
+            haystack = compile_to_cobol_value_expr(expr.args[1], record_var)
+            return [
+                f"MOVE {needle} TO WS-FIND-NEEDLE",
+                f"MOVE {haystack} TO WS-FIND-HAYSTACK",
+                "PERFORM FIND-CONTAINS",
+                f"MOVE WS-FIND-RESULT TO {result_var}",
+            ]
         if expr.name == 'CAST':
-            return compile_to_cobol(expr.args[0], prefix)
+            if len(expr.args) < 1:
+                raise ValueError("CAST requires at least 1 argument")
+            arg_expr = expr.args[0]
+            if isinstance(arg_expr, FieldRef):
+                field_type = field_types.get(arg_expr.name, 'string').lower()
+                src = f"{record_var}-{to_cobol_name(arg_expr.name)}"
+                if field_type == 'integer':
+                    return [f"MOVE {src} TO {result_var}"]
+                if field_type == 'boolean':
+                    return [f"MOVE {src} TO {result_var}"]
+            return compile_to_cobol(arg_expr, result_var, record_var, field_types, temp_prefix, temp_counter)
+        if expr.name == 'SUM':
+            if not expr.args:
+                return [f"MOVE 0 TO {result_var}"]
+            t = next_temp()
+            lines = [f"MOVE 0 TO {result_var}"]
+            for arg in expr.args:
+                arg_lines = compile_to_cobol(arg, t, record_var, field_types, temp_prefix, temp_counter)
+                lines.extend(arg_lines)
+                lines.append(f"ADD {t} TO {result_var}")
+            return lines
+        if expr.name == 'CONCAT':
+            return compile_to_cobol(Concat(parts=list(expr.args)), result_var, record_var, field_types, temp_prefix, temp_counter)
+        raise ValueError(f"Unknown function: {expr.name}")
 
-        if expr.name == 'SUBSTITUTE':
-            # SUBSTITUTE(text, old_text, new_text)
-            text = compile_to_cobol(expr.args[0], prefix)
-            old_text = compile_to_cobol(expr.args[1], prefix)
-            new_text = compile_to_cobol(expr.args[2], prefix)
-            return ('SUBSTITUTE', text, old_text, new_text)
-
-        raise ValueError(f"COBOL: Unknown function: {expr.name}")
-
-    raise ValueError(f"COBOL: Unknown expression type: {type(expr)}")
-
-
-def cobol_expr_to_statements(expr_result, result_var: str, temp_vars: list) -> list:
-    """
-    Convert compile_to_cobol result (string or tuple) into a list of COBOL statements.
-
-    Args:
-        expr_result: Result from compile_to_cobol (string or tuple)
-        result_var: Target variable to store result (e.g., "RECORD-FULL-NAME")
-        temp_vars: List of available temp variables (e.g., ["WS-TEMP-1", "WS-TEMP-2", ...])
-
-    Returns:
-        List of COBOL statement strings (without leading spaces)
-    """
-    temp_idx = [0]  # Use list for mutable closure
-
-    def get_temp():
-        if temp_idx[0] >= len(temp_vars):
-            raise ValueError("Ran out of temp variables")
-        var = temp_vars[temp_idx[0]]
-        temp_idx[0] += 1
-        return var
-
-    def flatten_concat(tup):
-        """Flatten nested CONCAT tuples into a list of parts."""
+    if isinstance(expr, Concat):
         parts = []
-        for item in tup[1:]:
-            if isinstance(item, tuple) and item[0] == 'CONCAT':
-                parts.extend(flatten_concat(item))
+        for part in expr.parts:
+            if isinstance(part, LiteralString):
+                esc = part.value.replace("'", "''")
+                parts.append(("'%s'" % esc, None))
+            elif isinstance(part, FieldRef):
+                fname = f"{record_var}-{to_cobol_name(part.name)}"
+                parts.append((fname, None))
             else:
-                parts.append(item)
-        return parts
+                t = next_temp()
+                sub = compile_to_cobol(part, t, record_var, field_types, temp_prefix, temp_counter)
+                parts.append((t, sub))
+        lines = []
+        for _, sub in parts:
+            if sub is not None:
+                lines.extend(sub)
+        str_parts = [val + " DELIMITED BY SIZE" for val, _ in parts]
+        lines.append(f"STRING {' '.join(str_parts)} INTO {result_var}")
+        return lines
 
-    def is_comparison_expr(s):
-        """Check if string contains a COBOL comparison operator."""
-        # Look for comparison operators that indicate a boolean expression
-        # These cannot be used in MOVE statements
-        comparison_ops = [' > ', ' < ', ' >= ', ' <= ', ' NOT = ']
-        for op in comparison_ops:
-            if op in s:
-                return True
-        # Check for parenthesized equality comparison: (X = Y)
-        # BinaryOp comparisons are always wrapped in parens
-        # Avoid matching string literals like = "true"
-        import re
-        if re.match(r'^\([^"]+\s+=\s+[^"]+\)$', s):
-            return True
-        return False
-
-    def process(expr, target_var):
-        """Process an expression and return statements that store result in target_var."""
-        stmts = []
-
-        if isinstance(expr, str):
-            # Check if this is a comparison expression (boolean result)
-            if is_comparison_expr(expr):
-                # Comparisons must use IF/ELSE in COBOL, not MOVE
-                stmts.append(f'IF {expr}')
-                stmts.append(f'    MOVE "True" TO {target_var}')
-                stmts.append('ELSE')
-                stmts.append(f'    MOVE "False" TO {target_var}')
-                stmts.append('END-IF')
-            else:
-                # Simple value - just MOVE it
-                stmts.append(f'MOVE {expr} TO {target_var}')
-
-        elif isinstance(expr, tuple):
-            op = expr[0]
-
-            if op == 'CONCAT':
-                # STRING concatenation - use FUNCTION TRIM for field values
-                parts = flatten_concat(expr)
-                stmts.append(f'MOVE SPACES TO {target_var}')
-                string_stmt = f'STRING '
-                delimited_parts = []
-                for p in parts:
-                    if isinstance(p, tuple):
-                        # Nested operation - evaluate to temp first
-                        tmp = get_temp()
-                        stmts.extend(process(p, tmp))
-                        delimited_parts.append(f'FUNCTION TRIM({tmp}) DELIMITED SIZE')
-                    elif p.startswith('"'):
-                        # String literal - use as-is
-                        delimited_parts.append(f'{p} DELIMITED SIZE')
-                    else:
-                        # Field reference - use TRIM to remove padding
-                        delimited_parts.append(f'FUNCTION TRIM({p}) DELIMITED SIZE')
-                string_stmt += ' '.join(delimited_parts)
-                string_stmt += f' INTO {target_var}'
-                stmts.append(string_stmt)
-
-            elif op == 'IF':
-                _, cond, then_val, else_val = expr
-                # Handle condition which might be a tuple
-                if isinstance(cond, tuple):
-                    cond_str = format_condition(cond)
-                else:
-                    cond_str = cond if ' = ' in cond or ' NOT ' in cond else f'{cond} = "true"'
-
-                stmts.append(f'IF {cond_str}')
-                then_stmts = process(then_val, target_var)
-                for s in then_stmts:
-                    stmts.append(f'    {s}')
-                stmts.append('ELSE')
-                else_stmts = process(else_val, target_var)
-                for s in else_stmts:
-                    stmts.append(f'    {s}')
-                stmts.append('END-IF')
-
-            elif op == 'LOWER':
-                _, arg = expr
-                if isinstance(arg, tuple):
-                    tmp = get_temp()
-                    stmts.extend(process(arg, tmp))
-                    stmts.append(f'MOVE FUNCTION LOWER-CASE({tmp}) TO {target_var}')
-                else:
-                    stmts.append(f'MOVE FUNCTION LOWER-CASE({arg}) TO {target_var}')
-
-            elif op == 'TRIM':
-                _, arg = expr
-                if isinstance(arg, tuple):
-                    tmp = get_temp()
-                    stmts.extend(process(arg, tmp))
-                    stmts.append(f'MOVE FUNCTION TRIM({tmp}) TO {target_var}')
-                else:
-                    stmts.append(f'MOVE FUNCTION TRIM({arg}) TO {target_var}')
-
-            elif op == 'SUM':
-                parts = expr[1]
-                # COMPUTE with addition
-                compute_expr = ' + '.join(str(p) for p in parts)
-                stmts.append(f'COMPUTE {target_var} = {compute_expr}')
-
-            elif op == 'FIND':
-                _, needle, haystack = expr
-                # Use INSPECT or helper paragraph
-                stmts.append(f'MOVE {needle} TO WS-FIND-NEEDLE')
-                stmts.append(f'MOVE {haystack} TO WS-FIND-HAYSTACK')
-                stmts.append('PERFORM FIND-CONTAINS')
-                stmts.append(f'MOVE WS-FIND-RESULT TO {target_var}')
-
-            elif op == 'SUBSTITUTE':
-                # SUBSTITUTE(text, old_text, new_text)
-                _, text, old_text, new_text = expr
-                # Evaluate nested expressions to temps if needed
-                if isinstance(text, tuple):
-                    text_tmp = get_temp()
-                    stmts.extend(process(text, text_tmp))
-                    text = text_tmp
-                if isinstance(old_text, tuple):
-                    old_tmp = get_temp()
-                    stmts.extend(process(old_text, old_tmp))
-                    old_text = old_tmp
-                if isinstance(new_text, tuple):
-                    new_tmp = get_temp()
-                    stmts.extend(process(new_text, new_tmp))
-                    new_text = new_tmp
-                # Use helper variables for SUBSTITUTE
-                stmts.append(f'MOVE {text} TO WS-SUBST-INPUT')
-                stmts.append(f'MOVE {old_text} TO WS-SUBST-OLD')
-                stmts.append(f'MOVE {new_text} TO WS-SUBST-NEW')
-                stmts.append('PERFORM SUBSTITUTE-ALL')
-                stmts.append(f'MOVE WS-SUBST-OUTPUT TO {target_var}')
-
-            else:
-                raise ValueError(f"Unknown COBOL tuple operation: {op}")
-
-        else:
-            raise ValueError(f"Unknown expression type: {type(expr)}")
-
-        return stmts
-
-    def format_condition(cond):
-        """Format a condition for use in IF statement."""
-        if isinstance(cond, str):
-            if ' = ' in cond or ' NOT ' in cond or ' < ' in cond or ' > ' in cond:
-                return cond
-            return f'{cond} = "true"'
-        elif isinstance(cond, tuple):
-            op = cond[0]
-            if op == 'CONCAT':
-                # Concatenation result used as condition - evaluate first
-                return f'{cond} = "true"'  # This shouldn't happen normally
-            # For other tuples, format recursively
-            return str(cond)
-        return str(cond)
-
-    return process(expr_result, result_var)
+    raise ValueError(f"Unknown expression node type: {type(expr)}")

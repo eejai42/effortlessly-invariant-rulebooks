@@ -32,20 +32,16 @@
        *> ========== WORKFLOWS ==========
        *> Level 1
        CALC-NAME.
-           MOVE FUNCTION LOWER-CASE(RECORD-DISPLAY-NAME) TO WS-TEMP-1
-           MOVE WS-TEMP-1 TO WS-SUBST-INPUT
-           MOVE " " TO WS-SUBST-OLD
-           MOVE "-" TO WS-SUBST-NEW
-           PERFORM SUBSTITUTE-ALL
-           MOVE WS-SUBST-OUTPUT TO RECORD-NAME
+           *> ERROR: Could not parse formula: =SUBSTITUTE(LOWER({{DisplayName}}), " ", "-")...
+           MOVE "ERROR" TO RECORD-NAME
        .
 
        *> Level 2
        CALC-HAS-MORE-THAN1-STEP.
-           IF (RECORD-COUNT-OF-NON-PROPOSED-STEPS > 1)
-               MOVE "True" TO RECORD-HAS-MORE-THAN1-STEP
+           IF RECORD-COUNT-OF-NON-PROPOSED-STEPS > 1
+              MOVE "true" TO RECORD-HAS-MORE-THAN1-STEP
            ELSE
-               MOVE "False" TO RECORD-HAS-MORE-THAN1-STEP
+              MOVE "false" TO RECORD-HAS-MORE-THAN1-STEP
            END-IF
        .
 
@@ -69,27 +65,3 @@
                ADD 1 TO WS-FIND-I
            END-PERFORM
            .
-
-       SUBSTITUTE-ALL.
-           MOVE SPACES TO WS-SUBST-OUTPUT
-           MOVE 1 TO WS-SUBST-I
-           MOVE 1 TO WS-SUBST-OUT-I
-           COMPUTE WS-SUBST-INLEN = FUNCTION LENGTH(
-               FUNCTION TRIM(WS-SUBST-INPUT))
-*>         For single-char replacement, hardcode length to 1
-           MOVE 1 TO WS-SUBST-OLDLEN
-           MOVE 1 TO WS-SUBST-NEWLEN
-           PERFORM UNTIL WS-SUBST-I > WS-SUBST-INLEN
-               IF WS-SUBST-INPUT(WS-SUBST-I:1) = WS-SUBST-OLD(1:1)
-                   MOVE WS-SUBST-NEW(1:1)
-                       TO WS-SUBST-OUTPUT(WS-SUBST-OUT-I:1)
-                   ADD 1 TO WS-SUBST-OUT-I
-                   ADD 1 TO WS-SUBST-I
-               ELSE
-                   MOVE WS-SUBST-INPUT(WS-SUBST-I:1)
-                       TO WS-SUBST-OUTPUT(WS-SUBST-OUT-I:1)
-                   ADD 1 TO WS-SUBST-I
-                   ADD 1 TO WS-SUBST-OUT-I
-               END-IF
-           END-PERFORM
-       .
