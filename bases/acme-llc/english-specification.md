@@ -1,61 +1,48 @@
-# Specification Document for ACME, LLC Rulebook
+# ACME, LLC Rulebook Specification Document
 
 ## Overview
-This specification document outlines the structure and computation methods for the rulebook generated from the Airtable base "ACME, LLC (template)". It details the entities involved, their fields, and how to compute calculated fields based on raw input data.
+This document outlines the specifications for the rulebook generated from the Airtable base "ACME, LLC (template)". It details the structure of the Customers table, including input fields and calculated fields, along with the methods for computing the values of these fields.
 
-## Customers Entity
+## Customers Table
 
 ### Input Fields
-The following input fields are available in the Customers entity:
+The following are the input fields used in the Customers table:
 
 1. **CustomerId**
    - **Type:** String
-   - **Description:** Unique identifier for each customer.
+   - **Description:** A unique identifier for each customer. This field is required and cannot be null.
 
 2. **Customer**
    - **Type:** String
-   - **Description:** Identifier for the customers.
+   - **Description:** An identifier for the customers. This field is optional and can be null.
 
 3. **EmailAddress**
    - **Type:** String
-   - **Description:** The customer's email address.
+   - **Description:** The customer's email address. This field is optional and can be null.
 
 4. **FirstName**
    - **Type:** String
-   - **Description:** First name of the customer, used to create the full name.
+   - **Description:** The first name of the customer, used to create the full name. This field is optional and can be null.
 
 5. **LastName**
    - **Type:** String
-   - **Description:** Last name of the customer, used to create the full name.
+   - **Description:** The last name of the customer, used to create the full name. This field is optional and can be null.
 
-### Calculated Field
+### Calculated Fields
 
 #### FullName
 - **Type:** Calculated
-- **Description:** The full name of the customer is computed by combining the last name and first name, formatted as "LastName, FirstName".
+- **Description:** The full name of the customer is computed by concatenating the last name and first name, separated by a comma and a space.
+- **Calculation Method:** To compute the FullName, take the LastName and FirstName fields, and format them as follows:
+  - Combine the LastName and FirstName using the formula: `={{LastName}} & ", " & {{FirstName}}`
+  
+- **Example:**
+  - For the customer with `FirstName` "Mary" and `LastName` "Smith":
+    - **Calculation:** `="Smith" & ", " & "Mary"` results in "Smith, Mary".
+  - For the customer with `FirstName` "John" and `LastName` "Doe":
+    - **Calculation:** `="Doe" & ", " & "John"` results in "Doe, John".
+  - For the customer with `FirstName` "Emily" and `LastName` "Jones":
+    - **Calculation:** `="Jones" & ", " & "Emily"` results in "Jones, Emily".
 
-**Computation Method:**
-To compute the `FullName`, concatenate the `LastName` and `FirstName` fields with a comma and a space in between. The formula for this operation is:
-
-```
-={{LastName}} & ", " & {{FirstName}}
-```
-
-**Example Calculation:**
-Using the provided data:
-
-- For the customer with `FirstName` "Mary" and `LastName` "Smith":
-  - FullName = "Smith, Mary"
-
-- For the customer with `FirstName` "John" and `LastName` "Doe":
-  - FullName = "Doe, John"
-
-- For the customer with `FirstName` "Emily" and `LastName` "Jones":
-  - FullName = "Jones, Emily"
-
-This results in the following computed `FullName` values:
-- "Smith, Mary"
-- "Doe, John"
-- "Jones, Emily"
-
-By following the above computation method, one can accurately derive the `FullName` for any customer using their `FirstName` and `LastName`.
+### Summary of Calculated Field
+- **FullName** is derived from the combination of the LastName and FirstName fields, formatted as "LastName, FirstName". This allows for a standardized representation of customer names, which is useful for display purposes in reports and communications.

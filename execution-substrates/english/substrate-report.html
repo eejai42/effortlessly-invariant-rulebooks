@@ -179,7 +179,7 @@ Using ENGLISH PROSE documents (glossary.md, specification.md)
 ======================================================================
 
 Loading English specification documents...
-  Loaded specification.md (1956 chars)
+  Loaded specification.md (2330 chars)
 
 Loading rulebook for schema metadata...
 Discovered 1 entities: Customers
@@ -191,7 +191,7 @@ Processing customers...
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (121 total lines, 3814 chars)
+  ... (108 total lines, 4188 chars)
 ============================================================
 Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
@@ -224,59 +224,48 @@ Filled 3 computed fields total
         <div id="specification" class="tab-content">
             <div class="card">
                 <h2>specification.md (LLM-Generated)</h2>
-                <div class="prose-container markdown-content"><h2>Specification Document for ACME, LLC Rulebook</h2>
+                <div class="prose-container markdown-content"><h2>ACME, LLC Rulebook Specification Document</h2>
 <h3>Overview</h3>
-<p>This specification document outlines the structure and computation methods for the rulebook generated from the Airtable base "ACME, LLC (template)". It details the entities involved, their fields, and how to compute calculated fields based on raw input data.</p>
-<h3>Customers Entity</h3>
+<p>This document outlines the specifications for the rulebook generated from the Airtable base "ACME, LLC (template)". It details the structure of the Customers table, including input fields and calculated fields, along with the methods for computing the values of these fields.</p>
+<h3>Customers Table</h3>
 <h4>Input Fields</h4>
-<p>The following input fields are available in the Customers entity:</p>
+<p>The following are the input fields used in the Customers table:</p>
 <p>1. <strong>CustomerId</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Unique identifier for each customer.</p>
+<p>   - <strong>Description:</strong> A unique identifier for each customer. This field is required and cannot be null.</p>
 <p>2. <strong>Customer</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Identifier for the customers.</p>
+<p>   - <strong>Description:</strong> An identifier for the customers. This field is optional and can be null.</p>
 <p>3. <strong>EmailAddress</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> The customer's email address.</p>
+<p>   - <strong>Description:</strong> The customer's email address. This field is optional and can be null.</p>
 <p>4. <strong>FirstName</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> First name of the customer, used to create the full name.</p>
+<p>   - <strong>Description:</strong> The first name of the customer, used to create the full name. This field is optional and can be null.</p>
 <p>5. <strong>LastName</strong></p>
 <p>   - <strong>Type:</strong> String</p>
-<p>   - <strong>Description:</strong> Last name of the customer, used to create the full name.</p>
-<h4>Calculated Field</h4>
+<p>   - <strong>Description:</strong> The last name of the customer, used to create the full name. This field is optional and can be null.</p>
+<h4>Calculated Fields</h4>
 <p>#### FullName</p>
 <ul>
 <li>**Type:** Calculated</li>
-<li>**Description:** The full name of the customer is computed by combining the last name and first name, formatted as &quot;LastName, FirstName&quot;.</li>
-</ul>
-<p><strong>Computation Method:</strong></p>
-<p>To compute the `FullName`, concatenate the `LastName` and `FirstName` fields with a comma and a space in between. The formula for this operation is:</p>
-<pre>
-={{LastName}} &amp; &quot;, &quot; &amp; {{FirstName}}
-</pre>
-<p><strong>Example Calculation:</strong></p>
-<p>Using the provided data:</p>
-<ul>
-<li>For the customer with `FirstName` &quot;Mary&quot; and `LastName` &quot;Smith&quot;:</li>
-<p>  - FullName = "Smith, Mary"</p>
+<li>**Description:** The full name of the customer is computed by concatenating the last name and first name, separated by a comma and a space.</li>
+<li>**Calculation Method:** To compute the FullName, take the LastName and FirstName fields, and format them as follows:</li>
+<p>  - Combine the LastName and FirstName using the formula: `={{LastName}} & ", " & {{FirstName}}`</p>
 </ul>
 <ul>
-<li>For the customer with `FirstName` &quot;John&quot; and `LastName` &quot;Doe&quot;:</li>
-<p>  - FullName = "Doe, John"</p>
+<li>**Example:**</li>
+<p>  - For the customer with `FirstName` "Mary" and `LastName` "Smith":</p>
+<p>    - <strong>Calculation:</strong> `="Smith" & ", " & "Mary"` results in "Smith, Mary".</p>
+<p>  - For the customer with `FirstName` "John" and `LastName` "Doe":</p>
+<p>    - <strong>Calculation:</strong> `="Doe" & ", " & "John"` results in "Doe, John".</p>
+<p>  - For the customer with `FirstName` "Emily" and `LastName` "Jones":</p>
+<p>    - <strong>Calculation:</strong> `="Jones" & ", " & "Emily"` results in "Jones, Emily".</p>
 </ul>
+<h4>Summary of Calculated Field</h4>
 <ul>
-<li>For the customer with `FirstName` &quot;Emily&quot; and `LastName` &quot;Jones&quot;:</li>
-<p>  - FullName = "Jones, Emily"</p>
-</ul>
-<p>This results in the following computed `FullName` values:</p>
-<ul>
-<li>&quot;Smith, Mary&quot;</li>
-<li>&quot;Doe, John&quot;</li>
-<li>&quot;Jones, Emily&quot;</li>
-</ul>
-<p>By following the above computation method, one can accurately derive the `FullName` for any customer using their `FirstName` and `LastName`.</p></div>
+<li>**FullName** is derived from the combination of the LastName and FirstName fields, formatted as &quot;LastName, FirstName&quot;. This allows for a standardized representation of customer names, which is useful for display purposes in reports and communications.</li>
+</ul></div>
             </div>
         </div>
     </main>
